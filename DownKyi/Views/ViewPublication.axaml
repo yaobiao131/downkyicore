@@ -1,0 +1,303 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:custom="clr-namespace:DownKyi.CustomControl"
+             x:Class="DownKyi.Views.ViewPublication"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vm="clr-namespace:DownKyi.ViewModels"
+             xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             x:DataType="vm:ViewPublicationViewModel">
+    <UserControl.Resources>
+        <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:PublicationMedia">
+            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <StackPanel
+                            Name="nameItemPanel"
+                            Margin="15,15,15,5"
+                            Cursor="Hand"
+                            Orientation="Vertical">
+                            <Border
+                                Name="nameCover"
+                                Width="190"
+                                Height="119"
+                                HorizontalAlignment="Center"
+                                CornerRadius="5">
+                                <Border.Background>
+                                    <!--  长宽比：1.6  -->
+                                    <ImageBrush Source="{Binding Cover}" />
+                                </Border.Background>
+                                <Grid Width="190" Height="119">
+                                    <Image
+                                        Name="nameChecked"
+                                        Width="24"
+                                        Height="24"
+                                        Margin="0,10,10,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Top"
+                                        Source="/Resources/checked.png" />
+                                    <Border
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Bottom"
+                                        Background="{DynamicResource BrushMask}"
+                                        CornerRadius="5 0 5 0">
+                                        <TextBlock
+                                            Name="nameDuration"
+                                            Padding="6,0"
+                                            Foreground="{DynamicResource BrushText}"
+                                            Text="{Binding Duration}" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <TextBlock
+                                Name="nameTitle"
+                                Height="35"
+                                MaxWidth="190"
+                                Margin="0,10,0,0"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Tag="{Binding Bvid}"
+                                Text="{Binding Title}"
+                                TextTrimming="CharacterEllipsis"
+                                TextWrapping="Wrap"
+                                ToolTip.Tip="{Binding Title}">
+                                <i:Interaction.Behaviors>
+                                    <ia:EventTriggerBehavior EventName="PointerReleased">
+                                        <ia:InvokeCommandAction Command="{Binding TitleCommand}"
+                                                                CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                    </ia:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                                <TextBlock.Styles>
+                                    <Style Selector="TextBlock#nameTitle:pointerover">
+                                        <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                                    </Style>
+                                </TextBlock.Styles>
+                            </TextBlock>
+                            <Grid Margin="0,3,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                    <Image
+                                        Width="11"
+                                        Height="11"
+                                        Source="/Resources/play.png" />
+                                    <TextBlock
+                                        Margin="5,0,0,0"
+                                        Foreground="{DynamicResource BrushTextGrey}"
+                                        Text="{Binding PlayNumber}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Image
+                                        Width="12"
+                                        Height="11"
+                                        Source="/Resources/time.png" />
+                                    <TextBlock
+                                        Margin="5,0,0,0"
+                                        Foreground="{DynamicResource BrushTextGrey}"
+                                        Text="{Binding CreateTime}" />
+                                </StackPanel>
+                            </Grid>
+                            <i:Interaction.Behaviors>
+                                <ia:DataTriggerBehavior Binding="{Binding IsSelected}" Value="True">
+                                    <ia:ChangePropertyAction TargetObject="nameChecked" PropertyName="IsVisible"
+                                                             Value="True" />
+                                </ia:DataTriggerBehavior>
+                                <ia:DataTriggerBehavior Binding="{Binding IsSelected}" Value="False">
+                                    <ia:ChangePropertyAction TargetObject="nameChecked" PropertyName="IsVisible"
+                                                             Value="False" />
+                                </ia:DataTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <Grid RowDefinitions="50,1,*">
+
+        <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
+
+            <Button
+                Grid.Column="0"
+                Margin="10,5,0,5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding BackSpaceCommand}"
+                Theme="{StaticResource ImageBtnStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Width="24" Height="24">
+                        <Path
+                            Width="{Binding ArrowBack.Width}"
+                            Height="{Binding ArrowBack.Height}"
+                            Data="{Binding ArrowBack.Data}"
+                            Fill="{Binding ArrowBack.Fill}"
+                            Stretch="None" />
+                    </ContentControl>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource Publication}" />
+                </StackPanel>
+            </Button>
+            <Button
+                Grid.Column="2"
+                Width="24"
+                Height="24"
+                Margin="10,5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Command="{Binding DownloadManagerCommand}"
+                Theme="{StaticResource ImageBtnStyle}"
+                ToolTip.Tip="{DynamicResource DownloadManager}">
+                <ContentControl>
+                    <Path
+                        Width="{Binding DownloadManage.Width}"
+                        Height="{Binding DownloadManage.Height}"
+                        Data="{Binding DownloadManage.Data}"
+                        Fill="{Binding DownloadManage.Fill}"
+                        Stretch="Uniform" />
+                </ContentControl>
+            </Button>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
+        <Grid Grid.Row="2" ColumnDefinitions="200,*">
+            <!--  左侧tab header  -->
+            <ListBox
+                Name="nameLeftTabHeaders"
+                Grid.Column="0"
+                BorderThickness="0"
+                IsEnabled="{Binding IsEnabled}"
+                ItemsSource="{Binding TabHeaders}"
+                ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                SelectedIndex="{Binding SelectTabId, Mode=TwoWay}">
+                <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="SelectionChanged">
+                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
+                                                CommandParameter="{Binding ElementName=nameLeftTabHeaders, Path=SelectedItem}" />
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ListBox>
+
+            <Grid Name="nameMediaPanel" Grid.Column="1" RowDefinitions="*,1,50">
+
+                <ListBox
+                    x:Name="nameMedias"
+                    Grid.Row="0"
+                    BorderThickness="0"
+                    ItemsSource="{Binding Medias}"
+                    ItemContainerTheme="{StaticResource MediaListStyle}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectionMode="Multiple">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding MediasCommand}"
+                                                    CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItems}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.Theme>
+                        <ControlTheme TargetType="ListBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBox">
+                                        <Border
+                                            x:Name="Bd"
+                                            Padding="0"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ScrollViewer Focusable="False">
+                                                <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                            </ScrollViewer>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </ControlTheme>
+                    </ListBox.Theme>
+                </ListBox>
+
+                <!--  加载gif  -->
+                <StackPanel
+                    Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Vertical"
+                    IsVisible="{Binding LoadingVisibility}">
+                    <custom:Loading
+                        Width="40"
+                        Height="40"
+                        Foreground="Gray"
+                        IsActive="{Binding Loading}" />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        FontSize="14"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource PublicationWait}" />
+                </StackPanel>
+
+                <!--  没有数据提示  -->
+                <Image
+                    Grid.Row="0"
+                    Width="256"
+                    Height="256"
+                    Source="/Resources/no-data.png"
+                    IsVisible="{Binding NoDataVisibility}" />
+                <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
+                <Grid Grid.Row="2" ColumnDefinitions="80,*,100,80">
+                    <CheckBox
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Command="{Binding SelectAllCommand}"
+                        CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItem}"
+                        Content="{DynamicResource SelectAll}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    
+                    <custom:CustomPager
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        DataContext="{Binding Pager}" />
+                    
+                    <Button
+                        Grid.Column="2"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding AddToDownloadCommand}"
+                        Content="{DynamicResource DownloadSelectedPublication}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                    <Button
+                        Grid.Column="3"
+                        Margin="0,0,10,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding AddAllToDownloadCommand}"
+                        Content="{DynamicResource DownloadAllPublication}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                </Grid>
+
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

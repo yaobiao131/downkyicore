@@ -1,0 +1,254 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
+                    xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
+                    xmlns:i="using:Avalonia.Xaml.Interactivity"
+                    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <!-- Add Resources Here -->
+    <ControlTheme x:Key="LeftTabHeaderItemStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:TabHeader">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Grid x:Name="panel" Height="60" ColumnDefinitions="2*,*">
+                        <StackPanel
+                            Grid.Column="0"
+                            Margin="20,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <ContentControl
+                                x:Name="ContentControl"
+                                Width="24"
+                                IsVisible="{Binding Image,Converter={x:Static ObjectConverters.IsNotNull}}"
+                                Height="24"
+                                Margin="0,0,5,0">
+                                <Path
+                                    x:Name="image"
+                                    Width="{Binding Image.Width}"
+                                    Height="{Binding Image.Height}"
+                                    Data="{Binding Image.Data}"
+                                    Fill="{Binding Image.Fill}"
+                                    Stretch="UniformToFill" />
+                            </ContentControl>
+                            <TextBlock
+                                x:Name="text"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Text="{Binding Title}"
+                                TextTrimming="CharacterEllipsis">
+                            </TextBlock>
+                        </StackPanel>
+                        <TextBlock
+                            x:Name="sub"
+                            Grid.Column="1"
+                            Margin="10,0,20,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextGrey2}"
+                            Text="{Binding SubTitle}" />
+                    </Grid>
+                    <!--<ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="False">
+                        <Setter TargetName="panel" Property="Background" Value="{DynamicResource BrushTabHeaderGrey}" />
+                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushTextDark}" />
+                        <Setter TargetName="image" Property="Fill" Value="{Binding Image.Fill}" />
+                    </Trigger>
+                    <Trigger Property="IsMouseOver" Value="true">
+                        <Setter TargetName="panel" Property="Background"
+                                Value="{DynamicResource BrushBackgroundGreyTranslucent2}" />
+                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                        <Setter TargetName="image" Property="Fill" Value="{DynamicResource BrushPrimary}" />
+                    </Trigger>
+                    <Trigger Property="Selector.IsSelected" Value="true">
+                        <Setter TargetName="panel" Property="Background" Value="{DynamicResource BrushBackground}" />
+                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                        <Setter TargetName="image" Property="Fill" Value="{DynamicResource BrushPrimary}" />
+                    </Trigger>
+                </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+
+        </Setter>
+        <Style Selector="^ /template/ TextBlock#text">
+            <Setter Property="Foreground" Value="{DynamicResource BrushTextDark}" />
+        </Style>
+        <Style Selector="^ /template/ Path#image">
+            <Setter Property="Fill" Value="{Binding Image.Fill}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#panel">
+            <Setter Property="Background" Value="{DynamicResource BrushTabHeaderGrey}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Grid#panel">
+            <Setter Property="Background" Value="{DynamicResource BrushBackgroundGreyTranslucent2}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ TextBlock#text">
+            <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Path#image">
+            <Setter Property="Fill" Value="{DynamicResource BrushPrimary}" />
+        </Style>
+        <Style Selector="^:selected /template/ Grid">
+            <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
+        </Style>
+        <Style Selector="^:selected /template/ TextBlock#text">
+            <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+        </Style>
+        <Style Selector="^:selected /template/ Path#image">
+            <Setter Property="Fill" Value="{DynamicResource BrushPrimary}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="LeftTabHeaderStyle" TargetType="{x:Type ListBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border
+                        Padding="0"
+                        Background="{DynamicResource BrushTabHeaderGrey}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer Focusable="False">
+                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+
+    <!--  TAG样式1  -->
+    <ControlTheme x:Key="TagItemStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:VideoSection">
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border
+                        Name="Border"
+                        Margin="5,3"
+                        Padding="8,2"
+                        Background="{DynamicResource BrushPrimary}"
+                        CornerRadius="10"
+                        Cursor="Hand">
+                        <ContentPresenter
+                            x:Name="content"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{Binding Title}" />
+                    </Border>
+
+                    <!--<ControlTemplate.Triggers>
+                        ~1~  顺序很重要，不能修改  @1@
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimary}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+
+    <ControlTheme x:Key="TagStyle" TargetType="{x:Type ListBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+
+    <!--  TAG样式2  -->
+    <ControlTheme x:Key="TagItem2Style" TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}" x:DataType="vms:DisplayFileNamePart">
+                    <Border
+                        Name="Border"
+                        Margin="5,3"
+                        Padding="8,2"
+                        Background="{DynamicResource BrushBackgroundGrey}"
+                        CornerRadius="10"
+                        Cursor="Hand">
+                        <ContentPresenter
+                            Name="content"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource BrushText}"
+                            Content="{Binding Title}" />
+                    </Border>
+                    <!--<ControlTemplate.Triggers>
+                        ~1~  顺序很重要，不能修改  @1@
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
+                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>-->
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style Selector="^:selected /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border">
+            <Setter Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource BrushText}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="Tag2Style" TargetType="{x:Type ListBox}">
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <WrapPanel
+                        Orientation="Horizontal"
+                        ScrollViewer.IsScrollInertiaEnabled="False" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border
+                        Padding="5"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{DynamicResource BrushBorder}"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ControlTheme>
+
+
+</ResourceDictionary>

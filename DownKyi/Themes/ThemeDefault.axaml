@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <!--  每个主题都相同  -->
+        <ResourceInclude Source="/Themes/ColorBrush.axaml" />
+        <!--  根据实际需要调整  -->
+        <ResourceInclude Source="/Themes/Colors/ColorDefault.axaml" />
+        <ResourceInclude Source="/Themes/Styles/StyleBtn.axaml" />
+        <ResourceInclude Source="/Themes/Styles/StyleImageBtn.axaml" />
+        <!-- <ResourceInclude Source="Styles/StyleSystemBtn.xaml" /> -->
+        <ResourceInclude Source="/Themes/Styles/StyleCheckBox.axaml" />
+        <ResourceInclude Source="/Themes/Styles/StyleListBox.axaml" />
+        <!-- <ResourceInclude Source="Styles/StyleListView.xaml" /> -->
+        <ResourceInclude Source="/Themes/Styles/StyleRadio.axaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

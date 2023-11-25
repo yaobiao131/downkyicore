@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DownKyi.ViewModels"
+        xmlns:prism="http://prismlibrary.com/"
+        x:Class="DownKyi.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        xmlns:i="using:Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        Width="1100"
+        Height="750"
+        MinWidth="800"
+        MinHeight="550"
+        Title="{DynamicResource AppName}"
+        Icon="/Resources/favicon.ico">
+
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Closed">
+            <ia:InvokeCommandAction />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1">
+
+        <Grid Background="{DynamicResource BrushBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <!--<Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushCaptionBackground}"
+                KeyboardNavigation.TabNavigation="None">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="10,0"
+                    Orientation="Horizontal">
+                    <Image
+                        Width="20"
+                        Height="20"
+                        Source="/Resources/favicon.ico" />
+                    <TextBlock
+                        Grid.Column="0"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushCaptionForeground}"
+                        Text="{DynamicResource AppName}" />
+                </StackPanel>
+            </Grid>-->
+
+            <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" />
+
+            <Border
+                Grid.Row="1"
+                MinHeight="30"
+                Margin="0,0,0,20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Background="{DynamicResource BrushBackgroundDark}"
+                CornerRadius="15"
+                IsVisible="{Binding MessageVisibility}">
+                <TextBlock
+                    Margin="15,5,15,5"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="{x:Null}"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushForegroundDark}"
+                    Text="{Binding Message}"
+                    TextAlignment="Center" />
+            </Border>
+        </Grid>
+    </Border>
+
+</Window>

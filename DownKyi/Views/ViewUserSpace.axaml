@@ -1,0 +1,328 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             x:Class="DownKyi.Views.ViewUserSpace"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:custom="clr-namespace:DownKyi.CustomControl"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vm="clr-namespace:DownKyi.ViewModels"
+             xmlns:vmu="clr-namespace:DownKyi.ViewModels.UserSpace"
+             x:DataType="vm:ViewUserSpaceViewModel">
+    <UserControl.Resources>
+        <ControlTheme x:Key="TabLeftBannerStyle" TargetType="ListBoxItem" x:DataType="vmu:TabLeftBanner">
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+            <Setter Property="Template">
+                <ControlTemplate x:DataType="vmu:TabLeftBanner">
+                    <StackPanel
+                        x:Name="panel"
+                        Margin="10,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Cursor="Hand">
+                        <StackPanel Margin="0,0,0,5" Orientation="Horizontal">
+                            <TextBlock Padding="5,0">
+                                <ContentControl
+                                    Width="20"
+                                    Height="20"
+                                    VerticalAlignment="Center">
+                                    <Path
+                                        Width="20"
+                                        Height="20"
+                                        Data="{Binding Icon.Data}"
+                                        Fill="{Binding IconColor}"
+                                        Stretch="Uniform" />
+                                </ContentControl>
+                            </TextBlock>
+                            <TextBlock
+                                Name="nameText"
+                                Padding="5,0"
+                                VerticalAlignment="Center"
+                                FontSize="14"
+                                Text="{Binding Title}" />
+                        </StackPanel>
+                        <TextBlock
+                            Name="nameIndicator"
+                            Height="1.5"
+                            Background="{DynamicResource BrushPrimary}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^ /template/ TextBlock#nameText">
+                <Setter Property="Foreground" Value="{DynamicResource BrushTextDark}" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#nameIndicator">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+            <Style Selector="^:pointerover /template/ TextBlock#nameText">
+                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+            </Style>
+            <Style Selector="^:selected /template/ TextBlock#nameText">
+                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+            </Style>
+            <Style Selector="^:selected /template/ TextBlock#nameIndicator">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+        </ControlTheme>
+
+        <ControlTheme x:Key="TabRightBannerStyle" TargetType="ListBoxItem" x:DataType="vmu:TabRightBanner">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <StackPanel
+                        x:Name="panel"
+                        Margin="15,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Cursor="Hand"
+                        IsEnabled="{Binding IsEnabled}">
+                        <TextBlock
+                            Name="nameLabel"
+                            Padding="0,0,0,5"
+                            HorizontalAlignment="Center"
+                            Foreground="{DynamicResource BrushTextGrey2}"
+                            Text="{Binding Label}" />
+                        <TextBlock
+                            Name="nameCount"
+                            Padding="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{Binding Count}" />
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover /template/ TextBlock#nameLabel">
+                <Setter Property="Foreground" Value="{Binding LabelColor}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ TextBlock#nameCount">
+                <Setter Property="Foreground" Value="{Binding CountColor}" />
+            </Style>
+        </ControlTheme>
+
+        <ControlTheme x:Key="TabBannerStyle" TargetType="ListBox">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border
+                        x:Name="Bd"
+                        Padding="0"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer Focusable="False">
+                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"
+                                            Margin="{TemplateBinding Padding}"
+                                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                            VerticalAlignment="{TemplateBinding VerticalAlignment}" />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <Grid>
+        <Grid IsVisible="{Binding ViewVisibility}" RowDefinitions="300,*">
+            <Image
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="{Binding Background}"
+                Stretch="UniformToFill" />
+
+            <Grid Grid.Row="0" VerticalAlignment="Bottom" RowDefinitions="*,20" ColumnDefinitions="100,*">
+
+                <Image
+                    Grid.Column="0"
+                    Width="64"
+                    Height="64"
+                    Source="{Binding Header}">
+                    <Image.Clip>
+                        <!--  设置图像如何显示  -->
+                        <EllipseGeometry
+                            Center="32,32"
+                            RadiusX="32"
+                            RadiusY="32" />
+                    </Image.Clip>
+                </Image>
+
+                <!--  添加一个圆框在头像上，做边框  -->
+                <Ellipse
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Width="66"
+                    Height="66"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Stroke="{DynamicResource BrushImageBorder2}"
+                    StrokeThickness="2" />
+
+                <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="*,*">
+                    <StackPanel
+                        Grid.Row="0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Foreground="{DynamicResource BrushText}"
+                            Text="{Binding UserName}" />
+                        <Image
+                            Width="18"
+                            Height="18"
+                            Margin="5,0,0,0"
+                            Source="{Binding Sex}" />
+                        <Image
+                            Width="28"
+                            Height="16"
+                            Margin="5,0,0,0"
+                            Source="{Binding Level}" />
+                        <Border
+                            Height="17"
+                            Margin="5,0,0,0"
+                            Padding="5,0"
+                            Background="{DynamicResource BrushSecond}"
+                            CornerRadius="3"
+                            IsVisible="{Binding VipTypeVisibility}">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="10"
+                                Foreground="{DynamicResource BrushText}"
+                                Text="{Binding VipType}" />
+                        </Border>
+                    </StackPanel>
+                    <Grid Grid.Row="1" ColumnDefinitions="*,100">
+
+                        <TextBlock
+                            Grid.Column="0"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="{DynamicResource BrushText}"
+                            Text="{Binding Sign}" />
+
+                        <Border
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource BrushMask}"
+                            BorderBrush="{DynamicResource BrushImageBorder2}"
+                            BorderThickness="2"
+                            CornerRadius="5">
+                            <TextBlock
+                                Padding="8,3"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="{DynamicResource BrushBackground}"
+                                Text="{Binding IsFollowed}" />
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <!--  内容  -->
+            <Grid Grid.Row="1" IsVisible="{Binding ContentVisibility}" RowDefinitions="65,*">
+
+                <!--  内容区top banner  -->
+                <Grid Grid.Row="0" Margin="20,0" ColumnDefinitions="*,*">
+                    <ListBox
+                        Name="nameTabLeftBanners"
+                        Grid.Column="0"
+                        ItemsSource="{Binding TabLeftBanners}"
+                        ItemContainerTheme="{StaticResource TabLeftBannerStyle}"
+                        Theme="{StaticResource TabBannerStyle}"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="SelectionChanged">
+                                <ia:InvokeCommandAction Command="{Binding TabLeftBannersCommand}"
+                                                        CommandParameter="{Binding ElementName=nameTabLeftBanners, Path=SelectedItem}" />
+                            </ia:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ListBox>
+                    <ListBox
+                        Name="nameTabRightBanners"
+                        Grid.Column="1"
+                        ItemsSource="{Binding TabRightBanners}"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        Theme="{StaticResource TabBannerStyle}"
+                        ItemContainerTheme="{StaticResource TabRightBannerStyle}"
+                        SelectedIndex="{Binding SelectedRightBanner}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="SelectionChanged">
+                                <ia:InvokeCommandAction Command="{Binding TabRightBannersCommand}"
+                                                        CommandParameter="{Binding ElementName=nameTabRightBanners, Path=SelectedItem}" />
+                            </ia:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ListBox>
+                </Grid>
+                <!--  内容区content  -->
+                <ContentControl Grid.Row="1" prism:RegionManager.RegionName="UserSpaceContentRegion" />
+            </Grid>
+        </Grid>
+        <!--  加载gif  -->
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Vertical"
+            IsVisible="{Binding LoadingVisibility}">
+            <custom:Loading
+                Width="40"
+                Height="40"
+                Foreground="Gray"
+                IsActive="{Binding Loading}" />
+            <TextBlock
+                Margin="0,10,0,0"
+                FontSize="14"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource UserSpaceWait}" />
+        </StackPanel>
+
+        <!--  没有数据提示  -->
+        <Image
+            Width="256"
+            Height="256"
+            Source="/Resources/no-data.png"
+            IsVisible="{Binding NoDataVisibility}" />
+
+        <!--  顶部导航  -->
+        <Grid VerticalAlignment="Top" Background="{Binding TopNavigationBg}" ColumnDefinitions="150,*,150">
+
+            <Button
+                Grid.Column="0"
+                Margin="10,5,0,5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding BackSpaceCommand}"
+                Theme="{StaticResource ImageBtnStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Width="24" Height="24">
+                        <Path
+                            Width="{Binding ArrowBack.Width}"
+                            Height="{Binding ArrowBack.Height}"
+                            Data="{Binding ArrowBack.Data}"
+                            Fill="{Binding ArrowBack.Fill}"
+                            Stretch="None" />
+                    </ContentControl>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="{Binding ArrowBack.Fill}"
+                        Text="{DynamicResource UserSpace}" />
+                </StackPanel>
+            </Button>
+
+        </Grid>
+    </Grid>
+</UserControl>

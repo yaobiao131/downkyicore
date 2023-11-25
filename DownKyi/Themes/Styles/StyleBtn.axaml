@@ -1,0 +1,57 @@
+﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:i="clr-namespace:Avalonia.Xaml.Interactivity;assembly=Avalonia.Xaml.Interactivity"
+                    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <!-- Add Resources Here -->
+    <ControlTheme x:Key="BtnStyle" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{DynamicResource BrushPrimary}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type Button}">
+                <Border
+                    Padding="10,5"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="5">
+                    <ContentPresenter
+                        Name="content"
+                        HorizontalAlignment="Center"
+                        Content="{TemplateBinding Content}"
+                        VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="BtnBorderStyle" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="{x:Type Button}">
+                <Border
+                    Padding="10,5"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{DynamicResource BrushPrimary}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="5">
+                    <ContentPresenter
+                        Name="content"
+                        HorizontalAlignment="Center"
+                        Content="{TemplateBinding Content}"
+                        VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{DynamicResource BrushPrimaryTranslucent3}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

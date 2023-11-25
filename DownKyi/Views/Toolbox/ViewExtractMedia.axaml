@@ -1,0 +1,97 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.Toolbox.ViewExtractMedia"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:vm="clr-namespace:DownKyi.ViewModels.Toolbox"
+             x:DataType="vm:ViewExtractMediaViewModel">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
+        <Grid Margin="50,0" RowDefinitions="200,*">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="18"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource ExtractMedia}" />
+                </StackPanel>
+
+                <StackPanel
+                    Margin="0,20,0,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center" Text="{DynamicResource VideoFilePath}" />
+                    <TextBox
+                        Width="600"
+                        Height="65"
+                        Margin="0,10,10,10"
+                        VerticalContentAlignment="Top"
+                        IsReadOnly="True"
+                        Text="{Binding VideoPathsStr, Mode=TwoWay}" />
+
+                    <Button
+                        Width="75"
+                        Margin="30,0,0,0"
+                        VerticalAlignment="Center"
+                        Command="{Binding SelectVideoCommand}"
+                        Content="{DynamicResource SelectVideo}"
+                        Theme="{StaticResource BtnBorderStyle}" />
+                </StackPanel>
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button
+                        Grid.Column="0"
+                        Width="75"
+                        Margin="30,0,0,0"
+                        VerticalAlignment="Center"
+                        Command="{Binding ExtractAudioCommand}"
+                        Content="{DynamicResource ExtractAudio}"
+                        Theme="{StaticResource BtnBorderStyle}" />
+                    <Button
+                        Grid.Column="1"
+                        Width="75"
+                        Margin="30,0,0,0"
+                        VerticalAlignment="Center"
+                        Command="{Binding ExtractVideoCommand}"
+                        Content="{DynamicResource ExtractVideo}"
+                        Theme="{StaticResource BtnBorderStyle}" />
+                </Grid>
+            </StackPanel>
+            <Grid
+                Grid.Row="1"
+                Margin="0,20"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    VerticalAlignment="Bottom"
+                    Text="{DynamicResource OutputInfo}" />
+                <TextBox
+                    Name="nameStatus"
+                    Grid.Row="1"
+                    Background="Black"
+                    Foreground="White"
+                    ScrollViewer.HorizontalScrollBarVisibility="Visible"
+                    IsReadOnly="True"
+                    Text="{Binding Status, Mode=TwoWay}"
+                    ScrollViewer.VerticalScrollBarVisibility="Visible">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="TextChanged">
+                            <ia:InvokeCommandAction Command="{Binding StatusCommand}"
+                                                    CommandParameter="{Binding ElementName=nameStatus}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </TextBox>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

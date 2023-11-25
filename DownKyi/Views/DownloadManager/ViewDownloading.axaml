@@ -1,0 +1,325 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="clr-namespace:DownKyi.Converter"
+             x:Class="DownKyi.Views.DownloadManager.ViewDownloading"
+             xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
+             x:DataType="vmdm:ViewDownloadingViewModel"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <UserControl.Resources>
+        <converter:CountConverter x:Key="CountConverter" Count="0" />
+
+        <ControlTheme x:Key="DownloadingStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadingItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Grid
+                            Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=Bounds.Width}"
+                            Height="70">
+                            <Grid ColumnDefinitions="70,*,320,80,30">
+
+                                <Image
+                                    Grid.Column="0"
+                                    Width="48"
+                                    Height="48"
+                                    Source="{Binding ZoneImage}" />
+
+                                <!--  标题等视频信息  -->
+                                <Grid
+                                    Grid.Column="1"
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Left" RowDefinitions="*,*">
+
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="14"
+                                        Foreground="{DynamicResource BrushTextDark}"
+                                        TextTrimming="CharacterEllipsis"
+                                        ToolTip.Tip="">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
+                                                <Binding Path="Order" />
+                                                <Binding Path="MainTitle" />
+                                                <Binding Path="Name" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                        <ContentControl>
+                                            <ToolTip.Tip>
+                                                <TextBlock>
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}-{1}">
+                                                            <Binding Path="MainTitle" />
+                                                            <Binding Path="Name" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </ToolTip.Tip>
+                                        </ContentControl>
+                                        <!--<TextBlock.ToolTip>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}-{1}">
+                                                        <Binding Path="MainTitle" />
+                                                        <Binding Path="Name" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </TextBlock.ToolTip>-->
+                                    </TextBlock>
+
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        FontSize="12"
+                                        Foreground="{DynamicResource BrushTextGrey2}">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} · {1} · {2} · {3}">
+                                                <Binding Path="Duration" />
+                                                <Binding Path="Resolution.Name" />
+                                                <Binding Path="VideoCodecName" />
+                                                <Binding Path="AudioCodec.Name" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Grid>
+
+                                <!--  进度条  -->
+                                <Grid Grid.Column="2" RowDefinitions="*,*">
+
+                                    <Grid Grid.Row="0" VerticalAlignment="Bottom" ColumnDefinitions="100,*">
+
+                                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource BrushTextDark}"
+                                                Text="{Binding DownloadContent}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                Foreground="{DynamicResource BrushTextDark}"
+                                                Text="{Binding StringFormat={} {0}, Path=DownloadStatusTitle}">
+
+                                                <!--<TextBlock.Style>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Text"
+                                                                Value="{Binding StringFormat={} {0}, Path=DownloadStatusTitle}" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DownloadContent}" Value="">
+                                                                <Setter Property="Text"
+                                                                        Value="{Binding DownloadStatusTitle}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>-->
+                                                <i:Interaction.Behaviors>
+                                                    <ia:DataTriggerBehavior Binding="{Binding DownloadContent}"
+                                                                            Value="">
+                                                        <ia:ChangePropertyAction PropertyName="Text"
+                                                            Value="{Binding DownloadStatusTitle}" />
+                                                    </ia:DataTriggerBehavior>
+                                                </i:Interaction.Behaviors>
+                                            </TextBlock>
+                                        </StackPanel>
+
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            HorizontalAlignment="Right"
+                                            FontSize="12"
+                                            Foreground="{DynamicResource BrushTextGrey2}">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} {1}">
+                                                    <Binding Path="DownloadingFileSize" />
+                                                    <Binding Path="SpeedDisplay" />
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Grid>
+
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Height="20"
+                                        VerticalAlignment="Top"
+                                        BorderBrush="{x:Null}"
+                                        BorderThickness="0"
+                                        Value="{Binding Progress}">
+                                        <ProgressBar.Theme>
+                                            <ControlTheme TargetType="{x:Type ProgressBar}">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <Grid>
+                                                                <Border
+                                                                    Name="PART_Track"
+                                                                    Background="{DynamicResource BrushForegroundGrey2}"
+                                                                    BorderThickness="0" />
+                                                                <Border
+                                                                    Name="PART_Indicator"
+                                                                    HorizontalAlignment="Left"
+                                                                    Background="{DynamicResource BrushPrimary}"
+                                                                    BorderThickness="0" />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </ControlTheme>
+                                        </ProgressBar.Theme>
+                                    </ProgressBar>
+                                </Grid>
+
+                                <!--  控制面板，暂停继续删除  -->
+                                <Grid Grid.Column="3" ColumnDefinitions="*,*">
+
+                                    <Button
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding StartOrPauseCommand}"
+                                        Theme="{StaticResource ImageBtnStyle}"
+                                        ToolTip.Tip="{Binding OperationTip}">
+                                        <ContentControl Width="20" Height="20">
+                                            <Path
+                                                Width="{Binding StartOrPause.Width}"
+                                                Height="{Binding StartOrPause.Height}"
+                                                Data="{Binding StartOrPause.Data}"
+                                                Fill="{Binding StartOrPause.Fill}"
+                                                Stretch="Uniform" />
+                                        </ContentControl>
+                                    </Button>
+
+                                    <Button
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Command="{Binding DeleteCommand}"
+                                        Theme="{StaticResource ImageBtnStyle}"
+                                        ToolTip.Tip="{DynamicResource DeleteDownload}">
+                                        <ContentControl Width="20" Height="20">
+                                            <Path
+                                                Width="{Binding Delete.Width}"
+                                                Height="{Binding Delete.Height}"
+                                                Data="{Binding Delete.Data}"
+                                                Fill="{Binding Delete.Fill}"
+                                                Stretch="Uniform" />
+                                        </ContentControl>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <Grid>
+        <Grid RowDefinitions="*,1,50">
+            <i:Interaction.Behaviors>
+                <ia:DataTriggerBehavior Binding="{Binding DownloadingList}" Value="{x:Null}">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior Binding="{Binding DownloadingList.Count}" Value="0">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior
+                    Binding="{Binding DownloadingList.Count, Converter={StaticResource CountConverter}}" Value="">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
+                </ia:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <ListBox
+                Grid.Row="0"
+                BorderThickness="0"
+                ItemContainerTheme="{StaticResource DownloadingStyle}"
+                ItemsSource="{Binding DownloadingList}">
+                <ListBox.Theme>
+                    <ControlTheme TargetType="ListBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border
+                                        x:Name="Bd"
+                                        Padding="0"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ScrollViewer
+                                            Focusable="False"
+                                            HorizontalScrollBarVisibility="Hidden"
+                                            VerticalScrollBarVisibility="Auto">
+                                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                            Width="{TemplateBinding Width}" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </ControlTheme>
+                </ListBox.Theme>
+            </ListBox>
+
+            <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorderTranslucent}" />
+
+            <Grid Grid.Row="2" ColumnDefinitions="*,85,85,85">
+
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="10,0,0,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource TotalDownloading1}" />
+                    <TextBlock
+                        Margin="3,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="{DynamicResource BrushPrimary}"
+                        Text="{Binding DownloadingList.Count}" />
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="{DynamicResource TotalDownloading2}" />
+                </StackPanel>
+                <Button
+                    Grid.Column="1"
+                    Width="75"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Command="{Binding PauseAllDownloadingCommand}"
+                    Content="{DynamicResource PauseAllDownloading}"
+                    FontSize="12"
+                    Theme="{StaticResource BtnBorderStyle}" />
+                <Button
+                    Grid.Column="2"
+                    Width="75"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Command="{Binding ContinueAllDownloadingCommand}"
+                    Content="{DynamicResource ContinueAllDownloading}"
+                    FontSize="12"
+                    Theme="{StaticResource BtnBorderStyle}" />
+                <Button
+                    Grid.Column="3"
+                    Width="75"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Command="{Binding DeleteAllDownloadingCommand}"
+                    Content="{DynamicResource DeleteAllDownloading}"
+                    FontSize="12"
+                    Theme="{StaticResource BtnBorderStyle}" />
+            </Grid>
+        </Grid>
+        <!--  TODO 没有数据时显示图片或文字  -->
+        <Image
+            Width="256"
+            Height="256"
+            Source="/Resources/nodata02.png">
+        </Image>
+    </Grid>
+</UserControl>

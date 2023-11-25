@@ -1,0 +1,80 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             x:Class="DownKyi.Views.Dialogs.ViewParsingSelector"
+             xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             x:DataType="vmd:ViewParsingSelectorViewModel">
+    <!--<prism:Dialog.WindowStyle>
+        <Style Selector="Window">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="ShowInTaskbar" Value="False" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            ~1~ <Setter Property="WindowStyle" Value="None" /> @1@
+        </Style>
+    </prism:Dialog.WindowStyle>-->
+
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
+        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
+
+            <Grid 
+                Grid.Row="0" 
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}">
+                
+            </Grid>
+
+            <StackPanel
+                Grid.Row="1"
+                MinWidth="250"
+                Margin="15,10"
+                Orientation="Vertical">
+                <Button
+                    Width="160"
+                    Height="35"
+                    Margin="0,10,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding ParseSelectedItemCommand}"
+                    Content="{DynamicResource ParseSelectedItem}"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushText}"
+                    Theme="{StaticResource BtnStyle}" />
+
+                <Button
+                    Width="160"
+                    Height="35"
+                    Margin="0,30,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding ParseCurrentSectionCommand}"
+                    Content="{DynamicResource ParseCurrentSection}"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushText}"
+                    Theme="{StaticResource BtnStyle}" />
+
+                <Button
+                    Width="160"
+                    Height="35"
+                    Margin="0,30,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{Binding ParseAllCommand}"
+                    Content="{DynamicResource ParseAll}"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushText}"
+                    Theme="{StaticResource BtnStyle}" />
+
+                <CheckBox
+                    Margin="0,30,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Content="{DynamicResource SetParseDefault}"
+                    IsChecked="{Binding IsParseDefault, Mode=TwoWay}"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Theme="{StaticResource CheckBoxStyle}" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

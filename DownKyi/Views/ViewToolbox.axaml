@@ -1,0 +1,64 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.ViewToolbox"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vm="clr-namespace:DownKyi.ViewModels"
+             x:DataType="vm:ViewToolboxViewModel">
+    <Grid RowDefinitions="50,1,*">
+
+        <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
+
+            <Button
+                Grid.Column="0"
+                Margin="10,5,0,5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding BackSpaceCommand}"
+                Theme="{StaticResource ImageBtnStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Width="24" Height="24">
+                        <Path
+                            Width="{Binding ArrowBack.Width}"
+                            Height="{Binding ArrowBack.Height}"
+                            Data="{Binding ArrowBack.Data}"
+                            Fill="{Binding ArrowBack.Fill}"
+                            Stretch="None" />
+                    </ContentControl>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource Toolbox}" />
+                </StackPanel>
+            </Button>
+        </Grid>
+
+        <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
+
+        <Grid Grid.Row="2" ColumnDefinitions="200,*">
+
+            <!--  左侧tab header  -->
+            <ListBox
+                Name="nameLeftTabHeaders"
+                Grid.Column="0"
+                BorderThickness="0"
+                ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
+                Theme="{StaticResource LeftTabHeaderStyle}"
+                ItemsSource="{Binding TabHeaders}"
+                SelectedIndex="{Binding SelectTabId}">
+                <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="SelectionChanged">
+                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
+                                                CommandParameter="{Binding ElementName=nameLeftTabHeaders, Path=SelectedItem}" />
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
+            </ListBox>
+
+            <!--  右侧内容区  -->
+            <ContentControl Grid.Column="1" prism:RegionManager.RegionName="ToolboxContentRegion" />
+        </Grid>
+    </Grid>
+</UserControl>

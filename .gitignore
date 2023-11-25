@@ -1,0 +1,9 @@
+.idea/
+.vs/
+.vs_code/
+**/.DS_Store
+
+*/**/obj
+*/**/bin
+
+DownKyi.sln.DotSettings.user

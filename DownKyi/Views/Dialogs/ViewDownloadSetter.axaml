@@ -1,0 +1,224 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.Dialogs.ViewDownloadSetter"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             x:DataType="vmd:ViewDownloadSetterViewModel">
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
+        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
+
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}" ColumnDefinitions="*,50,*,50">
+
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushCaptionForeground}"
+                    Text="{Binding Title}" />
+
+                <Button
+                    Grid.Column="3"
+                    Command="{Binding CloseCommand}"
+                    Theme="{StaticResource ImageBtnStyle}">
+                    <Path
+                        Width="{Binding CloseIcon.Width}"
+                        Height="{Binding CloseIcon.Height}"
+                        Data="{Binding CloseIcon.Data}"
+                        Fill="{Binding CloseIcon.Fill}"
+                        Stretch="UniformToFill" />
+                </Button>
+            </Grid>
+            <Grid
+                Grid.Row="1"
+                MinWidth="600"
+                Margin="15,10" RowDefinitions="*,*,*,*">
+
+                <Grid Grid.Row="0" Margin="0,30,0,0" ColumnDefinitions="*,*,*,*,*">
+
+                    <ContentControl
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom">
+                        <Path
+                            Width="{Binding CloudDownloadIcon.Width}"
+                            Height="{Binding CloudDownloadIcon.Height}"
+                            Data="{Binding CloudDownloadIcon.Data}"
+                            Fill="{Binding CloudDownloadIcon.Fill}"
+                            Stretch="UniformToFill" />
+                    </ContentControl>
+
+                    <TextBlock
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        Foreground="{DynamicResource BrushPrimary}"
+                        Text="&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;" />
+
+                    <ContentControl
+                        Grid.Column="3"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom">
+                        <Path
+                            Width="{Binding FolderIcon.Width}"
+                            Height="{Binding FolderIcon.Height}"
+                            Data="{Binding FolderIcon.Data}"
+                            Fill="{Binding FolderIcon.Fill}"
+                            Stretch="UniformToFill" />
+                    </ContentControl>
+                </Grid>
+
+                <Grid Grid.Row="1" Margin="0,30,0,0" RowDefinitions="*,*" ColumnDefinitions="auto,*,auto">
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource Location}" />
+                    <ComboBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Height="25"
+                        Margin="10,0"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        ItemsSource="{Binding DirectoryList, Mode=TwoWay}"
+                        SelectedValue="{Binding Directory, Mode=TwoWay}" />
+
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Command="{Binding BrowseCommand}"
+                        Content="{DynamicResource Browse}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+
+                    <StackPanel
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="10,10,10,0"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{Binding DriveName}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{DynamicResource HardDiskFreeSpace}" />
+                        <TextBlock
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{Binding DriveNameFreeSpace}" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="0,30,0,0" ColumnDefinitions="auto,75,75,75,75,75,75">
+
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource DownloadContent}" />
+
+                    <CheckBox
+                        Grid.Column="1"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadAllCommand}"
+                        Content="{DynamicResource DownloadAll}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadAll, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+
+                    <CheckBox
+                        Grid.Column="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadAudioCommand}"
+                        Content="{DynamicResource DownloadAudio}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Grid.Column="3"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadVideoCommand}"
+                        Content="{DynamicResource DownloadVideo}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Grid.Column="4"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadDanmakuCommand}"
+                        Content="{DynamicResource DownloadDanmaku}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Grid.Column="5"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadSubtitleCommand}"
+                        Content="{DynamicResource DownloadSubtitle}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Grid.Column="6"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{Binding DownloadCoverCommand}"
+                        Content="{DynamicResource DownloadCover}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadCover, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                </Grid>
+
+                <Grid Grid.Row="3" Margin="0,30,0,0" ColumnDefinitions="*,*,100,100">
+
+                    <CheckBox
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Bottom"
+                        Content="{DynamicResource IsDefaultDownloadDirectory}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding IsDefaultDownloadDirectory, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <Button
+                        Grid.Column="2"
+                        Width="75"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding DownloadCommand}"
+                        Content="{DynamicResource Download}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                    <Button
+                        Grid.Column="3"
+                        Width="75"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding CloseCommand}"
+                        Content="{DynamicResource Cancel}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

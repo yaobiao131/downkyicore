@@ -1,0 +1,63 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.App"
+             RequestedThemeVariant="Light">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="/Languanges/Default.axaml" />
+                <ResourceInclude Source="/Themes/ThemeDefault.axaml" />
+                <ResourceInclude Source="avares://DownKyi.Core/BiliApi/Zone/ZoneImages.axaml" />
+                <ResourceInclude Source="avares://DownKyi.Core/BiliApi/BilibiliImages.axaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.Styles>
+        <SimpleTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Simple.xaml" />
+        <StyleInclude Source="/Themes/Styles/loading.axaml" />
+        <Style Selector="HeaderedContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid RowDefinitions="Auto,*" ColumnDefinitions="Auto,*">
+                            <Border
+                                ZIndex="1"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="5,0,5,0"
+                                Background="White"
+                                Margin="5,0,0,0">
+                                <TextBlock 
+                                    Text="{TemplateBinding Header}" 
+                                    FontSize="{TemplateBinding FontSize}"
+                                    Foreground="{TemplateBinding Foreground}"/>
+                            </Border>
+                            <Border
+                                Grid.RowSpan="2"
+                                Grid.ColumnSpan="2"
+                                Margin="0,10,0,0"
+                                BorderBrush="{TemplateBinding Background}"
+                                BorderThickness="1">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Application.Styles>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Resources/favicon.ico" ToolTipText="DownKyi">
+                <!--<TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="退出" />
+                    </NativeMenu>
+                </TrayIcon.Menu>-->
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
+</Application>

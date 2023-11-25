@@ -1,0 +1,325 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.Settings.ViewVideo"
+             xmlns:prism="http://prismlibrary.com/"
+             xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             x:DataType="vms:ViewVideoViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="50,0" Orientation="Vertical">
+
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <TextBlock FontSize="18" Text="{DynamicResource Video}" />
+            </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource FirstVideoCodecs}" />
+                <ComboBox
+                    Name="nameVideoCodecs"
+                    DisplayMemberBinding="{ReflectionBinding Name}"
+                    Width="120"
+                    VerticalContentAlignment="Center"
+                    ItemsSource="{Binding VideoCodecs}"
+                    SelectedValue="{Binding SelectedVideoCodec}">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource FirstVideoQuality}" />
+                <ComboBox
+                    Name="nameVideoQualityList"
+                    Width="120"
+                    VerticalContentAlignment="Center"
+                    DisplayMemberBinding="{ReflectionBinding Name}"
+                    ItemsSource="{Binding VideoQualityList}"
+                    SelectedItem="{Binding SelectedVideoQuality}">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource FirstAudioQuality}" />
+                <ComboBox
+                    Name="nameAudioQualityList"
+                    Width="120"
+                    VerticalContentAlignment="Center"
+                    DisplayMemberBinding="{ReflectionBinding Name}"
+                    ItemsSource="{Binding AudioQualityList}"
+                    SelectedItem="{Binding SelectedAudioQuality}">
+                </ComboBox>
+            </StackPanel>
+            <CheckBox
+                Margin="0,20,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding IsTranscodingFlvToMp4Command}"
+                Content="{DynamicResource IsTranscodingFlvToMp4}"
+                FontSize="12"
+                Foreground="{DynamicResource BrushTextDark}"
+                IsChecked="{Binding IsTranscodingFlvToMp4, Mode=TwoWay}"
+                Theme="{StaticResource CheckBoxStyle}" />
+
+            <TextBlock
+                Height="1"
+                Margin="0,20,0,0"
+                Background="{DynamicResource BrushBorder}" />
+
+            <CheckBox
+                Name="nameIsUseDefaultDirectory"
+                Margin="0,20,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding IsUseDefaultDirectoryCommand}"
+                Content="{DynamicResource IsUseDefaultDirectory}"
+                FontSize="12"
+                Foreground="{DynamicResource BrushTextDark}"
+                IsChecked="{Binding IsUseDefaultDirectory, Mode=TwoWay}"
+                Theme="{StaticResource CheckBoxStyle}" />
+
+            <StackPanel Margin="0,20,0,0" Orientation="Vertical">
+                <!--<StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultDirectory, Path=IsChecked}"
+                                         Value="false">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultDirectory, Path=IsChecked}"
+                                         Value="true">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>-->
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource DefaultDirectory}" />
+                    <TextBlock
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextGrey}"
+                        Text="{DynamicResource DefaultDirectoryTip}" />
+                </StackPanel>
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <TextBlock
+                        MaxWidth="600"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{Binding SaveVideoDirectory}"
+                        TextTrimming="CharacterEllipsis"
+                        ToolTip.Tip="{Binding SaveVideoDirectory}" />
+                    <Button
+                        Width="75"
+                        Margin="30,0,0,0"
+                        Command="{Binding ChangeSaveVideoDirectoryCommand}"
+                        Content="{DynamicResource ChangeDirectory}"
+                        FontSize="12"
+                        Theme="{StaticResource BtnBorderStyle}" />
+                </StackPanel>
+            </StackPanel>
+
+            <HeaderedContentControl
+                Header="{DynamicResource DownloadContent2}"
+                Background="LightGray"
+                Foreground="{DynamicResource BrushTextDark}"
+                CornerRadius="10"
+                FontSize="12">
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <CheckBox
+                        Margin="0,0,0,0"
+                        Command="{Binding DownloadAllCommand}"
+                        Content="{DynamicResource DownloadAll}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadAll, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding DownloadAudioCommand}"
+                        Content="{DynamicResource DownloadAudio}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding DownloadVideoCommand}"
+                        Content="{DynamicResource DownloadVideo}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding DownloadDanmakuCommand}"
+                        Content="{DynamicResource DownloadDanmaku}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding DownloadSubtitleCommand}"
+                        Content="{DynamicResource DownloadSubtitle}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding DownloadCoverCommand}"
+                        Content="{DynamicResource DownloadCover}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding DownloadCover, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <HeaderedContentControl
+                Header="{DynamicResource FileNameParts}"
+                Background="LightGray"
+                Foreground="{DynamicResource BrushTextDark}"
+                CornerRadius="10"
+                FontSize="12">
+                <Grid ColumnDefinitions="100,*" RowDefinitions="*,*,*" Margin="10">
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource OptionalFields}" />
+                    <ListBox
+                        Name="NameOptionalFields"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="0,0,0,20"
+                        ItemContainerTheme="{StaticResource TagItem2Style}"
+                        ItemsSource="{Binding OptionalFields, Mode=TwoWay}"
+                        SelectedIndex="{Binding SelectedOptionalField}"
+                        SelectionMode="Single"
+                        Theme="{StaticResource Tag2Style}">
+                        <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="SelectionChanged">
+                                <ia:InvokeCommandAction Command="{Binding OptionalFieldsCommand}"
+                                                        CommandParameter="{Binding ElementName=NameOptionalFields, Path=SelectedItem}" />
+                            </ia:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                    </ListBox>
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource FileName}" />
+
+                    <ListBox
+                        x:Name="nameSelectedFileName"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        MinHeight="30"
+                        ItemsSource="{Binding SelectedFileName, Mode=TwoWay}"
+                        SelectionMode="Single"
+                        Theme="{StaticResource Tag2Style}">
+                        <i:Interaction.Behaviors>
+                            <ia:EventTriggerBehavior EventName="DoubleTapped">
+                                <ia:InvokeCommandAction Command="{Binding SelectedFileNameRightCommand}"
+                                                        CommandParameter="{Binding ElementName=nameSelectedFileName, Path=SelectedItem}" />
+                            </ia:EventTriggerBehavior>
+                        </i:Interaction.Behaviors>
+                        <ListBox.ItemContainerTheme>
+                            <ControlTheme BasedOn="{StaticResource TagItem2Style}" TargetType="{x:Type ListBoxItem}">
+                                <!-- <Setter Property="AllowDrop" Value="True" /> -->
+                                <!-- <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectedFileName_PreviewMouseLeftButtonDown" /> -->
+                                <!-- <EventSetter Event="Drop" Handler="SelectedFileName_Drop" /> -->
+                            </ControlTheme>
+                        </ListBox.ItemContainerTheme>
+                    </ListBox>
+
+                    <Grid
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Text="{DynamicResource FileNameTimeFormat}" />
+                            <ComboBox
+                                Name="NameFileNamePartTimeFormat"
+                                Width="120"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                ItemsSource="{Binding FileNamePartTimeFormatList}"
+                                SelectedItem="{Binding SelectedFileNamePartTimeFormat}">
+                                <i:Interaction.Behaviors>
+                                    <ia:EventTriggerBehavior EventName="SelectionChanged">
+                                        <ia:InvokeCommandAction Command="{Binding FileNamePartTimeFormatCommand}"
+                                                                CommandParameter="{Binding ElementName=NameFileNamePartTimeFormat, Path=SelectedItem}" />
+                                    </ia:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel
+                            Grid.Column="1"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="{DynamicResource BrushTextDark}"
+                                Text="{DynamicResource OrderFormat}" />
+                            <ComboBox
+                                Name="NameOrderFormat"
+                                Width="120"
+                                VerticalAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                DisplayMemberBinding="{Binding Name}"
+                                ItemsSource="{Binding OrderFormatList}"
+                                SelectedItem="{Binding OrderFormatDisplay}">
+                                <i:Interaction.Behaviors>
+                                    <ia:EventTriggerBehavior EventName="SelectionChanged">
+                                        <ia:InvokeCommandAction Command="{Binding OrderFormatCommand}"
+                                                                CommandParameter="{Binding ElementName=NameOrderFormat, Path=SelectedItem}" />
+                                    </ia:EventTriggerBehavior>
+                                </i:Interaction.Behaviors>
+                            </ComboBox>
+                        </StackPanel>
+                        <Button
+                            Grid.Column="2"
+                            Width="75"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Command="{Binding ResetCommand}"
+                            Content="{DynamicResource Reset}"
+                            FontSize="12"
+                            Theme="{StaticResource BtnBorderStyle}" />
+                    </Grid>
+
+                </Grid>
+            </HeaderedContentControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:DownKyi.ViewModels"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             x:Class="DownKyi.Views.ViewLogin"
+             x:DataType="vm:ViewLoginViewModel">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="106" />
+            <RowDefinition Height="150*" MinHeight="120" />
+            <RowDefinition Height="100*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
+            <Button
+                Grid.Column="0"
+                Margin="10,5,0,5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding BackSpaceCommand}"
+                Theme="{StaticResource ImageBtnStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <ContentControl Width="24" Height="24">
+                        <Path
+                            Width="{Binding ArrowBack.Width}"
+                            Height="{Binding ArrowBack.Height}"
+                            Data="{Binding ArrowBack.Data}"
+                            Fill="{Binding ArrowBack.Fill}"
+                            Stretch="None" />
+                    </ContentControl>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource Login}" />
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+        <StackPanel
+            Grid.Row="1"
+            Height="86"
+            VerticalAlignment="Top"
+            Background="#FF00A0D8" />
+
+        <Image
+            Grid.Row="1"
+            Width="980"
+            Height="106"
+            Source="/Resources/login/login_top_bar.png" />
+
+        <Image
+            Name="NameLoginQrCode"
+            Grid.Row="2"
+            Width="200"
+            Height="200"
+            Opacity="{Binding LoginQrCodeOpacity}"
+            Source="{Binding LoginQrCode}" />
+
+        <Image
+            Name="NameLoginQrCodeStatus"
+            Grid.Row="2"
+            Width="80"
+            Height="80"
+            Source="/Resources/login/scan_succeed.png"
+            IsVisible="{Binding LoginQrCodeStatus}" />
+
+        <Image
+            IsVisible="False"
+            Name="NameLoginQrCodeTip"
+            Grid.Row="2"
+            MaxHeight="300"
+            Source="/Resources/login/qrcode_login_tip.png">
+            <!--<Image.Style>
+                <Style>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=nameLoginQRCode, Path=IsMouseOver}"
+                                           Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Image.Visibility" Value="Visible" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding ElementName=nameLoginQRCode, Path=IsMouseOver}"
+                                           Value="False" />
+                                <Condition Binding="{Binding ElementName=nameLoginQRCodeTip, Path=IsMouseOver}"
+                                           Value="False" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Image.Visibility" Value="Hidden" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=nameLoginQRCodeStatus, Path=Visibility}"
+                                     Value="Visible">
+                            <Setter Property="Image.Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>-->
+        </Image>
+
+
+        <Image
+            Grid.Row="3"
+            MaxHeight="160"
+            Margin="0,0,0,10"
+            Source="/Resources/login/qrcode_login_2233.png" />
+
+        <StackPanel Grid.Row="3" Margin="0,30,0,0">
+            <TextBlock
+                FontSize="18"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource ScanToLogin}"
+                TextAlignment="Center" />
+            <TextBlock
+                Margin="0,10,0,0"
+                FontSize="14"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource ScanLoginTip}"
+                TextAlignment="Center" />
+        </StackPanel>
+    </Grid>
+</UserControl>

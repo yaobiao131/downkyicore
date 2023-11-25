@@ -1,0 +1,123 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.UserSpace.ViewSeasonsSeries"
+             xmlns:vmu="clr-namespace:DownKyi.ViewModels.UserSpace"
+             x:DataType="vmu:ViewSeasonsSeriesViewModel"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <Grid RowDefinitions="*">
+        <ListBox
+            x:Name="nameSeasonsSeries"
+            ItemsSource="{Binding SeasonsSeries}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            SelectedIndex="{Binding SelectedItem}">
+            <i:Interaction.Behaviors>
+                <ia:EventTriggerBehavior EventName="SelectionChanged">
+                    <ia:InvokeCommandAction Command="{Binding SeasonsSeriesCommand}"
+                                            CommandParameter="{Binding ElementName=nameSeasonsSeries, Path=SelectedItem}" />
+                </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.Theme>
+                <ControlTheme TargetType="ListBox">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border
+                                    x:Name="Bd"
+                                    Padding="0"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ScrollViewer Focusable="False">
+                                        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </ControlTheme>
+            </ListBox.Theme>
+            <ListBox.ItemContainerTheme>
+                <ControlTheme TargetType="ListBoxItem" x:DataType="vmu:SeasonsSeries">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <StackPanel
+                                    Grid.Row="0"
+                                    Margin="30,0,30,10"
+                                    HorizontalAlignment="Left"
+                                    Orientation="Vertical">
+                                    <Border
+                                        Width="190"
+                                        Height="119"
+                                        HorizontalAlignment="Center"
+                                        CornerRadius="5"
+                                        Cursor="Hand">
+                                        <Border.Background>
+                                            <!--  长宽比：1.6  -->
+                                            <ImageBrush Source="{Binding Cover}" />
+                                        </Border.Background>
+                                        <Border
+                                            Width="70"
+                                            HorizontalAlignment="Right"
+                                            Background="{DynamicResource BrushBorderTranslucent100}"
+                                            CornerRadius="0 5 5 0">
+                                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <TextBlock
+                                                    FontSize="16"
+                                                    Foreground="{DynamicResource BrushText}"
+                                                    Text="{Binding Count}" />
+                                                <ContentControl
+                                                    Width="20"
+                                                    Height="20"
+                                                    Margin="0,10,0,0"
+                                                    VerticalAlignment="Center">
+                                                    <Path
+                                                        Width="20"
+                                                        Height="20"
+                                                        Data="{Binding TypeImage.Data}"
+                                                        Fill="#E5E9EF"
+                                                        Stretch="Uniform" />
+                                                </ContentControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </Border>
+                                    <TextBlock
+                                        MaxWidth="190"
+                                        Margin="0,5,0,0"
+                                        HorizontalAlignment="Left"
+                                        Cursor="Hand"
+                                        Text="{Binding Name}"
+                                        TextTrimming="CharacterEllipsis"
+                                        ToolTip.Tip="{Binding Name}">
+                                        <TextBlock.Styles>
+                                            <Style Selector="TextBlock">
+                                                <Setter Property="Foreground" Value="{DynamicResource BrushTextDark}" />
+                                            </Style>
+                                            <Style Selector="TextBlock:pointerover">
+                                                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                                            </Style>
+                                        </TextBlock.Styles>
+                                    </TextBlock>
+                                    <TextBlock
+                                        Name="nameZoneCount"
+                                        Margin="0,5,0,0"
+                                        HorizontalAlignment="Left"
+                                        Foreground="{DynamicResource BrushTextGrey2}"
+                                        Text="{Binding Ctime}" />
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </ControlTheme>
+            </ListBox.ItemContainerTheme>
+        </ListBox>
+    </Grid>
+</UserControl>

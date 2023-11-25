@@ -1,0 +1,237 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.CustomControl.CustomPager"
+             xmlns:vmc="clr-namespace:DownKyi.CustomControl"
+             x:DataType="vmc:CustomPagerViewModel">
+    
+    <UserControl.Resources>
+        <DrawingImage x:Key="ToLeftDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666"
+                                     Geometry="F1 M1024,1024z M0,0z M345.49,512L778.27,80.69Q791.47,66.02 791.47,46.95 791.47,27.88 777.54,13.94 763.6,-1.77635683940025E-15 744.53,-1.77635683940025E-15 725.46,-1.77635683940025E-15 710.79,14.67L247.2,478.26Q232.53,492.93 232.53,512 232.53,531.07 247.2,545.74L710.79,1009.33Q725.46,1024 744.53,1024 763.6,1024 777.54,1010.07 791.47,996.13 791.47,977.06 791.47,957.98 778.27,943.31L345.49,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToLeftHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6"
+                                     Geometry="F1 M1024,1024z M0,0z M345.49,512L778.27,80.69Q791.47,66.02 791.47,46.95 791.47,27.88 777.54,13.94 763.6,-1.77635683940025E-15 744.53,-1.77635683940025E-15 725.46,-1.77635683940025E-15 710.79,14.67L247.2,478.26Q232.53,492.93 232.53,512 232.53,531.07 247.2,545.74L710.79,1009.33Q725.46,1024 744.53,1024 763.6,1024 777.54,1010.07 791.47,996.13 791.47,977.06 791.47,957.98 778.27,943.31L345.49,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+
+        <DrawingImage x:Key="ToRightDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF666666"
+                                     Geometry="F1 M1024,1024z M0,0z M678.51,512L245.73,80.69Q232.53,66.02 232.53,46.95 232.53,27.88 246.46,13.94 260.4,-1.77635683940025E-15 279.47,-1.77635683940025E-15 298.54,-1.77635683940025E-15 313.21,14.67L776.8,478.26Q791.47,492.93 791.47,512 791.47,531.07 776.8,545.74L313.21,1009.33Q298.54,1024 279.47,1024 260.4,1024 246.46,1010.07 232.53,996.13 232.53,977.06 232.53,957.98 245.73,943.31L678.51,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        <DrawingImage x:Key="ToRightHoverDrawingImage">
+            <DrawingImage.Drawing>
+                <DrawingGroup ClipGeometry="M0,0 V1024 H1024 V0 H0 Z">
+                    <DrawingGroup.Transform>
+                        <TranslateTransform X="0" Y="1.7763568394002505E-15" />
+                    </DrawingGroup.Transform>
+                    <GeometryDrawing Brush="#FF00A1D6"
+                                     Geometry="F1 M1024,1024z M0,0z M678.51,512L245.73,80.69Q232.53,66.02 232.53,46.95 232.53,27.88 246.46,13.94 260.4,-1.77635683940025E-15 279.47,-1.77635683940025E-15 298.54,-1.77635683940025E-15 313.21,14.67L776.8,478.26Q791.47,492.93 791.47,512 791.47,531.07 776.8,545.74L313.21,1009.33Q298.54,1024 279.47,1024 260.4,1024 246.46,1010.07 232.53,996.13 232.53,977.06 232.53,957.98 245.73,943.31L678.51,512z" />
+                </DrawingGroup>
+            </DrawingImage.Drawing>
+        </DrawingImage>
+        
+        <ControlTheme x:Key="pagerBorder" TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="#FFFFFFFF" />
+            <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Cursor" Value="Hand" />
+        </ControlTheme>
+
+        <ControlTheme x:Key="pagerButton" TargetType="Button">
+            <Setter Property="Background" Value="#FFFFFFFF" />
+            <Setter Property="BorderBrush" Value="#FFD7DDE4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="MinWidth" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                            <ContentPresenter
+                                Name="content"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Content="{TemplateBinding Content}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <StackPanel Orientation="Horizontal" IsVisible="{Binding Visibility}">
+        <Button
+            x:Name="namePrevious"
+            Margin="0,0,8,0"
+            Command="{Binding PreviousCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding PreviousVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="{StaticResource ToLeftDrawingImage}" />
+        </Button>
+        
+        <Button
+            x:Name="nameFirst"
+            Margin="0,0,4,0"
+            Command="{Binding FirstCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding FirstVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding First, Mode=TwoWay}" />
+        </Button>
+        
+        <Border
+            Width="20"
+            Height="40"
+            Margin="0,0,4,0"
+            IsVisible="{Binding LeftJumpVisibility}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="#FF666666"
+                Text="&#x2022;&#x2022;&#x2022;" />
+        </Border>
+        
+        <Button
+            x:Name="namePreviousSecond"
+            Margin="0,0,4,0"
+            Command="{Binding PreviousSecondCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding PreviousSecondVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding PreviousSecond, Mode=TwoWay}" />
+        </Button>
+        
+        <Button
+            x:Name="namePreviousFirst"
+            Margin="0,0,4,0"
+            Command="{Binding PreviousFirstCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding PreviousFirstVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding PreviousFirst, Mode=TwoWay}" />
+        </Button>
+        <Border
+            Margin="0,0,4,0"
+            Background="#FF00A1D6"
+            Theme="{StaticResource pagerBorder}"
+            BorderThickness="0">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Foreground="#FFFFFFFF"
+                Text="{Binding Current, Mode=TwoWay}" />
+        </Border>
+        <Button
+            x:Name="nameNextFirst"
+            Margin="0,0,4,0"
+            Command="{Binding NextFirstCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding NextFirstVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding NextFirst, Mode=TwoWay}" />
+        </Button>
+        
+        <Button
+            x:Name="nameNextSecond"
+            Margin="0,0,4,0"
+            Command="{Binding NextSecondCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding NextSecondVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding NextSecond, Mode=TwoWay}" />
+        </Button>
+        
+        <Border
+            Width="20"
+            Height="40"
+            Margin="0,0,4,0"
+            IsVisible="{Binding RightJumpVisibility}">
+            <TextBlock
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="#FF666666"
+                Text="&#x2022;&#x2022;&#x2022;" />
+        </Border>
+        
+        <Button
+            x:Name="nameLast"
+            Margin="0,0,4,0"
+            Command="{Binding LastCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding LastVisibility}">
+            <TextBlock
+                Padding="10,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="14"
+                Text="{Binding Count}" />
+        </Button>
+        <Button
+            x:Name="nameNext"
+            Margin="4,0,4,0"
+            Command="{Binding NextCommand}"
+            Theme="{StaticResource pagerButton}"
+            IsVisible="{Binding NextVisibility}">
+            <Image
+                Width="16"
+                Height="16"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="{StaticResource ToRightDrawingImage}" />
+        </Button>
+    </StackPanel>
+</UserControl>

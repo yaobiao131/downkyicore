@@ -1,0 +1,87 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.UserSpace.ViewArchive"
+             xmlns:vmu="clr-namespace:DownKyi.ViewModels.UserSpace"
+             x:DataType="vmu:ViewArchiveViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <Grid RowDefinitions="*">
+
+        <ListBox Name="namePublicationZones"
+                 Margin="30,0,0,0"
+                 ItemsSource="{Binding PublicationZones}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 SelectedIndex="{Binding SelectedItem}">
+            <i:Interaction.Behaviors>
+                <ia:EventTriggerBehavior EventName="SelectionChanged">
+                    <ia:InvokeCommandAction Command="{Binding PublicationZonesCommand}"
+                                            CommandParameter="{Binding ElementName=namePublicationZones, Path=SelectedItem}" />
+                </ia:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.Theme>
+                <ControlTheme TargetType="ListBox">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border
+                                    x:Name="Bd"
+                                    Padding="0"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ScrollViewer Focusable="False">
+                                        <ItemsPresenter
+                                            VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </ControlTheme>
+            </ListBox.Theme>
+            <ListBox.ItemContainerTheme>
+                <ControlTheme TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}" x:DataType="vmu:PublicationZone">
+                                <StackPanel
+                                    Margin="0,20,30,0"
+                                    HorizontalAlignment="Left"
+                                    Cursor="Hand"
+                                    Orientation="Vertical">
+                                    <Image
+                                        Name="nameZoneIcon"
+                                        Width="64"
+                                        Height="64"
+                                        HorizontalAlignment="Center"
+                                        Source="{Binding Icon}" />
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock
+                                            Name="nameZoneName"
+                                            Foreground="{DynamicResource BrushTextDark}"
+                                            Text="{Binding Name}" />
+                                        <TextBlock
+                                            Name="nameZoneCount"
+                                            Margin="5,0,0,0"
+                                            Foreground="{DynamicResource BrushTextGrey2}"
+                                            Text="{Binding Count}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style Selector="^:pointerover /template/ TextBlock#nameZoneName">
+                        <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                    </Style>
+                </ControlTheme>
+            </ListBox.ItemContainerTheme>
+        </ListBox>
+    </Grid>
+</UserControl>

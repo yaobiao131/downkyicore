@@ -1,0 +1,145 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="DownKyi.Views.Friends.ViewFollower"
+             xmlns:vmf="clr-namespace:DownKyi.ViewModels.Friends"
+             xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
+             xmlns:custom="clr-namespace:DownKyi.CustomControl"
+             x:DataType="vmf:ViewFollowerViewModel"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+    <UserControl.Resources>
+        <ControlTheme x:Key="ContentListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FriendInfo">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Grid
+                            Name="nameUserPanel"
+                            Width="400"
+                            Height="80"
+                            Margin="15,15,10,5"
+                            Cursor="Hand" ColumnDefinitions="80,*">
+                            <i:Interaction.Behaviors>
+                                <ia:EventTriggerBehavior EventName="PointerReleased">
+                                    <ia:InvokeCommandAction Command="{Binding UserCommand}"
+                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                </ia:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+
+                            <Image
+                                Grid.Column="0"
+                                Width="64"
+                                Height="64"
+                                Source="{Binding Header}">
+                                <Image.Clip>
+                                    <EllipseGeometry
+                                        Center="32,32"
+                                        RadiusX="32"
+                                        RadiusY="32" />
+                                </Image.Clip>
+                            </Image>
+
+                            <Grid Grid.Column="1" RowDefinitions="40,*">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontSize="14"
+                                    Foreground="{DynamicResource BrushTextDark}"
+                                    Text="{Binding Name}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="WrapWithOverflow" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    FontSize="12"
+                                    Foreground="{DynamicResource BrushTextGrey2}"
+                                    Text="{Binding Sign}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="WrapWithOverflow"
+                                    ToolTip.Tip="{Binding Sign}" />
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </ControlTheme>
+    </UserControl.Resources>
+    <Grid>
+        <Grid Grid.Column="1" IsVisible="{Binding ContentVisibility}" RowDefinitions="*,50">
+
+            <ListBox
+                x:Name="nameContents"
+                Grid.Row="0"
+                BorderThickness="0"
+                ItemContainerTheme="{StaticResource ContentListStyle}"
+                ItemsSource="{Binding Contents}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <!--<i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="SelectionChanged">
+                        <ia:InvokeCommandAction Command="{Binding ContentsCommand}"
+                                                CommandParameter="{Binding ElementName=nameContents, Path=SelectedItems}" />
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>-->
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.Theme>
+                    <ControlTheme TargetType="ListBox">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border
+                                        x:Name="Bd"
+                                        Padding="0"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ScrollViewer Focusable="False">
+                                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </ControlTheme>
+                </ListBox.Theme>
+            </ListBox>
+
+            <custom:CustomPager
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                DataContext="{Binding Pager}" />
+        </Grid>
+        <!--  加载gif  -->
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Orientation="Vertical"
+            IsVisible="{Binding LoadingVisibility}">
+            <custom:Loading
+                Width="40"
+                Height="40"
+                Foreground="Gray"
+                IsActive="{Binding Loading}" />
+            <TextBlock
+                Margin="0,10,0,0"
+                FontSize="14"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource FollowerWait}" />
+        </StackPanel>
+
+
+        <!--  没有数据提示  -->
+        <Image
+            Width="256"
+            Height="256"
+            Source="/Resources/no-data.png"
+            IsVisible="{Binding NoDataVisibility}" />
+    </Grid>
+</UserControl>
