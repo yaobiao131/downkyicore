@@ -1,5 +1,18 @@
-# 哔哩下载姬(多平台版)
+# 哔哩下载姬(跨平台版)
 
 ## 介绍
 
-- 基于[哔哩下载姬window版](https://github.com/leiurayer/downkyi)和[Avalonia UI](https://github.com/AvaloniaUI/Avalonia.Xaml.Behaviors)制作的跨平台版本(支持window、linux、macos)
+- 基于[哔哩下载姬window版](https://github.com/leiurayer/downkyi)和[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)制作的跨平台版本(支持window、linux、macOS)。
+- 开发这个版本目的是由于本人日常使用macOS，当我想下载up视频是偶然间发现了[哔哩下载姬window版](https://github.com/leiurayer/downkyi)，发现很好用，就是不能支持macOS使用，就想看能不能基于跨平台方案重新开发。
+
+
+## 使用说明
+- 需要.net 6及以上运行环境
+
+## 免责申明
+
+1. 本软件只提供视频解析，不提供任何资源上传、存储到服务器的功能。
+2. 本软件仅解析来自B站的内容，不会对解析到的音视频进行二次编码，部分视频会进行有限的格式转换、拼接等操作。
+3. 本软件解析得到的所有内容均来自B站UP主上传、分享，其版权均归原作者所有。内容提供者、上传者（UP主）应对其提供、上传的内容承担全部责任。
+4. **本软件提供的所有内容，仅可用作学习交流使用，未经原作者授权，禁止用于其他用途。请在下载24小时内删除。为尊重作者版权，请前往资源的原始发布网站观看，支持原创，谢谢。**
+5. 因使用本软件产生的版权问题，软件作者概不负责。
