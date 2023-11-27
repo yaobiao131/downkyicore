@@ -176,6 +176,7 @@
     <system:String x:Key="AfterDownloadOperationNone">无</system:String>
     <system:String x:Key="AfterDownloadOperationCloseApp">关闭程序</system:String>
     <system:String x:Key="AfterDownloadOperationCloseSystem">关闭计算机</system:String>
+    <system:String x:Key="FFMpegLocation">FFMpeg位置：</system:String>
     <system:String x:Key="ListenClipboard">监听剪贴板</system:String>
     <system:String x:Key="VideoAutoParse">视频自动解析</system:String>
     <system:String x:Key="VideoParseScope">视频解析范围：</system:String>

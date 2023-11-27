@@ -203,12 +203,12 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private DelegateCommand inputSearchCommand;
 
     public DelegateCommand InputSearchCommand =>
-        inputSearchCommand ?? (inputSearchCommand = new DelegateCommand(ExcuteInputSearchCommand));
+        inputSearchCommand ?? (inputSearchCommand = new DelegateCommand(ExecuteInputSearchCommand));
 
     /// <summary>
     /// 搜索视频输入事件
     /// </summary>
-    private async void ExcuteInputSearchCommand()
+    private async void ExecuteInputSearchCommand()
     {
         await Task.Run(() =>
         {
