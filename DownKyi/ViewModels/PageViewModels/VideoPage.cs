@@ -124,7 +124,7 @@ public class VideoPage : BindableBase
         }
         else
         {
-            if (AudioQualityFormatList.Contains(dolby))
+            if (AudioQualityFormatList != null && AudioQualityFormatList.Contains(dolby))
             {
                 AudioQualityFormatList.Remove(dolby);
                 AudioQualityFormat = AudioQualityFormatList[0];
