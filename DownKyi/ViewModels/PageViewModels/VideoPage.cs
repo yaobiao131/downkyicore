@@ -70,7 +70,13 @@ public class VideoPage : BindableBase
     public string AudioQualityFormat
     {
         get => audioQualityFormat;
-        set => SetProperty(ref audioQualityFormat, value);
+        set
+        {
+            if (value != null)
+            {
+                SetProperty(ref audioQualityFormat, value);
+            }
+        }
     }
 
     private List<VideoQuality> videoQualityList;

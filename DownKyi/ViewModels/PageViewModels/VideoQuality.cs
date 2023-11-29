@@ -34,6 +34,12 @@ public class VideoQuality : BindableBase
     public string SelectedVideoCodec
     {
         get => selectedVideoCodec;
-        set => SetProperty(ref selectedVideoCodec, value);
+        set
+        {
+            if (value != null)
+            {
+                SetProperty(ref selectedVideoCodec, value);
+            }
+        }
     }
 }
