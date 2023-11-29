@@ -440,7 +440,7 @@ public class ViewNetworkViewModel : ViewModelBase
     /// 下载器选择事件
     /// </summary>
     /// <param name="parameter"></param>
-    private void ExecuteSelectDownloaderCommand(string parameter)
+    private async void ExecuteSelectDownloaderCommand(string parameter)
     {
         Downloader downloader;
         switch (parameter)
@@ -463,7 +463,7 @@ public class ViewNetworkViewModel : ViewModelBase
         PublishTip(isSucceed);
 
         AlertService alertService = new AlertService(dialogService);
-        ButtonResult result = alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
+        ButtonResult result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
         if (result == ButtonResult.OK)
         {
             (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).Shutdown(0);

@@ -160,10 +160,10 @@ namespace DownKyi.ViewModels.DownloadManager
         /// <summary>
         /// 删除事件
         /// </summary>
-        private void ExecuteRemoveVideoCommand()
+        private async void ExecuteRemoveVideoCommand()
         {
             AlertService alertService = new AlertService(DialogService);
-            ButtonResult result = alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
+            ButtonResult result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
             if (result != ButtonResult.OK)
             {
                 return;

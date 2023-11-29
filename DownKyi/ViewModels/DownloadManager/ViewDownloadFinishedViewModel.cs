@@ -111,7 +111,7 @@ namespace DownKyi.ViewModels.DownloadManager
         private async void ExecuteClearAllDownloadedCommand()
         {
             AlertService alertService = new AlertService(dialogService);
-            ButtonResult result = alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
+            ButtonResult result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
             if (result != ButtonResult.OK)
             {
                 return;

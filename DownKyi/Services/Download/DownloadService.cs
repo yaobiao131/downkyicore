@@ -487,7 +487,7 @@ public abstract class DownloadService
 
                 AlertService alertService = new AlertService(dialogService);
                 ButtonResult result =
-                    alertService.ShowError($"{path}{DictionaryResource.GetString("DirectoryError")}");
+                    await alertService.ShowError($"{path}{DictionaryResource.GetString("DirectoryError")}");
 
                 return;
             }

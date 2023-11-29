@@ -1,5 +1,6 @@
 ﻿using System;
 using DownKyi.Images;
+using DownKyi.Models;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -15,16 +16,16 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
 
     public string Title
     {
-        get { return title; }
-        set { SetProperty(ref title, value); }
+        get => title;
+        set => SetProperty(ref title, value);
     }
 
     private VectorImage closeIcon;
 
     public VectorImage CloseIcon
     {
-        get { return closeIcon; }
-        set { SetProperty(ref closeIcon, value); }
+        get => closeIcon;
+        set => SetProperty(ref closeIcon, value);
     }
 
     #endregion
@@ -33,14 +34,14 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
     {
         #region 属性初始化
 
-        // Title = new AppInfo().Name;
-        // CloseIcon = new VectorImage
-        // {
-        //     Height = SystemIcon.Instance().Close.Height,
-        //     Width = SystemIcon.Instance().Close.Width,
-        //     Data = SystemIcon.Instance().Close.Data,
-        //     Fill = SystemIcon.Instance().Close.Fill
-        // };
+        Title = new AppInfo().Name;
+        CloseIcon = new VectorImage
+        {
+            Height = SystemIcon.Instance().Close.Height,
+            Width = SystemIcon.Instance().Close.Width,
+            Data = SystemIcon.Instance().Close.Data,
+            Fill = SystemIcon.Instance().Close.Fill
+        };
 
         #endregion
     }

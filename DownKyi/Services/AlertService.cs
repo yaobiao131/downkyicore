@@ -1,4 +1,5 @@
-﻿using DownKyi.Images;
+﻿using System.Threading.Tasks;
+using DownKyi.Images;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
 using Prism.Services.Dialogs;
@@ -20,11 +21,11 @@ public class AlertService
     /// <param name="message"></param>
     /// <param name="buttonNumber"></param>
     /// <returns></returns>
-    public ButtonResult ShowInfo(string message, int buttonNumber = 2)
+    public async Task<ButtonResult> ShowInfo(string message, int buttonNumber = 2)
     {
         VectorImage image = SystemIcon.Instance().Info;
         string title = DictionaryResource.GetString("Info");
-        return ShowMessage(image, title, message, buttonNumber);
+        return await ShowMessage(image, title, message, buttonNumber);
     }
 
     /// <summary>
@@ -33,11 +34,11 @@ public class AlertService
     /// <param name="message"></param>
     /// <param name="buttonNumber"></param>
     /// <returns></returns>
-    public ButtonResult ShowWarning(string message, int buttonNumber = 1)
+    public async Task<ButtonResult> ShowWarning(string message, int buttonNumber = 1)
     {
         VectorImage image = SystemIcon.Instance().Warning;
         string title = DictionaryResource.GetString("Warning");
-        return ShowMessage(image, title, message, buttonNumber);
+        return await ShowMessage(image, title, message, buttonNumber);
     }
 
     /// <summary>
@@ -45,30 +46,43 @@ public class AlertService
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public ButtonResult ShowError(string message)
+    public async Task<ButtonResult> ShowError(string message)
     {
         VectorImage image = SystemIcon.Instance().Error;
         string title = DictionaryResource.GetString("Error");
-        return ShowMessage(image, title, message, 1);
+        return await ShowMessage(image, title, message, 1);
     }
 
-    public ButtonResult ShowMessage(VectorImage image, string type, string message, int buttonNumber)
+    public async Task<ButtonResult> ShowMessage(VectorImage image, string type, string message, int buttonNumber)
     {
-        ButtonResult result = ButtonResult.None;
+        var result = ButtonResult.None;
         if (dialogService == null)
         {
             return result;
         }
 
-        DialogParameters param = new DialogParameters
+        var param = new DialogParameters
         {
             { "image", image },
             { "title", type },
             { "message", message },
             { "button_number", buttonNumber }
         };
+
+        var isEnd = false;
         dialogService.ShowDialog(ViewAlertDialogViewModel.Tag, param,
-            buttonResult => { result = buttonResult.Result; });
+            buttonResult =>
+            {
+                result = buttonResult.Result;
+                isEnd = true;
+            });
+        await Task.Run(() =>
+        {
+            while (true)
+            {
+                if (isEnd) break;
+            }
+        });
         return result;
     }
 }
