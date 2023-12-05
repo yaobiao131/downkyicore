@@ -6,7 +6,8 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vms:ViewVideoViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:id="clr-namespace:Avalonia.Xaml.Interactions.Draggable;assembly=Avalonia.Xaml.Interactions.Draggable">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
 
@@ -223,7 +224,6 @@
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource FileName}" />
-
                     <ListBox
                         x:Name="nameSelectedFileName"
                         Grid.Row="1"
@@ -240,9 +240,14 @@
                         </i:Interaction.Behaviors>
                         <ListBox.ItemContainerTheme>
                             <ControlTheme BasedOn="{StaticResource TagItem2Style}" TargetType="{x:Type ListBoxItem}">
-                                <!-- <Setter Property="AllowDrop" Value="True" /> -->
-                                <!-- <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectedFileName_PreviewMouseLeftButtonDown" /> -->
-                                <!-- <EventSetter Event="Drop" Handler="SelectedFileName_Drop" /> -->
+                                <Setter Property="DragDrop.AllowDrop" Value="True" />
+                                <Setter Property="(i:Interaction.Behaviors)">
+                                    <i:BehaviorCollectionTemplate>
+                                        <i:BehaviorCollection>
+                                            <id:ItemDragBehavior Orientation="Horizontal" />
+                                        </i:BehaviorCollection>
+                                    </i:BehaviorCollectionTemplate>
+                                </Setter>
                             </ControlTheme>
                         </ListBox.ItemContainerTheme>
                     </ListBox>
