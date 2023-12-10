@@ -14,7 +14,8 @@ public static class WbiSign
     /// <returns></returns>
     private static string GetMixinKey(string origin)
     {
-        int[] mixinKeyEncTab = {
+        int[] mixinKeyEncTab =
+        {
             46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49,
             33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41, 13, 37, 48, 7, 16, 24, 55, 40,
             61, 26, 17, 0, 1, 60, 51, 30, 4, 22, 25, 54, 21, 56, 59, 6, 63, 57, 62, 11,
@@ -35,7 +36,7 @@ public static class WbiSign
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public static string ParametersToQuery(Dictionary<string, object> parameters)
+    public static string ParametersToQuery(Dictionary<string, string> parameters)
     {
         var keys = parameters.Keys.ToList();
         var queryList = new List<string>();
@@ -53,9 +54,9 @@ public static class WbiSign
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public static Dictionary<string, object> EncodeWbi(Dictionary<string, object> parameters)
+    public static Dictionary<string, string> EncodeWbi(Dictionary<string, object> parameters)
     {
-        return EncodeWbi(parameters, GetKey().Item1, GetKey().Item2);
+        return EncWbi(parameters, GetKey().Item1, GetKey().Item2);
     }
 
     /// <summary>
@@ -65,46 +66,38 @@ public static class WbiSign
     /// <param name="imgKey"></param>
     /// <param name="subKey"></param>
     /// <returns></returns>
-    public static Dictionary<string, object> EncodeWbi(Dictionary<string, object> parameters, string imgKey,
+    private static Dictionary<string, string> EncWbi(Dictionary<string, object> parameters, string imgKey,
         string subKey)
     {
-        var mixinKey = GetMixinKey(imgKey + subKey);
-
-        var chrFilter = new Regex("[!'()*]");
-
-        var newParameters = new Dictionary<string, object>
-        {
-            { "wts", (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds }
-        };
-
+        var paraStr = new Dictionary<string, string>();
         foreach (var para in parameters)
         {
             var key = para.Key;
             var value = para.Value.ToString();
-
-            var encodedValue = chrFilter.Replace(value, "");
-
-            newParameters.Add(Uri.EscapeDataString(key), Uri.EscapeDataString(encodedValue));
+            paraStr.Add(key, value);
         }
 
-        var keys = newParameters.Keys.ToList();
-        keys.Sort();
+        var mixinKey = GetMixinKey(imgKey + subKey);
+        var currTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        //添加 wts 字段
+        paraStr["wts"] = currTime;
+        // 按照 key 重排参数
+        paraStr = paraStr.OrderBy(p => p.Key).ToDictionary(p => p.Key, p => p.Value);
+        //过滤 value 中的 "!'()*" 字符
+        paraStr = paraStr.ToDictionary(
+            kvp => kvp.Key,
+            kvp => new string(kvp.Value.Where(chr => !"!'()*".Contains(chr)).ToArray())
+        );
+        // 序列化参数
+        var query = new FormUrlEncodedContent(paraStr).ReadAsStringAsync().Result;
+        //计算 w_rid
+        using var md5 = MD5.Create();
+        //using MD5 md5 = MD5.Create();
+        var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(query + mixinKey));
+        var wbiSign = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+        paraStr["w_rid"] = wbiSign;
 
-        var queryList = new List<string>();
-        foreach (var item in keys)
-        {
-            var value = newParameters[item];
-            queryList.Add($"{item}={value}");
-        }
-
-        var queryString = string.Join("&", queryList);
-        var md5Hasher = MD5.Create();
-        var hashStr = queryString + mixinKey;
-        var hashedQueryString = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(hashStr));
-        var wbiSign = BitConverter.ToString(hashedQueryString).Replace("-", "").ToLower();
-
-        newParameters.Add("w_rid", wbiSign);
-        return newParameters;
+        return paraStr;
     }
 
     public static Tuple<string, string> GetKey()
