@@ -205,7 +205,7 @@ public static class VideoStream
     /// <returns></returns>
     private static PlayUrl GetPlayUrl(string url)
     {
-        string referer = "https://www.bilibili.com";
+        string referer = "https://m.bilibili.com";
         string response = WebClient.RequestWeb(url, referer);
 
         try

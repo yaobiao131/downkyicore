@@ -66,7 +66,7 @@ internal static class WebClient
             // 构造cookie
             if (!url.Contains("getLogin"))
             {
-                request.Headers["origin"] = "https://www.bilibili.com";
+                request.Headers["origin"] = "https://m.bilibili.com";
 
                 CookieContainer cookies = LoginHelper.GetLoginInfoCookies();
                 if (cookies != null)
@@ -74,6 +74,8 @@ internal static class WebClient
                     request.CookieContainer = cookies;
                 }
             }
+
+            request.Proxy = new WebProxy("http://localhost:8080");
 
             string html = string.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
