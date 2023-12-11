@@ -23,6 +23,7 @@ namespace DownKyi.ViewModels.DownloadManager
         #region 页面属性申明
 
         private ObservableCollection<DownloadingItem> downloadingList;
+
         public ObservableCollection<DownloadingItem> DownloadingList
         {
             get => downloadingList;
@@ -31,7 +32,8 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #endregion
 
-        public ViewDownloadingViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
+        public ViewDownloadingViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
+            eventAggregator, dialogService)
         {
             // 初始化DownloadingList
             DownloadingList = App.DownloadingList;
@@ -43,14 +45,17 @@ namespace DownKyi.ViewModels.DownloadManager
                 }
             });
             SetDialogService();
-
         }
 
         #region 命令申明
 
         // 暂停所有下载事件
         private DelegateCommand pauseAllDownloadingCommand;
-        public DelegateCommand PauseAllDownloadingCommand => pauseAllDownloadingCommand ?? (pauseAllDownloadingCommand = new DelegateCommand(ExecutePauseAllDownloadingCommand));
+
+        public DelegateCommand PauseAllDownloadingCommand => pauseAllDownloadingCommand ??
+                                                             (pauseAllDownloadingCommand =
+                                                                 new DelegateCommand(
+                                                                     ExecutePauseAllDownloadingCommand));
 
         /// <summary>
         /// 暂停所有下载事件
@@ -93,7 +98,11 @@ namespace DownKyi.ViewModels.DownloadManager
 
         // 继续所有下载事件
         private DelegateCommand continueAllDownloadingCommand;
-        public DelegateCommand ContinueAllDownloadingCommand => continueAllDownloadingCommand ?? (continueAllDownloadingCommand = new DelegateCommand(ExecuteContinueAllDownloadingCommand));
+
+        public DelegateCommand ContinueAllDownloadingCommand => continueAllDownloadingCommand ??
+                                                                (continueAllDownloadingCommand =
+                                                                    new DelegateCommand(
+                                                                        ExecuteContinueAllDownloadingCommand));
 
         /// <summary>
         /// 继续所有下载事件
@@ -139,33 +148,32 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 删除所有下载事件
-        private DelegateCommand deleteAllDownloadingCommand;
-        public DelegateCommand DeleteAllDownloadingCommand => deleteAllDownloadingCommand ?? (deleteAllDownloadingCommand = new DelegateCommand(ExecuteDeleteAllDownloadingCommand));
+        private DelegateCommand? deleteAllDownloadingCommand;
+
+        public DelegateCommand DeleteAllDownloadingCommand => deleteAllDownloadingCommand ??=
+            new DelegateCommand(ExecuteDeleteAllDownloadingCommand);
 
         /// <summary>
         /// 删除所有下载事件
         /// </summary>
         private async void ExecuteDeleteAllDownloadingCommand()
         {
-            // AlertService alertService = new AlertService(dialogService);
-            // ButtonResult result = alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
-            // if (result != ButtonResult.OK)
-            // {
-            //     return;
-            // }
+            var alertService = new AlertService(dialogService);
+            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
+            if (result != ButtonResult.OK)
+            {
+                return;
+            }
 
             // 使用Clear()不能触发NotifyCollectionChangedAction.Remove事件
             // 因此遍历删除
             // DownloadingList中元素被删除后不能继续遍历
             await Task.Run(() =>
             {
-                List<DownloadingItem> list = DownloadingList.ToList();
-                foreach (DownloadingItem item in list)
+                var list = DownloadingList.ToList();
+                foreach (var item in list)
                 {
-                    App.PropertyChangeAsync(new Action(() =>
-                    {
-                        App.DownloadingList.Remove(item);
-                    }));
+                    App.PropertyChangeAsync(() => { App.DownloadingList.Remove(item); });
                 }
             });
         }
@@ -201,6 +209,5 @@ namespace DownKyi.ViewModels.DownloadManager
 
             SetDialogService();
         }
-
     }
 }

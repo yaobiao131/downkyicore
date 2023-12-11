@@ -209,22 +209,22 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 下载列表删除事件
-        private DelegateCommand deleteCommand;
-        public DelegateCommand DeleteCommand => deleteCommand ?? (deleteCommand = new DelegateCommand(ExecuteDeleteCommand));
+        private DelegateCommand? deleteCommand;
+        public DelegateCommand DeleteCommand => deleteCommand ??= new DelegateCommand(ExecuteDeleteCommand);
 
         /// <summary>
         /// 下载列表删除事件
         /// </summary>
-        private void ExecuteDeleteCommand()
+        private async void ExecuteDeleteCommand()
         {
-            // AlertService alertService = new AlertService(DialogService);
-            // ButtonResult result = alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
-            // if (result != ButtonResult.OK)
-            // {
-            //     return;
-            // }
-            //
-            // App.DownloadingList.Remove(this);
+            var alertService = new AlertService(DialogService);
+            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
+            if (result != ButtonResult.OK)
+            {
+                return;
+            }
+            
+            App.DownloadingList.Remove(this);
         }
 
         #endregion
