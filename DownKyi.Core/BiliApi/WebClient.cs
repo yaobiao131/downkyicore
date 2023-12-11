@@ -75,8 +75,6 @@ internal static class WebClient
                 }
             }
 
-            request.Proxy = new WebProxy("http://localhost:8080");
-
             string html = string.Empty;
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             {
