@@ -104,19 +104,6 @@
                                                 FontSize="12"
                                                 Foreground="{DynamicResource BrushTextDark}"
                                                 Text="{Binding StringFormat={} {0}, Path=DownloadStatusTitle}">
-
-                                                <!--<TextBlock.Style>
-                                                    <Style TargetType="{x:Type TextBlock}">
-                                                        <Setter Property="Text"
-                                                                Value="{Binding StringFormat={} {0}, Path=DownloadStatusTitle}" />
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding DownloadContent}" Value="">
-                                                                <Setter Property="Text"
-                                                                        Value="{Binding DownloadStatusTitle}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>-->
                                                 <i:Interaction.Behaviors>
                                                     <ia:DataTriggerBehavior Binding="{Binding DownloadContent}"
                                                                             Value="">

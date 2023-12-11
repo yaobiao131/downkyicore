@@ -286,15 +286,82 @@
                     BorderThickness="1"
                     BorderBrush="Gray"
                     CanUserSortColumns="False"
+                    CanUserResizeColumns="True"
                     IsReadOnly="True"
                     ItemsSource="{ReflectionBinding ElementName=NameVideoSections,Path=SelectedItem.VideoPages,Mode=TwoWay}"
                     SelectionMode="Extended">
+                    <DataGrid.ColumnHeaderTheme>
+                        <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="Background" Value="{DynamicResource BrushHeaderGrey}" />
+                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                        <Grid>
+                                            <Border
+                                                x:Name="HeaderBorder"
+                                                Height="30"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition MaxHeight="10" />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Border Grid.RowSpan="2" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter
+                                                            x:Name="HeaderContent"
+                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                            Content="{TemplateBinding Content}"
+                                                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                            RecognizesAccessKey="True" />
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                            <Canvas>
+                                                <Thumb x:Name="PART_HeaderGripper">
+                                                    <Thumb.Theme>
+                                                        <ControlTheme TargetType="{x:Type Thumb}">
+                                                            <Setter Property="Canvas.Right" Value="-9" />
+                                                            <Setter Property="Width" Value="18" />
+                                                            <Setter Property="Height"
+                                                                    Value="{Binding Bounds.Size.Height, RelativeSource={RelativeSource TemplatedParent}}" />
+                                                            <Setter Property="Padding" Value="0" />
+                                                            <Setter Property="Background" Value="White" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                        <Border Padding="{TemplateBinding Padding}"
+                                                                            Background="Transparent">
+                                                                            <Rectangle
+                                                                                Width="1"
+                                                                                HorizontalAlignment="Center"
+                                                                                Fill="{TemplateBinding Background}" />
+                                                                        </Border>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </ControlTheme>
+                                                    </Thumb.Theme>
+                                                </Thumb>
+                                            </Canvas>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </ControlTheme>
+                    </DataGrid.ColumnHeaderTheme>
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="SelectionChanged">
                             <ia:InvokeCommandAction Command="{Binding VideoPagesCommand}"
                                                     CommandParameter="{Binding ElementName=NameVideoPages1,Path=SelectedItems}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
+                    <DataGrid.RowTheme>
+                        
+                    </DataGrid.RowTheme>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="50"
@@ -386,6 +453,11 @@
                         Watermark="{DynamicResource SearchVideoByName}"
                         Text="{Binding Path=InputSearchText, Mode=TwoWay}"
                         TextWrapping="Wrap">
+                        <i:Interaction.Behaviors>
+                            <iac:KeyUpBehavior Key="Enter">
+                                <ia:InvokeCommandAction Command="{Binding InputSearchCommand}" />
+                            </iac:KeyUpBehavior>
+                        </i:Interaction.Behaviors>
                     </TextBox>
                     <Button
                         Grid.Column="4"

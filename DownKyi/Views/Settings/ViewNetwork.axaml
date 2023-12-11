@@ -6,7 +6,8 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:iac="clr-namespace:DownKyi.CustomAction">
     <ScrollViewer>
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -17,7 +18,7 @@
             </StackPanel>
 
             <CheckBox
-                Name="nameUseSSL"
+                Name="NameUseSsl"
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -26,7 +27,7 @@
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding UseSSL, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}"/>
+                Theme="{StaticResource CheckBoxStyle}" />
 
             <TextBlock
                 Margin="0,20,0,0"
@@ -35,11 +36,18 @@
                 Text="{DynamicResource UserAgent}" />
 
             <TextBox
-                Name="nameUserAgent"
+                Name="NameUserAgent"
                 Height="25"
                 Margin="0,10,0,0"
                 HorizontalAlignment="Stretch"
-                Text="{Binding UserAgent}"/>
+                Text="{Binding UserAgent}">
+                <i:Interaction.Behaviors>
+                    <iac:KeyUpBehavior Key="Enter">
+                        <ia:InvokeCommandAction Command="{Binding UserAgentCommand}"
+                                                CommandParameter="{Binding ElementName=NameUserAgent,Path=Text}" />
+                    </iac:KeyUpBehavior>
+                </i:Interaction.Behaviors>
+            </TextBox>
 
             <StackPanel Margin="0,20,0,0" Orientation="Vertical">
                 <TextBlock
@@ -80,7 +88,7 @@
                 Margin="0,20,0,0"
                 Background="{DynamicResource BrushBorder}" />
 
-            <StackPanel x:Name="nameBuiltin">
+            <StackPanel x:Name="NameBuiltin">
                 <i:Interaction.Behaviors>
                     <ia:DataTriggerBehavior Binding="{Binding Builtin}" Value="True">
                         <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
@@ -97,7 +105,7 @@
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource MaxCurrentDownloads}" />
                     <ComboBox
-                        Name="nameMaxCurrentDownloads"
+                        Name="NameMaxCurrentDownloads"
                         Width="100"
                         VerticalContentAlignment="Center"
                         ItemsSource="{Binding MaxCurrentDownloads}"
@@ -105,7 +113,7 @@
                         <i:Interaction.Behaviors>
                             <ia:EventTriggerBehavior EventName="SelectionChanged">
                                 <ia:InvokeCommandAction Command="{Binding MaxCurrentDownloadsCommand}"
-                                                        CommandParameter="{Binding ElementName=nameMaxCurrentDownloads, Path=SelectedValue}" />
+                                                        CommandParameter="{Binding ElementName=NameMaxCurrentDownloads, Path=SelectedValue}" />
                             </ia:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ComboBox>
@@ -119,7 +127,7 @@
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource Split}" />
                     <ComboBox
-                        Name="nameSplits"
+                        Name="NameSplits"
                         Width="100"
                         VerticalContentAlignment="Center"
                         ItemsSource="{Binding Splits}"
@@ -127,14 +135,14 @@
                         <i:Interaction.Behaviors>
                             <ia:EventTriggerBehavior EventName="SelectionChanged">
                                 <ia:InvokeCommandAction Command="{Binding SplitsCommand}"
-                                                        CommandParameter="{Binding ElementName=nameSplits, Path=SelectedValue}" />
+                                                        CommandParameter="{Binding ElementName=NameSplits, Path=SelectedValue}" />
                             </ia:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ComboBox>
                 </StackPanel>
 
                 <CheckBox
-                    Name="nameIsHttpProxy"
+                    Name="NameIsHttpProxy"
                     Margin="0,20,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
