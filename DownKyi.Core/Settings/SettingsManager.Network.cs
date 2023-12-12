@@ -1,5 +1,7 @@
 ﻿// using DownKyi.Core.Aria2cNet.Server;
 
+using DownKyi.Core.Aria2cNet.Server;
+
 namespace DownKyi.Core.Settings
 {
     public partial class SettingsManager
@@ -38,7 +40,7 @@ namespace DownKyi.Core.Settings
         private readonly int ariaListenPort = 6800;
 
         // Aria日志等级
-        // private readonly AriaConfigLogLevel ariaLogLevel = AriaConfigLogLevel.INFO;
+        private readonly AriaConfigLogLevel ariaLogLevel = AriaConfigLogLevel.INFO;
 
         // Aria单文件最大线程数
         private readonly int ariaSplit = 5;
@@ -50,7 +52,7 @@ namespace DownKyi.Core.Settings
         private readonly int ariaMaxDownloadLimit = 0;
 
         // Aria文件预分配
-        // private readonly AriaConfigFileAllocation ariaFileAllocation = AriaConfigFileAllocation.NONE;
+        private readonly AriaConfigFileAllocation ariaFileAllocation = AriaConfigFileAllocation.NONE;
 
         // Aria HttpProxy代理
         private readonly AllowStatus isAriaHttpProxy = AllowStatus.NO;
@@ -272,7 +274,6 @@ namespace DownKyi.Core.Settings
             // 第一次获取，先设置默认值
             SetHttpProxyListenPort(httpProxyListenPort);
             return httpProxyListenPort;
-
         }
 
         /// <summary>
@@ -374,28 +375,29 @@ namespace DownKyi.Core.Settings
         /// 获取Aria日志等级
         /// </summary>
         /// <returns></returns>
-        // public AriaConfigLogLevel GetAriaLogLevel()
-        // {
-        //     appSettings = GetSettings();
-        //     if (appSettings.Network.AriaLogLevel == AriaConfigLogLevel.NOT_SET)
-        //     {
-        //         // 第一次获取，先设置默认值
-        //         SetAriaLogLevel(ariaLogLevel);
-        //         return ariaLogLevel;
-        //     }
-        //     return appSettings.Network.AriaLogLevel;
-        // }
+        public AriaConfigLogLevel GetAriaLogLevel()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Network.AriaLogLevel == AriaConfigLogLevel.NOT_SET)
+            {
+                // 第一次获取，先设置默认值
+                SetAriaLogLevel(ariaLogLevel);
+                return ariaLogLevel;
+            }
+
+            return appSettings.Network.AriaLogLevel;
+        }
 
         /// <summary>
         /// 设置Aria日志等级
         /// </summary>
         /// <param name="ariaLogLevel"></param>
         /// <returns></returns>
-        // public bool SetAriaLogLevel(AriaConfigLogLevel ariaLogLevel)
-        // {
-        //     appSettings.Network.AriaLogLevel = ariaLogLevel;
-        //     return SetSettings();
-        // }
+        public bool SetAriaLogLevel(AriaConfigLogLevel ariaLogLevel)
+        {
+            appSettings.Network.AriaLogLevel = ariaLogLevel;
+            return SetSettings();
+        }
 
         /// <summary>
         /// 获取Aria单文件最大线程数
@@ -485,28 +487,29 @@ namespace DownKyi.Core.Settings
         /// 获取Aria文件预分配
         /// </summary>
         /// <returns></returns>
-        // public AriaConfigFileAllocation GetAriaFileAllocation()
-        // {
-        //     appSettings = GetSettings();
-        //     if (appSettings.Network.AriaFileAllocation == AriaConfigFileAllocation.NOT_SET)
-        //     {
-        //         // 第一次获取，先设置默认值
-        //         SetAriaFileAllocation(ariaFileAllocation);
-        //         return ariaFileAllocation;
-        //     }
-        //     return appSettings.Network.AriaFileAllocation;
-        // }
+        public AriaConfigFileAllocation GetAriaFileAllocation()
+        {
+            appSettings = GetSettings();
+            if (appSettings.Network.AriaFileAllocation == AriaConfigFileAllocation.NOT_SET)
+            {
+                // 第一次获取，先设置默认值
+                SetAriaFileAllocation(ariaFileAllocation);
+                return ariaFileAllocation;
+            }
+
+            return appSettings.Network.AriaFileAllocation;
+        }
 
         /// <summary>
         /// 设置Aria文件预分配
         /// </summary>
         /// <param name="ariaFileAllocation"></param>
         /// <returns></returns>
-        // public bool SetAriaFileAllocation(AriaConfigFileAllocation ariaFileAllocation)
-        // {
-        //     appSettings.Network.AriaFileAllocation = ariaFileAllocation;
-        //     return SetSettings();
-        // }
+        public bool SetAriaFileAllocation(AriaConfigFileAllocation ariaFileAllocation)
+        {
+            appSettings.Network.AriaFileAllocation = ariaFileAllocation;
+            return SetSettings();
+        }
 
         /// <summary>
         /// 获取是否开启Aria http代理

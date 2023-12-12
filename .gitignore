@@ -1,6 +1,6 @@
 .idea/
 .vs/
-.vs_code/
+.vscode/
 **/.DS_Store
 
 */**/obj

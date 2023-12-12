@@ -201,7 +201,8 @@ public partial class App : PrismApplication
                     (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
             case Downloader.ARIA:
-                // downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                _downloadService = new AriaDownloadService(DownloadingList, DownloadedList,
+                    (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
             case Downloader.CUSTOM_ARIA:
                 // downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));

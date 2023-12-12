@@ -13,7 +13,7 @@ public static class ImageHelper
     {
         return resourceUri.Scheme switch
         {
-            "avares" => new Bitmap(AssetLoader.Open(resourceUri)),
+            "avares" => LoadFromAvares(resourceUri),
             "file" => LoadFromFile(resourceUri),
             _ => new Bitmap("")
         };

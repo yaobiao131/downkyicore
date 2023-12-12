@@ -4,22 +4,28 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RuntimeIdentifier>$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</RuntimeIdentifier>
     </PropertyGroup>
-
     <ItemGroup>
-      <PackageReference Include="Avalonia" Version="11.1.999-cibuild0042781-beta" />
-      <PackageReference Include="FFMpegCore" Version="5.1.0" />
-      <PackageReference Include="Google.Protobuf" Version="3.25.1" />
-      <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-      <PackageReference Include="QRCoder" Version="1.4.3" />
-      <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.7" />
+        <PackageReference Include="Avalonia" Version="11.1.999-cibuild0042781-beta"/>
+        <PackageReference Include="FFMpegCore" Version="5.1.0"/>
+        <PackageReference Include="Google.Protobuf" Version="3.25.1"/>
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.0"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="QRCoder" Version="1.4.3"/>
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.7"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="Avalonia.Base">
-        <HintPath>..\DownKyi\bin\Debug\net6.0\Avalonia.Base.dll</HintPath>
-      </Reference>
+        <Reference Include="Avalonia.Base">
+            <HintPath>..\DownKyi\bin\Debug\net6.0\Avalonia.Base.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Binary/$(RuntimeIdentifier)/aria2/*" Link="aria2/%(Filename)%(Extension)">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

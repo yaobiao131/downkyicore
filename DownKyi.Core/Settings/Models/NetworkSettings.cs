@@ -1,4 +1,6 @@
-﻿namespace DownKyi.Core.Settings.Models;
+﻿using DownKyi.Core.Aria2cNet.Server;
+
+namespace DownKyi.Core.Settings.Models;
 
 /// <summary>
 /// 网络
@@ -29,11 +31,11 @@ public class NetworkSettings
 
     public int AriaListenPort { get; set; } = -1;
 
-    // public AriaConfigLogLevel AriaLogLevel { get; set; } = AriaConfigLogLevel.NOT_SET;
+    public AriaConfigLogLevel AriaLogLevel { get; set; } = AriaConfigLogLevel.NOT_SET;
     public int AriaSplit { get; set; } = -1;
     public int AriaMaxOverallDownloadLimit { get; set; } = -1;
     public int AriaMaxDownloadLimit { get; set; } = -1;
-    // public AriaConfigFileAllocation AriaFileAllocation { get; set; } = AriaConfigFileAllocation.NOT_SET;
+    public AriaConfigFileAllocation AriaFileAllocation { get; set; } = AriaConfigFileAllocation.NOT_SET;
 
     public AllowStatus IsAriaHttpProxy { get; set; } = AllowStatus.NONE;
     public string AriaHttpProxy { get; set; } = null;
