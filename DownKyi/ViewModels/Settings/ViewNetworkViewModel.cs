@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
+using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using DownKyi.Core.Aria2cNet.Server;
 using DownKyi.Core.Settings;
@@ -32,7 +31,7 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     private string userAgent;
-    
+
     public string UserAgent
     {
         get => userAgent;
@@ -467,9 +466,13 @@ public class ViewNetworkViewModel : ViewModelBase
         var result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
         if (result == ButtonResult.OK)
         {
-            (App.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime).Shutdown(0);
-            // System.Windows.Application.Current.Shutdown();
-            Process.Start(Assembly.GetExecutingAssembly().Location);
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+            // var dir = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            // todo 暂时去掉自动重启,多平台需要不同实现
+            // if (dir != null)
+            // {
+            //     Process.Start($"{dir}/DownKyi");
+            // }
         }
     }
 

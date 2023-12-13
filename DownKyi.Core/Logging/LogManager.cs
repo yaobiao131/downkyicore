@@ -420,7 +420,7 @@ public class LogManager
     {
         string newFilePath;
         var logDir = string.IsNullOrEmpty(LogDirectory)
-            ? Path.Combine(Environment.CurrentDirectory, "logs")
+            ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs")
             : LogDirectory;
         Directory.CreateDirectory(logDir);
         string extension = ".log";

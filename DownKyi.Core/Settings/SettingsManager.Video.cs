@@ -18,7 +18,7 @@ public partial class SettingsManager
     private readonly AllowStatus isTranscodingFlvToMp4 = AllowStatus.YES;
 
     // 默认下载目录
-    private readonly string saveVideoRootPath = Path.Combine(Environment.CurrentDirectory, "Media");
+    private readonly string saveVideoRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
 
     // 历史下载目录
     private readonly List<string> historyVideoRootPaths = new();

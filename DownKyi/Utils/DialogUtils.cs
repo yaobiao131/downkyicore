@@ -12,7 +12,7 @@ namespace DownKyi.Utils;
 
 public static class DialogUtils
 {
-    private static readonly string DefaultDirectory = Environment.CurrentDirectory;
+    private static readonly string DefaultDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
     /// <summary>
     /// 弹出选择文件夹弹窗

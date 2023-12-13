@@ -6,6 +6,7 @@
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>

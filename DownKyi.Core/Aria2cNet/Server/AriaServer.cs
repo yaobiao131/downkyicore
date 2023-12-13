@@ -22,7 +22,7 @@ namespace DownKyi.Core.Aria2cNet.Server
             // aria端口
             ListenPort = config.ListenPort;
             // aria目录
-            var ariaDir = Environment.CurrentDirectory + "\\aria\\";
+            var ariaDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aria");
             //string ariaDir = StorageManager.GetAriaDir();
             // 会话文件
 #if DEBUG
@@ -84,7 +84,14 @@ namespace DownKyi.Core.Aria2cNet.Server
                         (current, header) => current + $"--header=\"{header}\" ");
                 }
 
-                ExecuteProcess("aria2/aria2c.exe",
+                var executeName = "aria2c";
+
+                if (OperatingSystem.IsWindows())
+                {
+                    executeName += ".exe";
+                }
+
+                ExecuteProcess($"aria2/{executeName}",
                     $"--enable-rpc --rpc-listen-all=true --rpc-allow-origin-all=true " +
                     $"--check-certificate=false " + // 解决问题 SSL/TLS handshake failure
                     $"--rpc-listen-port={config.ListenPort} " +

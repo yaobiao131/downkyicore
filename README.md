@@ -2,8 +2,8 @@
 
 ## 介绍
 
-- 基于[哔哩下载姬window版](https://github.com/leiurayer/downkyi)和[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)制作的跨平台版本(支持window、linux、macOS)。
-- 开发这个版本目的是由于本人日常使用macOS，当我想下载up视频是偶然间发现了[哔哩下载姬window版](https://github.com/leiurayer/downkyi)，发现很好用，就是不能支持macOS使用，就想看能不能基于跨平台方案重新开发。
+- 基于[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)和[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)制作的跨平台版本(支持Windows、linux、macOS)。
+- 开发这个版本目的是由于本人日常使用macOS，当我想下载up视频是偶然间发现了[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)，发现很好用，就是不能支持macOS使用，就想看能不能基于跨平台方案重新开发。
 
 
 ## 使用说明

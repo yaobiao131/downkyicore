@@ -17,7 +17,7 @@ namespace DownKyi.Core.Settings
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36";
 
         // 下载器
-        private readonly Downloader downloader = Downloader.BUILT_IN;
+        private readonly Downloader downloader = Downloader.ARIA;
 
         // 最大同时下载数(任务数)
         private readonly int maxCurrentDownloads = 3;
