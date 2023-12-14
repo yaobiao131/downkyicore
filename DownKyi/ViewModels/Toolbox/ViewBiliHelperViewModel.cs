@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.Logging;
+using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -20,32 +19,32 @@ public class ViewBiliHelperViewModel : ViewModelBase
 
     public string Avid
     {
-        get { return avid; }
-        set { SetProperty(ref avid, value); }
+        get => avid;
+        set => SetProperty(ref avid, value);
     }
 
     private string bvid;
 
     public string Bvid
     {
-        get { return bvid; }
-        set { SetProperty(ref bvid, value); }
+        get => bvid;
+        set => SetProperty(ref bvid, value);
     }
 
     private string danmakuUserID;
 
     public string DanmakuUserID
     {
-        get { return danmakuUserID; }
-        set { SetProperty(ref danmakuUserID, value); }
+        get => danmakuUserID;
+        set => SetProperty(ref danmakuUserID, value);
     }
 
     private string userMid;
 
     public string UserMid
     {
-        get { return userMid; }
-        set { SetProperty(ref userMid, value); }
+        get => userMid;
+        set => SetProperty(ref userMid, value);
     }
 
     #endregion
@@ -129,20 +128,8 @@ public class ViewBiliHelperViewModel : ViewModelBase
     /// </summary>
     private void ExecuteGotoWebCommand()
     {
-        var baseUrl = "https://www.bilibili.com/video/";
-        if (OperatingSystem.IsWindows())
-        {
-            Process.Start(baseUrl + Bvid);
-        }
-
-        if (OperatingSystem.IsMacOS())
-        {
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = "open",
-                ArgumentList = { baseUrl + Bvid },
-            });
-        }
+        var url = $"https://www.bilibili.com/video/{Bvid}";
+        PlatformHelper.Open(url);
     }
 
     // 查询弹幕发送者事件
@@ -190,8 +177,8 @@ public class ViewBiliHelperViewModel : ViewModelBase
             return;
         }
 
-        string baseUrl = "https://space.bilibili.com/";
-        Process.Start(baseUrl + UserMid);
+        var userSpace = $"https://space.bilibili.com/{UserMid}";
+        PlatformHelper.Open(userSpace);
     }
 
     #endregion

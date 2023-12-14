@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using DownKyi.Images;
 using DownKyi.Models;
@@ -57,9 +55,10 @@ namespace DownKyi.ViewModels.DownloadManager
             }
         }
 
-        #region 控制按钮 
+        #region 控制按钮
 
         private VectorImage openFolder;
+
         public VectorImage OpenFolder
         {
             get => openFolder;
@@ -67,6 +66,7 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         private VectorImage openVideo;
+
         public VectorImage OpenVideo
         {
             get => openVideo;
@@ -74,6 +74,7 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         private VectorImage removeVideo;
+
         public VectorImage RemoveVideo
         {
             get => removeVideo;
@@ -86,19 +87,25 @@ namespace DownKyi.ViewModels.DownloadManager
 
         // 打开文件夹事件
         private DelegateCommand openFolderCommand;
-        public DelegateCommand OpenFolderCommand => openFolderCommand ?? (openFolderCommand = new DelegateCommand(ExecuteOpenFolderCommand));
+
+        public DelegateCommand OpenFolderCommand =>
+            openFolderCommand ?? (openFolderCommand = new DelegateCommand(ExecuteOpenFolderCommand));
 
         /// <summary>
         /// 打开文件夹事件
         /// </summary>
         private void ExecuteOpenFolderCommand()
         {
-            if (DownloadBase == null) { return; }
+            if (DownloadBase == null)
+            {
+                return;
+            }
+
             //TODO:这里不光有mp4视频文件，也可能存在音频文件、字幕，或者其他文件类型
             //fix bug:Issues #709
             //这里根据需要下载的类型判断，具体对应的文件后缀名
             var downLoadContents = DownloadBase.NeedDownloadContent.Where(e => e.Value == true).Select(e => e.Key);
-            string fileSuffix = string.Empty;
+            var fileSuffix = string.Empty;
             if (downLoadContents.Contains("downloadVideo"))
             {
                 fileSuffix = ".mp4";
@@ -111,14 +118,12 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 fileSuffix = ".jpg";
             }
-            string videoPath = $"{DownloadBase.FilePath}{fileSuffix}";
-            FileInfo fileInfo = new FileInfo(videoPath);
+
+            var videoPath = $"{DownloadBase.FilePath}{fileSuffix}";
+            var fileInfo = new FileInfo(videoPath);
             if (File.Exists(fileInfo.FullName))
             {
-                if (OperatingSystem.IsWindows())
-                {
-                    Process.Start("Explorer", "/select," + fileInfo.FullName);
-                }
+                PlatformHelper.OpenFolder(fileInfo.FullName);
             }
             else
             {
@@ -135,16 +140,16 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         private void ExecuteOpenVideoCommand()
         {
-            if (DownloadBase == null) { return; }
+            if (DownloadBase == null)
+            {
+                return;
+            }
 
-            string videoPath = $"{DownloadBase.FilePath}.mp4";
+            var videoPath = $"{DownloadBase.FilePath}.mp4";
             var fileInfo = new FileInfo(videoPath);
             if (File.Exists(fileInfo.FullName))
             {
-                if (OperatingSystem.IsWindows())
-                {
-                    Process.Start(fileInfo.FullName);
-                }
+                PlatformHelper.Open(fileInfo.FullName);
             }
             else
             {
@@ -155,7 +160,10 @@ namespace DownKyi.ViewModels.DownloadManager
 
         // 删除事件
         private DelegateCommand removeVideoCommand;
-        public DelegateCommand RemoveVideoCommand => removeVideoCommand ?? (removeVideoCommand = new DelegateCommand(ExecuteRemoveVideoCommand));
+
+        public DelegateCommand RemoveVideoCommand => removeVideoCommand ??
+                                                     (removeVideoCommand =
+                                                         new DelegateCommand(ExecuteRemoveVideoCommand));
 
         /// <summary>
         /// 删除事件
@@ -168,11 +176,10 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 return;
             }
-            
+
             App.DownloadedList.Remove(this);
         }
 
         #endregion
-
     }
 }

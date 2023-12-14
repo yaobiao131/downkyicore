@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using DownKyi.Core.Settings;
+﻿using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Models;
 using DownKyi.Utils;
@@ -97,7 +96,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAppNameCommand()
     {
-        Process.Start("https://github.com/leiurayer/downkyi");
+        PlatformHelper.Open("https://github.com/leiurayer/downkyi");
     }
 
     // 检查更新事件
@@ -124,7 +123,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteFeedbackCommand()
     {
-        Process.Start("https://github.com/leiurayer/downkyi/issues");
+        PlatformHelper.Open("https://github.com/leiurayer/downkyi/issues");
     }
 
     // 是否接收测试版更新事件
@@ -173,7 +172,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteBrotliLicenseCommand()
     {
-        Process.Start("https://licenses.nuget.org/MIT");
+        PlatformHelper.Open("https://licenses.nuget.org/MIT");
     }
 
     // Google.Protobuf许可证查看事件
@@ -188,7 +187,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteProtobufLicenseCommand()
     {
-        Process.Start("https://github.com/protocolbuffers/protobuf/blob/master/LICENSE");
+        PlatformHelper.Open("https://github.com/protocolbuffers/protobuf/blob/master/LICENSE");
     }
 
     // Newtonsoft.Json许可证查看事件
@@ -203,7 +202,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteNewtonsoftLicenseCommand()
     {
-        Process.Start("https://licenses.nuget.org/MIT");
+        PlatformHelper.Open("https://licenses.nuget.org/MIT");
     }
 
     // Prism.DryIoc许可证查看事件
@@ -218,7 +217,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecutePrismLicenseCommand()
     {
-        Process.Start("https://www.nuget.org/packages/Prism.DryIoc/8.1.97/license");
+        PlatformHelper.Open("https://www.nuget.org/packages/Prism.DryIoc/8.1.97/license");
     }
 
     // QRCoder许可证查看事件
@@ -233,7 +232,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteQRCoderLicenseCommand()
     {
-        Process.Start("https://licenses.nuget.org/MIT");
+        PlatformHelper.Open("https://licenses.nuget.org/MIT");
     }
 
     // System.Data.SQLite.Core许可证查看事件
@@ -248,7 +247,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteSQLiteLicenseCommand()
     {
-        Process.Start("https://www.sqlite.org/copyright.html");
+        PlatformHelper.Open("https://www.sqlite.org/copyright.html");
     }
 
     // Aria2c许可证查看事件
@@ -262,7 +261,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAriaLicenseCommand()
     {
-        Process.Start("aria2_COPYING.txt");
+        PlatformHelper.Open("aria2_COPYING.txt");
     }
 
     // FFmpeg许可证查看事件
@@ -277,7 +276,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteFFmpegLicenseCommand()
     {
-        Process.Start("FFmpeg_LICENSE.txt");
+        PlatformHelper.Open("FFmpeg_LICENSE.txt");
     }
 
     #endregion

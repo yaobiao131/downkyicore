@@ -36,7 +36,7 @@ public abstract class DownloadService
     protected Task workTask;
     protected CancellationTokenSource tokenSource;
     protected CancellationToken cancellationToken;
-    protected List<Task> downloadingTasks = new List<Task>();
+    protected List<Task> downloadingTasks = new();
 
     protected readonly int retry = 5;
     protected readonly string nullMark = "<null>";
@@ -453,7 +453,7 @@ public abstract class DownloadService
         }
 
         await Task.WhenAny(Task.WhenAll(downloadingTasks), Task.Delay(30000));
-        foreach (Task tsk in downloadingTasks.FindAll((m) => !m.IsCompleted))
+        foreach (var tsk in downloadingTasks.FindAll((m) => !m.IsCompleted))
         {
             Console.PrintLine($"{Tag}.DoWork() 任务结束超时");
             LogManager.Debug($"{Tag}.DoWork()", "任务结束超时");
@@ -485,8 +485,8 @@ public abstract class DownloadService
                 Console.PrintLine(Tag, e.ToString());
                 LogManager.Debug(Tag, e.Message);
 
-                AlertService alertService = new AlertService(dialogService);
-                ButtonResult result =
+                var alertService = new AlertService(dialogService);
+                var result =
                     await alertService.ShowError($"{path}{DictionaryResource.GetString("DirectoryError")}");
 
                 return;
@@ -781,7 +781,7 @@ public abstract class DownloadService
                 break;
             case AfterDownloadOperation.CLOSE_SYSTEM:
                 // 关机
-                Process.Start("shutdown.exe", "-s");
+                // Process.Start("shutdown.exe", "-s");
                 break;
             default:
                 break;
@@ -801,7 +801,7 @@ public abstract class DownloadService
         //先简单等待一下
 
         // 下载数据存储服务
-        // DownloadStorageService downloadStorageService = new DownloadStorageService();
+        var downloadStorageService = new DownloadStorageService();
         // 保存数据
         foreach (DownloadingItem item in downloadingList)
         {
@@ -829,12 +829,12 @@ public abstract class DownloadService
 
             item.Progress = 0;
 
-            // downloadStorageService.UpdateDownloading(item);
+            downloadStorageService.UpdateDownloading(item);
         }
 
-        foreach (DownloadedItem item in downloadedList)
+        foreach (var item in downloadedList)
         {
-            // downloadStorageService.UpdateDownloaded(item);
+            downloadStorageService.UpdateDownloaded(item);
         }
     }
 
