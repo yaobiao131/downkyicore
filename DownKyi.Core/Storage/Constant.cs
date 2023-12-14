@@ -6,9 +6,30 @@
 internal static class Constant
 {
     // 根目录
+#if NET8_0_OR_GREATER //兼容8.0中断性变更https://learn.microsoft.com/zh-cn/dotnet/core/compatibility/core-libraries/8.0/getfolderpath-unix
     private static string Root => OperatingSystem.IsWindows()
         ? AppDomain.CurrentDomain.BaseDirectory
-        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Downkyi");
+        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DownKyi");
+#else
+    private static string Root
+    {
+        get
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                return AppDomain.CurrentDomain.BaseDirectory;
+            }
+
+            if (OperatingSystem.IsMacOS())
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library",
+                    "Application Support", "DownKyi");
+            }
+
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "DownKyi");
+        }
+    }
+#endif
     // private static string Root { get; } = AppDomain.CurrentDomain.BaseDirectory;
 
     // Aria

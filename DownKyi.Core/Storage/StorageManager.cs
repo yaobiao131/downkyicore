@@ -3,13 +3,23 @@
 public static class StorageManager
 {
     /// <summary>
-    /// 获取历史记录的文件路径
+    /// 获取Aria的文件路径
     /// </summary>
     /// <returns></returns>
     public static string GetAriaDir()
     {
         CreateDirectory(Constant.Aria);
         return Constant.Aria;
+    }
+    
+    /// <summary>
+    /// 获取日志的文件路径
+    /// </summary>
+    /// <returns></returns>
+    public static string GetLogsDir()
+    {
+        CreateDirectory(Constant.Logs);
+        return Constant.Logs;
     }
 
     /// <summary>

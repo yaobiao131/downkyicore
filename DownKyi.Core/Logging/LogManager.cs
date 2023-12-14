@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
+using DownKyi.Core.Storage;
 using static System.DateTime;
 
 namespace DownKyi.Core.Logging;
@@ -60,28 +61,10 @@ public class LogManager
 
     private static AutoResetEvent Pause => new AutoResetEvent(false);
 
-    private static string logDirectory;
-
     /// <summary>
-    /// 日志存放目录，默认日志放在当前应用程序运行目录下的logs文件夹中
+    /// 日志存放目录，windows默认日志放在当前应用程序运行目录下的Logs文件夹中,macOS、linux存放于applicationData目录下
     /// </summary>
-    public static string LogDirectory
-    {
-        get => logDirectory ??
-               (Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory).Any(s => s.Contains("Web.config"))
-                   ? AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Logs\"
-                   : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs"));
-        set
-        {
-            //自定义目录
-            if (!Directory.Exists(value))
-            {
-                Directory.CreateDirectory(value);
-            }
-
-            logDirectory = value;
-        }
-    }
+    private static string LogDirectory => StorageManager.GetLogsDir();
 
     /// <summary>
     /// 写入Info级别的日志
