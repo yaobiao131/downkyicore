@@ -6,8 +6,10 @@
 internal static class Constant
 {
     // 根目录
-    //private static string Root { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Downkyi";
-    private static string Root { get; } = AppDomain.CurrentDomain.BaseDirectory;
+    private static string Root => OperatingSystem.IsWindows()
+        ? AppDomain.CurrentDomain.BaseDirectory
+        : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Downkyi");
+    // private static string Root { get; } = AppDomain.CurrentDomain.BaseDirectory;
 
     // Aria
     public static string Aria { get; } = $"{Root}/Aria";
