@@ -164,7 +164,7 @@ public class MultiThreadDownloader
     public MultiThreadDownloader(string sourceUrl, string savePath, int numOfParts) : this(sourceUrl, null,
         savePath, numOfParts)
     {
-        TempFileDirectory = Environment.GetFolderPath(Environment.SpecialFolder.InternetCache);
+        TempFileDirectory = Path.Combine(Path.GetTempPath(), "DownKyi");
     }
 
     /// <summary>
