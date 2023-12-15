@@ -11,6 +11,8 @@ create_dir() {
   fi
 }
 
+create_dir "$download_dir"
+
 download_ffmpeg_macos() {
   local url="https://github.com/eugeneware/ffmpeg-static/releases/download/b4.4.1/darwin-$arch"
   create_dir "$ffmpeg_save_path/osx-$arch/ffmpeg"

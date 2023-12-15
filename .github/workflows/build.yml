@@ -131,6 +131,7 @@ jobs:
         run: |
           chmod +x ffmpeg.sh
           ./ffmpeg.ps1 mac ${{ matrix.cpu }}
+        working-directory: ./script
       - name: Build ${{ matrix.cpu }}
         run: |
           dotnet restore
