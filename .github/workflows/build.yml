@@ -130,7 +130,7 @@ jobs:
       - name: Get Deps
         run: |
           chmod +x ffmpeg.sh
-          ./ffmpeg.ps1 mac ${{ matrix.cpu }}
+          ./ffmpeg.sh mac ${{ matrix.cpu }}
         working-directory: ./script
       - name: Build ${{ matrix.cpu }}
         run: |
