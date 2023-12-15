@@ -82,6 +82,8 @@ jobs:
       - name: Install Pupnet
         run: |
           dotnet tool install -g KuiperZone.PupNet
+          sudo apt update
+          sudo apt install libfuse2
       - name: Get Deps
         run: |
           chmod +x ffmpeg.sh
@@ -135,7 +137,7 @@ jobs:
       - name: Build ${{ matrix.cpu }}
         run: |
           dotnet restore
-          dotnet publish DownKyi.csproj --self-contained -r osx-${{ matrix.cpu }} -c Release -p:DebugType=None -p:DebugSymbols=false
+          dotnet publish --self-contained -r osx-${{ matrix.cpu }} -c Release -p:DebugType=None -p:DebugSymbols=false
       - name: Package app
         run: |
           chmod +x package.sh
