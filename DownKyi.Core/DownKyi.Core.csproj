@@ -26,6 +26,9 @@
         <None Update="Binary/$(RuntimeIdentifier)/aria2/*" Link="aria2/%(Filename)%(Extension)">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Update="Binary/$(RuntimeIdentifier)/ffmpeg/*" Link="ffmpeg/%(Filename)%(Extension)">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

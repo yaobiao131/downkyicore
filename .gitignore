@@ -6,4 +6,11 @@
 */**/obj
 */**/bin
 
-DownKyi.sln.DotSettings.user
+DownKyi.Core/Binary/*/*/
+!DownKyi.Core/Binary/osx-x64/aria2/
+!DownKyi.Core/Binary/osx-arm64/aria2/
+
+script/macos/*.app
+script/macos/*.dmg
+
+*.sln.DotSettings.user

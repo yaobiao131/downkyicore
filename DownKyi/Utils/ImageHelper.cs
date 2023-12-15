@@ -9,9 +9,9 @@ namespace DownKyi.Utils;
 
 public static class ImageHelper
 {
-    public static Bitmap LoadFromResource(Uri resourceUri)
+    public static Bitmap LoadFromResource(Uri? resourceUri)
     {
-        return resourceUri.Scheme switch
+        return resourceUri?.Scheme switch
         {
             "avares" => LoadFromAvares(resourceUri),
             "file" => LoadFromFile(resourceUri),
@@ -26,7 +26,7 @@ public static class ImageHelper
 
     private static Bitmap LoadFromFile(Uri resourceUri)
     {
-        return new Bitmap(resourceUri.AbsolutePath);
+        return new Bitmap(resourceUri.LocalPath);
     }
 
     public static async Task<Bitmap?> LoadFromWeb(Uri url)
