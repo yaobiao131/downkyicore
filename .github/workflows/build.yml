@@ -86,8 +86,8 @@ jobs:
         run: |
           chmod +x ffmpeg.sh
           chmod +x aria2.sh
-          .\ffmpeg.sh linux ${{ matrix.cpu }}
-          .\aria2.sh linux-${{ matrix.cpu }}
+          ./ffmpeg.sh linux ${{ matrix.cpu }}
+          ./aria2.sh linux-${{ matrix.cpu }}
         working-directory: ./script
       - name: Package
         run: |
@@ -130,7 +130,7 @@ jobs:
       - name: Get Deps
         run: |
           chmod +x ffmpeg.sh
-          .\ffmpeg.ps1 mac ${{ matrix.cpu }}
+          ./ffmpeg.ps1 mac ${{ matrix.cpu }}
       - name: Build ${{ matrix.cpu }}
         run: |
           dotnet restore
