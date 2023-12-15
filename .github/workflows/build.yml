@@ -144,7 +144,7 @@ jobs:
           ./package.sh ${{ matrix.cpu }}
         working-directory: ./script/macos
       - name: Create DMG
-        run:
+        run: |
           create-dmg \
           --hdiutil-quiet \
           --icon 哔哩下载姬.app 165 175 \
