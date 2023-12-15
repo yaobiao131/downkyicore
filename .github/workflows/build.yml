@@ -147,11 +147,11 @@ jobs:
         run:
           create-dmg \
           --hdiutil-quiet \
-          --icon "哔哩下载姬.app" 165 175 \
+          --icon 哔哩下载姬.app 165 175 \
           --icon-size 120 \
           --app-drop-link 495 175 \
           --window-size 660 400 \
-          "DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg" "./哔哩下载姬.app"
+          DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg 哔哩下载姬.app
         working-directory: ./script/macos
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
