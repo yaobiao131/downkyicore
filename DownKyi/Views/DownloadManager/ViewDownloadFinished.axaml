@@ -242,8 +242,8 @@
         <Image
             Width="256"
             Height="256"
-            Source="/Resources/nodata02.png">
-            <i:Interaction.Behaviors>
+            Source="/Resources/nodata02.png" IsVisible="{Binding !DownloadedList.Count}">
+            <!--<i:Interaction.Behaviors>
                 <ia:DataTriggerBehavior Binding="{Binding DownloadedList}" Value="{x:Null}">
                     <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
                 </ia:DataTriggerBehavior>
@@ -254,7 +254,7 @@
                     Binding="{Binding DownloadedList.Count, Converter={StaticResource CountConverter}}" Value="true">
                     <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
                 </ia:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
+            </i:Interaction.Behaviors>-->
         </Image>
     </Grid>
 </UserControl>

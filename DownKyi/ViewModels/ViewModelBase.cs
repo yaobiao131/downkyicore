@@ -1,11 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
-using Avalonia;
 using Avalonia.Threading;
+using DownKyi.Services;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 
 namespace DownKyi.ViewModels;
 

@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using IDialogService = DownKyi.Services.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
@@ -37,13 +38,13 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             // 初始化DownloadingList
             DownloadingList = App.DownloadingList;
-            DownloadingList.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
+            DownloadingList.CollectionChanged += (sender, e) =>
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
                     SetDialogService();
                 }
-            });
+            };
             SetDialogService();
         }
 

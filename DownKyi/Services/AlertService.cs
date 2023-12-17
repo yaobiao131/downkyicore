@@ -69,20 +69,11 @@ public class AlertService
             { "button_number", buttonNumber }
         };
 
-        var isEnd = false;
-        dialogService.ShowDialog(ViewAlertDialogViewModel.Tag, param,
+        await dialogService.ShowDialogAsync(ViewAlertDialogViewModel.Tag, param,
             buttonResult =>
             {
                 result = buttonResult.Result;
-                isEnd = true;
             });
-        await Task.Run(() =>
-        {
-            while (true)
-            {
-                if (isEnd) break;
-            }
-        });
         return result;
     }
 }

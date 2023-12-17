@@ -10,6 +10,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
+using DownKyi.Services;
 using DownKyi.Services.Download;
 using DownKyi.ViewModels;
 using DownKyi.ViewModels.Dialogs;
@@ -27,7 +28,6 @@ using DownKyi.Views.Toolbox;
 using DownKyi.Views.UserSpace;
 using Prism.DryIoc;
 using Prism.Ioc;
-using Prism.Services.Dialogs;
 using ViewSeasonsSeries = DownKyi.Views.ViewSeasonsSeries;
 using ViewSeasonsSeriesViewModel = DownKyi.ViewModels.ViewSeasonsSeriesViewModel;
 
@@ -60,6 +60,7 @@ public partial class App : PrismApplication
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<IDialogService, DialogService>();
         // pages
         containerRegistry.RegisterForNavigation<ViewIndex>(ViewIndexViewModel.Tag);
         containerRegistry.RegisterForNavigation<ViewLogin>(ViewLoginViewModel.Tag);

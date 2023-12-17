@@ -1,11 +1,10 @@
-﻿using DownKyi.Core.BiliApi.BiliUtils;
+﻿using Avalonia.Media;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Models;
-using Prism.Mvvm;
-using Prism.Services.Dialogs;
-using Avalonia;
-using Avalonia.Media;
+using DownKyi.Services;
 using DownKyi.Utils;
+using Prism.Mvvm;
 
 namespace DownKyi.ViewModels.DownloadManager
 {

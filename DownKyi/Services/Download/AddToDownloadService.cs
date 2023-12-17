@@ -189,7 +189,7 @@ public class AddToDownloadService
         {
             bool run = true;
             // 打开文件夹选择器
-            dialogService.ShowDialog(ViewDownloadSetterViewModel.Tag, null, result =>
+            await dialogService.ShowDialogAsync(ViewDownloadSetterViewModel.Tag, null, result =>
             {
                 if (result.Result == ButtonResult.OK)
                 {
@@ -206,13 +206,14 @@ public class AddToDownloadService
 
                 run = false;
             });
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (!run) break;
-                }
-            });
+            // await Task.Run(() =>
+            // {
+            //     while (true)
+            //     {
+            //         if (!run) break;
+            //         Thread.Sleep(100);
+            //     }
+            // });
         }
 
         if (directory == String.Empty)
@@ -224,7 +225,7 @@ public class AddToDownloadService
         if (!Directory.Exists(Directory.GetDirectoryRoot(directory)))
         {
             var alert = new AlertService(dialogService);
-            alert.ShowError(DictionaryResource.GetString("DriveNotFound"));
+            await alert.ShowError(DictionaryResource.GetString("DriveNotFound"));
 
             directory = string.Empty;
         }

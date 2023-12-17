@@ -22,6 +22,7 @@ using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Console = DownKyi.Core.Utils.Debugging.Console;
+using IDialogService = DownKyi.Services.IDialogService;
 
 namespace DownKyi.ViewModels;
 
@@ -489,7 +490,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         if (parseScope == ParseScope.NONE)
         {
             //打开解析选择器
-            DialogService.ShowDialog(ViewParsingSelectorViewModel.Tag, null, async result =>
+            await DialogService?.ShowDialogAsync(ViewParsingSelectorViewModel.Tag, null, async result =>
             {
                 if (result.Result == ButtonResult.OK)
                 {

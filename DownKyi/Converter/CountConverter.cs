@@ -10,6 +10,7 @@ namespace DownKyi.Converter
 
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
+            var i = ((int)value) > Count;
             return ((int)value) > Count;
         }
 

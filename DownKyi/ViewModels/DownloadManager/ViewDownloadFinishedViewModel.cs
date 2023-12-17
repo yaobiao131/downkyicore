@@ -13,6 +13,7 @@ using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using Console = DownKyi.Core.Utils.Debugging.Console;
+using IDialogService = DownKyi.Services.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
 {

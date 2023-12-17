@@ -205,19 +205,9 @@
         </ControlTheme>
     </UserControl.Resources>
     <Grid>
-        <Grid RowDefinitions="*,1,50">
-            <i:Interaction.Behaviors>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadingList}" Value="{x:Null}">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadingList.Count}" Value="0">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior
-                    Binding="{Binding DownloadingList.Count, Converter={StaticResource CountConverter}}" Value="">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
-                </ia:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
+        <Grid
+            RowDefinitions="*,1,50"
+            IsVisible="{Binding DownloadingList.Count}">
             <ListBox
                 Grid.Row="0"
                 BorderThickness="0"
@@ -238,7 +228,8 @@
                                             HorizontalScrollBarVisibility="Hidden"
                                             VerticalScrollBarVisibility="Auto">
                                             <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}"
-                                                            Width="{TemplateBinding Width}" />
+                                                            Width="{TemplateBinding Width}"
+                                                            Height="{TemplateBinding Height}" />
                                         </ScrollViewer>
                                     </Border>
                                 </ControlTemplate>
@@ -306,19 +297,8 @@
         <Image
             Width="256"
             Height="256"
-            Source="/Resources/nodata02.png">
-            <i:Interaction.Behaviors>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadingList}" Value="{x:Null}">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadingList.Count}" Value="0">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior
-                    Binding="{Binding DownloadingList.Count, Converter={StaticResource CountConverter}}" Value="true">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                </ia:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
+            Source="/Resources/nodata02.png"
+            IsVisible="{Binding !DownloadingList.Count}">
         </Image>
     </Grid>
 </UserControl>

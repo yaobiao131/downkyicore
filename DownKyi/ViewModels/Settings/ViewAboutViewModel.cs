@@ -1,11 +1,11 @@
 ﻿using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Models;
+using DownKyi.Services;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 
 namespace DownKyi.ViewModels.Settings;
 

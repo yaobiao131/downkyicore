@@ -6,6 +6,7 @@ using DownKyi.Services;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Services.Dialogs;
+using IDialogService = DownKyi.Services.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
