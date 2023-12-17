@@ -5,6 +5,29 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
              x:DataType="vms:ViewAboutViewModel">
+    <UserControl.Styles>
+        <Style Selector="Button.link">
+            <Setter Property="Foreground" Value="Blue" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <ContentPresenter Content="{TemplateBinding Content}">
+                        <ContentPresenter.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="Foreground" Value="{TemplateBinding Foreground}" />
+                                <Setter Property="FontSize" Value="{TemplateBinding FontSize}" />
+                                <Setter Property="TextDecorations" Value="Underline" />
+                            </Style>
+                        </ContentPresenter.Styles>
+                    </ContentPresenter>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </UserControl.Styles>
+
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -77,29 +100,12 @@
                         BorderBrush="{DynamicResource BrushBorder}"
                         BorderThickness="1"
                         CornerRadius="5">
-                    <Grid>
+                    <Grid RowDefinitions="30,20,20,20,20,20,20,20,20" ColumnDefinitions="200,200,100,100">
                         <Grid.Styles>
                             <Style Selector="TextBlock">
                                 <Setter Property="VerticalAlignment" Value="Center" />
                             </Style>
                         </Grid.Styles>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                            <RowDefinition Height="20" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="100" />
-                            <ColumnDefinition Width="100" />
-                        </Grid.ColumnDefinitions>
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="0"
@@ -128,6 +134,65 @@
                             FontWeight="Bold"
                             Foreground="{DynamicResource BrushTextDark}"
                             Text="{DynamicResource ThirdPartyLicense}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="Google.Protobuf" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="Google Inc." />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="2"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="3.21.12" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="3"
+                            FontSize="12">
+                            <Button Classes="link" Command="{Binding ProtobufLicenseCommand}">LICENSE</Button>
+                            ~1~ <Hyperlink Command="{Binding ProtobufLicenseCommand}"> @1@
+                            ~1~     <TextBlock Text="LICENSE" /> @1@
+                            ~1~ </Hyperlink> @1@
+                        </TextBlock>
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="Newtonsoft.Json" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="James Newton-King" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="2"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="13.0.2" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="3"
+                            FontSize="12">
+                            <Button
+                                Command="{Binding NewtonsoftLicenseCommand}"
+                                Classes="link">
+                                MIT
+                            </Button>
+                        </TextBlock>
+
+
                     </Grid>
                 </Border>
             </StackPanel>-->
