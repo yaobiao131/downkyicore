@@ -171,7 +171,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 前往下载管理页面
@@ -192,7 +192,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             ParentViewName = Tag,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 输入确认事件
@@ -330,7 +330,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private void ExecuteUpperCommand()
     {
-        NavigateToView.NavigateToViewUserSpace(eventAggregator, Tag, VideoInfoView.UpperMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid);
     }
 
 // 视频章节选择事件
@@ -420,6 +420,57 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
     }
 
+    // 解析视频流事件
+    private DelegateCommand<object> parseCommand;
+
+    public DelegateCommand<object> ParseCommand => parseCommand ??
+                                                   (parseCommand = new DelegateCommand<object>(ExecuteParseCommand,
+                                                       CanExecuteParseCommand));
+
+    /// <summary>
+    /// 解析视频流事件
+    /// </summary>
+    /// <param name="parameter"></param>
+    private async void ExecuteParseCommand(object parameter)
+    {
+        if (!(parameter is VideoPage videoPage))
+        {
+            return;
+        }
+
+        LoadingVisibility = true;
+
+        try
+        {
+            await Task.Run(() =>
+            {
+                LogManager.Debug(Tag, $"Video Page: {videoPage.Cid}");
+
+                UnityUpdateView(ParseVideo, input, videoPage, true);
+            });
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("ParseCommand()发生异常: {0}", e);
+            LogManager.Error(Tag, e);
+
+            LoadingVisibility = false;
+        }
+
+        LoadingVisibility = false;
+    }
+
+    /// <summary>
+    /// 解析视频流事件是否允许执行
+    /// </summary>
+    /// <param name="parameter"></param>
+    /// <returns></returns>
+    private bool CanExecuteParseCommand(object parameter)
+    {
+        return LoadingVisibility != true;
+    }
+
+
     // 解析所有视频流事件
     private DelegateCommand parseAllVideoCommand;
 
@@ -431,8 +482,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private async void ExecuteParseAllVideoCommand()
     {
-        LoadingVisibility = true;
-
         // 解析范围
         ParseScope parseScope = SettingsManager.GetInstance().GetParseScope();
 
@@ -440,17 +489,13 @@ public class ViewVideoDetailViewModel : ViewModelBase
         if (parseScope == ParseScope.NONE)
         {
             //打开解析选择器
-            dialogService.ShowDialog(ViewParsingSelectorViewModel.Tag, null, async result =>
+            DialogService.ShowDialog(ViewParsingSelectorViewModel.Tag, null, async result =>
             {
                 if (result.Result == ButtonResult.OK)
                 {
                     // 选择的解析范围
                     parseScope = result.Parameters.GetValue<ParseScope>("parseScope");
                     await ExecuteParse(parseScope);
-                }
-                else
-                {
-                    loadingVisibility = false;
                 }
             });
         }
@@ -473,6 +518,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     {
         try
         {
+            LoadingVisibility = true;
             await Task.Run(() =>
             {
                 LogManager.Debug(Tag, "Parse video");
@@ -737,7 +783,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(dialogService);
+        string directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
@@ -747,7 +793,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList(),
                 selectedVideoPages.Select(video => video.Order).ToList());
             // 下载
-            i = addToDownloadService.AddToDownload(eventAggregator, directory, isAll);
+            i = addToDownloadService.AddToDownload(EventAggregator, directory, isAll);
         });
 
         if (directory == null)
@@ -758,11 +804,11 @@ public class ViewVideoDetailViewModel : ViewModelBase
         // 通知用户添加到下载列表的结果
         if (i <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>()
+            EventAggregator.GetEvent<MessageEvent>()
                 .Publish(
                     $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }

@@ -359,9 +359,6 @@
                                                     CommandParameter="{Binding ElementName=NameVideoPages1,Path=SelectedItems}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
-                    <DataGrid.RowTheme>
-                        
-                    </DataGrid.RowTheme>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="50"

@@ -20,6 +20,8 @@ public class ViewLoginViewModel : ViewModelBase
 
     private CancellationTokenSource _tokenSource;
 
+    #region 页面属性申明
+
     private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
@@ -52,6 +54,7 @@ public class ViewLoginViewModel : ViewModelBase
         set => SetProperty(ref _loginQrCodeStatus, value);
     }
 
+    #endregion
 
     public ViewLoginViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
     {
@@ -81,7 +84,7 @@ public class ViewLoginViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = "login"
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     /// <summary>
@@ -105,7 +108,7 @@ public class ViewLoginViewModel : ViewModelBase
 
             if (loginUrl.Data == null || loginUrl.Data.Url == null)
             {
-                eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("GetLoginUrlFailed"));
+                EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("GetLoginUrlFailed"));
                 return;
             }
 
@@ -160,7 +163,7 @@ public class ViewLoginViewModel : ViewModelBase
                     // 不匹配的oauthKey，超时或已确认的oauthKey
 
                     // 发送通知
-                    eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginTimeOut"));
+                    EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginTimeOut"));
                     LogManager.Info(Tag, DictionaryResource.GetString("LoginTimeOut"));
 
                     // 取消任务
@@ -187,17 +190,16 @@ public class ViewLoginViewModel : ViewModelBase
                     // 确认登录
 
                     // 发送通知
-                    eventAggregator.GetEvent<MessageEvent>().Publish("登陆成功");
+                    EventAggregator.GetEvent<MessageEvent>().Publish("登陆成功");
                     // LogManager.Info(Tag, DictionaryResource.GetString("LoginSuccessful"));
 
                     // 保存登录信息
                     try
                     {
-                        System.Console.Out.WriteLine(loginStatus.Data.Url);
                         bool isSucceed = LoginHelper.SaveLoginInfoCookies(loginStatus.Data.Url);
                         if (!isSucceed)
                         {
-                            eventAggregator.GetEvent<MessageEvent>()
+                            EventAggregator.GetEvent<MessageEvent>()
                                 .Publish(DictionaryResource.GetString("LoginFailed"));
                             LogManager.Error(Tag, DictionaryResource.GetString("LoginFailed"));
                         }
@@ -206,7 +208,7 @@ public class ViewLoginViewModel : ViewModelBase
                     {
                         Console.PrintLine("PageLogin 保存登录信息发生异常: {0}", e);
                         LogManager.Error(e);
-                        eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginFailed"));
+                        EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginFailed"));
                     }
 
                     // TODO 其他操作
@@ -214,7 +216,7 @@ public class ViewLoginViewModel : ViewModelBase
 
                     // 取消任务
                     Thread.Sleep(3000);
-                    PropertyChangeAsync(ExecuteBackSpace);
+                    PropertyChange(ExecuteBackSpace);
                     break;
             }
 

@@ -75,7 +75,7 @@ public class ViewArchiveViewModel : ViewModelBase
         };
 
         // 进入视频页面
-        NavigateToView.NavigationView(eventAggregator, ViewPublicationViewModel.Tag, ViewUserSpaceViewModel.Tag,
+        NavigateToView.NavigationView(EventAggregator, ViewPublicationViewModel.Tag, ViewUserSpaceViewModel.Tag,
             data);
 
         SelectedItem = -1;

@@ -222,7 +222,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 左侧tab点击事件
@@ -303,11 +303,11 @@ public class ViewUserSpaceViewModel : ViewModelBase
         {
             case 0:
                 data["friendId"] = 0;
-                NavigateToView.NavigationView(eventAggregator, ViewFriendsViewModel.Tag, parentViewName, data);
+                NavigateToView.NavigationView(EventAggregator, ViewFriendsViewModel.Tag, parentViewName, data);
                 break;
             case 1:
                 data["friendId"] = 1;
-                NavigateToView.NavigationView(eventAggregator, ViewFriendsViewModel.Tag, parentViewName, data);
+                NavigateToView.NavigationView(EventAggregator, ViewFriendsViewModel.Tag, parentViewName, data);
                 break;
         }
 

@@ -4,6 +4,7 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
+using DownKyi.Core.Utils.Encryptor;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.Login
@@ -30,7 +31,7 @@ namespace DownKyi.Core.BiliApi.Login
             if (isSucceed)
             {
                 // 加密密钥，增加机器码
-                string password = SecretKey;
+                var password = SecretKey;
 
                 try
                 {
@@ -68,7 +69,7 @@ namespace DownKyi.Core.BiliApi.Login
                 {
                     File.Copy(LOCAL_LOGIN_INFO, tempFile, true);
                     // 加密密钥，增加机器码
-                    // string password = SecretKey;
+                    var password = SecretKey;
                     // Encryptor.DecryptFile(LOCAL_LOGIN_INFO, tempFile, password);
                 }
                 catch (Exception e)

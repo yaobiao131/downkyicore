@@ -97,7 +97,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
             ParentViewName = ViewUserSpaceViewModel.Tag,
             Parameter = data
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(param);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(param);
 
         SelectedItem = -1;
     }

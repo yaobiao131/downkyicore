@@ -110,7 +110,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         private async void ExecuteClearAllDownloadedCommand()
         {
-            AlertService alertService = new AlertService(dialogService);
+            AlertService alertService = new AlertService(DialogService);
             ButtonResult result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
             if (result != ButtonResult.OK)
             {
@@ -146,7 +146,7 @@ namespace DownKyi.ViewModels.DownloadManager
                     {
                         if (item != null && item.DialogService == null)
                         {
-                            item.DialogService = dialogService;
+                            item.DialogService = DialogService;
                         }
                     }
                 });

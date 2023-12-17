@@ -462,7 +462,7 @@ public class ViewNetworkViewModel : ViewModelBase
         var isSucceed = SettingsManager.GetInstance().SetDownloader(downloader);
         PublishTip(isSucceed);
 
-        var alertService = new AlertService(dialogService);
+        var alertService = new AlertService(DialogService);
         var result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
         if (result == ButtonResult.OK)
         {
@@ -830,11 +830,11 @@ public class ViewNetworkViewModel : ViewModelBase
 
         if (isSucceed)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
         }
     }
 }

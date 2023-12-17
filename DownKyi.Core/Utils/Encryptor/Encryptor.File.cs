@@ -131,17 +131,6 @@ public static partial class Encryptor
 
                     if (slack > 0)
                     {
-                        // .net6引入变更，使用旧方法无法读取完毕
-                        // int totalRead = 0;
-                        // while (totalRead < slack)
-                        // {
-                        //     read = cin.Read(bytes, 0, (int)slack-totalRead);
-                        //     fout.Write(bytes, 0, read);
-                        //     chash.Write(bytes, 0, read);
-                        //     value += read;
-                        //     outValue += read;
-                        //     totalRead += read;
-                        // }
                         read = cin.Read(bytes, 0, (int)slack);
                         fout.Write(bytes, 0, read);
                         chash.Write(bytes, 0, read);
@@ -209,7 +198,7 @@ public static partial class Encryptor
         SymmetricAlgorithm sma = Rijndael.Create();
         sma.KeySize = 256;
         sma.Key = pdb.GetBytes(32);
-        sma.Padding = PaddingMode.PKCS7;
+        sma.Padding = PaddingMode.Zeros;
         return sma;
     }
 

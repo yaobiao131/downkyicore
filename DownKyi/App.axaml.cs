@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
@@ -209,7 +210,12 @@ public partial class App : PrismApplication
                 break;
         }
 
-        _downloadService?.Start();
+        // 防止设计器启动aria2导致端口占用
+        if (!Design.IsDesignMode)
+        {
+            _downloadService?.Start();
+        }
+
 
         return Container.Resolve<MainWindow>();
     }

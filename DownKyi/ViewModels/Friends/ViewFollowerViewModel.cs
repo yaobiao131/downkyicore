@@ -115,7 +115,7 @@ public class ViewFollowerViewModel : ViewModelBase
             Bitmap header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
             App.PropertyChangeAsync(new Action(() =>
             {
-                Contents.Add(new FriendInfo(eventAggregator)
+                Contents.Add(new FriendInfo(EventAggregator)
                     { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign });
             }));
         }

@@ -72,7 +72,7 @@ public class ViewExtractMediaViewModel : ViewModelBase
     {
         if (isExtracting)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
 
@@ -93,13 +93,13 @@ public class ViewExtractMediaViewModel : ViewModelBase
     {
         if (isExtracting)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
 
         if (VideoPaths.Length <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
             return;
         }
 
@@ -137,13 +137,13 @@ public class ViewExtractMediaViewModel : ViewModelBase
     {
         if (isExtracting)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
 
         if (VideoPaths.Length <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
             return;
         }
 

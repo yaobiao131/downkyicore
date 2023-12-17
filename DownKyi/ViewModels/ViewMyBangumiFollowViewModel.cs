@@ -144,7 +144,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     public ViewMyBangumiFollowViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.dialogService = dialogService;
+        this.DialogService = dialogService;
 
         #region 属性初始化
 
@@ -199,7 +199,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 前往下载管理页面
@@ -220,7 +220,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
             ParentViewName = Tag,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 顶部tab点击事件
@@ -358,7 +358,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.BANGUMI);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(dialogService);
+        string directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
@@ -387,7 +387,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(service);
                 // 下载
-                i += addToDownloadService.AddToDownload(eventAggregator, directory);
+                i += addToDownloadService.AddToDownload(EventAggregator, directory);
             }
         });
 
@@ -399,11 +399,11 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         // 通知用户添加到下载列表的结果
         if (i <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>()
+            EventAggregator.GetEvent<MessageEvent>()
                 .Publish(
                     $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
@@ -507,7 +507,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
 
                 App.PropertyChangeAsync(() =>
                 {
-                    BangumiFollowMedia media = new BangumiFollowMedia(eventAggregator)
+                    BangumiFollowMedia media = new BangumiFollowMedia(EventAggregator)
                     {
                         MediaId = bangumiFollow.MediaId,
                         SeasonId = bangumiFollow.SeasonId,

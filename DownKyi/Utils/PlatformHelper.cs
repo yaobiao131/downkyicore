@@ -13,7 +13,7 @@ public static class PlatformHelper
     {
         if (OperatingSystem.IsWindows())
         {
-            Process.Start("explorer.exe", $"/select,{folder}");
+            Process.Start("explorer.exe", $"{folder}");
         }
 
         if (OperatingSystem.IsMacOS())

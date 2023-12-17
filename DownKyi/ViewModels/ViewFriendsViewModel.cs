@@ -89,7 +89,7 @@ namespace DownKyi.ViewModels
                 ParentViewName = null,
                 Parameter = null
             };
-            eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+            EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
         }
 
         // 顶部tab点击事件

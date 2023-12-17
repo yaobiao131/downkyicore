@@ -145,7 +145,7 @@ public class ViewIndexViewModel : ViewModelBase
     {
         if (UserName == null)
         {
-            NavigateToView.NavigationView(eventAggregator, ViewLoginViewModel.Tag, Tag, null);
+            NavigateToView.NavigationView(EventAggregator, ViewLoginViewModel.Tag, Tag, null);
         }
         else
         {
@@ -153,7 +153,7 @@ public class ViewIndexViewModel : ViewModelBase
             var userInfo = SettingsManager.GetInstance().GetUserInfo();
             if (userInfo != null && userInfo.Mid != -1)
             {
-                NavigateToView.NavigationView(eventAggregator, ViewMySpaceViewModel.Tag, Tag, userInfo.Mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMySpaceViewModel.Tag, Tag, userInfo.Mid);
             }
         }
     }
@@ -169,7 +169,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private void ExecuteSettingsCommand()
     {
-        NavigateToView.NavigationView(eventAggregator, ViewSettingsViewModel.Tag, Tag, null);
+        NavigateToView.NavigationView(EventAggregator, ViewSettingsViewModel.Tag, Tag, null);
     }
 
     // 进入下载管理页面
@@ -184,7 +184,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigateToView.NavigationView(eventAggregator, ViewDownloadManagerViewModel.Tag, Tag, null);
+        NavigateToView.NavigationView(EventAggregator, ViewDownloadManagerViewModel.Tag, Tag, null);
     }
 
 // 进入工具箱页面
@@ -198,7 +198,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private async void ExecuteToolboxCommand()
     {
-        NavigateToView.NavigationView(eventAggregator, ViewToolboxViewModel.Tag, Tag, null);
+        NavigateToView.NavigationView(EventAggregator, ViewToolboxViewModel.Tag, Tag, null);
     }
 
 
@@ -217,11 +217,11 @@ public class ViewIndexViewModel : ViewModelBase
         LogManager.Debug(Tag, $"InputText: {InputText}");
         InputText = Regex.Replace(InputText, @"[【]*[^【]*[^】]*[】 ]", "");
         SearchService searchService = new SearchService();
-        bool isSupport = searchService.BiliInput(InputText, Tag, eventAggregator);
+        bool isSupport = searchService.BiliInput(InputText, Tag, EventAggregator);
         if (!isSupport)
         {
             // 关键词搜索
-            searchService.SearchKey(InputText, Tag, eventAggregator);
+            searchService.SearchKey(InputText, Tag, EventAggregator);
         }
 
         InputText = string.Empty;

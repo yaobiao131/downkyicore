@@ -109,7 +109,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
     public ViewMyHistoryViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.dialogService = dialogService;
+        this.DialogService = dialogService;
 
         #region 属性初始化
 
@@ -158,7 +158,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 前往下载管理页面
@@ -179,7 +179,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
             ParentViewName = Tag,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 全选按钮点击事件
@@ -279,7 +279,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
         AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(dialogService);
+        string directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
@@ -321,7 +321,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(service);
                 // 下载
-                i += addToDownloadService.AddToDownload(eventAggregator, directory);
+                i += addToDownloadService.AddToDownload(EventAggregator, directory);
             }
         });
 
@@ -333,11 +333,11 @@ public class ViewMyHistoryViewModel : ViewModelBase
         // 通知用户添加到下载列表的结果
         if (i <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>()
+            EventAggregator.GetEvent<MessageEvent>()
                 .Publish(
                     $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
@@ -493,7 +493,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                                    Format.FormatDuration3(history.Progress);
                     }
 
-                    HistoryMedia media = new HistoryMedia(eventAggregator)
+                    HistoryMedia media = new HistoryMedia(EventAggregator)
                     {
                         Business = history.History.Business,
                         Bvid = history.History.Bvid,

@@ -89,7 +89,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 左侧tab点击事件

@@ -341,7 +341,7 @@ public class ViewMySpaceViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 退出登录事件
@@ -365,7 +365,7 @@ public class ViewMySpaceViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = "logout"
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 页面选择事件
@@ -394,15 +394,15 @@ public class ViewMySpaceViewModel : ViewModelBase
         {
             case 0:
                 data["friendId"] = 0;
-                NavigateToView.NavigationView(eventAggregator, ViewFriendsViewModel.Tag, Tag, data);
+                NavigateToView.NavigationView(EventAggregator, ViewFriendsViewModel.Tag, Tag, data);
                 break;
             case 1:
                 data["friendId"] = 0;
-                NavigateToView.NavigationView(eventAggregator, ViewFriendsViewModel.Tag, Tag, data);
+                NavigateToView.NavigationView(EventAggregator, ViewFriendsViewModel.Tag, Tag, data);
                 break;
             case 2:
                 data["friendId"] = 1;
-                NavigateToView.NavigationView(eventAggregator, ViewFriendsViewModel.Tag, Tag, data);
+                NavigateToView.NavigationView(EventAggregator, ViewFriendsViewModel.Tag, Tag, data);
                 break;
             default:
                 break;
@@ -432,16 +432,16 @@ public class ViewMySpaceViewModel : ViewModelBase
         switch (SelectedPackage)
         {
             case 0:
-                NavigateToView.NavigationView(eventAggregator, ViewMyFavoritesViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyFavoritesViewModel.Tag, Tag, mid);
                 break;
             case 1:
-                NavigateToView.NavigationView(eventAggregator, ViewMyBangumiFollowViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyBangumiFollowViewModel.Tag, Tag, mid);
                 break;
             case 2:
-                NavigateToView.NavigationView(eventAggregator, ViewMyToViewVideoViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyToViewVideoViewModel.Tag, Tag, mid);
                 break;
             case 3:
-                NavigateToView.NavigationView(eventAggregator, ViewMyHistoryViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyHistoryViewModel.Tag, Tag, mid);
                 break;
             default:
                 break;

@@ -128,7 +128,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     public ViewPublicFavoritesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.dialogService = dialogService;
+        this.DialogService = dialogService;
 
         #region 属性初始化
 
@@ -177,7 +177,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 前往下载管理页面
@@ -198,7 +198,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
             ParentViewName = Tag,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 复制封面事件
@@ -243,7 +243,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     /// </summary>
     private void ExecuteUpperCommand()
     {
-        NavigateToView.NavigateToViewUserSpace(eventAggregator, Tag, Favorites.UpperMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, Favorites.UpperMid);
     }
 
     // 添加选中项到下载列表事件
@@ -300,7 +300,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(dialogService);
+        string directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
@@ -328,7 +328,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(videoInfoService);
                 // 下载
-                i += addToDownloadService.AddToDownload(eventAggregator, directory);
+                i += addToDownloadService.AddToDownload(EventAggregator, directory);
             }
         });
 
@@ -340,11 +340,11 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         // 通知用户添加到下载列表的结果
         if (i <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>()
+            EventAggregator.GetEvent<MessageEvent>()
                 .Publish(
                     $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
@@ -412,7 +412,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
             MediaNoDataVisibility = false;
         }
 
-        favoritesService.GetFavoritesMediaList(medias, FavoritesMedias, eventAggregator, cancellationToken);
+        favoritesService.GetFavoritesMediaList(medias, FavoritesMedias, EventAggregator, cancellationToken);
     }
 
     /// <summary>

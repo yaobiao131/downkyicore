@@ -1,11 +1,14 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="clr-namespace:DownKyi.Converter"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloadFinished"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
              x:DataType="vmdm:ViewDownloadFinishedViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <UserControl.Resources>
+        <converter:CountConverter x:Key="CountConverter" Count="0" />
+        
         <ControlTheme x:Key="DownloadedStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadedItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -240,6 +243,18 @@
             Width="256"
             Height="256"
             Source="/Resources/nodata02.png">
+            <i:Interaction.Behaviors>
+                <ia:DataTriggerBehavior Binding="{Binding DownloadedList}" Value="{x:Null}">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior Binding="{Binding DownloadedList.Count}" Value="0">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior
+                    Binding="{Binding DownloadedList.Count, Converter={StaticResource CountConverter}}" Value="true">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                </ia:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
         </Image>
     </Grid>
 </UserControl>

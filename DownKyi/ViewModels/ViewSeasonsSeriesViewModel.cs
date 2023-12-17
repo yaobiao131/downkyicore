@@ -130,7 +130,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     public ViewSeasonsSeriesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.dialogService = dialogService;
+        this.DialogService = dialogService;
 
         #region 属性初始化
 
@@ -177,7 +177,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 前往下载管理页面
@@ -198,7 +198,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
             ParentViewName = Tag,
             Parameter = null
         };
-        eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
 
     // 全选按钮点击事件
@@ -299,7 +299,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(dialogService);
+        string directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
@@ -327,7 +327,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(videoInfoService);
                 // 下载
-                i += addToDownloadService.AddToDownload(eventAggregator, directory);
+                i += addToDownloadService.AddToDownload(EventAggregator, directory);
             }
         });
 
@@ -339,11 +339,11 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         // 通知用户添加到下载列表的结果
         if (i <= 0)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
         }
         else
         {
-            eventAggregator.GetEvent<MessageEvent>()
+            EventAggregator.GetEvent<MessageEvent>()
                 .Publish(
                     $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
@@ -545,7 +545,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
                 App.PropertyChangeAsync(new Action(() =>
                 {
-                    ChannelMedia media = new ChannelMedia(eventAggregator)
+                    ChannelMedia media = new ChannelMedia(EventAggregator)
                     {
                         Avid = video.Aid,
                         Bvid = video.Bvid,
@@ -643,7 +643,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
                 App.PropertyChangeAsync(new Action(() =>
                 {
-                    ChannelMedia media = new ChannelMedia(eventAggregator)
+                    ChannelMedia media = new ChannelMedia(EventAggregator)
                     {
                         Avid = video.Aid,
                         Bvid = video.Bvid,

@@ -110,7 +110,7 @@ public class ViewAboutViewModel : ViewModelBase
     private void ExecuteCheckUpdateCommand()
     {
         //eventAggregator.GetEvent<MessageEvent>().Publish("开始查找更新，请稍后~");
-        eventAggregator.GetEvent<MessageEvent>().Publish("请前往主页下载最新版~");
+        EventAggregator.GetEvent<MessageEvent>().Publish("请前往主页下载最新版~");
     }
 
     // 意见反馈事件
@@ -292,7 +292,7 @@ public class ViewAboutViewModel : ViewModelBase
             return;
         }
 
-        eventAggregator.GetEvent<MessageEvent>().Publish(isSucceed
+        EventAggregator.GetEvent<MessageEvent>().Publish(isSucceed
             ? DictionaryResource.GetString("TipSettingUpdated")
             : DictionaryResource.GetString("TipSettingFailed"));
     }

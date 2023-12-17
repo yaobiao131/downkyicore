@@ -121,9 +121,9 @@ namespace DownKyi.ViewModels.DownloadManager
 
             var videoPath = $"{DownloadBase.FilePath}{fileSuffix}";
             var fileInfo = new FileInfo(videoPath);
-            if (File.Exists(fileInfo.FullName))
+            if (File.Exists(fileInfo.FullName) && fileInfo.DirectoryName != null)
             {
-                PlatformHelper.OpenFolder(fileInfo.FullName);
+                PlatformHelper.OpenFolder(fileInfo.DirectoryName);
             }
             else
             {
