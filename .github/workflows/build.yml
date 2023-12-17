@@ -67,11 +67,11 @@ jobs:
           - kind: deb
             cpu: x64
             package-tail: _amd64
-            package-head: DownKyi_
+            package-head: downkyi_
           - kind: rpm
             cpu: x64
             package-tail: .x86_64
-            package-head: DownKyi_
+            package-head: downkyi_
     steps:
       - name: Checkout
         uses: actions/checkout@v3
