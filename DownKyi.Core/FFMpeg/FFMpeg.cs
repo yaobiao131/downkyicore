@@ -1,12 +1,27 @@
 ﻿using DownKyi.Core.Logging;
 using FFMpegCore;
 using FFMpegCore.Enums;
+using FFMpegCore.Helpers;
 
-namespace DownKyi.Core.FFmpeg;
+namespace DownKyi.Core.FFMpeg;
 
-public static class FFmpegHelper
+public class FFMpeg
 {
     private const string Tag = "FFmpegHelper";
+    private static readonly FFMpeg instance = new();
+
+    static FFMpeg()
+    {
+    }
+
+    private FFMpeg()
+    {
+        GlobalFFOptions.Configure(new FFOptions
+            { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
+        FFMpegHelper.VerifyFFMpegExists(GlobalFFOptions.Current);
+    }
+
+    public static FFMpeg Instance => instance;
 
     /// <summary>
     /// 合并音频和视频
@@ -14,7 +29,7 @@ public static class FFmpegHelper
     /// <param name="audio">音频</param>
     /// <param name="video">视频</param>
     /// <param name="destVideo"></param>
-    public static bool MergeVideo(string audio, string video, string destVideo)
+    public bool MergeVideo(string audio, string video, string destVideo)
     {
         if (!File.Exists(audio) && !File.Exists(video)) return false;
         FFMpegArguments
@@ -56,8 +71,7 @@ public static class FFmpegHelper
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="action"></param>
-    public static void Delogo(string video, string destVideo, int x, int y, int width, int height,
-        Action<string> action)
+    public void Delogo(string video, string destVideo, int x, int y, int width, int height, Action<string> action)
     {
         var arg = FFMpegArguments
             .FromFileInput(video)
@@ -77,7 +91,7 @@ public static class FFmpegHelper
     /// <param name="video">源视频</param>
     /// <param name="audio">目标音频</param>
     /// <param name="action">输出信息</param>
-    public static void ExtractAudio(string video, string audio, Action<string> action)
+    public void ExtractAudio(string video, string audio, Action<string> action)
     {
         FFMpegArguments
             .FromFileInput(video)
@@ -99,7 +113,7 @@ public static class FFmpegHelper
     /// <param name="video">源视频</param>
     /// <param name="destVideo">目标视频</param>
     /// <param name="action">输出信息</param>
-    public static void ExtractVideo(string video, string destVideo, Action<string> action)
+    public void ExtractVideo(string video, string destVideo, Action<string> action)
     {
         FFMpegArguments.FromFileInput(video)
             .OutputToFile(

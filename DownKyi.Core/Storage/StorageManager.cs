@@ -11,7 +11,7 @@ public static class StorageManager
         CreateDirectory(Constant.Aria);
         return Constant.Aria;
     }
-    
+
     /// <summary>
     /// 获取日志的文件路径
     /// </summary>
@@ -144,6 +144,12 @@ public static class StorageManager
     {
         CreateDirectory(Constant.Header);
         return Constant.HeaderIndex;
+    }
+
+    public static string GetMedia()
+    {
+        CreateDirectory(Constant.Media);
+        return Constant.Media;
     }
 
 

@@ -29,10 +29,10 @@
                                 Padding="5,0,5,0"
                                 Background="White"
                                 Margin="5,0,0,0">
-                                <TextBlock 
-                                    Text="{TemplateBinding Header}" 
+                                <TextBlock
+                                    Text="{TemplateBinding Header}"
                                     FontSize="{TemplateBinding FontSize}"
-                                    Foreground="{TemplateBinding Foreground}"/>
+                                    Foreground="{TemplateBinding Foreground}" />
                             </Border>
                             <Border
                                 Grid.RowSpan="2"
@@ -51,7 +51,7 @@
 
     <TrayIcon.Icons>
         <TrayIcons>
-            <TrayIcon Icon="/Resources/favicon.ico" ToolTipText="DownKyi">
+            <TrayIcon Icon="/Resources/favicon.ico" ToolTipText="{StaticResource AppName}">
                 <!--<TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="退出" />

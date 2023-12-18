@@ -23,9 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="ffmpeg.config.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
         <None Update="Binary/$(RuntimeIdentifier)/aria2/*" Link="aria2/%(Filename)%(Extension)" Visible="false">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>

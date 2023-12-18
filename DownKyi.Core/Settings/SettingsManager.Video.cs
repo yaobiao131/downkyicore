@@ -1,5 +1,6 @@
 ﻿using DownKyi.Core.FileName;
 using DownKyi.Core.Settings.Models;
+using DownKyi.Core.Storage;
 
 namespace DownKyi.Core.Settings;
 
@@ -18,7 +19,7 @@ public partial class SettingsManager
     private readonly AllowStatus isTranscodingFlvToMp4 = AllowStatus.YES;
 
     // 默认下载目录
-    private readonly string saveVideoRootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
+    private readonly string saveVideoRootPath = StorageManager.GetMedia();
 
     // 历史下载目录
     private readonly List<string> historyVideoRootPaths = new();
@@ -64,6 +65,7 @@ public partial class SettingsManager
             SetVideoCodecs(videoCodecs);
             return videoCodecs;
         }
+
         return appSettings.Video.VideoCodecs;
     }
 
@@ -91,6 +93,7 @@ public partial class SettingsManager
             SetQuality(quality);
             return quality;
         }
+
         return appSettings.Video.Quality;
     }
 
@@ -118,6 +121,7 @@ public partial class SettingsManager
             SetAudioQuality(audioQuality);
             return audioQuality;
         }
+
         return appSettings.Video.AudioQuality;
     }
 
@@ -145,6 +149,7 @@ public partial class SettingsManager
             IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
             return isTranscodingFlvToMp4;
         }
+
         return appSettings.Video.IsTranscodingFlvToMp4;
     }
 
@@ -172,6 +177,7 @@ public partial class SettingsManager
             SetSaveVideoRootPath(saveVideoRootPath);
             return saveVideoRootPath;
         }
+
         return appSettings.Video.SaveVideoRootPath;
     }
 
@@ -199,6 +205,7 @@ public partial class SettingsManager
             SetHistoryVideoRootPaths(historyVideoRootPaths);
             return historyVideoRootPaths;
         }
+
         return appSettings.Video.HistoryVideoRootPaths;
     }
 
@@ -226,6 +233,7 @@ public partial class SettingsManager
             IsUseSaveVideoRootPath(isUseSaveVideoRootPath);
             return isUseSaveVideoRootPath;
         }
+
         return appSettings.Video.IsUseSaveVideoRootPath;
     }
 
@@ -253,6 +261,7 @@ public partial class SettingsManager
             SetVideoContent(videoContent);
             return videoContent;
         }
+
         return appSettings.Video.VideoContent;
     }
 
@@ -280,6 +289,7 @@ public partial class SettingsManager
             SetFileNameParts(fileNameParts);
             return fileNameParts;
         }
+
         return appSettings.Video.FileNameParts;
     }
 
@@ -301,12 +311,14 @@ public partial class SettingsManager
     public string GetFileNamePartTimeFormat()
     {
         appSettings = GetSettings();
-        if (appSettings.Video.FileNamePartTimeFormat == null || appSettings.Video.FileNamePartTimeFormat == string.Empty)
+        if (appSettings.Video.FileNamePartTimeFormat == null ||
+            appSettings.Video.FileNamePartTimeFormat == string.Empty)
         {
             // 第一次获取，先设置默认值
             SetFileNamePartTimeFormat(fileNamePartTimeFormat);
             return fileNamePartTimeFormat;
         }
+
         return appSettings.Video.FileNamePartTimeFormat;
     }
 
@@ -334,6 +346,7 @@ public partial class SettingsManager
             SetOrderFormat(orderFormat);
             return orderFormat;
         }
+
         return appSettings.Video.OrderFormat;
     }
 
@@ -347,5 +360,4 @@ public partial class SettingsManager
         appSettings.Video.OrderFormat = orderFormat;
         return SetSettings();
     }
-
 }

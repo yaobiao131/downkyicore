@@ -9,14 +9,14 @@
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <Grid RowDefinitions="*">
         <ListBox
-            x:Name="nameSeasonsSeries"
+            x:Name="NameSeasonsSeries"
             ItemsSource="{Binding SeasonsSeries}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             SelectedIndex="{Binding SelectedItem}">
             <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="SelectionChanged">
                     <ia:InvokeCommandAction Command="{Binding SeasonsSeriesCommand}"
-                                            CommandParameter="{Binding ElementName=nameSeasonsSeries, Path=SelectedItem}" />
+                                            CommandParameter="{Binding ElementName=NameSeasonsSeries, Path=SelectedItem}" />
                 </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <ListBox.ItemsPanel>
@@ -50,7 +50,6 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
                                 <StackPanel
-                                    Grid.Row="0"
                                     Margin="30,0,30,10"
                                     HorizontalAlignment="Left"
                                     Orientation="Vertical">
@@ -62,7 +61,7 @@
                                         Cursor="Hand">
                                         <Border.Background>
                                             <!--  长宽比：1.6  -->
-                                            <ImageBrush Source="{Binding Cover}" />
+                                            <ImageBrush Source="{Binding Cover}" Stretch="Fill" />
                                         </Border.Background>
                                         <Border
                                             Width="70"

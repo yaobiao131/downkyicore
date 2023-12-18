@@ -86,4 +86,7 @@ internal static class Constant
 
     // 用户头像文件索引
     public static string HeaderIndex { get; } = $"{Header}/Index.db";
+
+    // 下载
+    public static string Media { get; } = $"{Root}/Media";
 }

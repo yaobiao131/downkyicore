@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using DownKyi.Core.FFmpeg;
+using DownKyi.Core.FFMpeg;
 using DownKyi.Events;
 using DownKyi.Utils;
 using Prism.Commands;
@@ -113,7 +113,7 @@ public class ViewExtractMediaViewModel : ViewModelBase
                 // 音频文件名
                 string audioFileName = item.Remove(item.Length - 4, 4) + ".aac";
                 // 执行提取音频程序
-                FFmpegHelper.ExtractAudio(item, audioFileName, output =>
+                FFMpeg.Instance.ExtractAudio(item, audioFileName, output =>
                 {
                     Status += output + "\n";
                 });
@@ -157,7 +157,7 @@ public class ViewExtractMediaViewModel : ViewModelBase
                 // 视频文件名
                 string videoFileName = item.Remove(item.Length - 4, 4) + "_onlyVideo.mp4";
                 // 执行提取视频程序
-                FFmpegHelper.ExtractVideo(item, videoFileName, new Action<string>((output) =>
+                FFMpeg.Instance.ExtractVideo(item, videoFileName, new Action<string>((output) =>
                 {
                     Status += output + "\n";
                 }));

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Avalonia.Controls;
-using DownKyi.Core.FFmpeg;
+using DownKyi.Core.FFMpeg;
 using DownKyi.Events;
 using DownKyi.Utils;
 using Prism.Commands;
@@ -159,7 +158,7 @@ public class ViewDelogoViewModel : ViewModelBase
         {
             // 执行去水印程序
             isDelogo = true;
-            FFmpegHelper.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output =>
+            FFMpeg.Instance.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output =>
             {
                 Status += output + "\n";
             });

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -10,7 +9,7 @@ using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Danmaku2Ass;
-using DownKyi.Core.FFmpeg;
+using DownKyi.Core.FFMpeg;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
@@ -19,7 +18,6 @@ using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
-using Prism.Services.Dialogs;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Services.Download;
@@ -320,7 +318,7 @@ public abstract class DownloadService
         }
 
         // 合并音视频
-        FFmpegHelper.MergeVideo(audioUid, videoUid, finalFile);
+        FFMpeg.Instance.MergeVideo(audioUid, videoUid, finalFile);
 
         // 获取文件大小
         if (File.Exists(finalFile))

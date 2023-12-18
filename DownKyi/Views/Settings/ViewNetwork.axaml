@@ -2,9 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.Settings.ViewNetwork"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
-             x:DataType="vms:ViewNetworkViewModel"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             x:DataType="vms:ViewNetworkViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:iac="clr-namespace:DownKyi.CustomAction">
@@ -294,15 +294,13 @@
                 <HeaderedContentControl
                     Margin="0,20,0,0"
                     Padding="10,5"
-                    HorizontalAlignment="Left">
-                    <HeaderedContentControl.Header>
-                        <TextBlock
-                            FontSize="12"
-                            Foreground="{DynamicResource BrushTextDark}"
-                            Text="{DynamicResource AriaDownloadLimit}" />
-                    </HeaderedContentControl.Header>
+                    HorizontalAlignment="Left"
+                    FontSize="12"
+                    Background="LightGray"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Header="{DynamicResource AriaDownloadLimit}">
 
-                    <StackPanel>
+                    <StackPanel Margin="10">
                         <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
                             <TextBlock
                                 Width="300"
@@ -453,6 +451,7 @@
                     </ComboBox>
                 </StackPanel>
             </StackPanel>
+            <StackPanel Margin="10" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

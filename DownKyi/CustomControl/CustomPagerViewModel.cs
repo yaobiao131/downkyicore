@@ -14,7 +14,7 @@ public class CustomPagerViewModel : INotifyPropertyChanged
         SetView();
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     // Current修改的回调
     public delegate bool CurrentChangedHandler(int old, int current);

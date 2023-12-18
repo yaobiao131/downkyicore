@@ -96,7 +96,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAppNameCommand()
     {
-        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/release");
+        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/releases");
     }
 
     // 检查更新事件
