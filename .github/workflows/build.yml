@@ -59,6 +59,7 @@ jobs:
       matrix:
         cpu: [ x64 ]
         kind: [ AppImage, deb, rpm ]
+        type: [ self-contained ]
         include:
           - kind: AppImage
             cpu: x64
@@ -104,18 +105,18 @@ jobs:
       - name: Upload build artifacts ${{ matrix.kind }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.package-tail }}.${{ matrix.kind }}
+          name: ${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.kind }}
           path: script/pupnet/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}-1${{ matrix.package-tail }}.${{ matrix.kind }}
       - name: Change Name
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        run: mv "${{ matrix.package-head }}${{ steps.version.outputs.content }}-1${{ matrix.package-tail }}.${{ matrix.kind }}" "${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.package-tail }}.${{ matrix.kind }}"
+        run: mv "${{ matrix.package-head }}${{ steps.version.outputs.content }}-1${{ matrix.package-tail }}.${{ matrix.kind }}" "${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.kind }}"
         working-directory: ./script/pupnet/output/
       - name: Release
         uses: ncipollo/release-action@v1
         if: ${{ startsWith(github.ref, 'refs/tags/') }}
         with:
           allowUpdates: true
-          artifacts: script/pupnet/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.package-tail }}.${{ matrix.kind }}
+          artifacts: script/pupnet/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.kind }}
   build-macos:
     runs-on: macos-latest
     strategy:
