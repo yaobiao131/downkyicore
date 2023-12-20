@@ -279,7 +279,7 @@
                 </ListBox>
 
                 <DataGrid
-                    x:Name="NameVideoPages1"
+                    x:Name="NameVideoPages"
                     Grid.Row="1"
                     BorderThickness="1"
                     BorderBrush="Gray"
@@ -354,7 +354,7 @@
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="SelectionChanged">
                             <ia:InvokeCommandAction Command="{Binding VideoPagesCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoPages1,Path=SelectedItems}" />
+                                                    CommandParameter="{Binding ElementName=NameVideoPages,Path=SelectedItems}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                     <DataGrid.Columns>
