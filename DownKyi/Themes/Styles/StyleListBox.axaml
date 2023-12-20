@@ -1,9 +1,7 @@
 ﻿<ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
-                    xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
-                    xmlns:i="using:Avalonia.Xaml.Interactivity"
-                    xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+                    xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings">
     <!-- Add Resources Here -->
     <ControlTheme x:Key="LeftTabHeaderItemStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:TabHeader">
         <Setter Property="Template">
@@ -50,24 +48,6 @@
                             Foreground="{DynamicResource BrushTextGrey2}"
                             Text="{Binding SubTitle}" />
                     </Grid>
-                    <!--<ControlTemplate.Triggers>
-                    <Trigger Property="IsMouseOver" Value="False">
-                        <Setter TargetName="panel" Property="Background" Value="{DynamicResource BrushTabHeaderGrey}" />
-                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushTextDark}" />
-                        <Setter TargetName="image" Property="Fill" Value="{Binding Image.Fill}" />
-                    </Trigger>
-                    <Trigger Property="IsMouseOver" Value="true">
-                        <Setter TargetName="panel" Property="Background"
-                                Value="{DynamicResource BrushBackgroundGreyTranslucent2}" />
-                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushPrimary}" />
-                        <Setter TargetName="image" Property="Fill" Value="{DynamicResource BrushPrimary}" />
-                    </Trigger>
-                    <Trigger Property="Selector.IsSelected" Value="true">
-                        <Setter TargetName="panel" Property="Background" Value="{DynamicResource BrushBackground}" />
-                        <Setter TargetName="text" Property="Foreground" Value="{DynamicResource BrushPrimary}" />
-                        <Setter TargetName="image" Property="Fill" Value="{DynamicResource BrushPrimary}" />
-                    </Trigger>
-                </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
 
@@ -129,7 +109,6 @@
                         Name="Border"
                         Margin="5,3"
                         Padding="8,2"
-                        Background="{DynamicResource BrushPrimary}"
                         CornerRadius="10"
                         Cursor="Hand">
                         <ContentPresenter
@@ -138,33 +117,41 @@
                             VerticalAlignment="Center"
                             Content="{Binding Title}" />
                     </Border>
-
-                    <!--<ControlTemplate.Triggers>
-                        ~1~  顺序很重要，不能修改  @1@
-                        <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimary}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+
+        <Style Selector="^ /template/ Border#Border">
+            <Setter Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+        </Style>
+        <Style Selector="^">
+            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+        </Style>
+
+        <Style Selector="^:selected /template/ Border#Border">
+            <Setter Property="Background" Value="{DynamicResource BrushPrimary}" />
+        </Style>
+        <Style Selector="^:selected">
+            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+        </Style>
+
+        <Style Selector="^:pointerover /template/ Border#Border">
+            <Setter Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
+        </Style>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
+        </Style>
     </ControlTheme>
 
     <ControlTheme x:Key="TagStyle" TargetType="{x:Type ListBox}">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
-                    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
-                        <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                    <ScrollViewer
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Disabled">
+                        <ItemsPresenter
+                            ItemsPanel="{TemplateBinding ItemsPanel}" />
                     </ScrollViewer>
                 </ControlTemplate>
             </Setter.Value>
@@ -190,21 +177,6 @@
                             Foreground="{DynamicResource BrushText}"
                             Content="{Binding Title}" />
                     </Border>
-                    <!--<ControlTemplate.Triggers>
-                        ~1~  顺序很重要，不能修改  @1@
-                        <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="Background" Value="{DynamicResource BrushPrimaryTranslucent}" />
-                            <Setter Property="Foreground" Value="{DynamicResource BrushText}" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -242,7 +214,9 @@
                         BorderThickness="1"
                         CornerRadius="10">
                         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
-                            <ItemsPresenter ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            <ItemsPresenter
+                                ItemsPanel="{TemplateBinding ItemsPanel}"
+                                Margin="{TemplateBinding Padding}" />
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>

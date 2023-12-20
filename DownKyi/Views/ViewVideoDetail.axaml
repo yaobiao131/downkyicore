@@ -275,6 +275,10 @@
                         <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="1">
                             <ia:ChangePropertyAction PropertyName="Height" Value="0" />
                         </ia:DataTriggerBehavior>
+                        <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}"
+                                                ComparisonCondition="GreaterThan" Value="1">
+                            <ia:ChangePropertyAction PropertyName="Height" Value="Nan" />
+                        </ia:DataTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </ListBox>
 
