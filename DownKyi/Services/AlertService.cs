@@ -21,11 +21,11 @@ public class AlertService
     /// <param name="message"></param>
     /// <param name="buttonNumber"></param>
     /// <returns></returns>
-    public async Task<ButtonResult> ShowInfo(string message, int buttonNumber = 2)
+    public Task<ButtonResult> ShowInfo(string message, int buttonNumber = 2)
     {
         VectorImage image = SystemIcon.Instance().Info;
         string title = DictionaryResource.GetString("Info");
-        return await ShowMessage(image, title, message, buttonNumber);
+        return ShowMessage(image, title, message, buttonNumber);
     }
 
     /// <summary>
@@ -34,11 +34,11 @@ public class AlertService
     /// <param name="message"></param>
     /// <param name="buttonNumber"></param>
     /// <returns></returns>
-    public async Task<ButtonResult> ShowWarning(string message, int buttonNumber = 1)
+    public Task<ButtonResult> ShowWarning(string message, int buttonNumber = 1)
     {
         VectorImage image = SystemIcon.Instance().Warning;
         string title = DictionaryResource.GetString("Warning");
-        return await ShowMessage(image, title, message, buttonNumber);
+        return ShowMessage(image, title, message, buttonNumber);
     }
 
     /// <summary>
@@ -46,11 +46,11 @@ public class AlertService
     /// </summary>
     /// <param name="message"></param>
     /// <returns></returns>
-    public async Task<ButtonResult> ShowError(string message)
+    public Task<ButtonResult> ShowError(string message)
     {
         VectorImage image = SystemIcon.Instance().Error;
         string title = DictionaryResource.GetString("Error");
-        return await ShowMessage(image, title, message, 1);
+        return ShowMessage(image, title, message, 1);
     }
 
     public async Task<ButtonResult> ShowMessage(VectorImage image, string type, string message, int buttonNumber)

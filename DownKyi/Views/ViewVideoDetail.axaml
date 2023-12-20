@@ -1,14 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.ViewVideoDetail"
-             xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:iac="clr-namespace:DownKyi.CustomAction"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vm:ViewVideoDetailViewModel">
     <Grid RowDefinitions="50,10,*">
 

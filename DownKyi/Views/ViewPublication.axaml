@@ -2,8 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:Class="DownKyi.Views.ViewPublication"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
@@ -272,8 +270,8 @@
                     <custom:CustomPager
                         Grid.Column="1"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        DataContext="{Binding Pager}" />
+                        VerticalAlignment="Center" 
+                        DataContext="{Binding Pager}"/>
                     
                     <Button
                         Grid.Column="2"

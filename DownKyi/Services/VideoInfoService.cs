@@ -233,7 +233,7 @@ public class VideoInfoService : IInfoService
     public void GetVideoStream(VideoPage page)
     {
         var playUrl = VideoStream.GetVideoPlayUrl(page.Avid, page.Bvid, page.Cid);
-        Dispatcher.UIThread.InvokeAsync(() =>
+        Dispatcher.UIThread.Invoke(() =>
         {
             Utils.VideoPageInfo(playUrl, page);
         });
