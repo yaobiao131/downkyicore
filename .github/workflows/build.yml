@@ -11,8 +11,29 @@ on:
       - 'v*'
 
 jobs:
+  changelog:
+    name: Generate changelog
+    runs-on: ubuntu-latest
+    outputs:
+      release_body: ${{ steps.git-cliff.outputs.content }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Generate a changelog
+        uses: orhun/git-cliff-action@v2
+        id: git-cliff
+        with:
+          config: cliff.toml
+          args: -vv --latest --strip header
+        env:
+          OUTPUT: CHANGELOG.md
+      - name: Print the changelog
+        run: cat "${{ steps.git-cliff.outputs.changelog }}"
   build-windows:
     runs-on: windows-latest
+    needs: changelog
     strategy:
       matrix:
         cpu: [ x64, x86 ]
@@ -53,8 +74,10 @@ jobs:
         with:
           allowUpdates: true
           artifacts: script/pupnet/output/DownKyi-${{ steps.version.outputs.content }}-1.win-${{ matrix.cpu }}.${{ matrix.kind }}
+          body: ${{ needs.changelog.outputs.release_body }}
   build-linux:
     runs-on: ubuntu-latest
+    needs: changelog
     strategy:
       matrix:
         cpu: [ x64 ]
@@ -117,8 +140,10 @@ jobs:
         with:
           allowUpdates: true
           artifacts: script/pupnet/output/${{ matrix.package-head }}${{ steps.version.outputs.content }}_linux_${{ matrix.type }}${{ matrix.package-tail }}.${{ matrix.kind }}
+          body: ${{ needs.changelog.outputs.release_body }}
   build-macos:
     runs-on: macos-latest
+    needs: changelog
     strategy:
       matrix:
         cpu: [ x64, arm64 ]
@@ -175,3 +200,4 @@ jobs:
         with:
           allowUpdates: true
           artifacts: script/macos/DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg
+          body: ${{ needs.changelog.outputs.release_body }}
