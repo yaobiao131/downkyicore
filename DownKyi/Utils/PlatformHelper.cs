@@ -20,6 +20,11 @@ public static class PlatformHelper
         {
             Process.Start("open", $"\"{folder}\"");
         }
+
+        if (OperatingSystem.IsLinux())
+        {
+            Process.Start("xdg-open", $"\"{folder}\"");
+        }
     }
 
     /// <summary>
@@ -36,6 +41,11 @@ public static class PlatformHelper
         if (OperatingSystem.IsMacOS())
         {
             Process.Start("open", $"\"{filename}\"");
+        }
+        
+        if (OperatingSystem.IsLinux())
+        {
+            Process.Start("xdg-open", $"\"{filename}\"");
         }
     }
 }
