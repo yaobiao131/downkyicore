@@ -1,4 +1,5 @@
 ﻿using Avalonia.Media.Imaging;
+using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -63,7 +64,7 @@ public class FriendInfo : BindableBase
             return;
         }
 
-        // NavigateToView.NavigationView(eventAggregator, ViewUserSpaceViewModel.Tag, tag, Mid);
+        NavigateToView.NavigationView(eventAggregator, ViewUserSpaceViewModel.Tag, tag, Mid);
     }
 
     #endregion
