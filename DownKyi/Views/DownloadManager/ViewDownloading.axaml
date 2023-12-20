@@ -1,16 +1,11 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converter="clr-namespace:DownKyi.Converter"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloading"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
              x:DataType="vmdm:ViewDownloadingViewModel"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <UserControl.Resources>
-        <converter:CountConverter x:Key="CountConverter" Count="0" />
-
         <ControlTheme x:Key="DownloadingStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadingItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -38,28 +33,8 @@
                                         VerticalAlignment="Center"
                                         FontSize="14"
                                         Foreground="{DynamicResource BrushTextDark}"
-                                        TextTrimming="CharacterEllipsis"
-                                        ToolTip.Tip="">
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
-                                                <Binding Path="Order" />
-                                                <Binding Path="MainTitle" />
-                                                <Binding Path="Name" />
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                        <ContentControl>
-                                            <ToolTip.Tip>
-                                                <TextBlock>
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0}-{1}">
-                                                            <Binding Path="MainTitle" />
-                                                            <Binding Path="Name" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                            </ToolTip.Tip>
-                                        </ContentControl>
-                                        <!--<TextBlock.ToolTip>
+                                        TextTrimming="CharacterEllipsis">
+                                        <ToolTip.Tip>
                                             <TextBlock>
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0}-{1}">
@@ -68,7 +43,14 @@
                                                     </MultiBinding>
                                                 </TextBlock.Text>
                                             </TextBlock>
-                                        </TextBlock.ToolTip>-->
+                                        </ToolTip.Tip>
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0}-{1}-{2}">
+                                                <Binding Path="Order" />
+                                                <Binding Path="MainTitle" />
+                                                <Binding Path="Name" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
                                     </TextBlock>
 
                                     <TextBlock

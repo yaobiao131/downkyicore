@@ -1,14 +1,11 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converter="clr-namespace:DownKyi.Converter"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloadFinished"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
              x:DataType="vmdm:ViewDownloadFinishedViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <UserControl.Resources>
-        <converter:CountConverter x:Key="CountConverter" Count="0" />
-        
         <ControlTheme x:Key="DownloadedStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadedItem">
             <Setter Property="Template">
                 <Setter.Value>
@@ -37,6 +34,16 @@
                                         FontSize="14"
                                         Foreground="{DynamicResource BrushTextDark}"
                                         TextTrimming="CharacterEllipsis">
+                                        <ToolTip.Tip>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0}-{1}">
+                                                        <Binding Path="MainTitle" />
+                                                        <Binding Path="Name" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </ToolTip.Tip>
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0}-{1}-{2}">
                                                 <Binding Path="Order" />
@@ -44,18 +51,6 @@
                                                 <Binding Path="Name" />
                                             </MultiBinding>
                                         </TextBlock.Text>
-                                        <ContentControl>
-                                            <ToolTip.Tip>
-                                                <TextBlock>
-                                                    <TextBlock.Text>
-                                                        <MultiBinding StringFormat="{}{0}-{1}">
-                                                            <Binding Path="MainTitle" />
-                                                            <Binding Path="Name" />
-                                                        </MultiBinding>
-                                                    </TextBlock.Text>
-                                                </TextBlock>
-                                            </ToolTip.Tip>
-                                        </ContentControl>
                                     </TextBlock>
 
                                     <TextBlock
@@ -211,7 +206,7 @@
                 </StackPanel>
 
                 <ComboBox
-                    Name="nameFinishedSort"
+                    Name="NameFinishedSort"
                     Grid.Column="1"
                     Width="120"
                     HorizontalAlignment="Left"
@@ -220,7 +215,7 @@
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="SelectionChanged">
                             <ia:InvokeCommandAction Command="{Binding FinishedSortCommand}"
-                                                    CommandParameter="{Binding ElementName=nameFinishedSort, Path=SelectedIndex}" />
+                                                    CommandParameter="{Binding ElementName=NameFinishedSort, Path=SelectedIndex}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByTime}" />
