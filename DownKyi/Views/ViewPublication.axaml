@@ -175,7 +175,8 @@
                 ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                SelectedIndex="{Binding SelectTabId, Mode=TwoWay}">
+                SelectedIndex="{Binding SelectTabId, Mode=TwoWay}"
+                Theme="{StaticResource LeftTabHeaderStyle}">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"

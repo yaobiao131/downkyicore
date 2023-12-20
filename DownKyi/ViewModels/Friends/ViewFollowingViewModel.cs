@@ -109,7 +109,7 @@ public class ViewFollowingViewModel : ViewModelBase
         set => SetProperty(ref tabHeaders, value);
     }
 
-    private int selectTabId = -1;
+    private int selectTabId;
 
     public int SelectTabId
     {
