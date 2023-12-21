@@ -38,6 +38,7 @@
                             </Border>
 
                             <Image
+                                IsVisible="{Binding IsSelected}"
                                 Name="nameChecked"
                                 Grid.Column="0"
                                 Width="24"
@@ -52,7 +53,7 @@
                                 Margin="20,0"
                                 Orientation="Vertical">
                                 <TextBlock
-                                    Name="nameTitle"
+                                    Name="NameTitle"
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Top"
                                     Cursor="Hand"
@@ -62,7 +63,7 @@
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip.Tip="{Binding Title}">
                                     <i:Interaction.Behaviors>
-                                        <ia:EventTriggerBehavior EventName="MouseLeftButtonUp">
+                                        <ia:EventTriggerBehavior EventName="PointerReleased">
                                             <ia:InvokeCommandAction Command="{Binding TitleCommand}"
                                                                     CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                         </ia:EventTriggerBehavior>
@@ -70,7 +71,7 @@
                                 </TextBlock>
 
                                 <StackPanel
-                                    Name="nameUp"
+                                    Name="NameUp"
                                     Margin="0,40,0,0"
                                     Cursor="Hand"
                                     Orientation="Horizontal">
@@ -107,25 +108,15 @@
                                 VerticalAlignment="Bottom"
                                 Background="{DynamicResource BrushBorderTranslucent}" />
                         </Grid>
-                        <!--<ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="nameChecked" Property="Visibility" Value="Visible" />
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="nameChecked" Property="Visibility" Value="Hidden" />
-                            </Trigger>
-                            <Trigger SourceName="nameTitle" Property="IsMouseOver" Value="True">
-                                <Setter TargetName="nameTitle" Property="Foreground"
-                                        Value="{DynamicResource BrushPrimary}" />
-                            </Trigger>
-                            <Trigger SourceName="nameUp" Property="IsMouseOver" Value="True">
-                                <Setter TargetName="nameUpName" Property="Foreground"
-                                        Value="{DynamicResource BrushPrimary}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>-->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style Selector="^ /template/ TextBlock#NameTitle:pointerover">
+                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#NameUp:pointerover TextBlock#nameUpName">
+                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+            </Style>
         </ControlTheme>
     </UserControl.Resources>
     <Grid RowDefinitions="50,1,*">
@@ -179,7 +170,7 @@
         <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
         <Grid Grid.Row="2" IsVisible="{Binding ContentVisibility}" RowDefinitions="*,1,50">
             <ListBox
-                x:Name="nameMedias"
+                x:Name="NameMedias"
                 Grid.Row="0"
                 BorderThickness="0"
                 ItemContainerTheme="{StaticResource MediaListStyle}"
@@ -189,7 +180,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding MediasCommand}"
-                                                CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItems}" />
+                                                CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <ListBox.ItemsPanel>
@@ -218,10 +209,10 @@
                     </ControlTheme>
                 </ListBox.Theme>
             </ListBox>
-            
+
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
-            
-            
+
+
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80" />
@@ -236,7 +227,7 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Command="{Binding SelectAllCommand}"
-                    CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItem}"
+                    CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItem}"
                     Content="{DynamicResource SelectAll}"
                     Foreground="{DynamicResource BrushTextDark}"
                     IsChecked="{Binding IsSelectAll, Mode=TwoWay}"

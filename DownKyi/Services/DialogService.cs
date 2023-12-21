@@ -14,14 +14,14 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
     {
     }
 
-    public Task ShowDialogAsync(string name, IDialogParameters parameters, Action<IDialogResult> callback = null,
-        string windowName = null)
+    public Task ShowDialogAsync(string name, IDialogParameters parameters, Action<IDialogResult>? callback = null,
+        string? windowName = null)
     {
         return ShowDialogInternal(name, parameters, callback, true, windowName);
     }
 
     private Task ShowDialogInternal(string name, IDialogParameters parameters, Action<IDialogResult>? callback,
-        bool isModal, string windowName = null, Window parentWindow = null)
+        bool isModal, string? windowName = null, Window? parentWindow = null)
     {
         if (parameters == null)
             parameters = new DialogParameters();
@@ -33,7 +33,7 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
         return ShowDialogWindow(dialogWindow, isModal, parentWindow);
     }
 
-    protected virtual Task ShowDialogWindow(IDialogWindow dialogWindow, bool isModal, Window owner = null)
+    protected new virtual Task ShowDialogWindow(IDialogWindow dialogWindow, bool isModal, Window? owner = null)
     {
         if (isModal &&
             Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime deskLifetime)
