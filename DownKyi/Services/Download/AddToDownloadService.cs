@@ -20,6 +20,7 @@ using DownKyi.ViewModels.DownloadManager;
 using DownKyi.ViewModels.PageViewModels;
 using Prism.Events;
 using Prism.Services.Dialogs;
+using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.Services.Download;
 

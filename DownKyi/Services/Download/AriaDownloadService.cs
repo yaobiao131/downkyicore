@@ -15,9 +15,9 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Utils;
 using DownKyi.Images;
 using DownKyi.Models;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
-using Prism.Services.Dialogs;
 
 namespace DownKyi.Services.Download;
 

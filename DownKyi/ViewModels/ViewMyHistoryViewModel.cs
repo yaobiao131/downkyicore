@@ -11,6 +11,7 @@ using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.Events;
 using DownKyi.Images;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services;
 using DownKyi.Services.Download;
 using DownKyi.Utils;
@@ -18,8 +19,6 @@ using DownKyi.ViewModels.PageViewModels;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using Prism.Services.Dialogs;
-using IDialogService = DownKyi.Services.IDialogService;
 
 namespace DownKyi.ViewModels;
 

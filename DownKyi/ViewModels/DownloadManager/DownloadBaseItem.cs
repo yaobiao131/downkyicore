@@ -2,7 +2,7 @@
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Models;
-using DownKyi.Services;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using Prism.Mvvm;
 

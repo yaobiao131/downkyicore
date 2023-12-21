@@ -12,6 +12,7 @@ using DownKyi.Core.Utils;
 using DownKyi.CustomControl;
 using DownKyi.Events;
 using DownKyi.Images;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services;
 using DownKyi.Services.Download;
 using DownKyi.Utils;

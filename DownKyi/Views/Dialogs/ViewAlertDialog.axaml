@@ -4,7 +4,20 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
-             x:DataType="vmd:ViewAlertDialogViewModel">
+             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
+             x:DataType="vmd:ViewAlertDialogViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+
+    <prismExtension:Dialog.Theme>
+        <ControlTheme TargetType="Window">
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="ShowInTaskbar" Value="False" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="SystemDecorations" Value="None" />
+        </ControlTheme>
+    </prismExtension:Dialog.Theme>
+
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
         <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
 
@@ -18,7 +31,9 @@
                     Margin="10,0"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
-                    <ContentControl Margin="0,0,10,0">
+                    <ContentControl
+                        Margin="0,0,10,0"
+                        IsVisible="{Binding Image,Converter={x:Static ObjectConverters.IsNotNull}}">
                         <Path
                             Width="{Binding Image.Width}"
                             Height="{Binding Image.Height}"
@@ -34,12 +49,14 @@
                 </StackPanel>
                 <Button
                     Grid.Column="4"
-                    Command="{Binding CloseCommand}">
+                    Command="{Binding CloseCommand}"
+                    ToolTip.Tip="{DynamicResource Close}"
+                    Theme="{StaticResource CloseBtnStyle}">
                     <Path
                         Width="{Binding CloseIcon.Width}"
                         Height="{Binding CloseIcon.Height}"
                         Data="{Binding CloseIcon.Data}"
-                        Fill="{Binding CloseIcon.Fill}"
+                        Fill="{DynamicResource ColorSystemBtnTintDark}"
                         Stretch="UniformToFill" />
                 </Button>
             </Grid>

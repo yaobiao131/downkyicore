@@ -16,6 +16,7 @@ using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.Images;
 using DownKyi.Models;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
 using Console = DownKyi.Core.Utils.Debugging.Console;

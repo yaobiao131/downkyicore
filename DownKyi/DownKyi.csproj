@@ -35,4 +35,12 @@
     <ItemGroup>
       <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Update="PrismExtension\Dialog\DialogWindow.axaml.cs">
+        <DependentUpon>DialogWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

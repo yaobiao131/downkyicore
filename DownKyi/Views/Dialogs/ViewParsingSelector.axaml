@@ -4,24 +4,45 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:Class="DownKyi.Views.Dialogs.ViewParsingSelector"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
              x:DataType="vmd:ViewParsingSelectorViewModel">
-    <!--<prism:Dialog.WindowStyle>
-        <Style Selector="Window">
-            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterOwner" />
+
+    <prismExtension:Dialog.Theme>
+        <ControlTheme TargetType="Window">
             <Setter Property="CanResize" Value="False" />
             <Setter Property="ShowInTaskbar" Value="False" />
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
-            ~1~ <Setter Property="WindowStyle" Value="None" /> @1@
-        </Style>
-    </prism:Dialog.WindowStyle>-->
+            <Setter Property="SystemDecorations" Value="None" />
+        </ControlTheme>
+    </prismExtension:Dialog.Theme>
 
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
         <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
 
-            <Grid 
-                Grid.Row="0" 
-                Background="{DynamicResource BrushBackgroundGreyTranslucent3}">
-                
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}" ColumnDefinitions="*,50,*,50">
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushCaptionForeground}"
+                    Text="{Binding Title}" />
+
+                <Button
+                    Grid.Column="4"
+                    Command="{Binding CloseCommand}"
+                    Theme="{StaticResource CloseBtnStyle}"
+                    ToolTip.Tip="{DynamicResource Close}">
+                    <Path
+                        Width="{Binding CloseIcon.Width}"
+                        Height="{Binding CloseIcon.Height}"
+                        Data="{Binding CloseIcon.Data}"
+                        Fill="{Binding CloseIcon.Fill}"
+                        Stretch="UniformToFill" />
+                </Button>
+
             </Grid>
 
             <StackPanel

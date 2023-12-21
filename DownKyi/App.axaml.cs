@@ -10,7 +10,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
-using DownKyi.Services;
+using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services.Download;
 using DownKyi.ViewModels;
 using DownKyi.ViewModels.Dialogs;
@@ -61,6 +61,7 @@ public partial class App : PrismApplication
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<IDialogService, DialogService>();
+        containerRegistry.Register<IDialogWindow, DialogWindow>();
         // pages
         containerRegistry.RegisterForNavigation<ViewIndex>(ViewIndexViewModel.Tag);
         containerRegistry.RegisterForNavigation<ViewLogin>(ViewLoginViewModel.Tag);
@@ -105,8 +106,7 @@ public partial class App : PrismApplication
         // UserSpace
         containerRegistry.RegisterForNavigation<ViewArchive>(ViewArchiveViewModel.Tag);
         // containerRegistry.RegisterForNavigation<Views.UserSpace.ViewChannel>(ViewModels.UserSpace.ViewChannelViewModel.Tag);
-        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace
-            .ViewSeasonsSeriesViewModel.Tag);
+        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace.ViewSeasonsSeriesViewModel.Tag);
 
         // dialogs
         containerRegistry.RegisterDialog<ViewAlertDialog>(ViewAlertDialogViewModel.Tag);

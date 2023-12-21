@@ -7,7 +7,7 @@
         <ResourceInclude Source="/Themes/Colors/ColorDefault.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleBtn.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleImageBtn.axaml" />
-        <!-- <ResourceInclude Source="Styles/StyleSystemBtn.xaml" /> -->
+        <ResourceInclude Source="/Themes/Styles/StyleSystemBtn.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleCheckBox.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleListBox.axaml" />
         <!-- <ResourceInclude Source="Styles/StyleListView.xaml" /> -->

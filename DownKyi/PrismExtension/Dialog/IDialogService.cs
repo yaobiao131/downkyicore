@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Prism.Services.Dialogs;
 
-namespace DownKyi.Services;
+namespace DownKyi.PrismExtension.Dialog;
 
 public interface IDialogService : Prism.Services.Dialogs.IDialogService
 {

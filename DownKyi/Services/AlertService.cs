@@ -3,6 +3,7 @@ using DownKyi.Images;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
 using Prism.Services.Dialogs;
+using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.Services;
 

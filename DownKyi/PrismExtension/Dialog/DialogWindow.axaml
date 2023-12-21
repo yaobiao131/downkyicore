@@ -1,0 +1,12 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:CompileBindings="False"
+        x:Class="DownKyi.PrismExtension.Dialog.DialogWindow"
+        Title="{Binding Title}"
+        WindowStartupLocation="CenterOwner">
+    <Window.Styles>
+        <Style Selector="Window">
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+        </Style>
+    </Window.Styles>
+</Window>

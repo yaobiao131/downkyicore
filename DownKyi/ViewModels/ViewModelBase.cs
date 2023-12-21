@@ -1,6 +1,6 @@
 ﻿using System;
 using Avalonia.Threading;
-using DownKyi.Services;
+using DownKyi.PrismExtension.Dialog;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;

@@ -1,4 +1,10 @@
-﻿using DownKyi.Core.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
+using DownKyi.Core.Logging;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
@@ -7,13 +13,8 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Threading.Tasks;
-using IDialogService = DownKyi.Services.IDialogService;
+using Console = DownKyi.Core.Utils.Debugging.Console;
+using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
@@ -199,7 +200,7 @@ namespace DownKyi.ViewModels.DownloadManager
             }
             catch (Exception e)
             {
-                Core.Utils.Debugging.Console.PrintLine("SetDialogService()发生异常: {0}", e);
+                Console.PrintLine("SetDialogService()发生异常: {0}", e);
                 LogManager.Error($"{Tag}.SetDialogService()", e);
             }
         }
