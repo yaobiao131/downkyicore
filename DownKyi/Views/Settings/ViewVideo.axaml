@@ -94,7 +94,7 @@
                 Background="{DynamicResource BrushBorder}" />
 
             <CheckBox
-                Name="nameIsUseDefaultDirectory"
+                Name="NameIsUseDefaultDirectory"
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
@@ -105,21 +105,10 @@
                 IsChecked="{Binding IsUseDefaultDirectory, Mode=TwoWay}"
                 Theme="{StaticResource CheckBoxStyle}" />
 
-            <StackPanel Margin="0,20,0,0" Orientation="Vertical">
-                <!--<StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultDirectory, Path=IsChecked}"
-                                         Value="false">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding ElementName=nameIsUseDefaultDirectory, Path=IsChecked}"
-                                         Value="true">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>-->
+            <StackPanel
+                Margin="0,20,0,0"
+                Orientation="Vertical"
+                IsVisible="{Binding ElementName=NameIsUseDefaultDirectory,Path=IsChecked}">
 
                 <StackPanel Orientation="Horizontal">
                     <TextBlock
@@ -156,6 +145,7 @@
             <HeaderedContentControl
                 Header="{DynamicResource DownloadContent2}"
                 Background="LightGray"
+                Margin="0,20,0,0"
                 Foreground="{DynamicResource BrushTextDark}"
                 CornerRadius="10"
                 FontSize="12">
@@ -208,6 +198,7 @@
             <HeaderedContentControl
                 Header="{DynamicResource FileNameParts}"
                 Background="LightGray"
+                Margin="0,20,0,0"
                 Foreground="{DynamicResource BrushTextDark}"
                 CornerRadius="10"
                 FontSize="12">
@@ -243,7 +234,7 @@
                         Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource FileName}" />
                     <ListBox
-                        x:Name="nameSelectedFileName"
+                        x:Name="NameSelectedFileName"
                         Grid.Row="1"
                         Grid.Column="1"
                         MinHeight="30"
@@ -253,7 +244,7 @@
                         <i:Interaction.Behaviors>
                             <ia:EventTriggerBehavior EventName="DoubleTapped">
                                 <ia:InvokeCommandAction Command="{Binding SelectedFileNameRightCommand}"
-                                                        CommandParameter="{Binding ElementName=nameSelectedFileName, Path=SelectedItem}" />
+                                                        CommandParameter="{Binding ElementName=NameSelectedFileName, Path=SelectedItem}" />
                             </ia:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                         <ListBox.ItemContainerTheme>
