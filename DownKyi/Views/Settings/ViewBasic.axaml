@@ -4,7 +4,9 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
-             x:DataType="vms:ViewBasicViewModel">
+             x:DataType="vms:ViewBasicViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -81,12 +83,19 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource VideoParseScope}" />
                 <ComboBox
-                    Name="nameParseScopes"
+                    Name="NameParseScopes"
                     Width="120"
                     VerticalContentAlignment="Center"
                     DisplayMemberBinding="{Binding Name}"
                     ItemsSource="{Binding ParseScopes}"
                     SelectedItem="{Binding SelectedParseScope}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding ParseScopesCommand}"
+                                                    CommandParameter="{Binding ElementName=NameParseScopes, Path=SelectedItem}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+
                 </ComboBox>
             </StackPanel>
             <CheckBox

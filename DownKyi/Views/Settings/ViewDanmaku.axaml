@@ -4,7 +4,10 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
-             x:DataType="vms:ViewDanmakuViewModel">
+             x:DataType="vms:ViewDanmakuViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:iac="clr-namespace:DownKyi.CustomAction">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -22,11 +25,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource Resolution}" />
                 <TextBox
-                    Name="nameScreenWidth"
+                    Name="NameScreenWidth"
                     Width="95"
                     Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenWidth, Mode=TwoWay}">
+                    <i:Interaction.Behaviors>
+                        <iac:KeyUpBehavior Key="Enter">
+                            <ia:InvokeCommandAction
+                                Command="{Binding ScreenWidthCommand}"
+                                CommandParameter="{Binding ElementName=NameScreenWidth, Path=Text}" />
+                        </iac:KeyUpBehavior>
+                    </i:Interaction.Behaviors>
                 </TextBox>
                 <TextBlock
                     Margin="5,0"
@@ -35,11 +45,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="×" />
                 <TextBox
-                    Name="nameScreenHeight"
+                    Name="NameScreenHeight"
                     Width="95"
                     Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenHeight, Mode=TwoWay}">
+                    <i:Interaction.Behaviors>
+                        <iac:KeyUpBehavior Key="Enter">
+                            <ia:InvokeCommandAction
+                                Command="{Binding ScreenHeightCommand}"
+                                CommandParameter="{Binding ElementName=NameScreenHeight, Path=Text}" />
+                        </iac:KeyUpBehavior>
+                    </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -49,11 +66,19 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource FontName}" />
                 <ComboBox
-                    Name="nameFonts"
+                    Name="NameFonts"
                     Width="200"
                     VerticalContentAlignment="Center"
                     ItemsSource="{Binding Fonts}"
                     SelectedValue="{Binding SelectedFont}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction
+                                Command="{Binding FontSelectCommand}"
+                                CommandParameter="{Binding ElementName=NameFonts, Path=SelectedValue}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+
                 </ComboBox>
             </StackPanel>
             <StackPanel
@@ -65,11 +90,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource FontSize}" />
                 <TextBox
-                    x:Name="nameFontSize"
+                    x:Name="NameFontSize"
                     Width="200"
                     Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding FontSize}">
+                    <i:Interaction.Behaviors>
+                        <iac:KeyUpBehavior Key="Enter">
+                            <ia:InvokeCommandAction
+                                Command="{Binding FontSizeCommand}"
+                                CommandParameter="{Binding ElementName=NameFontSize, Path=Text}" />
+                        </iac:KeyUpBehavior>
+                    </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
             <StackPanel
@@ -81,11 +113,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource LineCount}" />
                 <TextBox
-                    Name="nameLineCount"
+                    Name="NameLineCount"
                     Width="200"
                     Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding LineCount}">
+                    <i:Interaction.Behaviors>
+                        <iac:KeyUpBehavior Key="Enter">
+                            <ia:InvokeCommandAction
+                                Command="{Binding LineCountCommand}"
+                                CommandParameter="{Binding ElementName=NameLineCount, Path=Text}" />
+                        </iac:KeyUpBehavior>
+                    </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -116,7 +155,7 @@
                     IsChecked="{Binding Async, Mode=TwoWay}"
                     Theme="{StaticResource CheckBoxStyle}" />
             </StackPanel>
-            
+
             <StackPanel Margin="10" />
         </StackPanel>
 
