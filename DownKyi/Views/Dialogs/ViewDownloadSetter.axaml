@@ -109,10 +109,6 @@
                         <TextBlock
                             FontSize="12"
                             Foreground="{DynamicResource BrushTextDark}"
-                            Text="{Binding DriveName}" />
-                        <TextBlock
-                            FontSize="12"
-                            Foreground="{DynamicResource BrushTextDark}"
                             Text="{DynamicResource HardDiskFreeSpace}" />
                         <TextBlock
                             FontSize="12"

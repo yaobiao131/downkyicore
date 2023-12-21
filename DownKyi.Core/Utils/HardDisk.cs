@@ -39,9 +39,9 @@ public static class HardDisk
     /// <summary>
     /// 获取指定驱动器的剩余空间总大小
     /// </summary>
-    /// <param name="hardDiskName">只需输入代表驱动器的字母即可</param>
+    /// <param name="path">路径</param>
     /// <returns></returns>
-    public static long GetHardDiskFreeSpace(string hardDiskName)
+    /*public static long GetHardDiskFreeSpace(string hardDiskName)
     {
         long freeSpace = 0;
         try
@@ -56,6 +56,23 @@ public static class HardDisk
                     freeSpace = drive.TotalFreeSpace;
                 }
             }
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("GetHardDiskFreeSpace()发生异常: {0}", e);
+            LogManager.Error("HardDisk", e);
+        }
+
+        return freeSpace;
+    }*/
+    public static long GetHardDiskFreeSpace(string path)
+    {
+        long freeSpace = 0;
+        try
+        {
+            DriveInfo driveInfo = new DriveInfo(path);
+            // hardDiskName = $"{path}:\\";
+            freeSpace = driveInfo.TotalFreeSpace;
         }
         catch (Exception e)
         {

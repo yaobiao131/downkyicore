@@ -202,8 +202,8 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
         if (directory == null)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
-            Directory = string.Empty;
+            // eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
+            // Directory = string.Empty;
         }
         else
         {
