@@ -21,12 +21,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource FirstVideoCodecs}" />
                 <ComboBox
-                    Name="nameVideoCodecs"
+                    Name="NameVideoCodecs"
                     DisplayMemberBinding="{ReflectionBinding Name}"
                     Width="120"
                     VerticalContentAlignment="Center"
                     ItemsSource="{Binding VideoCodecs}"
                     SelectedValue="{Binding SelectedVideoCodec}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding VideoCodecsCommand}"
+                                                    CommandParameter="{Binding ElementName=NameVideoCodecs,Path=SelectedValue}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -36,12 +42,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource FirstVideoQuality}" />
                 <ComboBox
-                    Name="nameVideoQualityList"
+                    Name="NameVideoQualityList"
                     Width="120"
                     VerticalContentAlignment="Center"
                     DisplayMemberBinding="{ReflectionBinding Name}"
                     ItemsSource="{Binding VideoQualityList}"
                     SelectedItem="{Binding SelectedVideoQuality}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding VideoQualityCommand}"
+                                                    CommandParameter="{Binding ElementName=NameVideoQualityList,Path=SelectedValue}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -51,12 +63,18 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource FirstAudioQuality}" />
                 <ComboBox
-                    Name="nameAudioQualityList"
+                    Name="NameAudioQualityList"
                     Width="120"
                     VerticalContentAlignment="Center"
                     DisplayMemberBinding="{ReflectionBinding Name}"
                     ItemsSource="{Binding AudioQualityList}"
                     SelectedItem="{Binding SelectedAudioQuality}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding AudioQualityCommand}"
+                                                    CommandParameter="{Binding ElementName=NameAudioQualityList,Path=SelectedValue}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <CheckBox
