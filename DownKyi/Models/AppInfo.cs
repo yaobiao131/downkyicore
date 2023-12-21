@@ -11,7 +11,7 @@ public class AppInfo
 
     const int a = 1;
     const int b = 0;
-    const int c = 0;
+    const int c = 2;
 
     public AppInfo()
     {
