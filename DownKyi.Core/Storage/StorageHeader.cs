@@ -52,7 +52,8 @@ public class StorageHeader
         try
         {
             Bitmap bitmap = new Bitmap(header);
-            var thumbnail = bitmap.CreateScaledBitmap(new PixelSize(width, height));
+            var thumbnail =
+                bitmap.CreateScaledBitmap(new PixelSize(width, height), BitmapInterpolationMode.Unspecified);
 
             return thumbnail;
         }

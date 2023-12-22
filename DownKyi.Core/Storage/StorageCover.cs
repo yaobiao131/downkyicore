@@ -49,7 +49,7 @@ public class StorageCover
         try
         {
             Bitmap bitmap = new Bitmap(cover);
-            return bitmap.CreateScaledBitmap(new PixelSize(width, height));
+            return bitmap.CreateScaledBitmap(new PixelSize(width, height), BitmapInterpolationMode.Unspecified);
 
             // return StorageUtils.BitmapToBitmapImage(new Bitmap(thumbnail));
         }
