@@ -16,6 +16,41 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     Text="{DynamicResource SettingDanmaku}" />
             </StackPanel>
+
+            <HeaderedContentControl
+                Background="LightGray"
+                Margin="0,20,0,0"
+                Padding="20,5"
+                HorizontalAlignment="Left"
+                FontSize="12"
+                Foreground="{DynamicResource BrushTextDark}"
+                Header="{DynamicResource FilterType}">
+                <StackPanel Margin="10" Orientation="Horizontal">
+                    <CheckBox
+                        Margin="0,0,0,0"
+                        Command="{Binding TopFilterCommand}"
+                        Content="{DynamicResource TopFilter}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding TopFilter, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding BottomFilterCommand}"
+                        Content="{DynamicResource BottomFilter}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding BottomFilter, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                    <CheckBox
+                        Margin="40,0,0,0"
+                        Command="{Binding ScrollFilterCommand}"
+                        Content="{DynamicResource ScrollFilter}"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding ScrollFilter, Mode=TwoWay}"
+                        Theme="{StaticResource CheckBoxStyle}" />
+                </StackPanel>
+            </HeaderedContentControl>
+
+
             <StackPanel
                 Margin="0,20,0,0"
                 Orientation="Horizontal">
