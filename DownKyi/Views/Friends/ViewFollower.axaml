@@ -5,8 +5,6 @@
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmf:ViewFollowerViewModel"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <UserControl.Resources>
@@ -22,8 +20,9 @@
                             Cursor="Hand" ColumnDefinitions="80,*">
                             <i:Interaction.Behaviors>
                                 <ia:EventTriggerBehavior EventName="PointerReleased">
-                                    <ia:InvokeCommandAction Command="{Binding UserCommand}"
-                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                    <ia:InvokeCommandAction
+                                        Command="{Binding UserCommand}"
+                                        CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                 </ia:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
 
@@ -68,10 +67,11 @@
         </ControlTheme>
     </UserControl.Resources>
     <Grid>
-        <Grid Grid.Column="1" IsVisible="{Binding ContentVisibility}" RowDefinitions="*,50">
-
+        <Grid
+            IsVisible="{Binding ContentVisibility}"
+            RowDefinitions="*,50">
             <ListBox
-                x:Name="nameContents"
+                x:Name="NameContents"
                 Grid.Row="0"
                 BorderThickness="0"
                 ItemContainerTheme="{StaticResource ContentListStyle}"

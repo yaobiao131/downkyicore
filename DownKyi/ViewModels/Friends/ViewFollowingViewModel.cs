@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using DownKyi.Core.BiliApi.Users;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.Settings;
-using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
 using DownKyi.CustomControl;
 using DownKyi.Utils;
@@ -22,123 +21,123 @@ public class ViewFollowingViewModel : ViewModelBase
     public const string Tag = "PageFriendsFollowing";
 
     // mid
-    private long mid = -1;
+    private long _mid = -1;
 
     // 每页数量，暂时在此写死，以后在设置中增加选项
     private readonly int NumberInPage = 20;
 
     #region 页面属性申明
 
-    private string pageName = ViewFriendsViewModel.Tag;
+    private string _pageName = ViewFriendsViewModel.Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private bool innerContentVisibility;
+    private bool _innerContentVisibility;
 
     public bool InnerContentVisibility
     {
-        get => innerContentVisibility;
-        set => SetProperty(ref innerContentVisibility, value);
+        get => _innerContentVisibility;
+        set => SetProperty(ref _innerContentVisibility, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private bool contentLoading;
+    private bool _contentLoading;
 
     public bool ContentLoading
     {
-        get => contentLoading;
-        set => SetProperty(ref contentLoading, value);
+        get => _contentLoading;
+        set => SetProperty(ref _contentLoading, value);
     }
 
-    private bool contentLoadingVisibility;
+    private bool _contentLoadingVisibility;
 
     public bool ContentLoadingVisibility
     {
-        get => contentLoadingVisibility;
-        set => SetProperty(ref contentLoadingVisibility, value);
+        get => _contentLoadingVisibility;
+        set => SetProperty(ref _contentLoadingVisibility, value);
     }
 
-    private bool contentNoDataVisibility;
+    private bool _contentNoDataVisibility;
 
     public bool ContentNoDataVisibility
     {
-        get => contentNoDataVisibility;
-        set => SetProperty(ref contentNoDataVisibility, value);
+        get => _contentNoDataVisibility;
+        set => SetProperty(ref _contentNoDataVisibility, value);
     }
 
-    private ObservableCollection<TabHeader> tabHeaders;
+    private ObservableCollection<TabHeader> _tabHeaders;
 
     public ObservableCollection<TabHeader> TabHeaders
     {
-        get => tabHeaders;
-        set => SetProperty(ref tabHeaders, value);
+        get => _tabHeaders;
+        set => SetProperty(ref _tabHeaders, value);
     }
 
-    private int selectTabId;
+    private int _selectTabId;
 
     public int SelectTabId
     {
-        get => selectTabId;
-        set => SetProperty(ref selectTabId, value);
+        get => _selectTabId;
+        set => SetProperty(ref _selectTabId, value);
     }
 
-    private bool isEnabled = true;
+    private bool _isEnabled = true;
 
     public bool IsEnabled
     {
-        get => isEnabled;
-        set => SetProperty(ref isEnabled, value);
+        get => _isEnabled;
+        set => SetProperty(ref _isEnabled, value);
     }
 
-    private CustomPagerViewModel pager;
+    private CustomPagerViewModel _pager;
 
     public CustomPagerViewModel Pager
     {
-        get => pager;
-        set => SetProperty(ref pager, value);
+        get => _pager;
+        set => SetProperty(ref _pager, value);
     }
 
-    private ObservableCollection<FriendInfo> contents;
+    private ObservableCollection<FriendInfo> _contents;
 
     public ObservableCollection<FriendInfo> Contents
     {
-        get => contents;
-        set => SetProperty(ref contents, value);
+        get => _contents;
+        set => SetProperty(ref _contents, value);
     }
 
     #endregion
@@ -165,10 +164,9 @@ public class ViewFollowingViewModel : ViewModelBase
     #region 命令申明
 
     // 左侧tab点击事件
-    private DelegateCommand<object> leftTabHeadersCommand;
+    private DelegateCommand<object>? _leftTabHeadersCommand;
 
-    public DelegateCommand<object> LeftTabHeadersCommand => leftTabHeadersCommand ?? (leftTabHeadersCommand =
-        new DelegateCommand<object>(ExecuteLeftTabHeadersCommand, CanExecuteLeftTabHeadersCommand));
+    public DelegateCommand<object> LeftTabHeadersCommand => _leftTabHeadersCommand ??= new DelegateCommand<object>(ExecuteLeftTabHeadersCommand, CanExecuteLeftTabHeadersCommand);
 
     /// <summary>
     /// 左侧tab点击事件
@@ -176,7 +174,7 @@ public class ViewFollowingViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLeftTabHeadersCommand(object parameter)
     {
-        if (!(parameter is TabHeader tabHeader))
+        if (parameter is not TabHeader tabHeader)
         {
             return;
         }
@@ -220,16 +218,16 @@ public class ViewFollowingViewModel : ViewModelBase
     /// <summary>
     /// 初始化左侧列表
     /// </summary>
-    private async void InitLeftTable()
+    private async Task InitLeftTable()
     {
         TabHeaders.Clear();
 
-        UserInfoSettings userInfo = SettingsManager.GetInstance().GetUserInfo();
-        if (userInfo != null && userInfo.Mid == mid)
+        var userInfo = SettingsManager.GetInstance().GetUserInfo();
+        if (userInfo != null && userInfo.Mid == _mid)
         {
             // 用户的关系状态数
-            UserRelationStat relationStat = null;
-            await Task.Run(() => { relationStat = UserStatus.GetUserRelationStat(mid); });
+            UserRelationStat? relationStat = null;
+            await Task.Run(() => { relationStat = UserStatus.GetUserRelationStat(_mid); });
             if (relationStat != null)
             {
                 TabHeaders.Add(new TabHeader
@@ -245,11 +243,11 @@ public class ViewFollowingViewModel : ViewModelBase
             }
 
             // 用户的关注分组
-            List<FollowingGroup> followingGroup = null;
+            List<FollowingGroup>? followingGroup = null;
             await Task.Run(() => { followingGroup = UserRelation.GetFollowingGroup(); });
             if (followingGroup != null)
             {
-                foreach (FollowingGroup tag in followingGroup)
+                foreach (var tag in followingGroup)
                 {
                     TabHeaders.Add(new TabHeader { Id = tag.TagId, Title = tag.Name, SubTitle = tag.Count.ToString() });
                 }
@@ -258,8 +256,8 @@ public class ViewFollowingViewModel : ViewModelBase
         else
         {
             // 用户的关系状态数
-            UserRelationStat relationStat = null;
-            await Task.Run(() => { relationStat = UserStatus.GetUserRelationStat(mid); });
+            UserRelationStat? relationStat = null;
+            await Task.Run(() => { relationStat = UserStatus.GetUserRelationStat(_mid); });
             if (relationStat != null)
             {
                 TabHeaders.Add(new TabHeader
@@ -281,22 +279,18 @@ public class ViewFollowingViewModel : ViewModelBase
         ContentNoDataVisibility = false;
         foreach (var item in contents)
         {
-            StorageHeader storageHeader = new StorageHeader();
-            Bitmap header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
-            App.PropertyChangeAsync(new Action(() =>
-            {
-                Contents.Add(new FriendInfo(EventAggregator)
-                    { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign });
-            }));
+            var storageHeader = new StorageHeader();
+            var header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
+            App.PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
         }
     }
 
     private async Task<bool> LoadAllFollowings(int pn, int ps)
     {
-        List<RelationFollowInfo> contents = null;
+        List<RelationFollowInfo>? contents = null;
         await Task.Run(() =>
         {
-            RelationFollow data = UserRelation.GetFollowings(mid, pn, ps);
+            var data = UserRelation.GetFollowings(_mid, pn, ps);
             if (data != null && data.List != null && data.List.Count > 0)
             {
                 contents = data.List;
@@ -320,7 +314,7 @@ public class ViewFollowingViewModel : ViewModelBase
 
     private async Task<bool> LoadWhispers(int pn, int ps)
     {
-        List<RelationFollowInfo> contents = null;
+        List<RelationFollowInfo>? contents = null;
         await Task.Run(() =>
         {
             contents = UserRelation.GetWhispers(pn, ps);
@@ -342,7 +336,7 @@ public class ViewFollowingViewModel : ViewModelBase
 
     private async Task<bool> LoadFollowingGroupContent(long tagId, int pn, int ps)
     {
-        List<RelationFollowInfo> contents = null;
+        List<RelationFollowInfo>? contents = null;
         await Task.Run(() =>
         {
             contents = UserRelation.GetFollowingGroupContent(tagId, pn, ps);
@@ -373,7 +367,7 @@ public class ViewFollowingViewModel : ViewModelBase
         ContentLoadingVisibility = true;
         ContentNoDataVisibility = false;
 
-        TabHeader tab = TabHeaders[SelectTabId];
+        var tab = TabHeaders[SelectTabId];
 
         bool isSucceed;
         switch (tab.Id)
@@ -431,27 +425,30 @@ public class ViewFollowingViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 传入mid
-        long parameter = navigationContext.Parameters.GetValue<long>("mid");
+        var parameter = navigationContext.Parameters.GetValue<long>("mid");
         if (parameter == 0)
         {
             return;
         }
 
-        mid = parameter;
+        _mid = parameter;
 
         // 是否是从PageFriends的headerTable的item点击进入的
         // true表示加载PageFriends后第一次进入此页面
         // false表示从headerTable的item点击进入的
-        bool isFirst = navigationContext.Parameters.GetValue<bool>("isFirst");
+        var isFirst = navigationContext.Parameters.GetValue<bool>("isFirst");
         if (isFirst)
         {
-            InitView();
+            async void Init()
+            {
+                InitView();
+                // 初始化左侧列表
+                await InitLeftTable();
+                // 进入页面时显示的设置项
+                SelectTabId = 0;
+            }
 
-            // 初始化左侧列表
-            InitLeftTable();
-
-            // 进入页面时显示的设置项
-            SelectTabId = 0;
+            Dispatcher.UIThread.InvokeAsync(Init);
         }
     }
 }

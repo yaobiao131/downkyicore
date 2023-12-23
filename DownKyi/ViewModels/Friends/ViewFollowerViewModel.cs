@@ -46,6 +46,7 @@ public class ViewFollowerViewModel : ViewModelBase
     }
 
     private bool loading;
+
     public bool Loading
     {
         get => loading;
@@ -113,11 +114,7 @@ public class ViewFollowerViewModel : ViewModelBase
         {
             StorageHeader storageHeader = new StorageHeader();
             Bitmap header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
-            App.PropertyChangeAsync(new Action(() =>
-            {
-                Contents.Add(new FriendInfo(EventAggregator)
-                    { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign });
-            }));
+            App.PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
         }
     }
 
@@ -132,8 +129,8 @@ public class ViewFollowerViewModel : ViewModelBase
         LoadingVisibility = true;
         NoDataVisibility = false;
 
-        RelationFollow data = null;
-        List<RelationFollowInfo> contents = null;
+        RelationFollow? data = null;
+        List<RelationFollowInfo>? contents = null;
         await Task.Run(() =>
         {
             data = UserRelation.GetFollowers(mid, current, NumberInPage);
@@ -158,14 +155,14 @@ public class ViewFollowerViewModel : ViewModelBase
         }
         else
         {
-            UserInfoSettings userInfo = SettingsManager.GetInstance().GetUserInfo();
+            var userInfo = SettingsManager.GetInstance().GetUserInfo();
             if (userInfo != null && userInfo.Mid == mid)
             {
                 Pager.Count = (int)Math.Ceiling((double)data.Total / NumberInPage);
             }
             else
             {
-                int page = (int)Math.Ceiling((double)data.Total / NumberInPage);
+                var page = (int)Math.Ceiling((double)data.Total / NumberInPage);
                 if (page > 5)
                 {
                     Pager.Count = 5;
@@ -222,7 +219,7 @@ public class ViewFollowerViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 传入mid
-        long parameter = navigationContext.Parameters.GetValue<long>("mid");
+        var parameter = navigationContext.Parameters.GetValue<long>("mid");
         if (parameter == 0)
         {
             return;
@@ -233,7 +230,7 @@ public class ViewFollowerViewModel : ViewModelBase
         // 是否是从PageFriends的headerTable的item点击进入的
         // true表示加载PageFriends后第一次进入此页面
         // false表示从headerTable的item点击进入的
-        bool isFirst = navigationContext.Parameters.GetValue<bool>("isFirst");
+        var isFirst = navigationContext.Parameters.GetValue<bool>("isFirst");
         if (isFirst)
         {
             InitView();

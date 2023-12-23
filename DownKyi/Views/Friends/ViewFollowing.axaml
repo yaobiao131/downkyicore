@@ -1,17 +1,13 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:converter="clr-namespace:DownKyi.Converter"
              x:Class="DownKyi.Views.Friends.ViewFollowing"
              xmlns:vmf="clr-namespace:DownKyi.ViewModels.Friends"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmf:ViewFollowingViewModel"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <UserControl.Resources>
-        <converter:CountConverter x:Key="CountConverter" Count="1" />
 
         <ControlTheme x:Key="ContentListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FriendInfo">
             <Setter Property="Template">
@@ -25,8 +21,9 @@
                             Cursor="Hand" ColumnDefinitions="80,*">
                             <i:Interaction.Behaviors>
                                 <ia:EventTriggerBehavior EventName="PointerReleased">
-                                    <ia:InvokeCommandAction Command="{Binding UserCommand}"
-                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                    <ia:InvokeCommandAction
+                                        Command="{Binding UserCommand}"
+                                        CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                 </ia:EventTriggerBehavior>
                             </i:Interaction.Behaviors>
 
@@ -85,15 +82,19 @@
                 Theme="{StaticResource LeftTabHeaderStyle}">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
+                        <ia:InvokeCommandAction
+                            Command="{Binding LeftTabHeadersCommand}"
+                            CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListBox>
             <!--  右侧内容区  -->
-            <Grid Grid.Column="1" IsVisible="{Binding InnerContentVisibility}" RowDefinitions="*,50">
+            <Grid
+                Grid.Column="1"
+                IsVisible="{Binding InnerContentVisibility}"
+                RowDefinitions="*,50">
                 <ListBox
-                    x:Name="nameContents"
+                    x:Name="NameContents"
                     Grid.Row="0"
                     BorderThickness="0"
                     ItemContainerTheme="{StaticResource ContentListStyle}"
@@ -130,6 +131,11 @@
                         </ControlTheme>
                     </ListBox.Theme>
                 </ListBox>
+                <custom:CustomPager
+                    Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DataContext="{Binding Pager}" />
             </Grid>
             <!--  加载gif  -->
             <StackPanel
