@@ -2,16 +2,11 @@ namespace DownKyi.Images;
 
 public class ButtonIcon
 {
-    private static ButtonIcon instance;
+    private static ButtonIcon? _instance;
 
     public static ButtonIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new ButtonIcon();
-        }
-
-        return instance;
+        return _instance ??= new ButtonIcon();
     }
 
     public ButtonIcon()

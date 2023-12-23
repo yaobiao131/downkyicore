@@ -2,14 +2,10 @@ namespace DownKyi.Images;
 
 public class NavigationIcon
 {
-    private static NavigationIcon instance;
+    private static NavigationIcon? _instance;
     public static NavigationIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new NavigationIcon();
-        }
-        return instance;
+        return _instance ??= new NavigationIcon();
     }
 
     public NavigationIcon()

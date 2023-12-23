@@ -19,24 +19,17 @@ public class CustomPagerViewModel : INotifyPropertyChanged
     // Current修改的回调
     public delegate bool CurrentChangedHandler(int old, int current);
 
-    public event CurrentChangedHandler CurrentChanged;
+    public event CurrentChangedHandler? CurrentChanged;
 
     protected virtual bool OnCurrentChanged(int old, int current)
     {
-        if (CurrentChanged == null)
-        {
-            return false;
-        }
-        else
-        {
-            return CurrentChanged.Invoke(old, current);
-        }
+        return CurrentChanged != null && CurrentChanged.Invoke(old, current);
     }
 
     // Count修改的回调
     public delegate void CountChangedHandler(int count);
 
-    public event CountChangedHandler CountChanged;
+    public event CountChangedHandler? CountChanged;
 
     protected virtual void OnCountChanged(int count)
     {
@@ -45,14 +38,14 @@ public class CustomPagerViewModel : INotifyPropertyChanged
 
     #region 绑定属性
 
-    private bool visibility;
+    private bool? _visibility;
 
-    public bool Visibility
+    public bool? Visibility
     {
-        get { return visibility; }
+        get => _visibility;
         set
         {
-            visibility = value;
+            _visibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Visibility"));
         }
     }
@@ -74,14 +67,7 @@ public class CustomPagerViewModel : INotifyPropertyChanged
             {
                 count = value;
 
-                if (count <= 1)
-                {
-                    Visibility = false;
-                }
-                else
-                {
-                    Visibility = true;
-                }
+                Visibility = count > 1;
 
                 OnCountChanged(count);
 
@@ -92,18 +78,18 @@ public class CustomPagerViewModel : INotifyPropertyChanged
         }
     }
 
-    private int current;
+    private int _current;
 
     public int Current
     {
         get
         {
-            if (current < 1)
+            if (_current < 1)
             {
-                current = 1;
+                _current = 1;
             }
 
-            return current;
+            return _current;
         }
         set
         {
@@ -113,10 +99,10 @@ public class CustomPagerViewModel : INotifyPropertyChanged
             }
             else
             {
-                bool isSuccess = OnCurrentChanged(current, value);
+                bool isSuccess = OnCurrentChanged(_current, value);
                 if (isSuccess)
                 {
-                    current = value;
+                    _current = value;
 
                     SetView();
 
@@ -126,184 +112,184 @@ public class CustomPagerViewModel : INotifyPropertyChanged
         }
     }
 
-    private int first;
+    private int _first;
 
     public int First
     {
-        get { return first; }
+        get { return _first; }
         set
         {
-            first = value;
+            _first = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("First"));
         }
     }
 
-    private int previousSecond;
+    private int _previousSecond;
 
     public int PreviousSecond
     {
-        get { return previousSecond; }
+        get => _previousSecond;
         set
         {
-            previousSecond = value;
+            _previousSecond = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PreviousSecond"));
         }
     }
 
-    private int previousFirst;
+    private int _previousFirst;
 
     public int PreviousFirst
     {
-        get { return previousFirst; }
+        get => _previousFirst;
         set
         {
-            previousFirst = value;
+            _previousFirst = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PreviousFirst"));
         }
     }
 
-    private int nextFirst;
+    private int _nextFirst;
 
     public int NextFirst
     {
-        get { return nextFirst; }
+        get => _nextFirst;
         set
         {
-            nextFirst = value;
+            _nextFirst = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NextFirst"));
         }
     }
 
-    private int nextSecond;
+    private int _nextSecond;
 
     public int NextSecond
     {
-        get { return nextSecond; }
+        get => _nextSecond;
         set
         {
-            nextSecond = value;
+            _nextSecond = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NextSecond"));
         }
     }
 
     // 控制Current左边的控件
-    private bool previousVisibility;
+    private bool _previousVisibility;
 
     public bool PreviousVisibility
     {
-        get { return previousVisibility; }
+        get => _previousVisibility;
         set
         {
-            previousVisibility = value;
+            _previousVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PreviousVisibility"));
         }
     }
 
-    private bool firstVisibility;
+    private bool _firstVisibility;
 
     public bool FirstVisibility
     {
-        get { return firstVisibility; }
+        get => _firstVisibility;
         set
         {
-            firstVisibility = value;
+            _firstVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FirstVisibility"));
         }
     }
 
-    private bool leftJumpVisibility;
+    private bool _leftJumpVisibility;
 
     public bool LeftJumpVisibility
     {
-        get { return leftJumpVisibility; }
+        get => _leftJumpVisibility;
         set
         {
-            leftJumpVisibility = value;
+            _leftJumpVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LeftJumpVisibility"));
         }
     }
 
-    private bool previousSecondVisibility;
+    private bool _previousSecondVisibility;
 
     public bool PreviousSecondVisibility
     {
-        get { return previousSecondVisibility; }
+        get => _previousSecondVisibility;
         set
         {
-            previousSecondVisibility = value;
+            _previousSecondVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PreviousSecondVisibility"));
         }
     }
 
-    private bool previousFirstVisibility;
+    private bool _previousFirstVisibility;
 
     public bool PreviousFirstVisibility
     {
-        get { return previousFirstVisibility; }
+        get => _previousFirstVisibility;
         set
         {
-            previousFirstVisibility = value;
+            _previousFirstVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PreviousFirstVisibility"));
         }
     }
 
     // 控制Current右边的控件
-    private bool nextFirstVisibility;
+    private bool _nextFirstVisibility;
 
     public bool NextFirstVisibility
     {
-        get { return nextFirstVisibility; }
+        get => _nextFirstVisibility;
         set
         {
-            nextFirstVisibility = value;
+            _nextFirstVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NextFirstVisibility"));
         }
     }
 
-    private bool nextSecondVisibility;
+    private bool _nextSecondVisibility;
 
     public bool NextSecondVisibility
     {
-        get { return nextSecondVisibility; }
+        get => _nextSecondVisibility;
         set
         {
-            nextSecondVisibility = value;
+            _nextSecondVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NextSecondVisibility"));
         }
     }
 
-    private bool rightJumpVisibility;
+    private bool _rightJumpVisibility;
 
     public bool RightJumpVisibility
     {
-        get { return rightJumpVisibility; }
+        get => _rightJumpVisibility;
         set
         {
-            rightJumpVisibility = value;
+            _rightJumpVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RightJumpVisibility"));
         }
     }
 
-    private bool lastVisibility;
+    private bool _lastVisibility;
 
     public bool LastVisibility
     {
-        get { return lastVisibility; }
+        get => _lastVisibility;
         set
         {
-            lastVisibility = value;
+            _lastVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("LastVisibility"));
         }
     }
 
-    private bool nextVisibility;
+    private bool _nextVisibility;
 
     public bool NextVisibility
     {
-        get { return nextVisibility; }
+        get => _nextVisibility;
         set
         {
-            nextVisibility = value;
+            _nextVisibility = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NextVisibility"));
         }
     }
@@ -311,100 +297,89 @@ public class CustomPagerViewModel : INotifyPropertyChanged
     #endregion
 
 
-    private DelegateCommand<object> previousCommand;
+    private DelegateCommand<object>? _previousCommand;
 
-    public DelegateCommand<object> PreviousCommand =>
-        previousCommand ?? (previousCommand = new DelegateCommand<object>(PreviousExecuted));
+    public DelegateCommand<object> PreviousCommand => _previousCommand ??= new DelegateCommand<object>(PreviousExecuted);
 
-    public void PreviousExecuted(object obj)
+    private void PreviousExecuted(object obj)
     {
         Current -= 1;
 
         SetView();
     }
 
-    private DelegateCommand<object> firstCommand;
+    private DelegateCommand<object>? _firstCommand;
 
-    public DelegateCommand<object> FirstCommand =>
-        firstCommand ?? (firstCommand = new DelegateCommand<object>(FirstExecuted));
+    public DelegateCommand<object> FirstCommand => _firstCommand ??= new DelegateCommand<object>(FirstExecuted);
 
-    public void FirstExecuted(object obj)
+    private void FirstExecuted(object obj)
     {
         Current = 1;
 
         SetView();
     }
 
-    private DelegateCommand<object> previousSecondCommand;
+    private DelegateCommand<object>? _previousSecondCommand;
 
-    public DelegateCommand<object> PreviousSecondCommand => previousSecondCommand ??
-                                                            (previousSecondCommand =
-                                                                new DelegateCommand<object>(
-                                                                    PreviousSecondExecuted));
+    public DelegateCommand<object> PreviousSecondCommand => _previousSecondCommand ??= new DelegateCommand<object>(
+        PreviousSecondExecuted);
 
-    public void PreviousSecondExecuted(object obj)
+    private void PreviousSecondExecuted(object obj)
     {
         Current -= 2;
 
         SetView();
     }
 
-    private DelegateCommand<object> previousFirstCommand;
+    private DelegateCommand<object>? _previousFirstCommand;
 
-    public DelegateCommand<object> PreviousFirstCommand => previousFirstCommand ??
-                                                           (previousFirstCommand =
-                                                               new DelegateCommand<object>(PreviousFirstExecuted));
+    public DelegateCommand<object> PreviousFirstCommand => _previousFirstCommand ??= new DelegateCommand<object>(PreviousFirstExecuted);
 
-    public void PreviousFirstExecuted(object obj)
+    private void PreviousFirstExecuted(object obj)
     {
         Current -= 1;
 
         SetView();
     }
 
-    private DelegateCommand<object> nextFirstCommand;
+    private DelegateCommand<object>? _nextFirstCommand;
 
-    public DelegateCommand<object> NextFirstCommand =>
-        nextFirstCommand ?? (nextFirstCommand = new DelegateCommand<object>(NextFirstExecuted));
+    public DelegateCommand<object> NextFirstCommand => _nextFirstCommand ??= new DelegateCommand<object>(NextFirstExecuted);
 
-    public void NextFirstExecuted(object obj)
+    private void NextFirstExecuted(object obj)
     {
         Current += 1;
 
         SetView();
     }
 
-    private DelegateCommand<object> nextSecondCommand;
+    private DelegateCommand<object>? _nextSecondCommand;
 
-    public DelegateCommand<object> NextSecondCommand => nextSecondCommand ??
-                                                        (nextSecondCommand =
-                                                            new DelegateCommand<object>(NextSecondExecuted));
+    public DelegateCommand<object> NextSecondCommand => _nextSecondCommand ??= new DelegateCommand<object>(NextSecondExecuted);
 
-    public void NextSecondExecuted(object obj)
+    private void NextSecondExecuted(object obj)
     {
         Current += 2;
 
         SetView();
     }
 
-    private DelegateCommand<object> lastCommand;
+    private DelegateCommand<object>? _lastCommand;
 
-    public DelegateCommand<object> LastCommand =>
-        lastCommand ?? (lastCommand = new DelegateCommand<object>(LastExecuted));
+    public DelegateCommand<object> LastCommand => _lastCommand ??= new DelegateCommand<object>(LastExecuted);
 
-    public void LastExecuted(object obj)
+    private void LastExecuted(object obj)
     {
         Current = Count;
 
         SetView();
     }
 
-    private DelegateCommand<object> nextCommand;
+    private DelegateCommand<object>? _nextCommand;
 
-    public DelegateCommand<object> NextCommand =>
-        nextCommand ?? (nextCommand = new DelegateCommand<object>(NextExecuted));
+    public DelegateCommand<object> NextCommand => _nextCommand ??= new DelegateCommand<object>(NextExecuted);
 
-    public void NextExecuted(object obj)
+    private void NextExecuted(object obj)
     {
         Current += 1;
 

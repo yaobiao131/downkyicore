@@ -31,103 +31,103 @@ public class ViewVideoDetailViewModel : ViewModelBase
     public const string Tag = "PageVideoDetail";
 
     // 保存输入字符串，避免被用户修改
-    private string input = null;
+    private string _input;
 
-    private IInfoService? infoService;
+    private IInfoService? _infoService;
 
     #region 页面属性申明
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private string inputText;
+    private string? _inputText;
 
-    public string InputText
+    public string? InputText
     {
-        get => inputText;
-        set => SetProperty(ref inputText, value);
+        get => _inputText;
+        set => SetProperty(ref _inputText, value);
     }
 
-    private string inputSearchText;
+    private string _inputSearchText;
 
     public string InputSearchText
     {
-        get => inputSearchText;
-        set => SetProperty(ref inputSearchText, value);
+        get => _inputSearchText;
+        set => SetProperty(ref _inputSearchText, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private VideoInfoView videoInfoView;
+    private VideoInfoView _videoInfoView;
 
     public VideoInfoView VideoInfoView
     {
-        get => videoInfoView;
-        set => SetProperty(ref videoInfoView, value);
+        get => _videoInfoView;
+        set => SetProperty(ref _videoInfoView, value);
     }
 
-    private ObservableCollection<VideoSection> videoSections;
+    private ObservableCollection<VideoSection> _videoSections;
 
     public ObservableCollection<VideoSection> VideoSections
     {
-        get => videoSections;
-        set => SetProperty(ref videoSections, value);
+        get => _videoSections;
+        set => SetProperty(ref _videoSections, value);
     }
 
     public ObservableCollection<VideoSection> CaCheVideoSections { get; set; }
 
     public List<VideoPage> selectedVideoPages { get; set; } = new();
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
     #endregion
@@ -156,17 +156,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
     #region 命令申明
 
 // 返回
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回
     /// </summary>
     private void ExecuteBackSpace()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -176,18 +175,17 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand =>
+        _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ViewDownloadManagerViewModel.Tag,
             ParentViewName = Tag,
@@ -197,16 +195,15 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 输入确认事件
-    private DelegateCommand inputCommand;
+    private DelegateCommand? _inputCommand;
 
     public DelegateCommand InputCommand =>
-        inputCommand ?? (inputCommand = new DelegateCommand(ExecuteInputCommand, CanExecuteInputCommand));
+        _inputCommand ??= new DelegateCommand(ExecuteInputCommand, CanExecuteInputCommand);
 
 
-    private DelegateCommand inputSearchCommand;
+    private DelegateCommand? _inputSearchCommand;
 
-    public DelegateCommand InputSearchCommand =>
-        inputSearchCommand ?? (inputSearchCommand = new DelegateCommand(ExecuteInputSearchCommand));
+    public DelegateCommand InputSearchCommand => _inputSearchCommand ??= new DelegateCommand(ExecuteInputSearchCommand);
 
     /// <summary>
     /// 搜索视频输入事件
@@ -258,10 +255,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
                 LogManager.Debug(Tag, $"InputText: {InputText}");
                 InputText = Regex.Replace(InputText, @"[【]*[^【]*[^】]*[】 ]", "");
-                input = InputText;
+                _input = InputText;
 
                 // 更新页面
-                UnityUpdateView(UpdateView, input, null, true);
+                UnityUpdateView(UpdateView, _input, null, true);
 
                 // 是否自动解析视频
                 if (SettingsManager.GetInstance().IsAutoParseVideo() == AllowStatus.YES)
@@ -291,10 +288,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 复制封面事件
-    private DelegateCommand? copyCoverCommand;
+    private DelegateCommand? _copyCoverCommand;
 
     public DelegateCommand CopyCoverCommand =>
-        copyCoverCommand ??= new DelegateCommand(ExecuteCopyCoverCommand);
+        _copyCoverCommand ??= new DelegateCommand(ExecuteCopyCoverCommand);
 
     /// <summary>
     /// 复制封面事件
@@ -307,10 +304,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 复制封面URL事件
-    private DelegateCommand? copyCoverUrlCommand;
+    private DelegateCommand? _copyCoverUrlCommand;
 
     public DelegateCommand CopyCoverUrlCommand =>
-        copyCoverUrlCommand ??= new DelegateCommand(ExecuteCopyCoverUrlCommand);
+        _copyCoverUrlCommand ??= new DelegateCommand(ExecuteCopyCoverUrlCommand);
 
     /// <summary>
     /// 复制封面URL事件
@@ -323,8 +320,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 前往UP主页事件
-    private DelegateCommand? upperCommand;
-    public DelegateCommand UpperCommand => upperCommand ??= new DelegateCommand(ExecuteUpperCommand);
+    private DelegateCommand? _upperCommand;
+    public DelegateCommand UpperCommand => _upperCommand ??= new DelegateCommand(ExecuteUpperCommand);
 
     /// <summary>
     /// 前往UP主页事件
@@ -335,10 +332,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
 // 视频章节选择事件
-    private DelegateCommand<object>? videoSectionsCommand;
+    private DelegateCommand<object>? _videoSectionsCommand;
 
     public DelegateCommand<object> VideoSectionsCommand =>
-        videoSectionsCommand ??= new DelegateCommand<object>(ExecuteVideoSectionsCommand);
+        _videoSectionsCommand ??= new DelegateCommand<object>(ExecuteVideoSectionsCommand);
 
     /// <summary>
     /// 视频章节选择事件
@@ -351,8 +348,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
             return;
         }
 
-        bool isSelectAll = true;
-        foreach (VideoPage page in section.VideoPages)
+        var isSelectAll = true;
+        foreach (var page in section.VideoPages)
         {
             if (!page.IsSelected)
             {
@@ -365,11 +362,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
 // 视频page选择事件
-    private DelegateCommand<IList> videoPagesCommand;
+    private DelegateCommand<IList>? _videoPagesCommand;
 
-    public DelegateCommand<IList> VideoPagesCommand => videoPagesCommand ??
-                                                       (videoPagesCommand =
-                                                           new DelegateCommand<IList>(ExecuteVideoPagesCommand));
+    public DelegateCommand<IList> VideoPagesCommand =>
+        _videoPagesCommand ??= new DelegateCommand<IList>(ExecuteVideoPagesCommand);
 
     /// <summary>
     /// 视频page选择事件
@@ -382,7 +378,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             return;
         }
 
-        VideoSection section = VideoSections.FirstOrDefault(item => item.IsSelected);
+        var section = VideoSections.FirstOrDefault(item => item.IsSelected);
 
         if (section == null)
         {
@@ -399,34 +395,32 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // Ctrl+A 全选事件
-    private DelegateCommand<object> keySelectAllCommand;
+    private DelegateCommand<object>? _keySelectAllCommand;
 
-    public DelegateCommand<object> KeySelectAllCommand => keySelectAllCommand ??
-                                                          (keySelectAllCommand =
-                                                              new DelegateCommand<object>(ExecuteKeySelectAllCommand));
+    public DelegateCommand<object> KeySelectAllCommand =>
+        _keySelectAllCommand ??= new DelegateCommand<object>(ExecuteKeySelectAllCommand);
 
     /// <summary>
     /// Ctrl+A 全选事件
     /// </summary>
     private void ExecuteKeySelectAllCommand(object parameter)
     {
-        if (!(parameter is VideoSection section))
+        if (parameter is not VideoSection section)
         {
             return;
         }
 
-        foreach (VideoPage page in section.VideoPages)
+        foreach (var page in section.VideoPages)
         {
             page.IsSelected = true;
         }
     }
 
     // 解析视频流事件
-    private DelegateCommand<object> parseCommand;
+    private DelegateCommand<object>? _parseCommand;
 
-    public DelegateCommand<object> ParseCommand => parseCommand ??
-                                                   (parseCommand = new DelegateCommand<object>(ExecuteParseCommand,
-                                                       CanExecuteParseCommand));
+    public DelegateCommand<object> ParseCommand => _parseCommand ??= new DelegateCommand<object>(ExecuteParseCommand,
+        CanExecuteParseCommand);
 
     /// <summary>
     /// 解析视频流事件
@@ -434,7 +428,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private async void ExecuteParseCommand(object parameter)
     {
-        if (!(parameter is VideoPage videoPage))
+        if (parameter is not VideoPage videoPage)
         {
             return;
         }
@@ -447,7 +441,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             {
                 LogManager.Debug(Tag, $"Video Page: {videoPage.Cid}");
 
-                UnityUpdateView(ParseVideo, input, videoPage, true);
+                UnityUpdateView(ParseVideo, _input, videoPage, true);
             });
         }
         catch (Exception e)
@@ -473,10 +467,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
 
     // 解析所有视频流事件
-    private DelegateCommand parseAllVideoCommand;
+    private DelegateCommand? _parseAllVideoCommand;
 
-    public DelegateCommand ParseAllVideoCommand => parseAllVideoCommand ?? (parseAllVideoCommand =
-        new DelegateCommand(ExecuteParseAllVideoCommand, CanExecuteParseAllVideoCommand));
+    public DelegateCommand ParseAllVideoCommand => _parseAllVideoCommand ??=
+        new DelegateCommand(ExecuteParseAllVideoCommand, CanExecuteParseAllVideoCommand);
 
     /// <summary>
     /// 解析所有视频流事件
@@ -529,13 +523,13 @@ public class ViewVideoDetailViewModel : ViewModelBase
                     case ParseScope.NONE:
                         break;
                     case ParseScope.SELECTED_ITEM:
-                        foreach (VideoSection section in VideoSections)
+                        foreach (var section in VideoSections)
                         {
-                            foreach (VideoPage page in section.VideoPages)
+                            foreach (var page in section.VideoPages)
                             {
                                 if (selectedVideoPages.Find(v => v.Order == page.Order) != null)
                                 {
-                                    UnityUpdateView(ParseVideo, input, page);
+                                    UnityUpdateView(ParseVideo, _input, page);
                                 }
                                 /*if (page.IsSelected)
                                 {
@@ -547,26 +541,26 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
                         break;
                     case ParseScope.CURRENT_SECTION:
-                        foreach (VideoSection section in VideoSections)
+                        foreach (var section in VideoSections)
                         {
                             if (section.IsSelected)
                             {
-                                foreach (VideoPage page in section.VideoPages)
+                                foreach (var page in section.VideoPages)
                                 {
                                     // 执行解析任务
-                                    UnityUpdateView(ParseVideo, input, page);
+                                    UnityUpdateView(ParseVideo, _input, page);
                                 }
                             }
                         }
 
                         break;
                     case ParseScope.ALL:
-                        foreach (VideoSection section in VideoSections)
+                        foreach (var section in VideoSections)
                         {
-                            foreach (VideoPage page in section.VideoPages)
+                            foreach (var page in section.VideoPages)
                             {
                                 // 执行解析任务
-                                UnityUpdateView(ParseVideo, input, page);
+                                UnityUpdateView(ParseVideo, _input, page);
                             }
                         }
 
@@ -587,7 +581,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         LoadingVisibility = false;
 
         // 解析后是否自动下载解析视频
-        AllowStatus isAutoDownloadAll = SettingsManager.GetInstance().IsAutoDownloadAll();
+        var isAutoDownloadAll = SettingsManager.GetInstance().IsAutoDownloadAll();
         if (parseScope != ParseScope.NONE && isAutoDownloadAll == AllowStatus.YES)
         {
             AddToDownload(true);
@@ -597,10 +591,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     // 添加到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ?? (addToDownloadCommand =
-        new DelegateCommand(ExecuteAddToDownloadCommand, CanExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??=
+        new DelegateCommand(ExecuteAddToDownloadCommand, CanExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加到下载列表事件
@@ -644,40 +638,41 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private void UnityUpdateView(Action<IInfoService, VideoPage> action, string input, VideoPage page,
         bool refresh = false)
     {
-        if (infoService == null || refresh)
+        if (_infoService == null || refresh)
         {
             // 视频
             if (ParseEntrance.IsAvUrl(input) || ParseEntrance.IsBvUrl(input))
             {
-                infoService = new VideoInfoService(input);
+                _infoService = new VideoInfoService(input);
             }
 
             // 番剧（电影、电视剧）
             if (ParseEntrance.IsBangumiSeasonUrl(input) || ParseEntrance.IsBangumiEpisodeUrl(input) ||
                 ParseEntrance.IsBangumiMediaUrl(input))
             {
-                infoService = new BangumiInfoService(input);
+                _infoService = new BangumiInfoService(input);
             }
 
             // 课程
             if (ParseEntrance.IsCheeseSeasonUrl(input) || ParseEntrance.IsCheeseEpisodeUrl(input))
             {
-                infoService = new CheeseInfoService(input);
+                _infoService = new CheeseInfoService(input);
             }
         }
 
-        if (infoService == null)
+        if (_infoService == null)
         {
             return;
         }
 
-        action(infoService, page);
+        action(_infoService, page);
     }
 
     /// <summary>
     /// 更新页面
     /// </summary>
     /// <param name="videoInfoService"></param>
+    /// <param name="param"></param>
     private void UpdateView(IInfoService videoInfoService, VideoPage param)
     {
         // 获取视频详情
@@ -699,7 +694,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         // 获取视频列表
-        List<VideoSection> videoSections = videoInfoService.GetVideoSections(false);
+        var videoSections = videoInfoService.GetVideoSections(false);
 
         // 清空以前的数据
         PropertyChangeAsync(() =>
@@ -713,7 +708,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             LogManager.Debug(Tag, "videoSections is not exist.");
 
-            List<VideoPage> pages = videoInfoService.GetVideoPages();
+            var pages = videoInfoService.GetVideoPages();
 
             PropertyChangeAsync(() =>
             {
@@ -750,6 +745,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// 解析视频流
     /// </summary>
     /// <param name="videoInfoService"></param>
+    /// <param name="videoPage"></param>
     private void ParseVideo(IInfoService videoInfoService, VideoPage videoPage)
     {
         videoInfoService.GetVideoStream(videoPage);
@@ -761,20 +757,20 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <param name="isAll">是否下载所有，包括未选中项</param>
     private async void AddToDownload(bool isAll)
     {
-        AddToDownloadService addToDownloadService = null;
+        AddToDownloadService? addToDownloadService;
         // 视频
-        if (ParseEntrance.IsAvUrl(input) || ParseEntrance.IsBvUrl(input))
+        if (ParseEntrance.IsAvUrl(_input) || ParseEntrance.IsBvUrl(_input))
         {
             addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
         }
         // 番剧（电影、电视剧）
-        else if (ParseEntrance.IsBangumiSeasonUrl(input) || ParseEntrance.IsBangumiEpisodeUrl(input) ||
-                 ParseEntrance.IsBangumiMediaUrl(input))
+        else if (ParseEntrance.IsBangumiSeasonUrl(_input) || ParseEntrance.IsBangumiEpisodeUrl(_input) ||
+                 ParseEntrance.IsBangumiMediaUrl(_input))
         {
             addToDownloadService = new AddToDownloadService(PlayStreamType.BANGUMI);
         }
         // 课程
-        else if (ParseEntrance.IsCheeseSeasonUrl(input) || ParseEntrance.IsCheeseEpisodeUrl(input))
+        else if (ParseEntrance.IsCheeseSeasonUrl(_input) || ParseEntrance.IsCheeseEpisodeUrl(_input))
         {
             addToDownloadService = new AddToDownloadService(PlayStreamType.CHEESE);
         }
@@ -784,17 +780,17 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
-        await Task.Run(() =>
+        var i = 0;
+        await Task.Run(async () =>
         {
             // 传递video对象
             addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList(),
                 selectedVideoPages.Select(video => video.Order).ToList());
             // 下载
-            i = addToDownloadService.AddToDownload(EventAggregator, directory, isAll);
+            i = await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory, isAll);
         });
 
         if (directory == null)
@@ -828,9 +824,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         // Parent参数为null时，表示是从下一个页面返回到本页面，不需要执行任务
         if (navigationContext.Parameters.GetValue<string>("Parent") != null)
         {
-            string param = navigationContext.Parameters.GetValue<string>("Parameter");
+            var param = navigationContext.Parameters.GetValue<string>("Parameter");
             // 移除剪贴板id
-            string input = param.Replace(AppConstant.ClipboardId, "");
+            var input = param.Replace(AppConstant.ClipboardId, "");
 
             // 检测是否从剪贴板传入
             if (InputText == input && param.EndsWith(AppConstant.ClipboardId))

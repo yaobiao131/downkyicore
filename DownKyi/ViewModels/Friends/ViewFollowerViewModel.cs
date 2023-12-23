@@ -20,69 +20,69 @@ public class ViewFollowerViewModel : ViewModelBase
     public const string Tag = "PageFriendsFollower";
 
     // mid
-    private long mid = -1;
+    private long _mid = -1;
 
     // 每页数量，暂时在此写死，以后在设置中增加选项
-    private readonly int NumberInPage = 20;
+    private const int NumberInPage = 20;
 
     public bool IsEnabled = true;
 
     #region 页面属性申明
 
-    private string pageName = ViewFriendsViewModel.Tag;
+    private string _pageName = ViewFriendsViewModel.Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private CustomPagerViewModel pager;
+    private CustomPagerViewModel _pager;
 
     public CustomPagerViewModel Pager
     {
-        get => pager;
-        set => SetProperty(ref pager, value);
+        get => _pager;
+        set => SetProperty(ref _pager, value);
     }
 
-    private ObservableCollection<FriendInfo> contents;
+    private ObservableCollection<FriendInfo> _contents;
 
     public ObservableCollection<FriendInfo> Contents
     {
-        get => contents;
-        set => SetProperty(ref contents, value);
+        get => _contents;
+        set => SetProperty(ref _contents, value);
     }
 
     #endregion
@@ -112,9 +112,9 @@ public class ViewFollowerViewModel : ViewModelBase
         NoDataVisibility = false;
         foreach (var item in contents)
         {
-            StorageHeader storageHeader = new StorageHeader();
-            Bitmap header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
-            App.PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
+            var storageHeader = new StorageHeader();
+            var header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
+            PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
         }
     }
 
@@ -133,7 +133,7 @@ public class ViewFollowerViewModel : ViewModelBase
         List<RelationFollowInfo>? contents = null;
         await Task.Run(() =>
         {
-            data = UserRelation.GetFollowers(mid, current, NumberInPage);
+            data = UserRelation.GetFollowers(_mid, current, NumberInPage);
             if (data != null && data.List != null && data.List.Count > 0)
             {
                 contents = data.List;
@@ -156,7 +156,7 @@ public class ViewFollowerViewModel : ViewModelBase
         else
         {
             var userInfo = SettingsManager.GetInstance().GetUserInfo();
-            if (userInfo != null && userInfo.Mid == mid)
+            if (userInfo != null && userInfo.Mid == _mid)
             {
                 Pager.Count = (int)Math.Ceiling((double)data.Total / NumberInPage);
             }
@@ -225,7 +225,7 @@ public class ViewFollowerViewModel : ViewModelBase
             return;
         }
 
-        mid = parameter;
+        _mid = parameter;
 
         // 是否是从PageFriends的headerTable的item点击进入的
         // true表示加载PageFriends后第一次进入此页面

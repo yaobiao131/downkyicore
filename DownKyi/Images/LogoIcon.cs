@@ -2,16 +2,11 @@ namespace DownKyi.Images;
 
 public class LogoIcon
 {
-    private static LogoIcon instance;
+    private static LogoIcon? _instance;
 
     public static LogoIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new LogoIcon();
-        }
-
-        return instance;
+        return _instance ??= new LogoIcon();
     }
 
     private LogoIcon()

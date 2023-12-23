@@ -26,82 +26,83 @@ public class ViewMyHistoryViewModel : ViewModelBase
 {
     public const string Tag = "PageMyHistory";
 
-    private CancellationTokenSource tokenSource;
+    private CancellationTokenSource? _tokenSource;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
     private readonly int VideoNumberInPage = 30;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private ObservableCollection<HistoryMedia> medias;
+    private ObservableCollection<HistoryMedia> _medias;
 
     public ObservableCollection<HistoryMedia> Medias
     {
-        get => medias;
-        set => SetProperty(ref medias, value);
+        get => _medias;
+        set => SetProperty(ref _medias, value);
     }
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
-    private bool loading;
+    private bool _loading;
+
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
     #endregion
@@ -109,7 +110,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
     public ViewMyHistoryViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -135,10 +136,9 @@ public class ViewMyHistoryViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -150,9 +150,9 @@ public class ViewMyHistoryViewModel : ViewModelBase
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
         // 结束任务
-        tokenSource?.Cancel();
+        _tokenSource?.Cancel();
 
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -162,18 +162,17 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand =>
+        _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ViewDownloadManagerViewModel.Tag,
             ParentViewName = Tag,
@@ -183,10 +182,10 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     // 全选按钮点击事件
-    private DelegateCommand<object> selectAllCommand;
+    private DelegateCommand<object>? _selectAllCommand;
 
     public DelegateCommand<object> SelectAllCommand =>
-        selectAllCommand ?? (selectAllCommand = new DelegateCommand<object>(ExecuteSelectAllCommand));
+        _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
 
     /// <summary>
     /// 全选按钮点击事件
@@ -211,10 +210,10 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> mediasCommand;
+    private DelegateCommand<object>? _mediasCommand;
 
     public DelegateCommand<object> MediasCommand =>
-        mediasCommand ?? (mediasCommand = new DelegateCommand<object>(ExecuteMediasCommand));
+        _mediasCommand ??= new DelegateCommand<object>(ExecuteMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -222,27 +221,19 @@ public class ViewMyHistoryViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteMediasCommand(object parameter)
     {
-        if (!(parameter is IList selectedMedia))
+        if (parameter is not IList selectedMedia)
         {
             return;
         }
 
-        if (selectedMedia.Count == Medias.Count)
-        {
-            IsSelectAll = true;
-        }
-        else
-        {
-            IsSelectAll = false;
-        }
+        IsSelectAll = selectedMedia.Count == Medias.Count;
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand =>
+        _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -253,11 +244,10 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand? _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand =>
+        _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -276,14 +266,14 @@ public class ViewMyHistoryViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // BANGUMI类型
-        AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
-        await Task.Run(() =>
+        var i = 0;
+        await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
             // Medias变化导致的异常
@@ -298,10 +288,10 @@ public class ViewMyHistoryViewModel : ViewModelBase
                     continue;
                 }
 
-                /// 有分P的就下载全部
+                // 有分P的就下载全部
 
                 // 开启服务
-                IInfoService service = null;
+                IInfoService? service = null;
                 switch (media.Business)
                 {
                     case "archive":
@@ -321,7 +311,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(service);
                 // 下载
-                i += addToDownloadService.AddToDownload(EventAggregator, directory);
+                i += await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory);
             }
         });
 
@@ -351,7 +341,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = _tokenSource.Token;
 
             var historyList = History.GetHistory(0, 0, VideoNumberInPage);
             if (historyList == null || historyList.List == null || historyList.List.Count == 0)
@@ -374,7 +364,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 }
 
                 // 播放url
-                string url = "https://www.bilibili.com";
+                var url = "https://www.bilibili.com";
                 switch (history.History.Business)
                 {
                     case "archive":
@@ -386,7 +376,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 }
 
                 // 查询、保存封面
-                string coverUrl = history.Cover;
+                var coverUrl = history.Cover;
                 Bitmap cover;
                 if (coverUrl == null || coverUrl == "")
                 {
@@ -399,7 +389,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                         coverUrl = $"https:{history.Cover}";
                     }
 
-                    StorageCover storageCover = new StorageCover();
+                    var storageCover = new StorageCover();
                     cover = storageCover.GetCoverThumbnail(history.History.Oid, history.History.Bvid,
                         history.History.Cid, coverUrl, 160, 100);
                 }
@@ -493,7 +483,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                                    Format.FormatDuration3(history.Progress);
                     }
 
-                    HistoryMedia media = new HistoryMedia(EventAggregator)
+                    var media = new HistoryMedia(EventAggregator)
                     {
                         Business = history.History.Business,
                         Bvid = history.History.Bvid,
@@ -529,7 +519,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                     break;
                 }
             }
-        }, (tokenSource = new CancellationTokenSource()).Token);
+        }, (_tokenSource = new CancellationTokenSource()).Token);
     }
 
     /// <summary>
@@ -568,7 +558,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
         DownloadManage.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 根据传入参数不同执行不同任务
-        long mid = navigationContext.Parameters.GetValue<long>("Parameter");
+        var mid = navigationContext.Parameters.GetValue<long>("Parameter");
         if (mid == 0)
         {
             IsSelectAll = false;

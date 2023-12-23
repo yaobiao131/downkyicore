@@ -47,6 +47,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     private bool loading;
+
     public bool Loading
     {
         get => loading;
@@ -299,11 +300,11 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
         int i = 0;
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
             // Medias变化导致的异常
@@ -321,13 +322,13 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 /// 有分P的就下载全部
 
                 // 开启服务
-                VideoInfoService videoInfoService = new VideoInfoService(media.Bvid);
+                var videoInfoService = new VideoInfoService(media.Bvid);
 
                 addToDownloadService.SetVideoInfoService(videoInfoService);
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(videoInfoService);
                 // 下载
-                i += addToDownloadService.AddToDownload(EventAggregator, directory);
+                i += await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory);
             }
         });
 

@@ -2,16 +2,11 @@
 
 public class SystemIcon
 {
-    private static SystemIcon instance;
+    private static SystemIcon? _instance;
 
     public static SystemIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new SystemIcon();
-        }
-
-        return instance;
+        return _instance ??= new SystemIcon();
     }
 
     private SystemIcon()

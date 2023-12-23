@@ -3,22 +3,25 @@
 public partial class SettingsManager
 {
     // 默认下载完成后的操作
-    private readonly AfterDownloadOperation afterDownload = AfterDownloadOperation.NONE;
+    private readonly AfterDownloadOperation _afterDownload = AfterDownloadOperation.NONE;
 
     // 是否监听剪贴板
-    private readonly AllowStatus isListenClipboard = AllowStatus.YES;
+    private readonly AllowStatus _isListenClipboard = AllowStatus.YES;
 
     // 视频详情页面是否自动解析
-    private readonly AllowStatus isAutoParseVideo = AllowStatus.NO;
+    private readonly AllowStatus _isAutoParseVideo = AllowStatus.NO;
 
     // 默认的视频解析项
-    private readonly ParseScope parseScope = ParseScope.NONE;
+    private readonly ParseScope _parseScope = ParseScope.NONE;
 
     // 解析后自动下载解析视频
-    private readonly AllowStatus isAutoDownloadAll = AllowStatus.NO;
+    private readonly AllowStatus _isAutoDownloadAll = AllowStatus.NO;
 
     // 下载完成列表排序
-    private readonly DownloadFinishedSort finishedSort = DownloadFinishedSort.DOWNLOAD;
+    private readonly DownloadFinishedSort _finishedSort = DownloadFinishedSort.DOWNLOAD;
+    
+    // 重复下载策略
+    private readonly RepeatDownloadStrategy _repeatDownloadStrategy = RepeatDownloadStrategy.Ask;
 
     /// <summary>
     /// 获取下载完成后的操作
@@ -30,8 +33,8 @@ public partial class SettingsManager
         if (appSettings.Basic.AfterDownload == AfterDownloadOperation.NOT_SET)
         {
             // 第一次获取，先设置默认值
-            SetAfterDownloadOperation(afterDownload);
-            return afterDownload;
+            SetAfterDownloadOperation(_afterDownload);
+            return _afterDownload;
         }
 
         return appSettings.Basic.AfterDownload;
@@ -58,8 +61,8 @@ public partial class SettingsManager
         if (appSettings.Basic.IsListenClipboard == AllowStatus.NONE)
         {
             // 第一次获取，先设置默认值
-            IsListenClipboard(isListenClipboard);
-            return isListenClipboard;
+            IsListenClipboard(_isListenClipboard);
+            return _isListenClipboard;
         }
 
         return appSettings.Basic.IsListenClipboard;
@@ -86,8 +89,8 @@ public partial class SettingsManager
         if (appSettings.Basic.IsAutoParseVideo == AllowStatus.NONE)
         {
             // 第一次获取，先设置默认值
-            IsAutoParseVideo(isAutoParseVideo);
-            return isAutoParseVideo;
+            IsAutoParseVideo(_isAutoParseVideo);
+            return _isAutoParseVideo;
         }
 
         return appSettings.Basic.IsAutoParseVideo;
@@ -114,8 +117,8 @@ public partial class SettingsManager
         if (appSettings.Basic.ParseScope == ParseScope.NOT_SET)
         {
             // 第一次获取，先设置默认值
-            SetParseScope(parseScope);
-            return parseScope;
+            SetParseScope(_parseScope);
+            return _parseScope;
         }
 
         return appSettings.Basic.ParseScope;
@@ -142,8 +145,8 @@ public partial class SettingsManager
         if (appSettings.Basic.IsAutoDownloadAll == AllowStatus.NONE)
         {
             // 第一次获取，先设置默认值
-            IsAutoDownloadAll(isAutoDownloadAll);
-            return isAutoDownloadAll;
+            IsAutoDownloadAll(_isAutoDownloadAll);
+            return _isAutoDownloadAll;
         }
 
         return appSettings.Basic.IsAutoDownloadAll;
@@ -170,8 +173,8 @@ public partial class SettingsManager
         if (appSettings.Basic.DownloadFinishedSort == DownloadFinishedSort.NOT_SET)
         {
             // 第一次获取，先设置默认值
-            SetDownloadFinishedSort(finishedSort);
-            return finishedSort;
+            SetDownloadFinishedSort(_finishedSort);
+            return _finishedSort;
         }
 
         return appSettings.Basic.DownloadFinishedSort;
@@ -185,6 +188,34 @@ public partial class SettingsManager
     public bool SetDownloadFinishedSort(DownloadFinishedSort finishedSort)
     {
         appSettings.Basic.DownloadFinishedSort = finishedSort;
+        return SetSettings();
+    }
+    
+    /// <summary>
+    /// 获取重复下载策略
+    /// </summary>
+    /// <returns></returns>
+    public RepeatDownloadStrategy GetRepeatDownloadStrategy()
+    {
+        appSettings = GetSettings();
+        if (appSettings.Basic.RepeatDownloadStrategy == RepeatDownloadStrategy.Ask)
+        {
+            // 第一次获取，先设置默认值
+            SetRepeatDownloadStrategy(_repeatDownloadStrategy);
+            return _repeatDownloadStrategy;
+        }
+
+        return appSettings.Basic.RepeatDownloadStrategy;
+    }
+
+    /// <summary>
+    /// 设置重复下载策略
+    /// </summary>
+    /// <param name="repeatDownloadStrategy"></param>
+    /// <returns></returns>
+    public bool SetRepeatDownloadStrategy(RepeatDownloadStrategy repeatDownloadStrategy)
+    {
+        appSettings.Basic.RepeatDownloadStrategy = repeatDownloadStrategy;
         return SetSettings();
     }
 }

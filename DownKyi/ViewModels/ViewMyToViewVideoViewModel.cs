@@ -78,6 +78,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     private bool loading;
+
     public bool Loading
     {
         get => loading;
@@ -279,7 +280,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
 
         // 视频计数
         int i = 0;
-        await Task.Run(() =>
+        await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
             // Medias变化导致的异常
@@ -303,7 +304,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(videoInfoService);
                 // 下载
-                i += addToDownloadService.AddToDownload(EventAggregator, directory);
+                i += await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory);
             }
         });
 

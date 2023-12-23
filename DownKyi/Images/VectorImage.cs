@@ -4,35 +4,35 @@ namespace DownKyi.Images;
 
 public class VectorImage : BindableBase
 {
-    private double width;
+    private double _width;
 
     public double Width
     {
-        get => width;
-        set => SetProperty(ref width, value);
+        get => _width;
+        set => SetProperty(ref _width, value);
     }
 
-    private double height;
+    private double _height;
 
     public double Height
     {
-        get => height;
-        set => SetProperty(ref height, value);
+        get => _height;
+        set => SetProperty(ref _height, value);
     }
 
-    private string data;
+    private string? _data;
 
-    public string Data
+    public string? Data
     {
-        get => data;
-        set => SetProperty(ref data, value);
+        get => _data;
+        set => SetProperty(ref _data, value);
     }
 
-    private string fill;
+    private string? _fill;
 
-    public string Fill
+    public string? Fill
     {
-        get => fill;
-        set => SetProperty(ref fill, value);
+        get => _fill;
+        set => SetProperty(ref _fill, value);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Cheese;
 using DownKyi.Core.BiliApi.Cheese.Models;
@@ -16,9 +17,9 @@ namespace DownKyi.Services;
 
 public class CheeseInfoService : IInfoService
 {
-    private readonly CheeseView cheeseView;
+    private readonly CheeseView? _cheeseView;
 
-    public CheeseInfoService(string input)
+    public CheeseInfoService(string? input)
     {
         if (input == null)
         {
@@ -27,14 +28,14 @@ public class CheeseInfoService : IInfoService
 
         if (ParseEntrance.IsCheeseSeasonUrl(input))
         {
-            long seasonId = ParseEntrance.GetCheeseSeasonId(input);
-            cheeseView = CheeseInfo.CheeseViewInfo(seasonId);
+            var seasonId = ParseEntrance.GetCheeseSeasonId(input);
+            _cheeseView = CheeseInfo.CheeseViewInfo(seasonId);
         }
 
         if (ParseEntrance.IsCheeseEpisodeUrl(input))
         {
-            long episodeId = ParseEntrance.GetCheeseEpisodeId(input);
-            cheeseView = CheeseInfo.CheeseViewInfo(-1, episodeId);
+            var episodeId = ParseEntrance.GetCheeseEpisodeId(input);
+            _cheeseView = CheeseInfo.CheeseViewInfo(-1, episodeId);
         }
     }
 
@@ -44,31 +45,31 @@ public class CheeseInfoService : IInfoService
     /// <returns></returns>
     public List<VideoPage> GetVideoPages()
     {
-        List<VideoPage> pages = new List<VideoPage>();
-        if (cheeseView == null)
+        var pages = new List<VideoPage>();
+        if (_cheeseView == null)
         {
             return pages;
         }
 
-        if (cheeseView.Episodes == null)
+        if (_cheeseView.Episodes == null)
         {
             return pages;
         }
 
-        if (cheeseView.Episodes.Count == 0)
+        if (_cheeseView.Episodes.Count == 0)
         {
             return pages;
         }
 
-        int order = 0;
-        foreach (CheeseEpisode episode in cheeseView.Episodes)
+        var order = 0;
+        foreach (var episode in _cheeseView.Episodes)
         {
             order++;
-            string name = episode.Title;
+            var name = episode.Title;
 
-            string duration = Format.FormatDuration(episode.Duration - 1);
+            var duration = Format.FormatDuration(episode.Duration - 1);
 
-            VideoPage page = new VideoPage
+            var page = new VideoPage
             {
                 Avid = episode.Aid,
                 Bvid = null,
@@ -81,13 +82,13 @@ public class CheeseInfoService : IInfoService
             };
 
             // UP主信息
-            if (cheeseView.UpInfo != null)
+            if (_cheeseView.UpInfo != null)
             {
                 page.Owner = new VideoOwner
                 {
-                    Name = cheeseView.UpInfo.Name,
-                    Face = cheeseView.UpInfo.Avatar,
-                    Mid = cheeseView.UpInfo.Mid,
+                    Name = _cheeseView.UpInfo.Name,
+                    Face = _cheeseView.UpInfo.Avatar,
+                    Mid = _cheeseView.UpInfo.Mid,
                 };
             }
             else
@@ -101,10 +102,10 @@ public class CheeseInfoService : IInfoService
             }
 
             // 文件命名中的时间格式
-            string timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
+            var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
             // 视频发布时间
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-            DateTime dateTime = startTime.AddSeconds(episode.ReleaseDate);
+            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+            var dateTime = startTime.AddSeconds(episode.ReleaseDate);
             page.PublishTime = dateTime.ToString(timeFormat);
 
             pages.Add(page);
@@ -117,7 +118,7 @@ public class CheeseInfoService : IInfoService
     /// 获取视频章节与剧集
     /// </summary>
     /// <returns></returns>
-    public List<VideoSection> GetVideoSections(bool noUgc = false)
+    public List<VideoSection>? GetVideoSections(bool noUgc = false)
     {
         return null;
     }
@@ -128,17 +129,17 @@ public class CheeseInfoService : IInfoService
     /// <param name="page"></param>
     public void GetVideoStream(VideoPage page)
     {
-        PlayUrl playUrl = VideoStream.GetCheesePlayUrl(page.Avid, page.Bvid, page.Cid, page.EpisodeId);
-        Utils.VideoPageInfo(playUrl, page);
+        var playUrl = VideoStream.GetCheesePlayUrl(page.Avid, page.Bvid, page.Cid, page.EpisodeId);
+        Dispatcher.UIThread.Invoke(() => { Utils.VideoPageInfo(playUrl, page); });
     }
 
     /// <summary>
     /// 获取视频信息
     /// </summary>
     /// <returns></returns>
-    public VideoInfoView GetVideoView()
+    public VideoInfoView? GetVideoView()
     {
-        if (cheeseView == null)
+        if (_cheeseView == null)
         {
             return null;
         }
@@ -146,18 +147,18 @@ public class CheeseInfoService : IInfoService
         // 查询、保存封面
         // 将SeasonId保存到avid字段中
         // 每集封面的cid保存到cid字段，EpisodeId保存到bvid字段中
-        StorageCover storageCover = new StorageCover();
-        string coverUrl = cheeseView.Cover;
-        string cover = storageCover.GetCover(cheeseView.SeasonId, "cheese", -1, coverUrl);
+        var storageCover = new StorageCover();
+        var coverUrl = _cheeseView.Cover;
+        var cover = storageCover.GetCover(_cheeseView.SeasonId, "cheese", -1, coverUrl);
 
         // 获取用户头像
         string upName;
         string header;
-        if (cheeseView.UpInfo != null)
+        if (_cheeseView.UpInfo != null)
         {
-            upName = cheeseView.UpInfo.Name;
-            StorageHeader storageHeader = new StorageHeader();
-            header = storageHeader.GetHeader(cheeseView.UpInfo.Mid, cheeseView.UpInfo.Name, cheeseView.UpInfo.Avatar);
+            upName = _cheeseView.UpInfo.Name;
+            var storageHeader = new StorageHeader();
+            header = storageHeader.GetHeader(_cheeseView.UpInfo.Mid, _cheeseView.UpInfo.Name, _cheeseView.UpInfo.Avatar);
         }
         else
         {
@@ -166,13 +167,13 @@ public class CheeseInfoService : IInfoService
         }
 
         // 为videoInfoView赋值
-        VideoInfoView videoInfoView = new VideoInfoView();
-        App.PropertyChangeAsync(new Action(() =>
+        var videoInfoView = new VideoInfoView();
+        App.PropertyChangeAsync(() =>
         {
             videoInfoView.CoverUrl = coverUrl;
 
             videoInfoView.Cover = cover == null ? null : ImageHelper.LoadFromResource(new Uri(cover));
-            videoInfoView.Title = cheeseView.Title;
+            videoInfoView.Title = _cheeseView.Title;
 
             // 分区id
             // 课堂的type id B站没有定义，这里自定义为-10
@@ -181,28 +182,28 @@ public class CheeseInfoService : IInfoService
             videoInfoView.VideoZone = DictionaryResource.GetString("Cheese");
             videoInfoView.CreateTime = "";
 
-            videoInfoView.PlayNumber = Format.FormatNumber(cheeseView.Stat.Play);
+            videoInfoView.PlayNumber = Format.FormatNumber(_cheeseView.Stat.Play);
             videoInfoView.DanmakuNumber = Format.FormatNumber(0);
             videoInfoView.LikeNumber = Format.FormatNumber(0);
             videoInfoView.CoinNumber = Format.FormatNumber(0);
             videoInfoView.FavoriteNumber = Format.FormatNumber(0);
             videoInfoView.ShareNumber = Format.FormatNumber(0);
             videoInfoView.ReplyNumber = Format.FormatNumber(0);
-            videoInfoView.Description = cheeseView.Subtitle;
+            videoInfoView.Description = _cheeseView.Subtitle;
 
             videoInfoView.UpName = upName;
             if (header != null)
             {
-                StorageHeader storageHeader = new StorageHeader();
+                var storageHeader = new StorageHeader();
                 videoInfoView.UpHeader = storageHeader.GetHeaderThumbnail(header, 48, 48);
 
-                videoInfoView.UpperMid = cheeseView.UpInfo.Mid;
+                videoInfoView.UpperMid = _cheeseView.UpInfo.Mid;
             }
             else
             {
                 videoInfoView.UpHeader = null;
             }
-        }));
+        });
 
         return videoInfoView;
     }

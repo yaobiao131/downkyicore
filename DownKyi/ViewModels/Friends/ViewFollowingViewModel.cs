@@ -281,7 +281,7 @@ public class ViewFollowingViewModel : ViewModelBase
         {
             var storageHeader = new StorageHeader();
             var header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
-            App.PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
+            PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
         }
     }
 
@@ -304,12 +304,7 @@ public class ViewFollowingViewModel : ViewModelBase
             LoadContent(contents);
         });
 
-        if (contents == null)
-        {
-            return false;
-        }
-
-        return true;
+        return contents != null;
     }
 
     private async Task<bool> LoadWhispers(int pn, int ps)
@@ -326,12 +321,7 @@ public class ViewFollowingViewModel : ViewModelBase
             LoadContent(contents);
         });
 
-        if (contents == null)
-        {
-            return false;
-        }
-
-        return true;
+        return contents != null;
     }
 
     private async Task<bool> LoadFollowingGroupContent(long tagId, int pn, int ps)
@@ -348,12 +338,7 @@ public class ViewFollowingViewModel : ViewModelBase
             LoadContent(contents);
         });
 
-        if (contents == null)
-        {
-            return false;
-        }
-
-        return true;
+        return contents != null;
     }
 
     private async void UpdateContent(int current)

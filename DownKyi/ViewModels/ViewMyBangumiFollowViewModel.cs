@@ -27,116 +27,117 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
 {
     public const string Tag = "PageMyBangumiFollow";
 
-    private CancellationTokenSource tokenSource;
+    private CancellationTokenSource _tokenSource;
 
-    private long mid = -1;
+    private long _mid = -1;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
-    private readonly int VideoNumberInPage = 15;
+    private readonly int _videoNumberInPage = 15;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private ObservableCollection<TabHeader> tabHeaders;
+    private ObservableCollection<TabHeader> _tabHeaders;
 
     public ObservableCollection<TabHeader> TabHeaders
     {
-        get => tabHeaders;
-        set => SetProperty(ref tabHeaders, value);
+        get => _tabHeaders;
+        set => SetProperty(ref _tabHeaders, value);
     }
 
-    private int selectTabId;
+    private int _selectTabId;
 
     public int SelectTabId
     {
-        get => selectTabId;
-        set => SetProperty(ref selectTabId, value);
+        get => _selectTabId;
+        set => SetProperty(ref _selectTabId, value);
     }
 
-    private bool isEnabled = true;
+    private bool _isEnabled = true;
 
     public bool IsEnabled
     {
-        get => isEnabled;
-        set => SetProperty(ref isEnabled, value);
+        get => _isEnabled;
+        set => SetProperty(ref _isEnabled, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private CustomPagerViewModel pager;
+    private CustomPagerViewModel _pager;
 
     public CustomPagerViewModel Pager
     {
-        get => pager;
-        set => SetProperty(ref pager, value);
+        get => _pager;
+        set => SetProperty(ref _pager, value);
     }
 
-    private ObservableCollection<BangumiFollowMedia> medias;
+    private ObservableCollection<BangumiFollowMedia> _medias;
 
     public ObservableCollection<BangumiFollowMedia> Medias
     {
-        get => medias;
-        set => SetProperty(ref medias, value);
+        get => _medias;
+        set => SetProperty(ref _medias, value);
     }
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
-    private bool loading;
+    private bool _loading;
+
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
     #endregion
@@ -176,10 +177,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -191,9 +191,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
         // 结束任务
-        tokenSource?.Cancel();
+        _tokenSource?.Cancel();
 
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -203,18 +203,16 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ViewDownloadManagerViewModel.Tag,
             ParentViewName = Tag,
@@ -224,10 +222,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 顶部tab点击事件
-    private DelegateCommand<object> tabHeadersCommand;
+    private DelegateCommand<object>? _tabHeadersCommand;
 
-    public DelegateCommand<object> TabHeadersCommand => tabHeadersCommand ?? (tabHeadersCommand =
-        new DelegateCommand<object>(ExecuteTabHeadersCommand, CanExecuteTabHeadersCommand));
+    public DelegateCommand<object> TabHeadersCommand => _tabHeadersCommand ??= new DelegateCommand<object>(ExecuteTabHeadersCommand, CanExecuteTabHeadersCommand);
 
     /// <summary>
     /// 顶部tab点击事件
@@ -235,7 +232,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteTabHeadersCommand(object parameter)
     {
-        if (!(parameter is TabHeader tabHeader))
+        if (parameter is not TabHeader tabHeader)
         {
             return;
         }
@@ -261,11 +258,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 全选按钮点击事件
-    private DelegateCommand<object> selectAllCommand;
+    private DelegateCommand<object>? _selectAllCommand;
 
-    public DelegateCommand<object> SelectAllCommand => selectAllCommand ??
-                                                       (selectAllCommand =
-                                                           new DelegateCommand<object>(ExecuteSelectAllCommand));
+    public DelegateCommand<object> SelectAllCommand => _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
 
     /// <summary>
     /// 全选按钮点击事件
@@ -290,10 +285,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> mediasCommand;
+    private DelegateCommand<object>? _mediasCommand;
 
-    public DelegateCommand<object> MediasCommand =>
-        mediasCommand ?? (mediasCommand = new DelegateCommand<object>(ExecuteMediasCommand));
+    public DelegateCommand<object> MediasCommand => _mediasCommand ??= new DelegateCommand<object>(ExecuteMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -317,11 +311,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -332,11 +324,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand? _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand => _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -355,14 +345,14 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 订阅里只有BANGUMI类型
-        AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.BANGUMI);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.BANGUMI);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
-        await Task.Run(() =>
+        var i = 0;
+        await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
             // Medias变化导致的异常
@@ -380,14 +370,13 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                 /// 有分P的就下载全部
 
                 // 开启服务
-                BangumiInfoService service =
-                    new BangumiInfoService($"{ParseEntrance.BangumiMediaUrl}md{media.MediaId}");
+                var service = new BangumiInfoService($"{ParseEntrance.BangumiMediaUrl}md{media.MediaId}");
 
                 addToDownloadService.SetVideoInfoService(service);
                 addToDownloadService.GetVideo();
                 addToDownloadService.ParseVideo(service);
                 // 下载
-                i += addToDownloadService.AddToDownload(EventAggregator, directory);
+                i += await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory);
             }
         });
 
@@ -404,8 +393,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         else
         {
             EventAggregator.GetEvent<MessageEvent>()
-                .Publish(
-                    $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
+                .Publish($"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
     }
 
@@ -439,14 +427,13 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         IsEnabled = false;
 
         var tab = TabHeaders[SelectTabId];
-        BangumiType type = (BangumiType)tab.Id;
+        var type = (BangumiType)tab.Id;
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = _tokenSource.Token;
 
-            var bangumiFollows =
-                Core.BiliApi.Users.UserSpace.GetBangumiFollow(mid, type, current, VideoNumberInPage);
+            var bangumiFollows = Core.BiliApi.Users.UserSpace.GetBangumiFollow(_mid, type, current, _videoNumberInPage);
             if (bangumiFollows == null || bangumiFollows.List == null || bangumiFollows.List.Count == 0)
             {
                 LoadingVisibility = false;
@@ -455,14 +442,14 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
             }
 
             // 更新总页码
-            Pager.Count = (int)Math.Ceiling((double)bangumiFollows.Total / VideoNumberInPage);
+            Pager.Count = (int)Math.Ceiling((double)bangumiFollows.Total / _videoNumberInPage);
             // 更新内容
             ContentVisibility = true;
 
             foreach (var bangumiFollow in bangumiFollows.List)
             {
                 // 查询、保存封面
-                string coverUrl = bangumiFollow.Cover;
+                var coverUrl = bangumiFollow.Cover;
                 Bitmap cover;
                 if (coverUrl == null || coverUrl == "")
                 {
@@ -475,20 +462,19 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                         coverUrl = $"https:{bangumiFollow.Cover}";
                     }
 
-                    StorageCover storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(bangumiFollow.MediaId, bangumiFollow.SeasonId.ToString(),
-                        -1, coverUrl, 110, 140);
+                    var storageCover = new StorageCover();
+                    cover = storageCover.GetCoverThumbnail(bangumiFollow.MediaId, bangumiFollow.SeasonId.ToString(), -1, coverUrl, 110, 140);
                 }
 
                 // 地区
-                string area = string.Empty;
+                var area = string.Empty;
                 if (bangumiFollow.Areas != null && bangumiFollow.Areas.Count > 0)
                 {
                     area = bangumiFollow.Areas[0].Name;
                 }
 
                 // 视频更新进度
-                string indexShow = string.Empty;
+                var indexShow = string.Empty;
                 if (bangumiFollow.NewEp != null)
                 {
                     indexShow = bangumiFollow.NewEp.IndexShow;
@@ -507,7 +493,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
 
                 App.PropertyChangeAsync(() =>
                 {
-                    BangumiFollowMedia media = new BangumiFollowMedia(EventAggregator)
+                    var media = new BangumiFollowMedia(EventAggregator)
                     {
                         MediaId = bangumiFollow.MediaId,
                         SeasonId = bangumiFollow.SeasonId,
@@ -535,7 +521,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                     break;
                 }
             }
-        }, (tokenSource = new CancellationTokenSource()).Token);
+        }, (_tokenSource = new CancellationTokenSource()).Token);
 
         IsEnabled = true;
     }
@@ -571,8 +557,8 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         DownloadManage.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 根据传入参数不同执行不同任务
-        mid = navigationContext.Parameters.GetValue<long>("Parameter");
-        if (mid == 0)
+        _mid = navigationContext.Parameters.GetValue<long>("Parameter");
+        if (_mid == 0)
         {
             return;
         }

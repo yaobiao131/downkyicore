@@ -94,7 +94,7 @@ public class StorageCover
     /// <summary>
     /// 获取封面
     /// </summary>
-    /// <param name="aid"></param>
+    /// <param name="avid"></param>
     /// <param name="bvid"></param>
     /// <param name="cid"></param>
     /// <param name="url"></param>

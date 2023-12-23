@@ -1,5 +1,4 @@
 ﻿using Avalonia;
-using Avalonia.ReactiveUI;
 using System;
 
 namespace DownKyi;
@@ -17,10 +16,9 @@ sealed class Program
     public static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
-            .With(new X11PlatformOptions { EnableMultiTouch = true, UseDBusMenu = true, })
-            .WithInterFont()
+            .With(new X11PlatformOptions { EnableMultiTouch = true, UseDBusMenu = true })
 #if DEBUG
             .LogToTrace()
 #endif
-            .UseReactiveUI();
+            .WithInterFont();
 }

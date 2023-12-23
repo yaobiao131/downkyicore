@@ -18,9 +18,9 @@ namespace DownKyi.Services;
 
 public class VideoInfoService : IInfoService
 {
-    private readonly VideoView videoView;
+    private readonly VideoView? _videoView;
 
-    public VideoInfoService(string input)
+    public VideoInfoService(string? input)
     {
         if (input == null)
         {
@@ -29,14 +29,14 @@ public class VideoInfoService : IInfoService
 
         if (ParseEntrance.IsAvId(input) || ParseEntrance.IsAvUrl(input))
         {
-            long avid = ParseEntrance.GetAvId(input);
-            videoView = VideoInfo.VideoViewInfo(null, avid);
+            var avid = ParseEntrance.GetAvId(input);
+            _videoView = VideoInfo.VideoViewInfo(null, avid);
         }
 
         if (ParseEntrance.IsBvId(input) || ParseEntrance.IsBvUrl(input))
         {
-            string bvid = ParseEntrance.GetBvId(input);
-            videoView = VideoInfo.VideoViewInfo(bvid);
+            var bvid = ParseEntrance.GetBvId(input);
+            _videoView = VideoInfo.VideoViewInfo(bvid);
         }
     }
 
@@ -44,35 +44,35 @@ public class VideoInfoService : IInfoService
     /// 获取视频剧集
     /// </summary>
     /// <returns></returns>
-    public List<VideoPage> GetVideoPages()
+    public List<VideoPage>? GetVideoPages()
     {
-        if (videoView == null)
+        if (_videoView == null)
         {
             return null;
         }
 
-        if (videoView.Pages == null)
+        if (_videoView.Pages == null)
         {
             return null;
         }
 
-        if (videoView.Pages.Count == 0)
+        if (_videoView.Pages.Count == 0)
         {
             return null;
         }
 
-        List<VideoPage> videoPages = new List<VideoPage>();
+        var videoPages = new List<VideoPage>();
 
-        int order = 0;
-        foreach (var page in videoView.Pages)
+        var order = 0;
+        foreach (var page in _videoView.Pages)
         {
             order++;
 
             // 标题
             string name;
-            if (videoView.Pages.Count == 1)
+            if (_videoView.Pages.Count == 1)
             {
-                name = videoView.Title;
+                name = _videoView.Title;
             }
             else
             {
@@ -80,7 +80,7 @@ public class VideoInfoService : IInfoService
                 if (page.Part == "")
                 {
                     // 如果page.part为空字符串
-                    name = $"{videoView.Title}-P{order}";
+                    name = $"{_videoView.Title}-P{order}";
                 }
                 else
                 {
@@ -88,10 +88,10 @@ public class VideoInfoService : IInfoService
                 }
             }
 
-            VideoPage videoPage = new VideoPage
+            var videoPage = new VideoPage
             {
-                Avid = videoView.Aid,
-                Bvid = videoView.Bvid,
+                Avid = _videoView.Aid,
+                Bvid = _videoView.Bvid,
                 Cid = page.Cid,
                 EpisodeId = -1,
                 FirstFrame = page.FirstFrame,
@@ -101,7 +101,7 @@ public class VideoInfoService : IInfoService
             };
 
             // UP主信息
-            videoPage.Owner = videoView.Owner;
+            videoPage.Owner = _videoView.Owner;
             if (videoPage.Owner == null)
             {
                 videoPage.Owner = new VideoOwner
@@ -116,7 +116,7 @@ public class VideoInfoService : IInfoService
             string timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
             // 视频发布时间
             DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-            DateTime dateTime = startTime.AddSeconds(videoView.Pubdate);
+            DateTime dateTime = startTime.AddSeconds(_videoView.Pubdate);
             videoPage.PublishTime = dateTime.ToString(timeFormat);
 
             videoPages.Add(videoPage);
@@ -129,14 +129,14 @@ public class VideoInfoService : IInfoService
     /// 获取视频章节与剧集
     /// </summary>
     /// <returns></returns>
-    public List<VideoSection> GetVideoSections(bool noUgc = false)
+    public List<VideoSection>? GetVideoSections(bool noUgc = false)
     {
-        if (videoView == null)
+        if (_videoView == null)
         {
             return null;
         }
 
-        List<VideoSection> videoSections = new List<VideoSection>();
+        var videoSections = new List<VideoSection>();
 
         // 不需要ugc内容
         if (noUgc)
@@ -152,29 +152,29 @@ public class VideoInfoService : IInfoService
             return videoSections;
         }
 
-        if (videoView.UgcSeason == null)
+        if (_videoView.UgcSeason == null)
         {
             return null;
         }
 
-        if (videoView.UgcSeason.Sections == null)
+        if (_videoView.UgcSeason.Sections == null)
         {
             return null;
         }
 
-        if (videoView.UgcSeason.Sections.Count == 0)
+        if (_videoView.UgcSeason.Sections.Count == 0)
         {
             return null;
         }
 
-        foreach (UgcSection section in videoView.UgcSeason.Sections)
+        foreach (var section in _videoView.UgcSeason.Sections)
         {
-            List<VideoPage> pages = new List<VideoPage>();
-            int order = 0;
+            var pages = new List<VideoPage>();
+            var order = 0;
             foreach (var episode in section.Episodes)
             {
                 order++;
-                VideoPage page = new VideoPage
+                var page = new VideoPage
                 {
                     Avid = episode.Aid,
                     Bvid = episode.Bvid,
@@ -183,11 +183,11 @@ public class VideoInfoService : IInfoService
                     FirstFrame = episode.Arc.Pic,
                     Order = order,
                     Name = episode.Title,
-                    Duration = "N/A"
+                    Duration = "N/A",
+                    // UP主信息
+                    Owner = _videoView.Owner
                 };
 
-                // UP主信息
-                page.Owner = videoView.Owner;
                 if (page.Owner == null)
                 {
                     page.Owner = new VideoOwner
@@ -199,10 +199,10 @@ public class VideoInfoService : IInfoService
                 }
 
                 // 文件命名中的时间格式
-                string timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
+                var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
                 // 视频发布时间
-                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                DateTime dateTime = startTime.AddSeconds(videoView.Pubdate);
+                var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+                var dateTime = startTime.AddSeconds(_videoView.Pubdate);
                 page.PublishTime = dateTime.ToString(timeFormat);
                 // 这里的发布时间有问题，
                 // 如果是合集，也会执行这里，
@@ -212,7 +212,7 @@ public class VideoInfoService : IInfoService
                 pages.Add(page);
             }
 
-            VideoSection videoSection = new VideoSection
+            var videoSection = new VideoSection
             {
                 Id = section.Id,
                 Title = section.Title,
@@ -233,32 +233,29 @@ public class VideoInfoService : IInfoService
     public void GetVideoStream(VideoPage page)
     {
         var playUrl = VideoStream.GetVideoPlayUrl(page.Avid, page.Bvid, page.Cid);
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            Utils.VideoPageInfo(playUrl, page);
-        });
+        Dispatcher.UIThread.Invoke(() => { Utils.VideoPageInfo(playUrl, page); });
     }
 
     /// <summary>
     /// 获取视频信息
     /// </summary>
     /// <returns></returns>
-    public VideoInfoView GetVideoView()
+    public VideoInfoView? GetVideoView()
     {
-        if (videoView == null)
+        if (_videoView == null)
         {
             return null;
         }
 
         // 查询、保存封面
-        StorageCover storageCover = new StorageCover();
-        string coverUrl = videoView.Pic;
-        string cover = storageCover.GetCover(videoView.Aid, videoView.Bvid, videoView.Cid, coverUrl);
+        var storageCover = new StorageCover();
+        var coverUrl = _videoView.Pic;
+        var cover = storageCover.GetCover(_videoView.Aid, _videoView.Bvid, _videoView.Cid, coverUrl);
 
         // 分区
-        string videoZone = string.Empty;
+        var videoZone = string.Empty;
         var zoneList = VideoZone.Instance().GetZones();
-        var zone = zoneList.Find(it => it.Id == videoView.Tid);
+        var zone = zoneList.Find(it => it.Id == _videoView.Tid);
         if (zone != null)
         {
             var zoneParent = zoneList.Find(it => it.Id == zone.ParentId);
@@ -273,17 +270,17 @@ public class VideoInfoService : IInfoService
         }
         else
         {
-            videoZone = videoView.Tname;
+            videoZone = _videoView.Tname;
         }
 
         // 获取用户头像
         string upName;
         string header;
-        if (videoView.Owner != null)
+        if (_videoView.Owner != null)
         {
-            upName = videoView.Owner.Name;
-            StorageHeader storageHeader = new StorageHeader();
-            header = storageHeader.GetHeader(videoView.Owner.Mid, videoView.Owner.Name, videoView.Owner.Face);
+            upName = _videoView.Owner.Name;
+            var storageHeader = new StorageHeader();
+            header = storageHeader.GetHeader(_videoView.Owner.Mid, _videoView.Owner.Name, _videoView.Owner.Face);
         }
         else
         {
@@ -292,45 +289,45 @@ public class VideoInfoService : IInfoService
         }
 
         // 为videoInfoView赋值
-        VideoInfoView videoInfoView = new VideoInfoView();
-        App.PropertyChangeAsync(new Action(() =>
+        var videoInfoView = new VideoInfoView();
+        App.PropertyChangeAsync(() =>
         {
             videoInfoView.CoverUrl = coverUrl;
 
             videoInfoView.Cover = cover == null ? null : new Bitmap(cover);
-            videoInfoView.Title = videoView.Title;
+            videoInfoView.Title = _videoView.Title;
 
             // 分区id
-            videoInfoView.TypeId = videoView.Tid;
+            videoInfoView.TypeId = _videoView.Tid;
 
             videoInfoView.VideoZone = videoZone;
 
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-            DateTime dateTime = startTime.AddSeconds(videoView.Pubdate);
+            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+            var dateTime = startTime.AddSeconds(_videoView.Pubdate);
             videoInfoView.CreateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-            videoInfoView.PlayNumber = Format.FormatNumber(videoView.Stat.View);
-            videoInfoView.DanmakuNumber = Format.FormatNumber(videoView.Stat.Danmaku);
-            videoInfoView.LikeNumber = Format.FormatNumber(videoView.Stat.Like);
-            videoInfoView.CoinNumber = Format.FormatNumber(videoView.Stat.Coin);
-            videoInfoView.FavoriteNumber = Format.FormatNumber(videoView.Stat.Favorite);
-            videoInfoView.ShareNumber = Format.FormatNumber(videoView.Stat.Share);
-            videoInfoView.ReplyNumber = Format.FormatNumber(videoView.Stat.Reply);
-            videoInfoView.Description = videoView.Desc;
+            videoInfoView.PlayNumber = Format.FormatNumber(_videoView.Stat.View);
+            videoInfoView.DanmakuNumber = Format.FormatNumber(_videoView.Stat.Danmaku);
+            videoInfoView.LikeNumber = Format.FormatNumber(_videoView.Stat.Like);
+            videoInfoView.CoinNumber = Format.FormatNumber(_videoView.Stat.Coin);
+            videoInfoView.FavoriteNumber = Format.FormatNumber(_videoView.Stat.Favorite);
+            videoInfoView.ShareNumber = Format.FormatNumber(_videoView.Stat.Share);
+            videoInfoView.ReplyNumber = Format.FormatNumber(_videoView.Stat.Reply);
+            videoInfoView.Description = _videoView.Desc;
 
             videoInfoView.UpName = upName;
             if (header != null)
             {
-                StorageHeader storageHeader = new StorageHeader();
+                var storageHeader = new StorageHeader();
                 videoInfoView.UpHeader = storageHeader.GetHeaderThumbnail(header, 48, 48);
 
-                videoInfoView.UpperMid = videoView.Owner.Mid;
+                videoInfoView.UpperMid = _videoView.Owner.Mid;
             }
             else
             {
                 videoInfoView.UpHeader = null;
             }
-        }));
+        });
 
         return videoInfoView;
     }

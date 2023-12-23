@@ -4,16 +4,11 @@ namespace DownKyi.Images;
 
 public class NormalIcon
 {
-    private static NormalIcon instance;
+    private static NormalIcon? _instance;
 
     public static NormalIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new NormalIcon();
-        }
-
-        return instance;
+        return _instance ??= new NormalIcon();
     }
 
     public NormalIcon()

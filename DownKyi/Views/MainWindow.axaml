@@ -4,8 +4,6 @@
         xmlns:prism="http://prismlibrary.com/"
         x:Class="DownKyi.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        xmlns:i="using:Avalonia.Xaml.Interactivity"
-        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         prism:ViewModelLocator.AutoWireViewModel="True"
         Width="1100"
         Height="750"
@@ -13,12 +11,7 @@
         MinHeight="550"
         Title="{DynamicResource AppName}"
         Icon="/Resources/favicon.ico">
-
-    <i:Interaction.Behaviors>
-        <ia:EventTriggerBehavior EventName="Closed">
-            <ia:InvokeCommandAction />
-        </ia:EventTriggerBehavior>
-    </i:Interaction.Behaviors>
+    
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1">
 
         <Grid Background="{DynamicResource BrushBackground}">

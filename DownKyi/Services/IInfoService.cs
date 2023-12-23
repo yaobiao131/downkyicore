@@ -5,11 +5,11 @@ namespace DownKyi.Services;
 
 public interface IInfoService
 {
-    VideoInfoView GetVideoView();
+    VideoInfoView? GetVideoView();
 
-    List<VideoSection> GetVideoSections(bool noUgc);
+    List<VideoSection>? GetVideoSections(bool noUgc);
 
-    List<VideoPage> GetVideoPages();
+    List<VideoPage>? GetVideoPages();
 
     void GetVideoStream(VideoPage page);
 }

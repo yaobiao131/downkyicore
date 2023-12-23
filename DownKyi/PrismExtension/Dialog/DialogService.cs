@@ -20,34 +20,32 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
         _containerExtension = containerExtension;
     }
 
-    public Task ShowDialogAsync(string name, IDialogParameters parameters, Action<IDialogResult>? callback = null,
+    public Task ShowDialogAsync(string name, IDialogParameters? parameters, Action<IDialogResult>? callback = null,
         string? windowName = null)
     {
         return ShowDialogInternal(name, parameters, callback, true, windowName);
     }
 
-    private Task ShowDialogInternal(string name, IDialogParameters parameters, Action<IDialogResult>? callback,
+    private Task ShowDialogInternal(string name, IDialogParameters? parameters, Action<IDialogResult>? callback,
         bool isModal, string? windowName = null, Window? parentWindow = null)
     {
-        if (parameters == null)
-            parameters = new DialogParameters();
+        parameters ??= new DialogParameters();
 
-        IDialogWindow dialogWindow = CreateDialogWindow(windowName);
+        var dialogWindow = CreateDialogWindow(windowName);
         ConfigureDialogWindowEvents(dialogWindow, callback);
         ConfigureDialogWindowContent(name, dialogWindow, parameters);
 
         return ShowDialogWindow(dialogWindow, isModal, parentWindow);
     }
 
-    protected virtual IDialogWindow CreateDialogWindow(string name)
+    protected new virtual IDialogWindow CreateDialogWindow(string? name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return _containerExtension.Resolve<IDialogWindow>();
-        else
-            return _containerExtension.Resolve<IDialogWindow>(name);
+        return string.IsNullOrWhiteSpace(name)
+            ? _containerExtension.Resolve<IDialogWindow>()
+            : _containerExtension.Resolve<IDialogWindow>(name);
     }
 
-    protected new virtual Task ShowDialogWindow(IDialogWindow dialogWindow, bool isModal, Window? owner = null)
+    protected virtual Task ShowDialogWindow(IDialogWindow dialogWindow, bool isModal, Window? owner = null)
     {
         if (isModal &&
             Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime deskLifetime)
@@ -56,11 +54,7 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
             //  - https://docs.avaloniaui.net/docs/controls/window#show-a-window-as-a-dialog
             //  - https://github.com/AvaloniaUI/Avalonia/discussions/7924
             // (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktopLifetime)
-
-            if (owner != null)
-                return dialogWindow.ShowDialog(owner);
-            else
-                return dialogWindow.ShowDialog(deskLifetime.MainWindow);
+            return dialogWindow.ShowDialog(owner ?? deskLifetime.MainWindow);
         }
         else
         {
@@ -80,12 +74,12 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
         IDialogParameters parameters)
     {
         var content = _containerExtension.Resolve<object>(dialogName);
-        if (!(content is Control dialogContent))
-            throw new NullReferenceException("A dialog's content must be a FrameworkElement");
+        if (content is not Control dialogContent)
+            throw new NullReferenceException("A dialog's content must be a Control");
 
         MvvmHelpers.AutowireViewModel(dialogContent);
 
-        if (!(dialogContent.DataContext is IDialogAware viewModel))
+        if (dialogContent.DataContext is not IDialogAware viewModel)
             throw new NullReferenceException("A dialog's ViewModel must implement the IDialogAware interface");
 
         ConfigureDialogWindowProperties(window, dialogContent, viewModel);
@@ -93,19 +87,16 @@ public class DialogService : Prism.Services.Dialogs.DialogService, IDialogServic
         MvvmHelpers.ViewAndViewModelAction<IDialogAware>(viewModel, d => d.OnDialogOpened(parameters));
     }
 
-    protected void ConfigureDialogWindowProperties(IDialogWindow window, Control dialogContent,
+    private void ConfigureDialogWindowProperties(IDialogWindow window, Control dialogContent,
         IDialogAware viewModel)
     {
-        // Avalonia returns 'null' for Dialog.GetWindowStyle(dialogContent);
-        // WPF: Window > ContentControl > FrameworkElement
-        // Ava: Window > WindowBase > TopLevel > Control > InputElement > Interactive > Layoutable > Visual > StyledElement.Styles (collection)
 
         var windowTheme = Dialog.GetTheme(dialogContent);
         if (windowTheme != null)
         {
             window.Theme = windowTheme;
         }
-        
+
         window.Content = dialogContent;
         window.DataContext = viewModel;
 
