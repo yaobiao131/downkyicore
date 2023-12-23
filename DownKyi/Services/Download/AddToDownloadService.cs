@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.Zone;
@@ -30,16 +31,16 @@ namespace DownKyi.Services.Download;
 public class AddToDownloadService
 {
     private readonly string Tag = "AddToDownloadService";
-    private IInfoService videoInfoService;
-    private VideoInfoView videoInfoView;
-    private List<VideoSection> videoSections;
+    private IInfoService _videoInfoService;
+    private VideoInfoView _videoInfoView;
+    private List<VideoSection>? _videoSections;
 
     // 下载内容
-    private bool downloadAudio = true;
-    private bool downloadVideo = true;
-    private bool downloadDanmaku = true;
-    private bool downloadSubtitle = true;
-    private bool downloadCover = true;
+    private bool _downloadAudio = true;
+    private bool _downloadVideo = true;
+    private bool _downloadDanmaku = true;
+    private bool _downloadSubtitle = true;
+    private bool _downloadCover = true;
 
     /// <summary>
     /// 添加下载
@@ -50,13 +51,13 @@ public class AddToDownloadService
         switch (streamType)
         {
             case PlayStreamType.VIDEO:
-                videoInfoService = new VideoInfoService(null);
+                _videoInfoService = new VideoInfoService(null);
                 break;
             case PlayStreamType.BANGUMI:
-                videoInfoService = new BangumiInfoService(null);
+                _videoInfoService = new BangumiInfoService(null);
                 break;
             case PlayStreamType.CHEESE:
-                videoInfoService = new CheeseInfoService(null);
+                _videoInfoService = new CheeseInfoService(null);
                 break;
             default:
                 break;
@@ -73,13 +74,13 @@ public class AddToDownloadService
         switch (streamType)
         {
             case PlayStreamType.VIDEO:
-                videoInfoService = new VideoInfoService(id);
+                _videoInfoService = new VideoInfoService(id);
                 break;
             case PlayStreamType.BANGUMI:
-                videoInfoService = new BangumiInfoService(id);
+                _videoInfoService = new BangumiInfoService(id);
                 break;
             case PlayStreamType.CHEESE:
-                videoInfoService = new CheeseInfoService(id);
+                _videoInfoService = new CheeseInfoService(id);
                 break;
             default:
                 break;
@@ -88,14 +89,14 @@ public class AddToDownloadService
 
     public void SetVideoInfoService(IInfoService videoInfoService)
     {
-        this.videoInfoService = videoInfoService;
+        _videoInfoService = videoInfoService;
     }
 
     public void GetVideo(VideoInfoView videoInfoView, List<VideoSection> videoSections, List<int> selectedVideo)
     {
-        this.videoInfoView = videoInfoView;
-        this.videoSections = videoSections;
-        foreach (VideoSection section in videoSections.Where(videoSection => videoSection.IsSelected))
+        _videoInfoView = videoInfoView;
+        _videoSections = videoSections;
+        foreach (var section in videoSections.Where(videoSection => videoSection.IsSelected))
         {
             foreach (var item in section.VideoPages)
             {
@@ -109,32 +110,32 @@ public class AddToDownloadService
 
     public void GetVideo()
     {
-        videoInfoView = videoInfoService.GetVideoView();
-        if (videoInfoView == null)
+        _videoInfoView = _videoInfoService.GetVideoView();
+        if (_videoInfoView == null)
         {
             LogManager.Debug(Tag, "VideoInfoView is null.");
             return;
         }
 
-        videoSections = videoInfoService.GetVideoSections(true);
-        if (videoSections == null)
+        _videoSections = _videoInfoService.GetVideoSections(true);
+        if (_videoSections == null)
         {
             LogManager.Debug(Tag, "videoSections is not exist.");
 
-            videoSections = new List<VideoSection>
+            _videoSections = new List<VideoSection>
             {
-                new VideoSection
+                new()
                 {
                     Id = 0,
                     Title = "default",
                     IsSelected = true,
-                    VideoPages = videoInfoService.GetVideoPages()
+                    VideoPages = _videoInfoService.GetVideoPages()
                 }
             };
         }
 
         // 将所有视频设置为选中
-        foreach (VideoSection section in videoSections)
+        foreach (var section in _videoSections)
         {
             foreach (var item in section.VideoPages)
             {
@@ -149,14 +150,14 @@ public class AddToDownloadService
     /// <param name="videoInfoService"></param>
     public void ParseVideo(IInfoService videoInfoService)
     {
-        if (videoSections == null)
+        if (_videoSections == null)
         {
             return;
         }
 
-        foreach (VideoSection section in videoSections)
+        foreach (var section in _videoSections)
         {
-            foreach (VideoPage page in section.VideoPages)
+            foreach (var page in section.VideoPages)
             {
                 // 执行解析任务
                 videoInfoService.GetVideoStream(page);
@@ -168,56 +169,43 @@ public class AddToDownloadService
     /// 选择文件夹和下载项
     /// </summary>
     /// <param name="dialogService"></param>
-    public async Task<string> SetDirectory(IDialogService dialogService)
+    public async Task<string?> SetDirectory(IDialogService dialogService)
     {
         // 选择的下载文件夹
-        string directory = string.Empty;
+        var directory = string.Empty;
 
         // 是否使用默认下载目录
         if (SettingsManager.GetInstance().IsUseSaveVideoRootPath() == AllowStatus.YES)
         {
             // 下载内容
-            VideoContentSettings videoContent = SettingsManager.GetInstance().GetVideoContent();
-            downloadAudio = videoContent.DownloadAudio;
-            downloadVideo = videoContent.DownloadVideo;
-            downloadDanmaku = videoContent.DownloadDanmaku;
-            downloadSubtitle = videoContent.DownloadSubtitle;
-            downloadCover = videoContent.DownloadCover;
+            var videoContent = SettingsManager.GetInstance().GetVideoContent();
+            _downloadAudio = videoContent.DownloadAudio;
+            _downloadVideo = videoContent.DownloadVideo;
+            _downloadDanmaku = videoContent.DownloadDanmaku;
+            _downloadSubtitle = videoContent.DownloadSubtitle;
+            _downloadCover = videoContent.DownloadCover;
 
             directory = SettingsManager.GetInstance().GetSaveVideoRootPath();
         }
         else
         {
-            bool run = true;
             // 打开文件夹选择器
             await dialogService.ShowDialogAsync(ViewDownloadSetterViewModel.Tag, null, result =>
             {
-                if (result.Result == ButtonResult.OK)
-                {
-                    // 选择的下载文件夹
-                    directory = result.Parameters.GetValue<string>("directory");
+                if (result.Result != ButtonResult.OK) return;
+                // 选择的下载文件夹
+                directory = result.Parameters.GetValue<string>("directory");
 
-                    // 下载内容
-                    downloadAudio = result.Parameters.GetValue<bool>("downloadAudio");
-                    downloadVideo = result.Parameters.GetValue<bool>("downloadVideo");
-                    downloadDanmaku = result.Parameters.GetValue<bool>("downloadDanmaku");
-                    downloadSubtitle = result.Parameters.GetValue<bool>("downloadSubtitle");
-                    downloadCover = result.Parameters.GetValue<bool>("downloadCover");
-                }
-
-                run = false;
+                // 下载内容
+                _downloadAudio = result.Parameters.GetValue<bool>("downloadAudio");
+                _downloadVideo = result.Parameters.GetValue<bool>("downloadVideo");
+                _downloadDanmaku = result.Parameters.GetValue<bool>("downloadDanmaku");
+                _downloadSubtitle = result.Parameters.GetValue<bool>("downloadSubtitle");
+                _downloadCover = result.Parameters.GetValue<bool>("downloadCover");
             });
-            // await Task.Run(() =>
-            // {
-            //     while (true)
-            //     {
-            //         if (!run) break;
-            //         Thread.Sleep(100);
-            //     }
-            // });
         }
 
-        if (directory == String.Empty)
+        if (directory == string.Empty)
         {
             return null;
         }
@@ -234,7 +222,7 @@ public class AddToDownloadService
         // 下载设置dialog中如果点击取消或者关闭窗口，
         // 会返回空字符串，
         // 这时直接退出
-        if (directory == null || directory == string.Empty)
+        if (string.IsNullOrEmpty(directory))
         {
             return null;
         }
@@ -252,33 +240,33 @@ public class AddToDownloadService
     /// 添加到下载列表
     /// </summary>
     /// <param name="eventAggregator">传递事件的对象</param>
+    /// <param name="dialogService">dialog</param>
     /// <param name="directory">下载路径</param>
     /// <param name="isAll">是否下载所有，包括未选中项</param>
     /// <returns>添加的数量</returns>
-    public int AddToDownload(IEventAggregator eventAggregator, string directory, bool isAll = false)
+    public async Task<int> AddToDownload(IEventAggregator eventAggregator, IDialogService dialogService, string? directory, bool isAll = false)
     {
-        if (directory == null || directory == string.Empty)
+        if (string.IsNullOrEmpty(directory))
         {
             return -1;
         }
 
-        if (videoSections == null)
+        if (_videoSections == null)
         {
             return -1;
         }
 
         // 视频计数
-        int i = 0;
-
+        var i = 0;
         // 添加到下载
-        foreach (VideoSection section in videoSections)
+        foreach (var section in _videoSections)
         {
             if (section.VideoPages == null)
             {
                 continue;
             }
 
-            foreach (VideoPage page in section.VideoPages)
+            foreach (var page in section.VideoPages)
             {
                 // 只下载选中项，跳过未选中项
                 if (!isAll && !page.IsSelected)
@@ -293,11 +281,11 @@ public class AddToDownloadService
                 }
 
                 // 判断VideoQuality
-                int retry = 0;
+                var retry = 0;
                 while (page.VideoQuality == null && retry < 5)
                 {
                     // 执行解析任务
-                    videoInfoService.GetVideoStream(page);
+                    _videoInfoService.GetVideoStream(page);
                     retry++;
                 }
 
@@ -309,20 +297,18 @@ public class AddToDownloadService
                 // 判断是否同一个视频，需要cid、画质、音质、视频编码都相同
 
                 // 如果存在正在下载列表，则跳过，并提示
-                bool isDownloading = false;
-                foreach (DownloadingItem item in App.DownloadingList)
+                var isDownloading = false;
+                foreach (var item in App.DownloadingList)
                 {
                     if (item.DownloadBase == null)
                     {
                         continue;
                     }
 
-                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality &&
-                        item.AudioCodec.Name == page.AudioQualityFormat &&
+                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality && item.AudioCodec.Name == page.AudioQualityFormat &&
                         item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
                     {
-                        eventAggregator.GetEvent<MessageEvent>()
-                            .Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloading")}");
+                        eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloading")}");
                         isDownloading = true;
                         break;
                     }
@@ -334,21 +320,59 @@ public class AddToDownloadService
                 }
 
                 // TODO 如果存在下载完成列表，弹出选择框是否再次下载
-                bool isDownloaded = false;
-                foreach (DownloadedItem item in App.DownloadedList)
+                var isDownloaded = false;
+                foreach (var item in App.DownloadedList)
                 {
                     if (item.DownloadBase == null)
                     {
                         continue;
                     }
 
-                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality &&
-                        item.AudioCodec.Name == page.AudioQualityFormat &&
+                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality && item.AudioCodec.Name == page.AudioQualityFormat &&
                         item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
                     {
-                        eventAggregator.GetEvent<MessageEvent>()
-                            .Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded")}");
-                        isDownloaded = true;
+                        // eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded")}");
+                        // isDownloaded = true;
+                        var repeatDownloadStrategy = SettingsManager.GetInstance().GetRepeatDownloadStrategy();
+                        switch (repeatDownloadStrategy)
+                        {
+                            case RepeatDownloadStrategy.Ask:
+                            {
+                                var result = ButtonResult.Cancel;
+                                await Dispatcher.UIThread.Invoke(async () =>
+                                {
+                                    var param = new DialogParameters
+                                    {
+                                        { "message", $"{item.Name}已下载，是否重新下载" },
+                                    };
+
+                                    await dialogService.ShowDialogAsync(ViewAlreadyDownloadedDialogViewModel.Tag, param,
+                                        buttonResult => { result = buttonResult.Result; });
+                                });
+
+                                if (result == ButtonResult.OK)
+                                {
+                                    App.PropertyChangeAsync(() => { App.DownloadedList.Remove(item); });
+                                    isDownloaded = false;
+                                }
+                                else
+                                {
+                                    isDownloaded = true;
+                                }
+
+                                break;
+                            }
+                            case RepeatDownloadStrategy.ReDownload:
+                                isDownloaded = false;
+                                break;
+                            case RepeatDownloadStrategy.JumpOver:
+                                isDownloaded = true;
+                                break;
+                            default:
+                                isDownloaded = true;
+                                break;
+                        }
+
                         break;
                     }
                 }
@@ -359,9 +383,9 @@ public class AddToDownloadService
                 }
 
                 // 视频分区
-                int zoneId = -1;
-                List<ZoneAttr> zoneList = VideoZone.Instance().GetZones();
-                ZoneAttr zone = zoneList.Find(it => it.Id == videoInfoView.TypeId);
+                var zoneId = -1;
+                var zoneList = VideoZone.Instance().GetZones();
+                var zone = zoneList.Find(it => it.Id == _videoInfoView.TypeId);
                 if (zone != null)
                 {
                     if (zone.ParentId == 0)
@@ -370,7 +394,7 @@ public class AddToDownloadService
                     }
                     else
                     {
-                        ZoneAttr zoneParent = zoneList.Find(it => it.Id == zone.ParentId);
+                        var zoneParent = zoneList.Find(it => it.Id == zone.ParentId);
                         if (zoneParent != null)
                         {
                             zoneId = zoneParent.Id;
@@ -379,19 +403,19 @@ public class AddToDownloadService
                 }
 
                 // 如果只有一个视频章节，则不在命名中出现
-                string sectionName = string.Empty;
-                if (videoSections.Count > 1)
+                var sectionName = string.Empty;
+                if (_videoSections.Count > 1)
                 {
                     sectionName = section.Title;
                 }
 
                 // 文件路径
-                List<FileNamePart> fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
-                FileName fileName = FileName.Builder(fileNameParts)
+                var fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
+                var fileName = FileName.Builder(fileNameParts)
                     .SetSection(Format.FormatFileName(sectionName))
-                    .SetMainTitle(Format.FormatFileName(videoInfoView.Title))
+                    .SetMainTitle(Format.FormatFileName(_videoInfoView.Title))
                     .SetPageTitle(Format.FormatFileName(page.Name))
-                    .SetVideoZone(videoInfoView.VideoZone.Split('>')[0])
+                    .SetVideoZone(_videoInfoView.VideoZone.Split('>')[0])
                     .SetAudioQuality(page.AudioQualityFormat)
                     .SetVideoQuality(page.VideoQuality == null ? "" : page.VideoQuality.QualityFormat)
                     .SetVideoCodec(page.VideoQuality == null ? "" :
@@ -407,7 +431,7 @@ public class AddToDownloadService
                     .SetUpName(Format.FormatFileName(page.Owner.Name));
 
                 // 序号设置
-                OrderFormat orderFormat = SettingsManager.GetInstance().GetOrderFormat();
+                var orderFormat = SettingsManager.GetInstance().GetOrderFormat();
                 switch (orderFormat)
                 {
                     case OrderFormat.NATURAL:
@@ -419,11 +443,11 @@ public class AddToDownloadService
                 }
 
                 // 合成绝对路径
-                string filePath = Path.Combine(directory, fileName.RelativePath());
+                var filePath = Path.Combine(directory, fileName.RelativePath());
 
                 // 视频类别
                 PlayStreamType playStreamType;
-                switch (videoInfoView.TypeId)
+                switch (_videoInfoView.TypeId)
                 {
                     case -10:
                         playStreamType = PlayStreamType.CHEESE;
@@ -457,46 +481,42 @@ public class AddToDownloadService
                 }
 
                 // 添加到下载列表
-                App.PropertyChangeAsync(new Action(() =>
+                App.PropertyChangeAsync(() =>
                 {
                     // 如果不存在，直接添加到下载列表
-                    DownloadBase downloadBase = new DownloadBase
+                    var downloadBase = new DownloadBase
                     {
                         Bvid = page.Bvid,
                         Avid = page.Avid,
                         Cid = page.Cid,
                         EpisodeId = page.EpisodeId,
-                        CoverUrl = videoInfoView.CoverUrl,
+                        CoverUrl = _videoInfoView.CoverUrl,
                         PageCoverUrl = page.FirstFrame,
                         ZoneId = zoneId,
                         FilePath = filePath,
 
                         Order = page.Order,
-                        MainTitle = videoInfoView.Title,
+                        MainTitle = _videoInfoView.Title,
                         Name = page.Name,
                         Duration = page.Duration,
                         VideoCodecName = page.VideoQuality.SelectedVideoCodec,
-                        Resolution = new Quality
-                            { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
-                        AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t =>
-                        {
-                            return t.Name == page.AudioQualityFormat;
-                        }),
+                        Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
+                        AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; })
                     };
-                    Downloading downloading = new Downloading
+                    var downloading = new Downloading
                     {
                         PlayStreamType = playStreamType,
                         DownloadStatus = DownloadStatus.NOT_STARTED,
                     };
 
                     // 需要下载的内容
-                    downloadBase.NeedDownloadContent["downloadAudio"] = downloadAudio;
-                    downloadBase.NeedDownloadContent["downloadVideo"] = downloadVideo;
-                    downloadBase.NeedDownloadContent["downloadDanmaku"] = downloadDanmaku;
-                    downloadBase.NeedDownloadContent["downloadSubtitle"] = downloadSubtitle;
-                    downloadBase.NeedDownloadContent["downloadCover"] = downloadCover;
+                    downloadBase.NeedDownloadContent["downloadAudio"] = _downloadAudio;
+                    downloadBase.NeedDownloadContent["downloadVideo"] = _downloadVideo;
+                    downloadBase.NeedDownloadContent["downloadDanmaku"] = _downloadDanmaku;
+                    downloadBase.NeedDownloadContent["downloadSubtitle"] = _downloadSubtitle;
+                    downloadBase.NeedDownloadContent["downloadCover"] = _downloadCover;
 
-                    DownloadingItem downloadingItem = new DownloadingItem
+                    var downloadingItem = new DownloadingItem
                     {
                         DownloadBase = downloadBase,
                         Downloading = downloading,
@@ -505,7 +525,7 @@ public class AddToDownloadService
 
                     App.DownloadingList.Add(downloadingItem);
                     Thread.Sleep(10);
-                }));
+                });
                 i++;
             }
         }

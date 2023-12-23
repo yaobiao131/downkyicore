@@ -1,0 +1,98 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             x:Class="DownKyi.Views.Dialogs.ViewAlreadyDownloadedDialog"
+             xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
+             x:DataType="vmd:ViewAlreadyDownloadedDialogViewModel">
+
+    <prismExtension:Dialog.Theme>
+        <ControlTheme TargetType="Window">
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="ShowInTaskbar" Value="False" />
+            <Setter Property="SizeToContent" Value="WidthAndHeight" />
+            <Setter Property="SystemDecorations" Value="None" />
+        </ControlTheme>
+    </prismExtension:Dialog.Theme>
+
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
+        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}"
+                KeyboardNavigation.TabNavigation="None" ColumnDefinitions="*,50,*,50">
+
+                <StackPanel
+                    Grid.Column="0"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <ContentControl
+                        Margin="0,0,10,0"
+                        IsVisible="{Binding Image,Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <Path
+                            Width="{Binding Image.Width}"
+                            Height="{Binding Image.Height}"
+                            Data="{Binding Image.Data}"
+                            Fill="{Binding Image.Fill}"
+                            Stretch="Uniform" />
+                    </ContentControl>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Foreground="{DynamicResource BrushCaptionForeground}"
+                        Text="{Binding Title}" />
+                </StackPanel>
+                <Button
+                    Grid.Column="3"
+                    Command="{Binding CloseCommand}"
+                    ToolTip.Tip="{DynamicResource Close}"
+                    Theme="{StaticResource CloseBtnStyle}">
+                    <Path
+                        Width="{Binding CloseIcon.Width}"
+                        Height="{Binding CloseIcon.Height}"
+                        Data="{Binding CloseIcon.Data}"
+                        Fill="{DynamicResource ColorSystemBtnTintDark}"
+                        Stretch="UniformToFill" />
+                </Button>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,10,0,20" RowDefinitions="*,*">
+                <TextBlock
+                    Grid.Row="0"
+                    Margin="0,10,0,30"
+                    Padding="15,0"
+                    MaxWidth="600"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{Binding Message}"
+                    TextWrapping="Wrap" />
+
+                <Grid Row="1" ColumnDefinitions="*,*">
+                    <Button
+                        Grid.Column="0"
+                        Width="75"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding YesCommand}"
+                        Content="{DynamicResource Yes}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                    <Button
+                        Grid.Column="1"
+                        Width="75"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Command="{Binding CloseCommand}"
+                        Content="{DynamicResource No}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
+                </Grid>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

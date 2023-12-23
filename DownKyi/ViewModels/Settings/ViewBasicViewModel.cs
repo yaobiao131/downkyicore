@@ -14,72 +14,88 @@ public class ViewBasicViewModel : ViewModelBase
 {
     public const string Tag = "PageSettingsBasic";
 
-    private bool isOnNavigatedTo;
+    private bool _isOnNavigatedTo;
 
     #region 页面属性申明
 
-    private bool none;
+    private bool _none;
 
     public bool None
     {
-        get { return none; }
-        set { SetProperty(ref none, value); }
+        get => _none;
+        set => SetProperty(ref _none, value);
     }
 
-    private bool closeApp;
+    private bool _closeApp;
 
     public bool CloseApp
     {
-        get { return closeApp; }
-        set { SetProperty(ref closeApp, value); }
+        get => _closeApp;
+        set => SetProperty(ref _closeApp, value);
     }
 
-    private bool closeSystem;
+    private bool _closeSystem;
 
     public bool CloseSystem
     {
-        get { return closeSystem; }
-        set { SetProperty(ref closeSystem, value); }
+        get => _closeSystem;
+        set => SetProperty(ref _closeSystem, value);
     }
 
-    private bool listenClipboard;
+    private bool _listenClipboard;
 
     public bool ListenClipboard
     {
-        get { return listenClipboard; }
-        set { SetProperty(ref listenClipboard, value); }
+        get => _listenClipboard;
+        set => SetProperty(ref _listenClipboard, value);
     }
 
-    private bool autoParseVideo;
+    private bool _autoParseVideo;
 
     public bool AutoParseVideo
     {
-        get { return autoParseVideo; }
-        set { SetProperty(ref autoParseVideo, value); }
+        get => _autoParseVideo;
+        set => SetProperty(ref _autoParseVideo, value);
     }
 
-    private List<ParseScopeDisplay> parseScopes;
+    private List<ParseScopeDisplay> _parseScopes;
 
     public List<ParseScopeDisplay> ParseScopes
     {
-        get { return parseScopes; }
-        set { SetProperty(ref parseScopes, value); }
+        get => _parseScopes;
+        set => SetProperty(ref _parseScopes, value);
     }
 
-    private ParseScopeDisplay selectedParseScope;
+    private ParseScopeDisplay _selectedParseScope;
 
     public ParseScopeDisplay SelectedParseScope
     {
-        get { return selectedParseScope; }
-        set { SetProperty(ref selectedParseScope, value); }
+        get => _selectedParseScope;
+        set => SetProperty(ref _selectedParseScope, value);
     }
 
-    private bool autoDownloadAll;
+    private bool _autoDownloadAll;
 
     public bool AutoDownloadAll
     {
-        get => autoDownloadAll;
-        set => SetProperty(ref autoDownloadAll, value);
+        get => _autoDownloadAll;
+        set => SetProperty(ref _autoDownloadAll, value);
+    }
+
+    private List<RepeatDownloadStrategyDisplay> _repeatDownloadStrategy;
+
+    public List<RepeatDownloadStrategyDisplay> RepeatDownloadStrategy
+    {
+        get => _repeatDownloadStrategy;
+        set => SetProperty(ref _repeatDownloadStrategy, value);
+    }
+
+    private RepeatDownloadStrategyDisplay _selectedRepeatDownloadStrategy;
+
+    public RepeatDownloadStrategyDisplay SelectedRepeatDownloadStrategy
+    {
+        get => _selectedRepeatDownloadStrategy;
+        set => SetProperty(ref _selectedRepeatDownloadStrategy, value);
     }
 
     #endregion
@@ -89,14 +105,19 @@ public class ViewBasicViewModel : ViewModelBase
         #region 属性初始化
 
         // 解析范围
-        ParseScopes = new List<ParseScopeDisplay>()
+        ParseScopes = new List<ParseScopeDisplay>
         {
-            new ParseScopeDisplay { Name = DictionaryResource.GetString("ParseNone"), ParseScope = ParseScope.NONE },
-            new ParseScopeDisplay
-                { Name = DictionaryResource.GetString("ParseSelectedItem"), ParseScope = ParseScope.SELECTED_ITEM },
-            new ParseScopeDisplay
-                { Name = DictionaryResource.GetString("ParseCurrentSection"), ParseScope = ParseScope.CURRENT_SECTION },
-            new ParseScopeDisplay { Name = DictionaryResource.GetString("ParseAll"), ParseScope = ParseScope.ALL }
+            new() { Name = DictionaryResource.GetString("ParseNone"), ParseScope = ParseScope.NONE },
+            new() { Name = DictionaryResource.GetString("ParseSelectedItem"), ParseScope = ParseScope.SELECTED_ITEM },
+            new() { Name = DictionaryResource.GetString("ParseCurrentSection"), ParseScope = ParseScope.CURRENT_SECTION },
+            new() { Name = DictionaryResource.GetString("ParseAll"), ParseScope = ParseScope.ALL }
+        };
+
+        RepeatDownloadStrategy = new List<RepeatDownloadStrategyDisplay>
+        {
+            new() { Name = DictionaryResource.GetString("RepeatDownloadAsk"), RepeatDownloadStrategy = Core.Settings.RepeatDownloadStrategy.Ask },
+            new() { Name = DictionaryResource.GetString("RepeatDownloadReDownload"), RepeatDownloadStrategy = Core.Settings.RepeatDownloadStrategy.ReDownload },
+            new() { Name = DictionaryResource.GetString("RepeatDownloadReJumpOver"), RepeatDownloadStrategy = Core.Settings.RepeatDownloadStrategy.JumpOver }
         };
 
         #endregion
@@ -110,40 +131,41 @@ public class ViewBasicViewModel : ViewModelBase
     {
         base.OnNavigatedTo(navigationContext);
 
-        isOnNavigatedTo = true;
+        _isOnNavigatedTo = true;
 
         // 下载完成后的操作
-        AfterDownloadOperation afterDownload = SettingsManager.GetInstance().GetAfterDownloadOperation();
+        var afterDownload = SettingsManager.GetInstance().GetAfterDownloadOperation();
         SetAfterDownloadOperation(afterDownload);
 
         // 是否监听剪贴板
-        AllowStatus isListenClipboard = SettingsManager.GetInstance().IsListenClipboard();
+        var isListenClipboard = SettingsManager.GetInstance().IsListenClipboard();
         ListenClipboard = isListenClipboard == AllowStatus.YES;
 
         // 是否自动解析视频
-        AllowStatus isAutoParseVideo = SettingsManager.GetInstance().IsAutoParseVideo();
+        var isAutoParseVideo = SettingsManager.GetInstance().IsAutoParseVideo();
         AutoParseVideo = isAutoParseVideo == AllowStatus.YES;
 
         // 解析范围
-        ParseScope parseScope = SettingsManager.GetInstance().GetParseScope();
+        var parseScope = SettingsManager.GetInstance().GetParseScope();
         SelectedParseScope = ParseScopes.FirstOrDefault(t => { return t.ParseScope == parseScope; });
 
         // 解析后是否自动下载解析视频
-        AllowStatus isAutoDownloadAll = SettingsManager.GetInstance().IsAutoDownloadAll();
+        var isAutoDownloadAll = SettingsManager.GetInstance().IsAutoDownloadAll();
         AutoDownloadAll = isAutoDownloadAll == AllowStatus.YES;
 
-        isOnNavigatedTo = false;
+        // 重复下载策略
+        var repeatDownloadStrategy = SettingsManager.GetInstance().GetRepeatDownloadStrategy();
+        SelectedRepeatDownloadStrategy = RepeatDownloadStrategy.FirstOrDefault(t => { return t.RepeatDownloadStrategy == repeatDownloadStrategy; });
+
+        _isOnNavigatedTo = false;
     }
 
     #region 命令申明
 
     // 下载完成后的操作事件
-    private DelegateCommand<string> afterDownloadOperationCommand;
+    private DelegateCommand<string>? _afterDownloadOperationCommand;
 
-    public DelegateCommand<string> AfterDownloadOperationCommand => afterDownloadOperationCommand ??
-                                                                    (afterDownloadOperationCommand =
-                                                                        new DelegateCommand<string>(
-                                                                            ExecuteAfterDownloadOperationCommand));
+    public DelegateCommand<string> AfterDownloadOperationCommand => _afterDownloadOperationCommand ??= new DelegateCommand<string>(ExecuteAfterDownloadOperationCommand);
 
     /// <summary>
     /// 下载完成后的操作事件
@@ -167,51 +189,45 @@ public class ViewBasicViewModel : ViewModelBase
                 break;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetAfterDownloadOperation(afterDownload);
+        var isSucceed = SettingsManager.GetInstance().SetAfterDownloadOperation(afterDownload);
         PublishTip(isSucceed);
     }
 
     // 是否监听剪贴板事件
-    private DelegateCommand listenClipboardCommand;
+    private DelegateCommand? _listenClipboardCommand;
 
-    public DelegateCommand ListenClipboardCommand => listenClipboardCommand ??
-                                                     (listenClipboardCommand =
-                                                         new DelegateCommand(ExecuteListenClipboardCommand));
+    public DelegateCommand ListenClipboardCommand => _listenClipboardCommand ??= new DelegateCommand(ExecuteListenClipboardCommand);
 
     /// <summary>
     /// 是否监听剪贴板事件
     /// </summary>
     private void ExecuteListenClipboardCommand()
     {
-        AllowStatus isListenClipboard = ListenClipboard ? AllowStatus.YES : AllowStatus.NO;
+        var isListenClipboard = ListenClipboard ? AllowStatus.YES : AllowStatus.NO;
 
-        bool isSucceed = SettingsManager.GetInstance().IsListenClipboard(isListenClipboard);
+        var isSucceed = SettingsManager.GetInstance().IsListenClipboard(isListenClipboard);
         PublishTip(isSucceed);
     }
 
-    private DelegateCommand autoParseVideoCommand;
+    private DelegateCommand? _autoParseVideoCommand;
 
-    public DelegateCommand AutoParseVideoCommand => autoParseVideoCommand ??
-                                                    (autoParseVideoCommand =
-                                                        new DelegateCommand(ExecuteAutoParseVideoCommand));
+    public DelegateCommand AutoParseVideoCommand => _autoParseVideoCommand ??= new DelegateCommand(ExecuteAutoParseVideoCommand);
 
     /// <summary>
     /// 是否自动解析视频
     /// </summary>
     private void ExecuteAutoParseVideoCommand()
     {
-        AllowStatus isAutoParseVideo = AutoParseVideo ? AllowStatus.YES : AllowStatus.NO;
+        var isAutoParseVideo = AutoParseVideo ? AllowStatus.YES : AllowStatus.NO;
 
-        bool isSucceed = SettingsManager.GetInstance().IsAutoParseVideo(isAutoParseVideo);
+        var isSucceed = SettingsManager.GetInstance().IsAutoParseVideo(isAutoParseVideo);
         PublishTip(isSucceed);
     }
 
     // 解析范围事件
-    private DelegateCommand<object> parseScopesCommand;
+    private DelegateCommand<object>? _parseScopesCommand;
 
-    public DelegateCommand<object> ParseScopesCommand => parseScopesCommand ??
-                                                         (parseScopesCommand =
-                                                             new DelegateCommand<object>(ExecuteParseScopesCommand));
+    public DelegateCommand<object> ParseScopesCommand => _parseScopesCommand ??= new DelegateCommand<object>(ExecuteParseScopesCommand);
 
     /// <summary>
     /// 解析范围事件
@@ -219,30 +235,48 @@ public class ViewBasicViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteParseScopesCommand(object parameter)
     {
-        if (!(parameter is ParseScopeDisplay parseScope))
+        if (parameter is not ParseScopeDisplay parseScope)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetParseScope(parseScope.ParseScope);
+        var isSucceed = SettingsManager.GetInstance().SetParseScope(parseScope.ParseScope);
         PublishTip(isSucceed);
     }
 
     // 解析后是否自动下载解析视频
-    private DelegateCommand autoDownloadAllCommand;
+    private DelegateCommand? _autoDownloadAllCommand;
 
-    public DelegateCommand AutoDownloadAllCommand => autoDownloadAllCommand ??
-                                                     (autoDownloadAllCommand =
-                                                         new DelegateCommand(ExecuteAutoDownloadAllCommand));
+    public DelegateCommand AutoDownloadAllCommand => _autoDownloadAllCommand ??= new DelegateCommand(ExecuteAutoDownloadAllCommand);
 
     /// <summary>
     /// 解析后是否自动下载解析视频
     /// </summary>
     private void ExecuteAutoDownloadAllCommand()
     {
-        AllowStatus isAutoDownloadAll = AutoDownloadAll ? AllowStatus.YES : AllowStatus.NO;
+        var isAutoDownloadAll = AutoDownloadAll ? AllowStatus.YES : AllowStatus.NO;
 
-        bool isSucceed = SettingsManager.GetInstance().IsAutoDownloadAll(isAutoDownloadAll);
+        var isSucceed = SettingsManager.GetInstance().IsAutoDownloadAll(isAutoDownloadAll);
+        PublishTip(isSucceed);
+    }
+
+    // 解析范围事件
+    private DelegateCommand<object>? _repeatDownloadStrategyCommand;
+
+    public DelegateCommand<object> RepeatDownloadStrategyCommand => _repeatDownloadStrategyCommand ??= new DelegateCommand<object>(ExecuteRepeatDownloadStrategyCommand);
+
+    /// <summary>
+    /// 解析范围事件
+    /// </summary>
+    /// <param name="parameter"></param>
+    private void ExecuteRepeatDownloadStrategyCommand(object parameter)
+    {
+        if (parameter is not RepeatDownloadStrategyDisplay repeatDownloadStrategy)
+        {
+            return;
+        }
+
+        var isSucceed = SettingsManager.GetInstance().SetRepeatDownloadStrategy(repeatDownloadStrategy.RepeatDownloadStrategy);
         PublishTip(isSucceed);
     }
 
@@ -276,7 +310,7 @@ public class ViewBasicViewModel : ViewModelBase
     /// <param name="isSucceed"></param>
     private void PublishTip(bool isSucceed)
     {
-        if (isOnNavigatedTo)
+        if (_isOnNavigatedTo)
         {
             return;
         }

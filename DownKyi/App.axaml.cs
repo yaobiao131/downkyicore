@@ -37,6 +37,9 @@ public partial class App : PrismApplication
 {
     public static ObservableCollection<DownloadingItem> DownloadingList { get; set; }
     public static ObservableCollection<DownloadedItem> DownloadedList { get; set; }
+    public new static App Current => (App)Application.Current!;
+    public new MainWindow MainWindow => Container.Resolve<MainWindow>();
+    private IClassicDesktopStyleApplicationLifetime _appLife;
 
     // 下载服务
     private IDownloadService? _downloadService;
@@ -51,8 +54,15 @@ public partial class App : PrismApplication
         AvaloniaXamlLoader.Load(this);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            // desktop.Startup += OnStartup;
             desktop.Exit += OnExit!;
+            _appLife = desktop;
+        }
+        else
+        {
+            if (!Design.IsDesignMode)
+            {
+                throw new NotImplementedException("Not support this system.");
+            }
         }
 
         base.Initialize();
@@ -106,12 +116,14 @@ public partial class App : PrismApplication
         // UserSpace
         containerRegistry.RegisterForNavigation<ViewArchive>(ViewArchiveViewModel.Tag);
         // containerRegistry.RegisterForNavigation<Views.UserSpace.ViewChannel>(ViewModels.UserSpace.ViewChannelViewModel.Tag);
-        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace.ViewSeasonsSeriesViewModel.Tag);
+        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace
+            .ViewSeasonsSeriesViewModel.Tag);
 
         // dialogs
         containerRegistry.RegisterDialog<ViewAlertDialog>(ViewAlertDialogViewModel.Tag);
         containerRegistry.RegisterDialog<ViewDownloadSetter>(ViewDownloadSetterViewModel.Tag);
         containerRegistry.RegisterDialog<ViewParsingSelector>(ViewParsingSelectorViewModel.Tag);
+        containerRegistry.RegisterDialog<ViewAlreadyDownloadedDialog>(ViewAlreadyDownloadedDialogViewModel.Tag);
     }
 
 
