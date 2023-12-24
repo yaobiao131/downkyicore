@@ -11,6 +11,7 @@ public class ViewModelBase : BindableBase, INavigationAware
 {
     protected readonly IEventAggregator EventAggregator;
     protected IDialogService? DialogService;
+    protected IRegionNavigationJournal? Journal;
     protected string ParentView = string.Empty;
 
     public ViewModelBase(IEventAggregator eventAggregator)
@@ -26,6 +27,7 @@ public class ViewModelBase : BindableBase, INavigationAware
 
     public virtual void OnNavigatedTo(NavigationContext navigationContext)
     {
+        Journal = navigationContext.NavigationService.Journal;
         string viewName = navigationContext.Parameters.GetValue<string>("Parent");
         if (viewName != null)
         {
@@ -50,7 +52,7 @@ public class ViewModelBase : BindableBase, INavigationAware
     {
         Dispatcher.UIThread.InvokeAsync(callback);
     }
-    
+
     /// <summary>
     /// 同步修改绑定到UI的属性
     /// </summary>

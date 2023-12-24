@@ -58,28 +58,28 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #region 控制按钮
 
-        private VectorImage openFolder;
+        private VectorImage _openFolder;
 
         public VectorImage OpenFolder
         {
-            get => openFolder;
-            set => SetProperty(ref openFolder, value);
+            get => _openFolder;
+            set => SetProperty(ref _openFolder, value);
         }
 
-        private VectorImage openVideo;
+        private VectorImage _openVideo;
 
         public VectorImage OpenVideo
         {
-            get => openVideo;
-            set => SetProperty(ref openVideo, value);
+            get => _openVideo;
+            set => SetProperty(ref _openVideo, value);
         }
 
-        private VectorImage removeVideo;
+        private VectorImage _removeVideo;
 
         public VectorImage RemoveVideo
         {
-            get => removeVideo;
-            set => SetProperty(ref removeVideo, value);
+            get => _removeVideo;
+            set => SetProperty(ref _removeVideo, value);
         }
 
         #endregion
@@ -87,10 +87,9 @@ namespace DownKyi.ViewModels.DownloadManager
         #region 命令申明
 
         // 打开文件夹事件
-        private DelegateCommand openFolderCommand;
+        private DelegateCommand? _openFolderCommand;
 
-        public DelegateCommand OpenFolderCommand =>
-            openFolderCommand ?? (openFolderCommand = new DelegateCommand(ExecuteOpenFolderCommand));
+        public DelegateCommand OpenFolderCommand => _openFolderCommand ??= new DelegateCommand(ExecuteOpenFolderCommand);
 
         /// <summary>
         /// 打开文件夹事件
@@ -160,25 +159,23 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 删除事件
-        private DelegateCommand removeVideoCommand;
+        private DelegateCommand? _removeVideoCommand;
 
-        public DelegateCommand RemoveVideoCommand => removeVideoCommand ??
-                                                     (removeVideoCommand =
-                                                         new DelegateCommand(ExecuteRemoveVideoCommand));
+        public DelegateCommand RemoveVideoCommand => _removeVideoCommand ??= new DelegateCommand(ExecuteRemoveVideoCommand);
 
         /// <summary>
         /// 删除事件
         /// </summary>
         private async void ExecuteRemoveVideoCommand()
         {
-            AlertService alertService = new AlertService(DialogService);
-            ButtonResult result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
+            var alertService = new AlertService(DialogService);
+            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
             if (result != ButtonResult.OK)
             {
                 return;
             }
 
-            App.DownloadedList.Remove(this);
+            App.DownloadedList?.Remove(this);
         }
 
         #endregion

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -35,8 +34,8 @@ namespace DownKyi;
 
 public partial class App : PrismApplication
 {
-    public static ObservableCollection<DownloadingItem> DownloadingList { get; set; }
-    public static ObservableCollection<DownloadedItem> DownloadedList { get; set; }
+    public static ObservableCollection<DownloadingItem>? DownloadingList { get; set; }
+    public static ObservableCollection<DownloadedItem>? DownloadedList { get; set; }
     public new static App Current => (App)Application.Current!;
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
     private IClassicDesktopStyleApplicationLifetime _appLife;
@@ -56,13 +55,6 @@ public partial class App : PrismApplication
         {
             desktop.Exit += OnExit!;
             _appLife = desktop;
-        }
-        else
-        {
-            if (!Design.IsDesignMode)
-            {
-                throw new NotImplementedException("Not support this system.");
-            }
         }
 
         base.Initialize();
@@ -116,8 +108,7 @@ public partial class App : PrismApplication
         // UserSpace
         containerRegistry.RegisterForNavigation<ViewArchive>(ViewArchiveViewModel.Tag);
         // containerRegistry.RegisterForNavigation<Views.UserSpace.ViewChannel>(ViewModels.UserSpace.ViewChannelViewModel.Tag);
-        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace
-            .ViewSeasonsSeriesViewModel.Tag);
+        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace.ViewSeasonsSeriesViewModel.Tag);
 
         // dialogs
         containerRegistry.RegisterDialog<ViewAlertDialog>(ViewAlertDialogViewModel.Tag);
@@ -134,11 +125,11 @@ public partial class App : PrismApplication
         DownloadedList = new ObservableCollection<DownloadedItem>();
 
         // 下载数据存储服务
-        DownloadStorageService downloadStorageService = new DownloadStorageService();
+        var downloadStorageService = new DownloadStorageService();
 
         // 从数据库读取
-        List<DownloadingItem> downloadingItems = downloadStorageService.GetDownloading();
-        List<DownloadedItem> downloadedItems = downloadStorageService.GetDownloaded();
+        var downloadingItems = downloadStorageService.GetDownloading();
+        var downloadedItems = downloadStorageService.GetDownloaded();
         DownloadingList.AddRange(downloadingItems);
         DownloadedList.AddRange(downloadedItems);
 
@@ -149,7 +140,7 @@ public partial class App : PrismApplication
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach (object item in e.NewItems)
+                    foreach (var item in e.NewItems)
                     {
                         if (item is DownloadingItem downloading)
                         {
@@ -161,7 +152,7 @@ public partial class App : PrismApplication
 
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    foreach (object item in e.OldItems)
+                    foreach (var item in e.OldItems)
                     {
                         if (item is DownloadingItem downloading)
                         {
@@ -180,7 +171,7 @@ public partial class App : PrismApplication
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    foreach (object item in e.NewItems)
+                    foreach (var item in e.NewItems)
                     {
                         if (item is DownloadedItem downloaded)
                         {
@@ -192,7 +183,7 @@ public partial class App : PrismApplication
 
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    foreach (object item in e.OldItems)
+                    foreach (var item in e.OldItems)
                     {
                         if (item is DownloadedItem downloaded)
                         {
@@ -211,12 +202,10 @@ public partial class App : PrismApplication
             case Downloader.NOT_SET:
                 break;
             case Downloader.BUILT_IN:
-                _downloadService = new BuiltinDownloadService(DownloadingList, DownloadedList,
-                    (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                _downloadService = new BuiltinDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
             case Downloader.ARIA:
-                _downloadService = new AriaDownloadService(DownloadingList, DownloadedList,
-                    (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                _downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
             case Downloader.CUSTOM_ARIA:
                 // downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
@@ -252,18 +241,18 @@ public partial class App : PrismApplication
     /// <param name="finishedSort"></param>
     public static void SortDownloadedList(DownloadFinishedSort finishedSort)
     {
-        var list = DownloadedList.ToList();
+        var list = DownloadedList?.ToList();
         switch (finishedSort)
         {
             case DownloadFinishedSort.DOWNLOAD:
                 // 按下载先后排序
-                list.Sort((x, y) => x.Downloaded.FinishedTimestamp.CompareTo(y.Downloaded.FinishedTimestamp));
+                list?.Sort((x, y) => x.Downloaded.FinishedTimestamp.CompareTo(y.Downloaded.FinishedTimestamp));
                 break;
             case DownloadFinishedSort.NUMBER:
                 // 按序号排序
-                list.Sort((x, y) =>
+                list?.Sort((x, y) =>
                 {
-                    int compare = x.MainTitle.CompareTo(y.MainTitle);
+                    var compare = x.MainTitle.CompareTo(y.MainTitle);
                     return compare == 0 ? x.Order.CompareTo(y.Order) : compare;
                 });
                 break;
@@ -273,10 +262,10 @@ public partial class App : PrismApplication
 
         // 更新下载完成列表
         // 如果有更好的方法再重写
-        DownloadedList.Clear();
-        foreach (DownloadedItem item in list)
+        DownloadedList?.Clear();
+        foreach (var item in list)
         {
-            DownloadedList.Add(item);
+            DownloadedList?.Add(item);
         }
     }
 
@@ -284,5 +273,10 @@ public partial class App : PrismApplication
     {
         // 关闭下载服务
         _downloadService?.End();
+    }
+
+    private void NativeMenuItem_OnClick(object? sender, EventArgs e)
+    {
+        _appLife.Shutdown();
     }
 }

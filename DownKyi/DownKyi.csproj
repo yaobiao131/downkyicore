@@ -23,7 +23,7 @@
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.999-cibuild0042781-beta" />
         <PackageReference Include="Avalonia.Themes.Simple" Version="11.1.999-cibuild0042781-beta" />
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.5" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.0.6" />
         <PackageReference Include="Prism.Avalonia" Version="8.1.97.11000" />
         <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97.11000" />
     </ItemGroup>

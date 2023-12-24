@@ -23,30 +23,29 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // model数据
-        private DownloadBase downloadBase;
+        private DownloadBase? _downloadBase;
 
-        public DownloadBase DownloadBase
+        public DownloadBase? DownloadBase
         {
-            get => downloadBase;
+            get => _downloadBase;
             set
             {
-                downloadBase = value;
+                _downloadBase = value;
 
-                if (value != null)
+                if (value != null && DownloadBase?.ZoneId != null)
                 {
-                    ZoneImage = DictionaryResource.Get<DrawingImage>(VideoZoneIcon.Instance()
-                        .GetZoneImageKey(DownloadBase.ZoneId));
+                    ZoneImage = DictionaryResource.Get<DrawingImage>(VideoZoneIcon.Instance().GetZoneImageKey(DownloadBase.ZoneId));
                 }
             }
         }
 
         // 视频分区image
-        private DrawingImage zoneImage;
+        private DrawingImage _zoneImage;
 
         public DrawingImage ZoneImage
         {
-            get => zoneImage;
-            set => SetProperty(ref zoneImage, value);
+            get => _zoneImage;
+            set => SetProperty(ref _zoneImage, value);
         }
 
         // 视频序号
