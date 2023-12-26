@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 using DownKyi.Core.FFMpeg;
 using DownKyi.Events;
 using DownKyi.Utils;
@@ -13,56 +15,56 @@ public class ViewDelogoViewModel : ViewModelBase
     public const string Tag = "PageToolboxDelogo";
 
     // 是否正在执行去水印任务
-    private bool isDelogo = false;
+    private bool _isDelogo = false;
 
     #region 页面属性申明
 
-    private string videoPath;
+    private string _videoPath;
 
     public string VideoPath
     {
-        get { return videoPath; }
-        set { SetProperty(ref videoPath, value); }
+        get => _videoPath;
+        set => SetProperty(ref _videoPath, value);
     }
 
-    private int logoWidth;
+    private int _logoWidth;
 
     public int LogoWidth
     {
-        get { return logoWidth; }
-        set { SetProperty(ref logoWidth, value); }
+        get => _logoWidth;
+        set => SetProperty(ref _logoWidth, value);
     }
 
-    private int logoHeight;
+    private int _logoHeight;
 
     public int LogoHeight
     {
-        get { return logoHeight; }
-        set { SetProperty(ref logoHeight, value); }
+        get => _logoHeight;
+        set => SetProperty(ref _logoHeight, value);
     }
 
-    private int logoX;
+    private int _logoX;
 
     public int LogoX
     {
-        get { return logoX; }
-        set { SetProperty(ref logoX, value); }
+        get => _logoX;
+        set => SetProperty(ref _logoX, value);
     }
 
-    private int logoY;
+    private int _logoY;
 
     public int LogoY
     {
-        get { return logoY; }
-        set { SetProperty(ref logoY, value); }
+        get => _logoY;
+        set => SetProperty(ref _logoY, value);
     }
 
-    private string status;
+    private string _status;
 
     public string Status
     {
-        get { return status; }
-        set { SetProperty(ref status, value); }
+        get => _status;
+        set => SetProperty(ref _status, value);
     }
 
     #endregion
@@ -84,17 +86,16 @@ public class ViewDelogoViewModel : ViewModelBase
     #region 命令申明
 
     // 选择视频事件
-    private DelegateCommand selectVideoCommand;
+    private DelegateCommand? _selectVideoCommand;
 
-    public DelegateCommand SelectVideoCommand =>
-        selectVideoCommand ?? (selectVideoCommand = new DelegateCommand(ExecuteSelectVideoCommand));
+    public DelegateCommand SelectVideoCommand => _selectVideoCommand ??= new DelegateCommand(ExecuteSelectVideoCommand);
 
     /// <summary>
     /// 选择视频事件
     /// </summary>
     private async void ExecuteSelectVideoCommand()
     {
-        if (isDelogo)
+        if (_isDelogo)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
@@ -104,17 +105,16 @@ public class ViewDelogoViewModel : ViewModelBase
     }
 
     // 去水印事件
-    private DelegateCommand delogoCommand;
+    private DelegateCommand? _delogoCommand;
 
-    public DelegateCommand DelogoCommand =>
-        delogoCommand ?? (delogoCommand = new DelegateCommand(ExecuteDelogoCommand));
+    public DelegateCommand DelogoCommand => _delogoCommand ??= new DelegateCommand(ExecuteDelogoCommand);
 
     /// <summary>
     /// 去水印事件
     /// </summary>
     private async void ExecuteDelogoCommand()
     {
-        if (isDelogo)
+        if (_isDelogo)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
@@ -151,26 +151,25 @@ public class ViewDelogoViewModel : ViewModelBase
         }
 
         // 新文件名
-        string newFileName = VideoPath.Insert(VideoPath.Length - 4, "_delogo");
+        var newFileName = VideoPath.Insert(VideoPath.Length - 4, "_delogo");
         Status = string.Empty;
 
         await Task.Run(() =>
         {
             // 执行去水印程序
-            isDelogo = true;
+            _isDelogo = true;
             FFMpeg.Instance.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output =>
             {
                 Status += output + "\n";
             });
-            isDelogo = false;
+            _isDelogo = false;
         });
     }
 
     // Status改变事件
-    private DelegateCommand<object> statusCommand;
+    private DelegateCommand<object>? _statusCommand;
 
-    public DelegateCommand<object> StatusCommand =>
-        statusCommand ?? (statusCommand = new DelegateCommand<object>(ExecuteStatusCommand));
+    public DelegateCommand<object> StatusCommand => _statusCommand ??= new DelegateCommand<object>(ExecuteStatusCommand);
 
     /// <summary>
     /// Status改变事件
@@ -178,13 +177,13 @@ public class ViewDelogoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteStatusCommand(object parameter)
     {
-        if (!(parameter is TextBox output))
+        if (parameter is not TextChangedEventArgs output)
         {
             return;
         }
 
         // TextBox滚动到底部
-        // output.ScrollToEnd();
+        ((TextBox?)output.Source)?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()?.ScrollToEnd();
     }
 
     #endregion

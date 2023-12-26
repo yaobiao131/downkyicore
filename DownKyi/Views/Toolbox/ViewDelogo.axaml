@@ -115,7 +115,7 @@
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="TextChanged">
                             <ia:InvokeCommandAction Command="{Binding StatusCommand}"
-                                                    CommandParameter="{Binding ElementName=NameStatus}" />
+                                                    PassEventArgsToCommand="True" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>

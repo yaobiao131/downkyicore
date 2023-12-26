@@ -1,8 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.Toolbox.ViewExtractMedia"
-             xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels.Toolbox"
@@ -38,11 +36,7 @@
                         Content="{DynamicResource SelectVideo}"
                         Theme="{StaticResource BtnBorderStyle}" />
                 </StackPanel>
-                <Grid Margin="0,20,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200" />
-                        <ColumnDefinition Width="200" />
-                    </Grid.ColumnDefinitions>
+                <Grid Margin="0,20,0,0" ColumnDefinitions="200,200">
 
                     <Button
                         Grid.Column="0"
@@ -66,17 +60,13 @@
                 Grid.Row="1"
                 Margin="0,20"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="20" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                VerticalAlignment="Stretch" RowDefinitions="20,*">
                 <TextBlock
                     Grid.Row="0"
                     VerticalAlignment="Bottom"
                     Text="{DynamicResource OutputInfo}" />
                 <TextBox
-                    Name="nameStatus"
+                    Name="NameStatus"
                     Grid.Row="1"
                     Background="Black"
                     Foreground="White"
@@ -86,8 +76,9 @@
                     ScrollViewer.VerticalScrollBarVisibility="Visible">
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="TextChanged">
-                            <ia:InvokeCommandAction Command="{Binding StatusCommand}"
-                                                    CommandParameter="{Binding ElementName=nameStatus}" />
+                            <ia:InvokeCommandAction
+                                Command="{Binding StatusCommand}"
+                                PassEventArgsToCommand="True" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>

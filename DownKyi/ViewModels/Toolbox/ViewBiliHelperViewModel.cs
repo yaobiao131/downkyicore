@@ -15,36 +15,36 @@ public class ViewBiliHelperViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private string avid;
+    private string _avid;
 
     public string Avid
     {
-        get => avid;
-        set => SetProperty(ref avid, value);
+        get => _avid;
+        set => SetProperty(ref _avid, value);
     }
 
-    private string bvid;
+    private string _bvid;
 
     public string Bvid
     {
-        get => bvid;
-        set => SetProperty(ref bvid, value);
+        get => _bvid;
+        set => SetProperty(ref _bvid, value);
     }
 
-    private string danmakuUserID;
+    private string _danmakuUserId;
 
-    public string DanmakuUserID
+    public string DanmakuUserId
     {
-        get => danmakuUserID;
-        set => SetProperty(ref danmakuUserID, value);
+        get => _danmakuUserId;
+        set => SetProperty(ref _danmakuUserId, value);
     }
 
-    private string userMid;
+    private string _userMid;
 
     public string UserMid
     {
-        get => userMid;
-        set => SetProperty(ref userMid, value);
+        get => _userMid;
+        set => SetProperty(ref _userMid, value);
     }
 
     #endregion
@@ -59,10 +59,9 @@ public class ViewBiliHelperViewModel : ViewModelBase
     #region 命令申明
 
     // 输入avid事件
-    private DelegateCommand<string> avidCommand;
+    private DelegateCommand<string>? _avidCommand;
 
-    public DelegateCommand<string> AvidCommand =>
-        avidCommand ?? (avidCommand = new DelegateCommand<string>(ExecuteAvidCommand));
+    public DelegateCommand<string> AvidCommand => _avidCommand ??= new DelegateCommand<string>(ExecuteAvidCommand);
 
     /// <summary>
     /// 输入avid事件
@@ -79,7 +78,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
             return;
         }
 
-        long avid = ParseEntrance.GetAvId(parameter);
+        var avid = ParseEntrance.GetAvId(parameter);
         if (avid == -1)
         {
             return;
@@ -89,10 +88,9 @@ public class ViewBiliHelperViewModel : ViewModelBase
     }
 
     // 输入bvid事件
-    private DelegateCommand<string> bvidCommand;
+    private DelegateCommand<string>? _bvidCommand;
 
-    public DelegateCommand<string> BvidCommand =>
-        bvidCommand ?? (bvidCommand = new DelegateCommand<string>(ExecuteBvidCommand));
+    public DelegateCommand<string> BvidCommand => _bvidCommand ??= new DelegateCommand<string>(ExecuteBvidCommand);
 
     /// <summary>
     /// 输入bvid事件
@@ -112,16 +110,15 @@ public class ViewBiliHelperViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            ulong avid = BvId.Bv2Av(parameter);
+            var avid = BvId.Bv2Av(parameter);
             Avid = $"av{avid}";
         });
     }
 
     // 访问网页事件
-    private DelegateCommand gotoWebCommand;
+    private DelegateCommand? _gotoWebCommand;
 
-    public DelegateCommand GotoWebCommand =>
-        gotoWebCommand ?? (gotoWebCommand = new DelegateCommand(ExecuteGotoWebCommand));
+    public DelegateCommand GotoWebCommand => _gotoWebCommand ??= new DelegateCommand(ExecuteGotoWebCommand);
 
     /// <summary>
     /// 访问网页事件
@@ -133,11 +130,9 @@ public class ViewBiliHelperViewModel : ViewModelBase
     }
 
     // 查询弹幕发送者事件
-    private DelegateCommand findDanmakuSenderCommand;
+    private DelegateCommand? _findDanmakuSenderCommand;
 
-    public DelegateCommand FindDanmakuSenderCommand => findDanmakuSenderCommand ??
-                                                       (findDanmakuSenderCommand =
-                                                           new DelegateCommand(ExecuteFindDanmakuSenderCommand));
+    public DelegateCommand FindDanmakuSenderCommand => _findDanmakuSenderCommand ??= new DelegateCommand(ExecuteFindDanmakuSenderCommand);
 
     /// <summary>
     /// 查询弹幕发送者事件
@@ -148,7 +143,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
         {
             try
             {
-                UserMid = DanmakuSender.FindDanmakuSender(DanmakuUserID);
+                UserMid = DanmakuSender.FindDanmakuSender(DanmakuUserId);
             }
             catch (Exception e)
             {
@@ -161,11 +156,9 @@ public class ViewBiliHelperViewModel : ViewModelBase
     }
 
     // 访问用户空间事件
-    private DelegateCommand visitUserSpaceCommand;
+    private DelegateCommand? _visitUserSpaceCommand;
 
-    public DelegateCommand VisitUserSpaceCommand => visitUserSpaceCommand ??
-                                                    (visitUserSpaceCommand =
-                                                        new DelegateCommand(ExecuteVisitUserSpaceCommand));
+    public DelegateCommand VisitUserSpaceCommand => _visitUserSpaceCommand ??= new DelegateCommand(ExecuteVisitUserSpaceCommand);
 
     /// <summary>
     /// 访问用户空间事件

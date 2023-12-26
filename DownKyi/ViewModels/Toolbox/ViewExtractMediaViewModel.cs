@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.VisualTree;
 using DownKyi.Core.FFMpeg;
 using DownKyi.Events;
 using DownKyi.Utils;
@@ -14,36 +16,36 @@ public class ViewExtractMediaViewModel : ViewModelBase
     public const string Tag = "PageToolboxExtractMedia";
 
     // 是否正在执行任务
-    private bool isExtracting = false;
+    private bool _isExtracting;
 
     #region 页面属性申明
 
-    private string videoPathsStr;
+    private string _videoPathsStr;
 
     public string VideoPathsStr
     {
-        get => videoPathsStr;
-        set { SetProperty(ref videoPathsStr, value); }
+        get => _videoPathsStr;
+        set => SetProperty(ref _videoPathsStr, value);
     }
 
-    private string[] videoPaths;
+    private string[] _videoPaths;
 
     public string[] VideoPaths
     {
-        get => videoPaths;
+        get => _videoPaths;
         set
         {
-            videoPaths = value;
+            _videoPaths = value;
             VideoPathsStr = string.Join(Environment.NewLine, value);
         }
     }
 
-    private string status;
+    private string _status;
 
     public string Status
     {
-        get => status;
-        set => SetProperty(ref status, value);
+        get => _status;
+        set => SetProperty(ref _status, value);
     }
 
     #endregion
@@ -52,7 +54,7 @@ public class ViewExtractMediaViewModel : ViewModelBase
     {
         #region 属性初始化
 
-        VideoPaths = new string[0];
+        VideoPaths = Array.Empty<string>();
 
         #endregion
     }
@@ -60,17 +62,16 @@ public class ViewExtractMediaViewModel : ViewModelBase
     #region 命令申明
 
     // 选择视频事件
-    private DelegateCommand selectVideoCommand;
+    private DelegateCommand? _selectVideoCommand;
 
-    public DelegateCommand SelectVideoCommand =>
-        selectVideoCommand ?? (selectVideoCommand = new DelegateCommand(ExecuteSelectVideoCommand));
+    public DelegateCommand SelectVideoCommand => _selectVideoCommand ??= new DelegateCommand(ExecuteSelectVideoCommand);
 
     /// <summary>
     /// 选择视频事件
     /// </summary>
     private async void ExecuteSelectVideoCommand()
     {
-        if (isExtracting)
+        if (_isExtracting)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
@@ -80,24 +81,22 @@ public class ViewExtractMediaViewModel : ViewModelBase
     }
 
     // 提取音频事件
-    private DelegateCommand extractAudioCommand;
+    private DelegateCommand? _extractAudioCommand;
 
-    public DelegateCommand ExtractAudioCommand => extractAudioCommand ??
-                                                  (extractAudioCommand =
-                                                      new DelegateCommand(ExecuteExtractAudioCommand));
+    public DelegateCommand ExtractAudioCommand => _extractAudioCommand ??= new DelegateCommand(ExecuteExtractAudioCommand);
 
     /// <summary>
     /// 提取音频事件
     /// </summary>
     private async void ExecuteExtractAudioCommand()
     {
-        if (isExtracting)
+        if (_isExtracting)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
 
-        if (VideoPaths.Length <= 0)
+        if (VideoPaths?.Length <= 0)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
             return;
@@ -107,35 +106,30 @@ public class ViewExtractMediaViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            isExtracting = true;
+            _isExtracting = true;
             foreach (var item in VideoPaths)
             {
                 // 音频文件名
-                string audioFileName = item.Remove(item.Length - 4, 4) + ".aac";
+                var audioFileName = item.Remove(item.Length - 4, 4) + ".aac";
                 // 执行提取音频程序
-                FFMpeg.Instance.ExtractAudio(item, audioFileName, output =>
-                {
-                    Status += output + "\n";
-                });
+                FFMpeg.Instance.ExtractAudio(item, audioFileName, output => { Status += output + "\n"; });
             }
 
-            isExtracting = false;
+            _isExtracting = false;
         });
     }
 
     // 提取视频事件
-    private DelegateCommand extractVideoCommand;
+    private DelegateCommand? _extractVideoCommand;
 
-    public DelegateCommand ExtractVideoCommand => extractVideoCommand ??
-                                                  (extractVideoCommand =
-                                                      new DelegateCommand(ExecuteExtractVideoCommand));
+    public DelegateCommand ExtractVideoCommand => _extractVideoCommand ??= new DelegateCommand(ExecuteExtractVideoCommand);
 
     /// <summary>
     /// 提取视频事件
     /// </summary>
     private async void ExecuteExtractVideoCommand()
     {
-        if (isExtracting)
+        if (_isExtracting)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
@@ -151,27 +145,23 @@ public class ViewExtractMediaViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            isExtracting = true;
+            _isExtracting = true;
             foreach (var item in VideoPaths)
             {
                 // 视频文件名
-                string videoFileName = item.Remove(item.Length - 4, 4) + "_onlyVideo.mp4";
+                var videoFileName = item.Remove(item.Length - 4, 4) + "_onlyVideo.mp4";
                 // 执行提取视频程序
-                FFMpeg.Instance.ExtractVideo(item, videoFileName, new Action<string>((output) =>
-                {
-                    Status += output + "\n";
-                }));
+                FFMpeg.Instance.ExtractVideo(item, videoFileName, new Action<string>((output) => { Status += output + "\n"; }));
             }
 
-            isExtracting = false;
+            _isExtracting = false;
         });
     }
 
     // Status改变事件
-    private DelegateCommand<object> statusCommand;
+    private DelegateCommand<object>? _statusCommand;
 
-    public DelegateCommand<object> StatusCommand =>
-        statusCommand ?? (statusCommand = new DelegateCommand<object>(ExecuteStatusCommand));
+    public DelegateCommand<object> StatusCommand => _statusCommand ??= new DelegateCommand<object>(ExecuteStatusCommand);
 
     /// <summary>
     /// Status改变事件
@@ -179,13 +169,13 @@ public class ViewExtractMediaViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteStatusCommand(object parameter)
     {
-        if (!(parameter is TextBox output))
+        if (parameter is not TextChangedEventArgs output)
         {
             return;
         }
 
         // TextBox滚动到底部
-        // output.ScrollToEnd();
+        ((TextBox?)output.Source)?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()?.ScrollToEnd();
     }
 
     #endregion

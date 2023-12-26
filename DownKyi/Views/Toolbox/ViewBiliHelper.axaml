@@ -98,7 +98,7 @@
                             Height="25"
                             Margin="10"
                             VerticalContentAlignment="Center"
-                            Text="{Binding DanmakuUserID, Mode=TwoWay}" />
+                            Text="{Binding DanmakuUserId, Mode=TwoWay}" />
                     </StackPanel>
 
                     <Button
@@ -120,21 +120,19 @@
                             FontSize="12"
                             IsReadOnly="True"
                             Text="{Binding UserMid, Mode=TwoWay}">
-                            <!--<TextBox.Style>
-                                <Style TargetType="{x:Type TextBox}">
+                            <i:Interaction.Behaviors>
+                                <ia:EventTriggerBehavior EventName="PointerReleased">
+                                    <ia:InvokeCommandAction Command="{Binding VisitUserSpaceCommand}" />
+                                </ia:EventTriggerBehavior>
+                            </i:Interaction.Behaviors>
+                            <TextBox.Styles>
+                                <Style Selector="TextBox">
                                     <Setter Property="Foreground" Value="{DynamicResource BrushTextDark}" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
-                                        </Trigger>
-                                    </Style.Triggers>
+                                    <Style Selector="^:pointerover">
+                                        <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                                    </Style>
                                 </Style>
-                            </TextBox.Style>-->
-                            <!--<i:Interaction.Triggers>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <i:InvokeCommandAction Command="{Binding VisitUserSpaceCommand}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
+                            </TextBox.Styles>
                         </TextBox>
                     </StackPanel>
 
