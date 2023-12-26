@@ -1,6 +1,6 @@
 # 哔哩下载姬(跨平台版)
 
-<p style="text-align: center">
+<p align="center">
     <a href="https://github.com/yaobiao131/downkyicore/stargazers" style="text-decoration:none" >
         <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/yaobiao131/downkyicore">
     </a>
@@ -17,7 +17,7 @@
 
 ## 下载
 
-<p>
+<p align="left">
     <a href="https://github.com/yaobiao131/downkyi/releases/latest" style="text-decoration:none">
        <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/yaobiao131/downkyicore">
     </a>
