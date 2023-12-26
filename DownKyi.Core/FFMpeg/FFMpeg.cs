@@ -38,7 +38,9 @@ public class FFMpeg
             .OutputToFile(destVideo, true, options => options
                 .WithAudioCodec("copy")
                 .WithVideoCodec("copy")
-                .ForceFormat("mp4"))
+                .ForceFormat("mp4")
+            )
+            .NotifyOnError(s => LogManager.Debug("ffmpeg", s))
             .ProcessSynchronously();
         try
         {
