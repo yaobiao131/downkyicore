@@ -1,9 +1,40 @@
 # 哔哩下载姬(跨平台版)
 
+<p style="text-align: center">
+    <a href="https://github.com/yaobiao131/downkyicore/stargazers" style="text-decoration:none" >
+        <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/yaobiao131/downkyicore">
+    </a>
+    <a href="https://github.com/yaobiao131/downkyicore/network" style="text-decoration:none" >
+        <img alt="GitHub forks" src="https://img.shields.io/github/forks/yaobiao131/downkyicore">
+    </a>
+    <a href="https://github.com/yaobiao131/downkyicore/issues" style="text-decoration:none">
+        <img alt="GitHub issues" src="https://img.shields.io/github/issues/yaobiao131/downkyicore">
+    </a>
+    <a href="https://github.com/yaobiao131/downkyicore/blob/main/LICENSE" style="text-decoration:none" >
+        <img alt="LICENSE" src="https://img.shields.io/github/license/yaobiao131/downkyicore">
+    </a>
+</p>
+
+## 下载
+
+<p>
+    <a href="https://github.com/yaobiao131/downkyi/releases/latest" style="text-decoration:none">
+       <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/yaobiao131/downkyicore">
+    </a>
+    <a href="https://github.com/yaobiao131/downkyi/releases/latest" style="text-decoration:none">
+       <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/yaobiao131/downkyicore">
+    </a>
+    <a href="https://github.com/yaobiao131/downkyi/releases" style="text-decoration:none">
+       <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/yaobiao131/downkyicore/total">
+    </a>
+</p>
+
+[更新日志](CHANGELOG.md)
+
 ## 介绍
 
-- 基于[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)和[Avalonia UI](https://github.com/AvaloniaUI/Avalonia)制作的跨平台版本(支持Windows、linux、macOS)。
-- 开发这个版本目的是由于本人日常使用macOS，当我想下载up视频是偶然间发现了[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)，发现很好用，就是不能支持macOS使用，就想看能不能基于跨平台方案重新开发。
+- 基于[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)和[AvaloniaUI](https://github.com/AvaloniaUI/Avalonia)制作的跨平台版本(支持Windows、linux、macOS)。
+- 开发这个版本目的是由于本人日常使用macOS，当我想下载up视频是偶然间发现了[哔哩下载姬Windows版](https://github.com/leiurayer/downkyi)，发现很好用，就是不能支持macOS使用，就基于AvaloniaUI重新开发了一个跨平台版本。
 
 ## 使用说明
 - 软件自带.NET6、ffmpeg、aria2运行环境、无需自行安装
