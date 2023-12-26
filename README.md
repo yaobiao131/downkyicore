@@ -1,33 +1,19 @@
 # 哔哩下载姬(跨平台版)
 
-<p align="center">
-    <a href="https://github.com/yaobiao131/downkyicore/stargazers" style="text-decoration:none" >
-        <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/yaobiao131/downkyicore">
-    </a>
-    <a href="https://github.com/yaobiao131/downkyicore/network" style="text-decoration:none" >
-        <img alt="GitHub forks" src="https://img.shields.io/github/forks/yaobiao131/downkyicore">
-    </a>
-    <a href="https://github.com/yaobiao131/downkyicore/issues" style="text-decoration:none">
-        <img alt="GitHub issues" src="https://img.shields.io/github/issues/yaobiao131/downkyicore">
-    </a>
-    <a href="https://github.com/yaobiao131/downkyicore/blob/main/LICENSE" style="text-decoration:none" >
-        <img alt="LICENSE" src="https://img.shields.io/github/license/yaobiao131/downkyicore">
-    </a>
-</p>
+<div align="center">
+
+[![GitHub Repo stars](https://img.shields.io/github/stars/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/network)
+[![GitHub forks](https://img.shields.io/github/issues/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/issues)
+[![GitHub forks](https://img.shields.io/github/license/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/blob/main/LICENSE)
+
+</div>
 
 ## 下载
 
-<p align="left">
-    <a href="https://github.com/yaobiao131/downkyi/releases/latest" style="text-decoration:none">
-       <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/yaobiao131/downkyicore">
-    </a>
-    <a href="https://github.com/yaobiao131/downkyi/releases/latest" style="text-decoration:none">
-       <img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/yaobiao131/downkyicore">
-    </a>
-    <a href="https://github.com/yaobiao131/downkyi/releases" style="text-decoration:none">
-       <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/yaobiao131/downkyicore/total">
-    </a>
-</p>
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyi/releases/latest)
+[![GitHub Release Date](https://img.shields.io/github/release-date/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyi/releases/latest)
+[![GitHub all releases](https://img.shields.io/github/downloads/yaobiao131/downkyicore/total)](https://github.com/yaobiao131/downkyi/releases/latest)
 
 [更新日志](CHANGELOG.md)
 
