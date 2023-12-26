@@ -11,9 +11,9 @@
 
 ## 下载
 
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyi/releases/latest)
-[![GitHub Release Date](https://img.shields.io/github/release-date/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyi/releases/latest)
-[![GitHub all releases](https://img.shields.io/github/downloads/yaobiao131/downkyicore/total)](https://github.com/yaobiao131/downkyi/releases/latest)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/releases/latest)
+[![GitHub Release Date](https://img.shields.io/github/release-date/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/releases/latest)
+[![GitHub all releases](https://img.shields.io/github/downloads/yaobiao131/downkyicore/total)](https://github.com/yaobiao131/downkyicore/releases/latest)
 
 [更新日志](CHANGELOG.md)
 
