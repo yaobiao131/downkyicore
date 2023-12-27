@@ -10,7 +10,12 @@
             <Setter Property="UseLayoutRounding" Value="True" />
             <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="FontFamily" Value="Ubuntu, Segoe UI, SF Pro Display, Noto Sans, Cantarel" />
+        </Style>
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
+        </Style>
+        <Style Selector="TemplatedControl">
+            <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
         </Style>
     </Window.Styles>
 </Window>
