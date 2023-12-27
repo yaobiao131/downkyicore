@@ -104,18 +104,18 @@
         <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                <ControlTemplate TargetType="{x:Type ListBoxItem}" x:DataType="vmp:VideoSection">
                     <Border
                         Name="Border"
                         Margin="5,3"
                         Padding="8,2"
                         CornerRadius="10"
                         Cursor="Hand">
-                        <ContentPresenter
-                            x:Name="content"
+                        <TextBlock
+                            x:Name="Content"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Content="{Binding Title}" />
+                            Text="{Binding Title}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -170,12 +170,12 @@
                         Background="{DynamicResource BrushBackgroundGrey}"
                         CornerRadius="10"
                         Cursor="Hand">
-                        <ContentPresenter
-                            Name="content"
+                        <TextBlock
+                            Name="Content"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Foreground="{DynamicResource BrushText}"
-                            Content="{Binding Title}" />
+                            Text="{Binding Title}" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
