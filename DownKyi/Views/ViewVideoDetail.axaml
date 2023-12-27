@@ -430,11 +430,13 @@
                         Grid.Column="0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        CommandParameter="{Binding ElementName=NameVideoSections, Path=SelectedItem}"
+                        Command="{Binding SelectAllCommand}"
+                        CommandParameter="{Binding ElementName=NameVideoPages,Path=$self}"
                         Content="{DynamicResource SelectAll}"
                         Foreground="{DynamicResource BrushTextDark}"
                         IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        Theme="{StaticResource CheckBoxStyle}">
+                    </CheckBox>
                     <Label
                         Grid.Column="3"
                         Margin="9,0,0,0"

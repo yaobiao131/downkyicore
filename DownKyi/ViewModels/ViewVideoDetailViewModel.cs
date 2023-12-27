@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.Logging;
@@ -415,6 +416,33 @@ public class ViewVideoDetailViewModel : ViewModelBase
             page.IsSelected = true;
         }
     }
+
+    // 全选事件
+    private DelegateCommand<object>? _selectAllCommand;
+    public DelegateCommand<object> SelectAllCommand => _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
+
+    /// <summary>
+    /// 全选事件
+    /// </summary>
+    /// <param name="parameter"></param>
+    private void ExecuteSelectAllCommand(object parameter)
+    {
+        if (parameter is not DataGrid dataGrid)
+        {
+            return;
+        }
+
+        if (IsSelectAll)
+        {
+            dataGrid.SelectAll();
+        }
+        else
+        {
+            dataGrid.SelectedIndex = -1;
+            selectedVideoPages.Clear();
+        }
+    }
+
 
     // 解析视频流事件
     private DelegateCommand<object>? _parseCommand;
