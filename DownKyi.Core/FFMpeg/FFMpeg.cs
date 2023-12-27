@@ -32,15 +32,38 @@ public class FFMpeg
     public bool MergeVideo(string audio, string video, string destVideo)
     {
         if (!File.Exists(audio) && !File.Exists(video)) return false;
-        FFMpegArguments
+
+        var arguments = FFMpegArguments
             .FromFileInput(audio)
             .AddFileInput(video)
             .OutputToFile(destVideo, true, options => options
+                .WithCustomArgument("-strict -2")
                 .WithAudioCodec("copy")
                 .WithVideoCodec("copy")
                 .ForceFormat("mp4")
-            )
-            .NotifyOnError(s => LogManager.Debug("ffmpeg", s))
+            );
+        if (audio == null || !File.Exists(audio))
+        {
+            arguments = FFMpegArguments.FromFileInput(video).OutputToFile(
+                destVideo,
+                true,
+                options => options.WithCustomArgument("-strict -2").WithVideoCodec("copy").WithAudioCodec("copy").ForceFormat("mp4")
+            );
+        }
+
+        if (video == null || !File.Exists(video))
+        {
+            arguments = FFMpegArguments.FromFileInput(audio).OutputToFile(
+                destVideo,
+                true,
+                options => options.WithCustomArgument("-strict -2").DisableChannel(Channel.Video).WithAudioCodec("copy")
+            );
+        }
+
+        LogManager.Debug(Tag, arguments.Arguments);
+
+        arguments
+            .NotifyOnError(s => LogManager.Debug(Tag, s))
             .ProcessSynchronously();
         try
         {

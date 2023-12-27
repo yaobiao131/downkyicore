@@ -4,8 +4,8 @@
 
 [![GitHub Repo stars](https://img.shields.io/github/stars/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/network)
-[![GitHub forks](https://img.shields.io/github/issues/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/issues)
-[![GitHub forks](https://img.shields.io/github/license/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/blob/main/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/issues)
+[![LICENSE](https://img.shields.io/github/license/yaobiao131/downkyicore)](https://github.com/yaobiao131/downkyicore/blob/main/LICENSE)
 
 </div>
 
