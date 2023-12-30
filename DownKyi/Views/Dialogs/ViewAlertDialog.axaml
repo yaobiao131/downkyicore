@@ -59,23 +59,25 @@
                 </Button>
             </Grid>
             <Grid Grid.Row="1" Margin="0,10,0,20" RowDefinitions="*,*">
-
-                <ScrollViewer
+                <ContentControl
                     Grid.Row="0"
-                    MaxWidth="500"
-                    MaxHeight="190"
                     Margin="0,10,0,30"
-                    Padding="15,0"
-                    VerticalScrollBarVisibility="Auto">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{Binding Message}"
-                        TextTrimming="CharacterEllipsis"
-                        TextWrapping="WrapWithOverflow" />
-                </ScrollViewer>
+                    Padding="15,0">
+                    <ScrollViewer
+                        MaxWidth="500"
+                        MaxHeight="190"
+                        VerticalScrollBarVisibility="Auto">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="14"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{Binding Message}"
+                            TextTrimming="CharacterEllipsis"
+                            TextWrapping="WrapWithOverflow" />
+                    </ScrollViewer>
+                </ContentControl>
+
 
                 <Button
                     Grid.Row="1"
