@@ -148,6 +148,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Import certificate
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.MACOS_CERTIFICATE }}
+          p12-password: ${{ secrets.MACOS_CERTIFICATE_PWD }}
       - name: Install Tool Via HomeBrew
         run: |
           export HOMEBREW_NO_AUTO_UPDATE=true
@@ -176,6 +181,11 @@ jobs:
         run: |
           chmod +x package.sh
           ./package.sh ${{ matrix.cpu }}
+        working-directory: ./script/macos
+      - name: Sign app
+        run: |
+          chmod +x sign.sh
+          ./sign.sh
         working-directory: ./script/macos
       - name: Create DMG
         run: |
