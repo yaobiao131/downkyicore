@@ -78,7 +78,7 @@
                         <ia:EventTriggerBehavior EventName="TextChanged">
                             <ia:InvokeCommandAction
                                 Command="{Binding StatusCommand}"
-                                PassEventArgsToCommand="True" />
+                                CommandParameter="{Binding $self}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>

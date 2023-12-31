@@ -169,13 +169,13 @@ public class ViewExtractMediaViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteStatusCommand(object parameter)
     {
-        if (parameter is not TextChangedEventArgs output)
+        if (parameter is not TextBox output)
         {
             return;
         }
 
         // TextBox滚动到底部
-        ((TextBox?)output.Source)?.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()?.ScrollToEnd();
+        output.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()?.ScrollToEnd();
     }
 
     #endregion
