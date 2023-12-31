@@ -1,6 +1,12 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
+using DownKyi.Core.Settings;
 using DownKyi.Events;
+using DownKyi.Services;
+using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -11,10 +17,19 @@ namespace DownKyi.ViewModels;
 public class MainWindowViewModel : BindableBase
 {
     private readonly IEventAggregator _eventAggregator;
-    private readonly IRegionManager _regionManager;
 
-    private bool _messageVisibility = false;
+    private ClipboardListener? _clipboardListener;
+
+    private bool _messageVisibility;
     private string? _oldMessage;
+
+    private WindowState _winState;
+
+    public WindowState WinState
+    {
+        get => _winState;
+        set => SetProperty(ref _winState, value);
+    }
 
     public bool MessageVisibility
     {
@@ -30,27 +45,23 @@ public class MainWindowViewModel : BindableBase
         set => SetProperty(ref _message, value);
     }
 
+    private DelegateCommand? LoadedCommand { get; }
+    public DelegateCommand<PointerPressedEventArgs> DragMoveCommand { get; private set; }
 
-    // 登录事件
-    private DelegateCommand? _loginCommand;
-    public DelegateCommand LoginCommand => _loginCommand ??= new DelegateCommand(ExecuteLogin);
+    private DelegateCommand? _closingCommand;
 
-    public DelegateCommand? LoadedCommand { get; }
+    public DelegateCommand ClosingCommand => _closingCommand ??= _closingCommand = new DelegateCommand(ExecuteClosingCommand);
 
-    public void ExecuteLogin()
+    private void ExecuteClosingCommand()
     {
-        NavigationParam parameter = new NavigationParam
-        {
-            ViewName = ViewLoginViewModel.Tag,
-            ParentViewName = null,
-            Parameter = null
-        };
-        _eventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
+        if (_clipboardListener == null) return;
+        _clipboardListener.Changed -= ClipboardListenerOnChanged;
+        _clipboardListener.Dispose();
     }
+
 
     public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
     {
-        _regionManager = regionManager;
         _eventAggregator = eventAggregator;
 
         #region MyRegion
@@ -88,6 +99,8 @@ public class MainWindowViewModel : BindableBase
 
         LoadedCommand = new DelegateCommand(() =>
         {
+            _clipboardListener = new ClipboardListener(App.Current.MainWindow);
+            _clipboardListener.Changed += ClipboardListenerOnChanged;
             var param = new NavigationParameters
             {
                 { "Parent", "" },
@@ -96,6 +109,84 @@ public class MainWindowViewModel : BindableBase
             regionManager.RequestNavigate("ContentRegion", ViewIndexViewModel.Tag, param);
         });
 
+        var times = 0;
+
+        DragMoveCommand = new DelegateCommand<PointerPressedEventArgs>(e =>
+        {
+            Window mainWindow = App.Current.MainWindow;
+            // caption 双击事件
+            times += 1;
+            var timer = new DispatcherTimer
+            {
+                Interval = new TimeSpan(0, 0, 0, 0, 300)
+            };
+            timer.Tick += (_, _) =>
+            {
+                timer.IsEnabled = false;
+                times = 0;
+            };
+            timer.IsEnabled = true;
+
+            if (times % 2 == 0)
+            {
+                timer.IsEnabled = false;
+                times = 0;
+                WinState = WinState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+            }
+
+            // caption 拖动事件
+            try
+            {
+                mainWindow.BeginMoveDrag(e);
+            }
+            catch
+            {
+                // ignored
+            }
+        });
+
+
         Dispatcher.UIThread.InvokeAsync(() => { LoadedCommand.Execute(); });
     }
+
+    #region 剪贴板
+
+    private int _times;
+
+    private void ClipboardListenerOnChanged(string obj)
+    {
+        #region 执行第二遍时跳过
+
+        _times += 1;
+        var timer = new DispatcherTimer
+        {
+            Interval = new TimeSpan(0, 0, 0, 0, 300)
+        };
+        timer.Tick += (_, _) =>
+        {
+            timer.IsEnabled = false;
+            _times = 0;
+        };
+        timer.IsEnabled = true;
+
+        if (_times % 2 == 0)
+        {
+            timer.IsEnabled = false;
+            _times = 0;
+            return;
+        }
+
+        #endregion
+
+        var isListenClipboard = SettingsManager.GetInstance().IsListenClipboard();
+        if (isListenClipboard != AllowStatus.YES)
+        {
+            return;
+        }
+
+        var searchService = new SearchService();
+        Dispatcher.UIThread.InvokeAsync(() => { searchService.BiliInput(obj + AppConstant.ClipboardId, ViewIndexViewModel.Tag, _eventAggregator); });
+    }
+
+    #endregion
 }

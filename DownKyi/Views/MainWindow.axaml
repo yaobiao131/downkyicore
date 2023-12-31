@@ -10,18 +10,28 @@
         MinWidth="800"
         MinHeight="550"
         Title="{DynamicResource AppName}"
-        Icon="/Resources/favicon.ico">
-    
+        Icon="/Resources/favicon.ico"
+        xmlns:i="using:Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        WindowState="{Binding WinState}">
+
+    <i:Interaction.Behaviors>
+        <ia:EventTriggerBehavior EventName="Closing">
+            <ia:InvokeCommandAction Command="{Binding ClosingCommand}" />
+        </ia:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1">
 
-        <Grid Background="{DynamicResource BrushBackground}">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-            </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="0,*">
             <!--<Grid
                 Grid.Row="0"
                 Background="{DynamicResource BrushCaptionBackground}"
                 KeyboardNavigation.TabNavigation="None">
+                <i:Interaction.Behaviors>
+                    <ia:EventTriggerBehavior EventName="PointerPressed">
+                        <ia:InvokeCommandAction Command="{Binding DragMoveCommand}" PassEventArgsToCommand="True" />
+                    </ia:EventTriggerBehavior>
+                </i:Interaction.Behaviors>
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />

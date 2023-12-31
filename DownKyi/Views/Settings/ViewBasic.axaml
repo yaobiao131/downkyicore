@@ -57,7 +57,7 @@
                 Height="1"
                 Margin="0,20,0,0"
                 Background="{DynamicResource BrushBorder}" />
-            <!--<CheckBox
+            <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
@@ -65,7 +65,7 @@
                 Content="{DynamicResource ListenClipboard}"
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding ListenClipboard, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />-->
+                Theme="{StaticResource CheckBoxStyle}" />
             <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"

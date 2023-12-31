@@ -62,6 +62,7 @@ public partial class App : PrismApplication
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<MainWindow>();
         containerRegistry.RegisterSingleton<IDialogService, DialogService>();
         containerRegistry.Register<IDialogWindow, DialogWindow>();
         // pages
