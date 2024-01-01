@@ -15,7 +15,7 @@ public class ClipboardListener
     private readonly SemaphoreSlim _tickSemaphore = new(1, 1);
     private CancellationTokenSource? _cts;
 
-    private Window _mainWindow;
+    private readonly Window _mainWindow;
 
     public ClipboardListener(Window mainWindow)
     {
@@ -28,7 +28,7 @@ public class ClipboardListener
         _timer = new Timer(InvokeTick, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
     }
 
-    private void UnRegisterSystemEvent(Action<string> action)
+    private void UnRegisterSystemEvent(Action<string> _)
     {
         _timer?.Dispose();
         _timer = null;

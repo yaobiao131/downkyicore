@@ -297,7 +297,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <summary>
     /// 复制封面事件
     /// </summary>
-    private void ExecuteCopyCoverCommand()
+    private async void ExecuteCopyCoverCommand()
     {
         // 复制封面图片到剪贴板
         // Clipboard.SetImage(VideoInfoView.Cover);
@@ -313,10 +313,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <summary>
     /// 复制封面URL事件
     /// </summary>
-    private void ExecuteCopyCoverUrlCommand()
+    private async void ExecuteCopyCoverUrlCommand()
     {
         // 复制封面url到剪贴板
-        // Clipboard.SetText(VideoInfoView.CoverUrl);
+        await ClipboardManager.SetText(_videoInfoView.CoverUrl);
         LogManager.Info(Tag, "复制封面url到剪贴板");
     }
 
@@ -332,7 +332,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid);
     }
 
-// 视频章节选择事件
+    // 视频章节选择事件
     private DelegateCommand<object>? _videoSectionsCommand;
 
     public DelegateCommand<object> VideoSectionsCommand =>

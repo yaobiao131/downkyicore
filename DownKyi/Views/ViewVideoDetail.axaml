@@ -97,7 +97,7 @@
                     Source="{Binding VideoInfoView.Cover}">
                     <Image.ContextMenu>
                         <ContextMenu>
-                            <MenuItem Command="{Binding CopyCoverCommand}" Header="{DynamicResource CopyCover}" />
+                            <!-- <MenuItem Command="{Binding CopyCoverCommand}" Header="{DynamicResource CopyCover}" /> -->
                             <MenuItem Command="{Binding CopyCoverUrlCommand}" Header="{DynamicResource CopyCoverUrl}" />
                         </ContextMenu>
                     </Image.ContextMenu>
