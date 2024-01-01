@@ -2,8 +2,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:DownKyi.ViewModels"
         xmlns:prism="http://prismlibrary.com/"
-        xmlns:i="using:Avalonia.Xaml.Interactivity"
-        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         x:Class="DownKyi.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         prism:ViewModelLocator.AutoWireViewModel="True"
@@ -13,10 +11,9 @@
         MinHeight="550"
         Title="{DynamicResource AppName}"
         Icon="/Resources/favicon.ico"
-        WindowState="{Binding WinState}"
-        ExtendClientAreaToDecorationsHint="True"
-        WindowStartupLocation="CenterScreen"
-        CanResize="True">
+        xmlns:i="using:Avalonia.Xaml.Interactivity"
+        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+        WindowState="{Binding WinState}">
 
     <i:Interaction.Behaviors>
         <ia:EventTriggerBehavior EventName="Closing">
@@ -25,99 +22,41 @@
     </i:Interaction.Behaviors>
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1">
 
-        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="30,*">
-            <Grid
+        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="0,*">
+            <!--<Grid
                 Grid.Row="0"
                 Background="{DynamicResource BrushCaptionBackground}"
-                KeyboardNavigation.TabNavigation="None"
-                ColumnDefinitions="*,50,50,50,50">
+                KeyboardNavigation.TabNavigation="None">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="PointerPressed">
                         <ia:InvokeCommandAction Command="{Binding DragMoveCommand}" PassEventArgsToCommand="True" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                </Grid.ColumnDefinitions>
                 <StackPanel
                     Grid.Column="0"
-                    Margin="{Binding TitleMargin}"
+                    Margin="10,0"
                     Orientation="Horizontal">
                     <Image
                         Width="20"
                         Height="20"
                         Source="/Resources/favicon.ico" />
                     <TextBlock
+                        Grid.Column="0"
                         Margin="10,0,0,0"
                         VerticalAlignment="Center"
                         FontSize="12"
                         Foreground="{DynamicResource BrushCaptionForeground}"
                         Text="{DynamicResource AppName}" />
                 </StackPanel>
-                <!--<Button
-                    Grid.Column="1"
-                    Command="{Binding SkinCommand}"
-                    Theme="{StaticResource SystemBtnStyle}"
-                    ToolTip.Tip="{DynamicResource Skin}"
-                    IsVisible="False">
-                    <Path
-                        Width="{Binding SkinIcon.Width}"
-                        Height="{Binding SkinIcon.Height}"
-                        Data="{Binding SkinIcon.Data}"
-                        Fill="{Binding SkinIcon.Fill}"
-                        Stretch="UniformToFill" />
-                </Button>-->
-                <Button
-                    Grid.Column="2"
-                    Command="{Binding MinimizeCommand}"
-                    Theme="{StaticResource SystemBtnStyle}"
-                    ToolTip.Tip="{DynamicResource Minimize}"
-                    IsVisible="{Binding !IsOsx}">
-                    <Path
-                        Width="{Binding MinimizeIcon.Width}"
-                        Height="{Binding MinimizeIcon.Height}"
-                        Data="{Binding MinimizeIcon.Data}"
-                        Fill="{Binding MinimizeIcon.Fill}"
-                        Stretch="UniformToFill" />
-                </Button>
-                <Button
-                    Grid.Column="3"
-                    Command="{Binding ResizeCommand}"
-                    Theme="{StaticResource SystemBtnStyle}"
-                    IsVisible="{Binding !IsOsx}">
-                    <Path
-                        Width="{Binding ResizeIcon.Width}"
-                        Height="{Binding ResizeIcon.Height}"
-                        Data="{Binding ResizeIcon.Data}"
-                        Fill="{Binding ResizeIcon.Fill}"
-                        Stretch="UniformToFill" />
-                    <i:Interaction.Behaviors>
-                        <ia:DataTriggerBehavior
-                            Binding="{Binding WindowState,RelativeSource={RelativeSource AncestorType=Window}}"
-                            Value="Maximized">
-                            <ia:ChangePropertyAction PropertyName="ToolTip.Tip" Value="{DynamicResource Restore}" />
-                        </ia:DataTriggerBehavior>
-                        <ia:DataTriggerBehavior
-                            Binding="{Binding WindowState,RelativeSource={RelativeSource AncestorType=Window}}"
-                            Value="Normal">
-                            <ia:ChangePropertyAction PropertyName="ToolTip.Tip" Value="{DynamicResource Maximize}" />
-                        </ia:DataTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </Button>
-
-                <Button
-                    Grid.Column="4"
-                    Command="{Binding CloseCommand}"
-                    Theme="{StaticResource CloseBtnStyle}"
-                    ToolTip.Tip="{DynamicResource Close}"
-                    IsVisible="{Binding !IsOsx}">
-                    <Path
-                        Width="{Binding CloseIcon.Width}"
-                        Height="{Binding CloseIcon.Height}"
-                        Data="{Binding CloseIcon.Data}"
-                        Fill="{Binding CloseIcon.Fill}"
-                        Stretch="UniformToFill" />
-                </Button>
-
-            </Grid>
+            </Grid>-->
 
             <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" />
 

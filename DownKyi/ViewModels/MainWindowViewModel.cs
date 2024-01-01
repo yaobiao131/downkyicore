@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Threading;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
-using DownKyi.Images;
 using DownKyi.Services;
 using DownKyi.Utils;
 using Prism.Commands;
@@ -30,12 +28,7 @@ public class MainWindowViewModel : BindableBase
     public WindowState WinState
     {
         get => _winState;
-        set
-        {
-            ResizeIcon = value == WindowState.Maximized ? SystemIcon.Instance().Restore : SystemIcon.Instance().Maximize;
-
-            SetProperty(ref _winState, value);
-        }
+        set => SetProperty(ref _winState, value);
     }
 
     public bool MessageVisibility
@@ -52,83 +45,12 @@ public class MainWindowViewModel : BindableBase
         set => SetProperty(ref _message, value);
     }
 
-    private VectorImage _minimizeIcon;
-
-    public VectorImage MinimizeIcon
-    {
-        get => _minimizeIcon;
-        set => SetProperty(ref _minimizeIcon, value);
-    }
-
-    private VectorImage _resizeIcon;
-
-    public VectorImage ResizeIcon
-    {
-        get => _resizeIcon;
-        set => SetProperty(ref _resizeIcon, value);
-    }
-
-
-    private VectorImage _closeIcon;
-
-    public VectorImage CloseIcon
-    {
-        get => _closeIcon;
-        set => SetProperty(ref _closeIcon, value);
-    }
-
-    private bool _isOsx;
-
-    public bool IsOsx
-    {
-        get => _isOsx;
-        set => SetProperty(ref _isOsx, value);
-    }
-
-    private Thickness? _titleMargin;
-
-    public Thickness? TitleMargin
-    {
-        get => _titleMargin;
-        set => SetProperty(ref _titleMargin, value);
-    }
-
     private DelegateCommand? LoadedCommand { get; }
     public DelegateCommand<PointerPressedEventArgs> DragMoveCommand { get; private set; }
 
-    private DelegateCommand? _closeCommand;
-    public DelegateCommand CloseCommand => _closeCommand ??= new DelegateCommand(ExecuteCloseCommand);
-
-    private void ExecuteCloseCommand()
-    {
-        if (_clipboardListener != null)
-        {
-            _clipboardListener.Changed -= ClipboardListenerOnChanged;
-            _clipboardListener.Dispose();
-        }
-
-        App.Current.MainWindow.Close();
-    }
-
-    private DelegateCommand? _resizeCommand;
-    public DelegateCommand ResizeCommand => _resizeCommand ??= new DelegateCommand(ExecuteResizeCommand);
-
-    private void ExecuteResizeCommand()
-    {
-        WinState = WinState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-    }
-
-    private DelegateCommand? _minimizeCommand;
-    public DelegateCommand MinimizeCommand => _minimizeCommand ??= new DelegateCommand(ExecuteMinimizeCommand);
-
-    private void ExecuteMinimizeCommand()
-    {
-        App.Current.MainWindow.WindowState = WindowState.Minimized;
-    }
-
     private DelegateCommand? _closingCommand;
 
-    public DelegateCommand ClosingCommand => _closingCommand ??= new DelegateCommand(ExecuteClosingCommand);
+    public DelegateCommand ClosingCommand => _closingCommand ??= _closingCommand = new DelegateCommand(ExecuteClosingCommand);
 
     private void ExecuteClosingCommand()
     {
@@ -142,28 +64,7 @@ public class MainWindowViewModel : BindableBase
     {
         _eventAggregator = eventAggregator;
 
-        #region 属性初始化
-
-        WinState = WindowState.Normal;
-
-        MinimizeIcon = SystemIcon.Instance().Minimize;
-        ResizeIcon = SystemIcon.Instance().Maximize;
-        CloseIcon = SystemIcon.Instance().Close;
-        if (OperatingSystem.IsMacOS())
-        {
-            TitleMargin = new Thickness(70, 0, 10, 0);
-            IsOsx = true;
-        }
-        else
-        {
-            TitleMargin = new Thickness(10, 0);
-            IsOsx = false;
-        }
-
-        #endregion
-
-
-        #region 订阅
+        #region MyRegion
 
         _eventAggregator.GetEvent<NavigationEvent>().Subscribe(view =>
         {
