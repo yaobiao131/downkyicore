@@ -9,7 +9,6 @@
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
             <Setter Property="UseLayoutRounding" Value="True" />
             <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
-            <Setter Property="BorderThickness" Value="1" />
         </Style>
         <Style Selector="Window">
             <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />

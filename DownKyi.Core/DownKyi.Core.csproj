@@ -17,12 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="Avalonia.Base">
-            <HintPath>..\DownKyi\bin\Debug\net6.0\Avalonia.Base.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Update="Binary/$(RuntimeIdentifier)/aria2/*" Link="aria2/%(Filename)%(Extension)" Visible="false">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
