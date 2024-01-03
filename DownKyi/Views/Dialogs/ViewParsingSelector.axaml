@@ -12,11 +12,11 @@
             <Setter Property="CanResize" Value="False" />
             <Setter Property="ShowInTaskbar" Value="False" />
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
-            <Setter Property="SystemDecorations" Value="BorderOnly" />
+            <Setter Property="SystemDecorations" Value="None" />
         </ControlTheme>
     </prismExtension:Dialog.Theme>
 
-    <Border CornerRadius="10">
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
         <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
 
             <Grid
@@ -31,7 +31,7 @@
                     Text="{Binding Title}" />
 
                 <Button
-                    Grid.Column="3"
+                    Grid.Column="4"
                     Command="{Binding CloseCommand}"
                     Theme="{StaticResource CloseBtnStyle}"
                     ToolTip.Tip="{DynamicResource Close}">
