@@ -64,7 +64,7 @@ public class FFMpeg
 
         arguments
             .NotifyOnError(s => LogManager.Debug(Tag, s))
-            .ProcessSynchronously();
+            .ProcessSynchronously(false);
         try
         {
             if (audio != null)
@@ -98,7 +98,7 @@ public class FFMpeg
     /// <param name="action"></param>
     public void Delogo(string video, string destVideo, int x, int y, int width, int height, Action<string> action)
     {
-        var arg = FFMpegArguments
+        FFMpegArguments
             .FromFileInput(video)
             .OutputToFile(
                 destVideo,
@@ -107,7 +107,7 @@ public class FFMpeg
                     .WithCustomArgument($"-vf delogo=x={x}:y={y}:w={width}:h={height}:show=0 -hide_banner"))
             .NotifyOnOutput(action.Invoke)
             .NotifyOnError(action.Invoke)
-            .ProcessSynchronously();
+            .ProcessSynchronously(false);
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class FFMpeg
             )
             .NotifyOnOutput(action.Invoke)
             .NotifyOnError(action.Invoke)
-            .ProcessSynchronously();
+            .ProcessSynchronously(false);
     }
 
     /// <summary>
@@ -150,6 +150,6 @@ public class FFMpeg
                     .DisableChannel(Channel.Audio))
             .NotifyOnOutput(action.Invoke)
             .NotifyOnError(action.Invoke)
-            .ProcessSynchronously();
+            .ProcessSynchronously(false);
     }
 }
