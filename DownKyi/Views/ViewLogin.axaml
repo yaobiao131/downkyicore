@@ -4,12 +4,14 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:Class="DownKyi.Views.ViewLogin"
-             x:DataType="vm:ViewLoginViewModel">
+             x:DataType="vm:ViewLoginViewModel"
+             xmlns:i="using:Avalonia.Xaml.Interactivity"
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="106" />
-            <RowDefinition Height="150*" MinHeight="120" />
+            <RowDefinition Height="150*" MinHeight="200" />
             <RowDefinition Height="100*" />
         </Grid.RowDefinitions>
 
@@ -74,36 +76,23 @@
             Grid.Row="2"
             MaxHeight="300"
             Source="/Resources/login/qrcode_login_tip.png">
-            <!--<Image.Style>
-                <Style>
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding ElementName=nameLoginQRCode, Path=IsMouseOver}"
-                                           Value="True" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Image.Visibility" Value="Visible" />
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding ElementName=nameLoginQRCode, Path=IsMouseOver}"
-                                           Value="False" />
-                                <Condition Binding="{Binding ElementName=nameLoginQRCodeTip, Path=IsMouseOver}"
-                                           Value="False" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Image.Visibility" Value="Hidden" />
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=nameLoginQRCodeStatus, Path=Visibility}"
-                                     Value="Visible">
-                            <Setter Property="Image.Visibility" Value="Hidden" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Image.Style>-->
+            <i:Interaction.Behaviors>
+                <ia:DataTriggerBehavior
+                    Binding="{Binding Path=IsPointerOver, ElementName=NameLoginQrCode}"
+                    Value="True">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" TargetObject="NameLoginQrCodeTip" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior
+                    Binding="{Binding Path=IsPointerOver, ElementName=NameLoginQrCodeTip}"
+                    Value="False">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
+                </ia:DataTriggerBehavior>
+                <ia:DataTriggerBehavior
+                    Binding="{Binding Path=IsVisible, ElementName=NameLoginQrCodeStatus}"
+                    Value="True">
+                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
+                </ia:DataTriggerBehavior>
+            </i:Interaction.Behaviors>
         </Image>
 
 
