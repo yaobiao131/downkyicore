@@ -42,6 +42,15 @@
                     VerticalAlignment="Center"
                     Stroke="{DynamicResource BrushImageBorder}"
                     StrokeThickness="2" />
+                <TextBlock
+                    Grid.Column="1"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Foreground="{DynamicResource BrushPrimary}"
+                    Text="{DynamicResource Login}"
+                    IsVisible="{Binding UserName,Converter={x:Static StringConverters.IsNullOrEmpty}}">
+                </TextBlock>
             </Grid>
         </Grid>
 
