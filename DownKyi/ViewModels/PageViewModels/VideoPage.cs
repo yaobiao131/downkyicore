@@ -110,32 +110,32 @@ public class VideoPage : BindableBase
     private void ExecuteVideoQualitySelectedCommand()
     {
         // 杜比视界
-        string dolby = string.Empty;
-        try
-        {
-            var qualities = Constant.GetAudioQualities();
-            dolby = qualities[3].Name;
-        }
-        catch (Exception e)
-        {
-            Console.PrintLine("ExecuteVideoQualitySelectedCommand()发生异常: {0}", e);
-            LogManager.Error("ExecuteVideoQualitySelectedCommand", e);
-        }
-
-        if (VideoQuality != null && VideoQuality.Quality == 126 && PlayUrl != null && PlayUrl.Dash != null &&
-            PlayUrl.Dash.Dolby != null)
-        {
-            ListHelper.AddUnique(AudioQualityFormatList, dolby);
-            AudioQualityFormat = dolby;
-        }
-        else
-        {
-            if (AudioQualityFormatList != null && AudioQualityFormatList.Contains(dolby))
-            {
-                AudioQualityFormatList.Remove(dolby);
-                AudioQualityFormat = AudioQualityFormatList[0];
-            }
-        }
+        // string dolby = string.Empty;
+        // try
+        // {
+        //     var qualities = Constant.GetAudioQualities();
+        //     dolby = qualities[3].Name;
+        // }
+        // catch (Exception e)
+        // {
+        //     Console.PrintLine("ExecuteVideoQualitySelectedCommand()发生异常: {0}", e);
+        //     LogManager.Error("ExecuteVideoQualitySelectedCommand", e);
+        // }
+        //
+        // if (VideoQuality != null && VideoQuality.Quality == 126 && PlayUrl != null && PlayUrl.Dash != null &&
+        //     PlayUrl.Dash.Dolby != null)
+        // {
+        //     ListHelper.AddUnique(AudioQualityFormatList, dolby);
+        //     AudioQualityFormat = dolby;
+        // }
+        // else
+        // {
+        //     if (AudioQualityFormatList != null && AudioQualityFormatList.Contains(dolby))
+        //     {
+        //         AudioQualityFormatList.Remove(dolby);
+        //         AudioQualityFormat = AudioQualityFormatList[0];
+        //     }
+        // }
     }
 
     #endregion
