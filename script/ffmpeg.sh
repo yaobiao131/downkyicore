@@ -13,19 +13,34 @@ create_dir() {
 
 create_dir "$download_dir"
 
-version="b4.4.1"
-
 download_ffmpeg_macos() {
-  local url="https://github.com/eugeneware/ffmpeg-static/releases/download/${version}/darwin-$arch"
+  local filename=""
+  case $arch in
+  x64)
+    filename=ffmpeg-x86_64-apple-darwin_static.zip
+    ;;
+  arm64)
+    filename=ffmpeg-aarch64-apple-darwin_static.zip
+    ;;
+  esac
+  local url="https://github.com/yaobiao131/downkyi-ffmpeg-build/releases/download/continuous/$filename"
   create_dir "$ffmpeg_save_path/osx-$arch/ffmpeg"
-  curl -kL "$url" -o "$ffmpeg_save_path/osx-$arch/ffmpeg/ffmpeg"
+  curl -kL "$url" -o "$download_dir/ffmpeg.zip"
+  unzip -d "$ffmpeg_save_path/osx-$arch/ffmpeg/" -o "$download_dir/ffmpeg.zip"
   chmod +x "$ffmpeg_save_path/osx-$arch/ffmpeg/ffmpeg"
 }
 
 download_ffmpeg_linux() {
-  local url="https://github.com/eugeneware/ffmpeg-static/releases/download/${version}/linux-$arch"
+  local filename=""
+  case $arch in
+  x64)
+    filename=ffmpeg-x86_64-linux-musl_static.zip
+    ;;
+  esac
+  local url="https://github.com/yaobiao131/downkyi-ffmpeg-build/releases/download/continuous/$filename"
   create_dir "$ffmpeg_save_path/linux-$arch/ffmpeg"
-  curl -kL "$url" -o "$ffmpeg_save_path/linux-$arch/ffmpeg/ffmpeg"
+  curl -kL "$url" -o "$download_dir/ffmpeg.zip"
+  unzip -d "$ffmpeg_save_path/linux-$arch/ffmpeg/" -o "$download_dir/ffmpeg.zip"
   chmod +x "$ffmpeg_save_path/linux-$arch/ffmpeg/ffmpeg"
 }
 
