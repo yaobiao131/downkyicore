@@ -20,8 +20,7 @@ public static class DialogUtils
     /// <returns></returns>
     public static async Task<string?> SetDownloadDirectory()
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || desktop.MainWindow?.StorageProvider is not { } provider)
             throw new NullReferenceException("Missing StorageProvider instance.");
         var folders = await provider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
@@ -38,16 +37,14 @@ public static class DialogUtils
     /// <returns></returns>
     public static async Task<string?> SelectVideoFile()
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || desktop.MainWindow?.StorageProvider is not { } provider)
             throw new NullReferenceException("Missing StorageProvider instance.");
         var files = await provider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "选择视频",
             SuggestedStartLocation = await provider.TryGetFolderFromPathAsync(new Uri(DefaultDirectory)),
             AllowMultiple = false,
-            FileTypeFilter = new FilePickerFileType[]
-                { new("select") { Patterns = new[] { "*.mp4" }, MimeTypes = new[] { "video/mp4" } } }
+            FileTypeFilter = new FilePickerFileType[] { new("select") { Patterns = new[] { "*.mp4" }, MimeTypes = new[] { "video/mp4" } } }
         });
 
         // 选择文件
@@ -60,8 +57,7 @@ public static class DialogUtils
     /// <returns></returns>
     public static async Task<string[]?> SelectMultiVideoFile()
     {
-        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop ||
-            desktop.MainWindow?.StorageProvider is not { } provider)
+        if (Application.Current?.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop || desktop.MainWindow?.StorageProvider is not { } provider)
             throw new NullReferenceException("Missing StorageProvider instance.");
         var files = await provider.OpenFilePickerAsync(
             new FilePickerOpenOptions
@@ -69,8 +65,7 @@ public static class DialogUtils
                 Title = "选择视频",
                 SuggestedStartLocation = await provider.TryGetFolderFromPathAsync(new Uri(DefaultDirectory)),
                 AllowMultiple = true,
-                FileTypeFilter = new FilePickerFileType[]
-                    { new("select") { Patterns = new[] { "*.mp4" } } }
+                FileTypeFilter = new FilePickerFileType[] { new("select") { Patterns = new[] { "*.mp4" } } }
             }
         );
 

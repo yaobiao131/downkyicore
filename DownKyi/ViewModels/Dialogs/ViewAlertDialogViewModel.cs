@@ -10,37 +10,37 @@ public class ViewAlertDialogViewModel : BaseDialogViewModel
 
     #region 页面属性申明
 
-    private VectorImage image;
+    private VectorImage _image;
 
     public VectorImage Image
     {
-        get => image;
-        set => SetProperty(ref image, value);
+        get => _image;
+        set => SetProperty(ref _image, value);
     }
 
-    private string message;
+    private string _message;
 
     public string Message
     {
-        get => message;
-        set => SetProperty(ref message, value);
+        get => _message;
+        set => SetProperty(ref _message, value);
     }
 
 
-    private bool aloneButton;
+    private bool _aloneButton;
 
     public bool AloneButton
     {
-        get => aloneButton;
-        set => SetProperty(ref aloneButton, value);
+        get => _aloneButton;
+        set => SetProperty(ref _aloneButton, value);
     }
 
-    private bool twoButton;
+    private bool _twoButton;
 
     public bool TwoButton
     {
-        get => twoButton;
-        set => SetProperty(ref twoButton, value);
+        get => _twoButton;
+        set => SetProperty(ref _twoButton, value);
     }
 
     #endregion
@@ -52,8 +52,8 @@ public class ViewAlertDialogViewModel : BaseDialogViewModel
     #region 命令申明
 
     // 确认事件
-    private DelegateCommand allowCommand;
-    public DelegateCommand AllowCommand => allowCommand ?? (allowCommand = new DelegateCommand(ExecuteAllowCommand));
+    private DelegateCommand? _allowCommand;
+    public DelegateCommand AllowCommand => _allowCommand ??= new DelegateCommand(ExecuteAllowCommand);
 
     /// <summary>
     /// 确认事件
@@ -75,7 +75,7 @@ public class ViewAlertDialogViewModel : BaseDialogViewModel
         Image = parameters.GetValue<VectorImage>("image");
         Title = parameters.GetValue<string>("title");
         Message = parameters.GetValue<string>("message");
-        int number = parameters.GetValue<int>("button_number");
+        var number = parameters.GetValue<int>("button_number");
 
         switch (number)
         {

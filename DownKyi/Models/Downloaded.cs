@@ -19,8 +19,8 @@ public class Downloaded // : DownloadBase
     {
         FinishedTimestamp = finishedTimestamp;
 
-        DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-        DateTime dateTime = startTime.AddSeconds(finishedTimestamp);
+        var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+        var dateTime = startTime.AddSeconds(finishedTimestamp);
         FinishedTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
     }
 

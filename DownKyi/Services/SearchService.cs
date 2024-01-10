@@ -27,13 +27,12 @@ public class SearchService
     public bool BiliInput(string input, string parentViewName, IEventAggregator eventAggregator)
     {
         // 移除剪贴板id
-        string justId = input.Replace(AppConstant.ClipboardId, "");
+        var justId = input.Replace(AppConstant.ClipboardId, "");
 
         // 视频
         if (ParseEntrance.IsAvId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName,
-                $"{ParseEntrance.VideoUrl}{input.ToLower()}");
+            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, $"{ParseEntrance.VideoUrl}{input.ToLower()}");
         }
         else if (ParseEntrance.IsAvUrl(justId))
         {
@@ -41,8 +40,7 @@ public class SearchService
         }
         else if (ParseEntrance.IsBvId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName,
-                $"{ParseEntrance.VideoUrl}{input}");
+            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, $"{ParseEntrance.VideoUrl}{input}");
         }
         else if (ParseEntrance.IsBvUrl(justId))
         {
@@ -51,8 +49,7 @@ public class SearchService
         // 番剧（电影、电视剧）
         else if (ParseEntrance.IsBangumiSeasonId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName,
-                $"{ParseEntrance.BangumiUrl}{input.ToLower()}");
+            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, $"{ParseEntrance.BangumiUrl}{input.ToLower()}");
         }
         else if (ParseEntrance.IsBangumiSeasonUrl(justId))
         {
@@ -60,8 +57,7 @@ public class SearchService
         }
         else if (ParseEntrance.IsBangumiEpisodeId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName,
-                $"{ParseEntrance.BangumiUrl}{input.ToLower()}");
+            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, $"{ParseEntrance.BangumiUrl}{input.ToLower()}");
         }
         else if (ParseEntrance.IsBangumiEpisodeUrl(justId))
         {
@@ -69,39 +65,35 @@ public class SearchService
         }
         else if (ParseEntrance.IsBangumiMediaId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName,
-                $"{ParseEntrance.BangumiMediaUrl}{input.ToLower()}");
+            NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, $"{ParseEntrance.BangumiMediaUrl}{input.ToLower()}");
         }
         else if (ParseEntrance.IsBangumiMediaUrl(justId))
         {
             NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, input);
         }
         // 课程
-        else if (ParseEntrance.IsCheeseSeasonUrl(justId)
-                 || ParseEntrance.IsCheeseEpisodeUrl(justId))
+        else if (ParseEntrance.IsCheeseSeasonUrl(justId) || ParseEntrance.IsCheeseEpisodeUrl(justId))
         {
             NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, parentViewName, input);
         }
         // 用户（参数传入mid）
         else if (ParseEntrance.IsUserId(justId))
         {
-            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag,
-                ParseEntrance.GetUserId(input));
+            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(input));
         }
         else if (ParseEntrance.IsUserUrl(justId))
         {
-            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag,
-                ParseEntrance.GetUserId(input));
+            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(input));
         }
-        // // 收藏夹
-        // else if (ParseEntrance.IsFavoritesId(justId))
-        // {
-        //     NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
-        // }
-        // else if (ParseEntrance.IsFavoritesUrl(justId))
-        // {
-        //     NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
-        // }
+        // 收藏夹
+        else if (ParseEntrance.IsFavoritesId(justId))
+        {
+            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
+        }
+        else if (ParseEntrance.IsFavoritesUrl(justId))
+        {
+            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
+        }
         else
         {
             return false;

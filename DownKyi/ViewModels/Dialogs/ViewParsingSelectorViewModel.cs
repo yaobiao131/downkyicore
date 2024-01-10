@@ -11,12 +11,12 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
 
     #region 页面属性申明
 
-    private bool isParseDefault;
+    private bool _isParseDefault;
 
     public bool IsParseDefault
     {
-        get { return isParseDefault; }
-        set { SetProperty(ref isParseDefault, value); }
+        get => _isParseDefault;
+        set => SetProperty(ref _isParseDefault, value);
     }
 
     #endregion
@@ -28,7 +28,7 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
         Title = DictionaryResource.GetString("ParsingSelector");
 
         // 解析范围
-        ParseScope parseScope = SettingsManager.GetInstance().GetParseScope();
+        var parseScope = SettingsManager.GetInstance().GetParseScope();
         IsParseDefault = parseScope != ParseScope.NONE;
 
         #endregion
@@ -37,11 +37,9 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     #region 命令申明
 
     // 解析当前项事件
-    private DelegateCommand parseSelectedItemCommand;
+    private DelegateCommand? _parseSelectedItemCommand;
 
-    public DelegateCommand ParseSelectedItemCommand => parseSelectedItemCommand ??
-                                                       (parseSelectedItemCommand =
-                                                           new DelegateCommand(ExecuteParseSelectedItemCommand));
+    public DelegateCommand ParseSelectedItemCommand => _parseSelectedItemCommand ??= new DelegateCommand(ExecuteParseSelectedItemCommand);
 
     /// <summary>
     /// 解析当前项事件
@@ -50,21 +48,18 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     {
         SetParseScopeSetting(ParseScope.SELECTED_ITEM);
 
-        ButtonResult result = ButtonResult.OK;
         IDialogParameters parameters = new DialogParameters
         {
             { "parseScope", ParseScope.SELECTED_ITEM }
         };
 
-        RaiseRequestClose(new DialogResult(result, parameters));
+        RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
     }
 
     // 解析当前页视频事件
-    private DelegateCommand parseCurrentSectionCommand;
+    private DelegateCommand? _parseCurrentSectionCommand;
 
-    public DelegateCommand ParseCurrentSectionCommand => parseCurrentSectionCommand ??
-                                                         (parseCurrentSectionCommand =
-                                                             new DelegateCommand(ExecuteParseCurrentSectionCommand));
+    public DelegateCommand ParseCurrentSectionCommand => _parseCurrentSectionCommand ??= new DelegateCommand(ExecuteParseCurrentSectionCommand);
 
     /// <summary>
     /// 解析当前页视频事件
@@ -73,20 +68,18 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     {
         SetParseScopeSetting(ParseScope.CURRENT_SECTION);
 
-        ButtonResult result = ButtonResult.OK;
         IDialogParameters parameters = new DialogParameters
         {
             { "parseScope", ParseScope.CURRENT_SECTION }
         };
 
-        RaiseRequestClose(new DialogResult(result, parameters));
+        RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
     }
 
     // 解析所有视频事件
-    private DelegateCommand parseAllCommand;
+    private DelegateCommand? _parseAllCommand;
 
-    public DelegateCommand ParseAllCommand =>
-        parseAllCommand ?? (parseAllCommand = new DelegateCommand(ExecuteParseAllCommand));
+    public DelegateCommand ParseAllCommand => _parseAllCommand ??= new DelegateCommand(ExecuteParseAllCommand);
 
     /// <summary>
     /// 解析所有视频事件
@@ -95,13 +88,12 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     {
         SetParseScopeSetting(ParseScope.ALL);
 
-        ButtonResult result = ButtonResult.OK;
         IDialogParameters parameters = new DialogParameters
         {
             { "parseScope", ParseScope.ALL }
         };
 
-        RaiseRequestClose(new DialogResult(result, parameters));
+        RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
     }
 
     #endregion
@@ -112,13 +104,6 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     /// <param name="parseScope"></param>
     private void SetParseScopeSetting(ParseScope parseScope)
     {
-        if (IsParseDefault)
-        {
-            SettingsManager.GetInstance().SetParseScope(parseScope);
-        }
-        else
-        {
-            SettingsManager.GetInstance().SetParseScope(ParseScope.NONE);
-        }
+        SettingsManager.GetInstance().SetParseScope(IsParseDefault ? parseScope : ParseScope.NONE);
     }
 }

@@ -29,10 +29,9 @@ public class FavoritesService : IFavoritesService
         }
 
         // 查询、保存封面
-        StorageCover storageCover = new StorageCover();
-        string coverUrl = favoritesMetaInfo.Cover;
-        Bitmap cover = storageCover.GetCoverThumbnail(favoritesMetaInfo.Id, "Favorites", favoritesMetaInfo.Mid,
-            coverUrl, 300, 188);
+        var storageCover = new StorageCover();
+        var coverUrl = favoritesMetaInfo.Cover;
+        var cover = storageCover.GetCoverThumbnail(favoritesMetaInfo.Id, "Favorites", favoritesMetaInfo.Mid, coverUrl, 300, 188);
 
         // 获取用户头像
         string upName;
@@ -40,9 +39,8 @@ public class FavoritesService : IFavoritesService
         if (favoritesMetaInfo.Upper != null)
         {
             upName = favoritesMetaInfo.Upper.Name;
-            StorageHeader storageHeader = new StorageHeader();
-            header = storageHeader.GetHeader(favoritesMetaInfo.Upper.Mid, favoritesMetaInfo.Upper.Name,
-                favoritesMetaInfo.Upper.Face);
+            var storageHeader = new StorageHeader();
+            header = storageHeader.GetHeader(favoritesMetaInfo.Upper.Mid, favoritesMetaInfo.Upper.Name, favoritesMetaInfo.Upper.Face);
         }
         else
         {
@@ -51,16 +49,16 @@ public class FavoritesService : IFavoritesService
         }
 
         // 为Favorites赋值
-        Favorites favorites = new Favorites();
-        App.PropertyChangeAsync(new Action(() =>
+        var favorites = new Favorites();
+        App.PropertyChangeAsync(() =>
         {
             favorites.CoverUrl = coverUrl;
 
             favorites.Cover = cover;
             favorites.Title = favoritesMetaInfo.Title;
 
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-            DateTime dateTime = startTime.AddSeconds(favoritesMetaInfo.Ctime);
+            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+            var dateTime = startTime.AddSeconds(favoritesMetaInfo.Ctime);
             favorites.CreateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
             favorites.PlayNumber = Format.FormatNumber(favoritesMetaInfo.CntInfo.Play);
@@ -73,7 +71,7 @@ public class FavoritesService : IFavoritesService
             favorites.UpName = upName;
             if (header != null)
             {
-                StorageHeader storageHeader = new StorageHeader();
+                var storageHeader = new StorageHeader();
                 favorites.UpHeader = storageHeader.GetHeaderThumbnail(header, 48, 48);
 
                 favorites.UpperMid = favoritesMetaInfo.Upper.Mid;
@@ -82,7 +80,7 @@ public class FavoritesService : IFavoritesService
             {
                 favorites.UpHeader = null;
             }
-        }));
+        });
 
         return favorites;
     }
@@ -123,11 +121,11 @@ public class FavoritesService : IFavoritesService
     /// <param name="medias"></param>
     /// <param name="result"></param>
     /// <param name="eventAggregator"></param>
-    public void GetFavoritesMediaList(List<FavoritesMedia> medias,
-        ObservableCollection<ViewModels.PageViewModels.FavoritesMedia> result, IEventAggregator eventAggregator,
+    /// <param name="cancellationToken"></param>
+    public void GetFavoritesMediaList(List<FavoritesMedia> medias, ObservableCollection<ViewModels.PageViewModels.FavoritesMedia> result, IEventAggregator eventAggregator,
         CancellationToken cancellationToken)
     {
-        int order = 0;
+        var order = 0;
         foreach (var media in medias)
         {
             if (media.Title == "已失效视频")
@@ -138,47 +136,46 @@ public class FavoritesService : IFavoritesService
             order++;
 
             // 查询、保存封面
-            StorageCover storageCover = new StorageCover();
-            string coverUrl = media.Cover;
+            var storageCover = new StorageCover();
+            var coverUrl = media.Cover;
             Bitmap cover = storageCover.GetCoverThumbnail(media.Id, media.Bvid, -1, coverUrl, 200, 125);
 
             // 当地时区
             DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
 
             // 创建时间
-            DateTime dateCTime = startTime.AddSeconds(media.Ctime);
-            string ctime = dateCTime.ToString("yyyy-MM-dd");
+            var dateCTime = startTime.AddSeconds(media.Ctime);
+            var ctime = dateCTime.ToString("yyyy-MM-dd");
 
             // 收藏时间
-            DateTime dateFavTime = startTime.AddSeconds(media.FavTime);
-            string favTime = dateFavTime.ToString("yyyy-MM-dd");
+            var dateFavTime = startTime.AddSeconds(media.FavTime);
+            var favTime = dateFavTime.ToString("yyyy-MM-dd");
 
-            App.PropertyChangeAsync(new Action(() =>
+            App.PropertyChangeAsync(() =>
             {
-                ViewModels.PageViewModels.FavoritesMedia newMedia =
-                    new ViewModels.PageViewModels.FavoritesMedia(eventAggregator)
-                    {
-                        Avid = media.Id,
-                        Bvid = media.Bvid,
-                        Order = order,
-                        Cover = cover,
-                        Title = media.Title,
-                        PlayNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Play) : "0",
-                        DanmakuNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Danmaku) : "0",
-                        FavoriteNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Collect) : "0",
-                        Duration = Format.FormatDuration2(media.Duration),
-                        UpName = media.Upper != null ? media.Upper.Name : string.Empty,
-                        UpMid = media.Upper != null ? media.Upper.Mid : -1,
-                        CreateTime = ctime,
-                        FavTime = favTime
-                    };
+                var newMedia = new ViewModels.PageViewModels.FavoritesMedia(eventAggregator)
+                {
+                    Avid = media.Id,
+                    Bvid = media.Bvid,
+                    Order = order,
+                    Cover = cover,
+                    Title = media.Title,
+                    PlayNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Play) : "0",
+                    DanmakuNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Danmaku) : "0",
+                    FavoriteNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Collect) : "0",
+                    Duration = Format.FormatDuration2(media.Duration),
+                    UpName = media.Upper != null ? media.Upper.Name : string.Empty,
+                    UpMid = media.Upper != null ? media.Upper.Mid : -1,
+                    CreateTime = ctime,
+                    FavTime = favTime
+                };
 
                 if (!result.ToList().Exists(t => t.Avid == newMedia.Avid))
                 {
                     result.Add(newMedia);
                     Thread.Sleep(10);
                 }
-            }));
+            });
 
             // 判断是否该结束线程，若为true，跳出循环
             if (cancellationToken.IsCancellationRequested)
@@ -193,8 +190,8 @@ public class FavoritesService : IFavoritesService
     /// </summary>
     /// <param name="mid"></param>
     /// <param name="tabHeaders"></param>
-    public void GetCreatedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders,
-        CancellationToken cancellationToken)
+    /// <param name="cancellationToken"></param>
+    public void GetCreatedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders, CancellationToken cancellationToken)
     {
         var favorites = FavoritesInfo.GetAllCreatedFavorites(mid);
         if (favorites.Count == 0)
@@ -212,11 +209,7 @@ public class FavoritesService : IFavoritesService
                 break;
             }
 
-            App.PropertyChangeAsync(new Action(() =>
-            {
-                tabHeaders.Add(new TabHeader
-                    { Id = item.Id, Title = item.Title, SubTitle = item.MediaCount.ToString() });
-            }));
+            App.PropertyChangeAsync(() => { tabHeaders.Add(new TabHeader { Id = item.Id, Title = item.Title, SubTitle = item.MediaCount.ToString() }); });
         }
     }
 
@@ -225,8 +218,8 @@ public class FavoritesService : IFavoritesService
     /// </summary>
     /// <param name="mid"></param>
     /// <param name="tabHeaders"></param>
-    public void GetCollectedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders,
-        CancellationToken cancellationToken)
+    /// <param name="cancellationToken"></param>
+    public void GetCollectedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders, CancellationToken cancellationToken)
     {
         var favorites = FavoritesInfo.GetAllCollectedFavorites(mid);
         if (favorites.Count == 0)
@@ -242,11 +235,7 @@ public class FavoritesService : IFavoritesService
                 break;
             }
 
-            App.PropertyChangeAsync(new Action(() =>
-            {
-                tabHeaders.Add(new TabHeader
-                    { Id = item.Id, Title = item.Title, SubTitle = item.MediaCount.ToString() });
-            }));
+            App.PropertyChangeAsync(() => { tabHeaders.Add(new TabHeader { Id = item.Id, Title = item.Title, SubTitle = item.MediaCount.ToString() }); });
         }
     }
 }

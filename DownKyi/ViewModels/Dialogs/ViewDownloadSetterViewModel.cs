@@ -18,121 +18,121 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     private readonly IEventAggregator eventAggregator;
 
     // 历史文件夹的数量
-    private readonly int maxDirectoryListCount = 20;
+    private const int MaxDirectoryListCount = 20;
 
     #region 页面属性申明
 
-    private VectorImage cloudDownloadIcon;
+    private VectorImage _cloudDownloadIcon;
 
     public VectorImage CloudDownloadIcon
     {
-        get { return cloudDownloadIcon; }
-        set { SetProperty(ref cloudDownloadIcon, value); }
+        get => _cloudDownloadIcon;
+        set => SetProperty(ref _cloudDownloadIcon, value);
     }
 
-    private VectorImage folderIcon;
+    private VectorImage _folderIcon;
 
     public VectorImage FolderIcon
     {
-        get { return folderIcon; }
-        set { SetProperty(ref folderIcon, value); }
+        get => _folderIcon;
+        set => SetProperty(ref _folderIcon, value);
     }
 
-    private bool isDefaultDownloadDirectory;
+    private bool _isDefaultDownloadDirectory;
 
     public bool IsDefaultDownloadDirectory
     {
-        get { return isDefaultDownloadDirectory; }
-        set { SetProperty(ref isDefaultDownloadDirectory, value); }
+        get => _isDefaultDownloadDirectory;
+        set => SetProperty(ref _isDefaultDownloadDirectory, value);
     }
 
-    private List<string> directoryList;
+    private List<string> _directoryList;
 
     public List<string> DirectoryList
     {
-        get { return directoryList; }
-        set { SetProperty(ref directoryList, value); }
+        get => _directoryList;
+        set => SetProperty(ref _directoryList, value);
     }
 
-    private string directory;
+    private string _directory;
 
     public string Directory
     {
-        get { return directory; }
+        get => _directory;
         set
         {
-            SetProperty(ref directory, value);
+            SetProperty(ref _directory, value);
 
-            if (directory != null && directory != string.Empty)
+            if (!string.IsNullOrEmpty(_directory))
             {
-                DriveName = directory.Substring(0, 1).ToUpper();
+                DriveName = _directory[..1].ToUpper();
                 DriveNameFreeSpace = Format.FormatFileSize(HardDisk.GetHardDiskFreeSpace(DriveName));
             }
         }
     }
 
-    private string driveName;
+    private string _driveName;
 
     public string DriveName
     {
-        get { return driveName; }
-        set { SetProperty(ref driveName, value); }
+        get => _driveName;
+        set => SetProperty(ref _driveName, value);
     }
 
-    private string driveNameFreeSpace;
+    private string _driveNameFreeSpace;
 
     public string DriveNameFreeSpace
     {
-        get { return driveNameFreeSpace; }
-        set { SetProperty(ref driveNameFreeSpace, value); }
+        get => _driveNameFreeSpace;
+        set => SetProperty(ref _driveNameFreeSpace, value);
     }
 
-    private bool downloadAll;
+    private bool _downloadAll;
 
     public bool DownloadAll
     {
-        get { return downloadAll; }
-        set { SetProperty(ref downloadAll, value); }
+        get => _downloadAll;
+        set => SetProperty(ref _downloadAll, value);
     }
 
-    private bool downloadAudio;
+    private bool _downloadAudio;
 
     public bool DownloadAudio
     {
-        get { return downloadAudio; }
-        set { SetProperty(ref downloadAudio, value); }
+        get => _downloadAudio;
+        set => SetProperty(ref _downloadAudio, value);
     }
 
-    private bool downloadVideo;
+    private bool _downloadVideo;
 
     public bool DownloadVideo
     {
-        get { return downloadVideo; }
-        set { SetProperty(ref downloadVideo, value); }
+        get => _downloadVideo;
+        set => SetProperty(ref _downloadVideo, value);
     }
 
-    private bool downloadDanmaku;
+    private bool _downloadDanmaku;
 
     public bool DownloadDanmaku
     {
-        get { return downloadDanmaku; }
-        set { SetProperty(ref downloadDanmaku, value); }
+        get => _downloadDanmaku;
+        set => SetProperty(ref _downloadDanmaku, value);
     }
 
-    private bool downloadSubtitle;
+    private bool _downloadSubtitle;
 
     public bool DownloadSubtitle
     {
-        get { return downloadSubtitle; }
-        set { SetProperty(ref downloadSubtitle, value); }
+        get => _downloadSubtitle;
+        set => SetProperty(ref _downloadSubtitle, value);
     }
 
-    private bool downloadCover;
+    private bool _downloadCover;
 
     public bool DownloadCover
     {
-        get { return downloadCover; }
-        set { SetProperty(ref downloadCover, value); }
+        get => _downloadCover;
+        set => SetProperty(ref _downloadCover, value);
     }
 
     #endregion
@@ -152,7 +152,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         FolderIcon.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 下载内容
-        VideoContentSettings videoContent = SettingsManager.GetInstance().GetVideoContent();
+        var videoContent = SettingsManager.GetInstance().GetVideoContent();
 
         DownloadAudio = videoContent.DownloadAudio;
         DownloadVideo = videoContent.DownloadVideo;
@@ -171,7 +171,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
         // 历史下载目录
         DirectoryList = SettingsManager.GetInstance().GetHistoryVideoRootPaths();
-        string directory = SettingsManager.GetInstance().GetSaveVideoRootPath();
+        var directory = SettingsManager.GetInstance().GetSaveVideoRootPath();
         if (!DirectoryList.Contains(directory))
         {
             ListHelper.InsertUnique(DirectoryList, directory, 0);
@@ -188,10 +188,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     #region 命令申明
 
     // 浏览文件夹事件
-    private DelegateCommand browseCommand;
+    private DelegateCommand? _browseCommand;
 
-    public DelegateCommand BrowseCommand =>
-        browseCommand ?? (browseCommand = new DelegateCommand(ExecuteBrowseCommand));
+    public DelegateCommand BrowseCommand => _browseCommand ??= new DelegateCommand(ExecuteBrowseCommand);
 
     /// <summary>
     /// 浏览文件夹事件
@@ -210,18 +209,17 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
             ListHelper.InsertUnique(DirectoryList, directory, 0);
             Directory = directory;
 
-            if (DirectoryList.Count > maxDirectoryListCount)
+            if (DirectoryList.Count > MaxDirectoryListCount)
             {
-                DirectoryList.RemoveAt(maxDirectoryListCount);
+                DirectoryList.RemoveAt(MaxDirectoryListCount);
             }
         }
     }
 
     // 所有内容选择事件
-    private DelegateCommand downloadAllCommand;
+    private DelegateCommand? _downloadAllCommand;
 
-    public DelegateCommand DownloadAllCommand =>
-        downloadAllCommand ?? (downloadAllCommand = new DelegateCommand(ExecuteDownloadAllCommand));
+    public DelegateCommand DownloadAllCommand => _downloadAllCommand ??= new DelegateCommand(ExecuteDownloadAllCommand);
 
     /// <summary>
     /// 所有内容选择事件
@@ -249,11 +247,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 音频选择事件
-    private DelegateCommand downloadAudioCommand;
+    private DelegateCommand? _downloadAudioCommand;
 
-    public DelegateCommand DownloadAudioCommand => downloadAudioCommand ??
-                                                   (downloadAudioCommand =
-                                                       new DelegateCommand(ExecuteDownloadAudioCommand));
+    public DelegateCommand DownloadAudioCommand => _downloadAudioCommand ??= new DelegateCommand(ExecuteDownloadAudioCommand);
 
     /// <summary>
     /// 音频选择事件
@@ -274,11 +270,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 视频选择事件
-    private DelegateCommand downloadVideoCommand;
+    private DelegateCommand? _downloadVideoCommand;
 
-    public DelegateCommand DownloadVideoCommand => downloadVideoCommand ??
-                                                   (downloadVideoCommand =
-                                                       new DelegateCommand(ExecuteDownloadVideoCommand));
+    public DelegateCommand DownloadVideoCommand => _downloadVideoCommand ??= new DelegateCommand(ExecuteDownloadVideoCommand);
 
     /// <summary>
     /// 视频选择事件
@@ -299,11 +293,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 弹幕选择事件
-    private DelegateCommand downloadDanmakuCommand;
+    private DelegateCommand? _downloadDanmakuCommand;
 
-    public DelegateCommand DownloadDanmakuCommand => downloadDanmakuCommand ??
-                                                     (downloadDanmakuCommand =
-                                                         new DelegateCommand(ExecuteDownloadDanmakuCommand));
+    public DelegateCommand DownloadDanmakuCommand => _downloadDanmakuCommand ??= new DelegateCommand(ExecuteDownloadDanmakuCommand);
 
     /// <summary>
     /// 弹幕选择事件
@@ -324,11 +316,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 字幕选择事件
-    private DelegateCommand downloadSubtitleCommand;
+    private DelegateCommand? _downloadSubtitleCommand;
 
-    public DelegateCommand DownloadSubtitleCommand => downloadSubtitleCommand ??
-                                                      (downloadSubtitleCommand =
-                                                          new DelegateCommand(ExecuteDownloadSubtitleCommand));
+    public DelegateCommand DownloadSubtitleCommand => _downloadSubtitleCommand ??= new DelegateCommand(ExecuteDownloadSubtitleCommand);
 
     /// <summary>
     /// 字幕选择事件
@@ -349,11 +339,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 封面选择事件
-    private DelegateCommand downloadCoverCommand;
+    private DelegateCommand? _downloadCoverCommand;
 
-    public DelegateCommand DownloadCoverCommand => downloadCoverCommand ??
-                                                   (downloadCoverCommand =
-                                                       new DelegateCommand(ExecuteDownloadCoverCommand));
+    public DelegateCommand DownloadCoverCommand => _downloadCoverCommand ??= new DelegateCommand(ExecuteDownloadCoverCommand);
 
     /// <summary>
     /// 封面选择事件
@@ -374,30 +362,22 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     }
 
     // 确认下载事件
-    private DelegateCommand downloadCommand;
+    private DelegateCommand? _downloadCommand;
 
-    public DelegateCommand DownloadCommand =>
-        downloadCommand ?? (downloadCommand = new DelegateCommand(ExecuteDownloadCommand));
+    public DelegateCommand DownloadCommand => _downloadCommand ??= new DelegateCommand(ExecuteDownloadCommand);
 
     /// <summary>
     /// 确认下载事件
     /// </summary>
     private void ExecuteDownloadCommand()
     {
-        if (Directory == null || Directory == string.Empty)
+        if (string.IsNullOrEmpty(Directory))
         {
             return;
         }
 
         // 设此文件夹为默认下载文件夹
-        if (IsDefaultDownloadDirectory)
-        {
-            SettingsManager.GetInstance().IsUseSaveVideoRootPath(AllowStatus.YES);
-        }
-        else
-        {
-            SettingsManager.GetInstance().IsUseSaveVideoRootPath(AllowStatus.NO);
-        }
+        SettingsManager.GetInstance().IsUseSaveVideoRootPath(IsDefaultDownloadDirectory ? AllowStatus.YES : AllowStatus.NO);
 
         // 将Directory移动到第一项
         // 如果直接在ComboBox中选择的就需要
@@ -409,7 +389,6 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         SettingsManager.GetInstance().SetHistoryVideoRootPaths(DirectoryList);
 
         // 返回数据
-        ButtonResult result = ButtonResult.OK;
         IDialogParameters parameters = new DialogParameters
         {
             { "directory", Directory },
@@ -420,7 +399,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
             { "downloadCover", DownloadCover }
         };
 
-        RaiseRequestClose(new DialogResult(result, parameters));
+        RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
     }
 
     #endregion
@@ -430,7 +409,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
     /// </summary>
     private void SetVideoContent()
     {
-        VideoContentSettings videoContent = new VideoContentSettings
+        var videoContent = new VideoContentSettings
         {
             DownloadAudio = DownloadAudio,
             DownloadVideo = DownloadVideo,

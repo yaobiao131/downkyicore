@@ -12,20 +12,20 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
 {
     #region 页面属性申明
 
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
-    private VectorImage closeIcon;
+    private VectorImage _closeIcon;
 
     public VectorImage CloseIcon
     {
-        get => closeIcon;
-        set => SetProperty(ref closeIcon, value);
+        get => _closeIcon;
+        set => SetProperty(ref _closeIcon, value);
     }
 
     #endregion
@@ -49,10 +49,9 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
     #region 命令申明
 
     // 鼠标进入关闭按钮事件
-    private DelegateCommand closeEnterCommand;
+    private DelegateCommand? _closeEnterCommand;
 
-    public DelegateCommand CloseEnterCommand =>
-        closeEnterCommand ?? (closeEnterCommand = new DelegateCommand(ExecuteCloseEnterCommand));
+    public DelegateCommand CloseEnterCommand => _closeEnterCommand ??= new DelegateCommand(ExecuteCloseEnterCommand);
 
     /// <summary>
     /// 鼠标进入关闭按钮事件
@@ -63,10 +62,9 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
     }
 
     // 鼠标离开关闭按钮事件
-    private DelegateCommand closeLeaveCommand;
+    private DelegateCommand? _closeLeaveCommand;
 
-    public DelegateCommand CloseLeaveCommand =>
-        closeLeaveCommand ?? (closeLeaveCommand = new DelegateCommand(ExecuteCloseLeaveCommand));
+    public DelegateCommand CloseLeaveCommand => _closeLeaveCommand ??= new DelegateCommand(ExecuteCloseLeaveCommand);
 
     /// <summary>
     /// 鼠标离开关闭按钮事件
@@ -77,16 +75,15 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
     }
 
     // 关闭窗口事件
-    private DelegateCommand closeCommand;
-    public DelegateCommand CloseCommand => closeCommand ?? (closeCommand = new DelegateCommand(ExecuteCloseCommand));
+    private DelegateCommand? _closeCommand;
+    public DelegateCommand CloseCommand => _closeCommand ??= new DelegateCommand(ExecuteCloseCommand);
 
     /// <summary>
     /// 关闭窗口事件
     /// </summary>
     private void ExecuteCloseCommand()
     {
-        ButtonResult result = ButtonResult.Cancel;
-        RaiseRequestClose(new DialogResult(result));
+        RaiseRequestClose(new DialogResult(ButtonResult.Cancel));
     }
 
     #endregion

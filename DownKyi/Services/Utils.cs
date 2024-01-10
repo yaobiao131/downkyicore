@@ -28,10 +28,10 @@ internal static class Utils
         page.PlayUrl = playUrl;
 
         // 获取设置
-        UserInfoSettings userInfo = SettingsManager.GetInstance().GetUserInfo();
-        int defaultQuality = SettingsManager.GetInstance().GetQuality();
-        int videoCodecs = SettingsManager.GetInstance().GetVideoCodecs();
-        int defaultAudioQuality = SettingsManager.GetInstance().GetAudioQuality();
+        var userInfo = SettingsManager.GetInstance().GetUserInfo();
+        var defaultQuality = SettingsManager.GetInstance().GetQuality();
+        var videoCodecs = SettingsManager.GetInstance().GetVideoCodecs();
+        var defaultAudioQuality = SettingsManager.GetInstance().GetAudioQuality();
 
         // 未登录时，最高仅720P
         if (userInfo.Mid == -1)
@@ -106,13 +106,13 @@ internal static class Utils
     /// <returns></returns>
     private static ObservableCollection<string> GetAudioQualityFormatList(PlayUrl playUrl, int defaultAudioQuality)
     {
-        List<string> audioQualityFormatList = new List<string>();
-        List<string> sortList = new List<string>();
-        List<Quality> audioQualities = Constant.GetAudioQualities();
+        var audioQualityFormatList = new List<string>();
+        var sortList = new List<string>();
+        var audioQualities = Constant.GetAudioQualities();
 
         if (playUrl.Dash.Audio != null && playUrl.Dash.Audio.Count > 0)
         {
-            foreach (PlayUrlDashVideo audio in playUrl.Dash.Audio)
+            foreach (var audio in playUrl.Dash.Audio)
             {
                 // 音质id大于设置音质时，跳过
                 if (audio.Id > defaultAudioQuality)
@@ -120,7 +120,7 @@ internal static class Utils
                     continue;
                 }
 
-                Quality audioQuality = audioQualities.FirstOrDefault(t => { return t.Id == audio.Id; });
+                var audioQuality = audioQualities.FirstOrDefault(t => { return t.Id == audio.Id; });
                 if (audioQuality != null)
                 {
                     ListHelper.AddUnique(audioQualityFormatList, audioQuality.Name);
@@ -171,15 +171,15 @@ internal static class Utils
     private static List<VideoQuality> GetVideoQualityList(PlayUrl playUrl, UserInfoSettings userInfo,
         int defaultQuality, int videoCodecs)
     {
-        List<VideoQuality> videoQualityList = new List<VideoQuality>();
-        List<Quality> codeIds = Constant.GetCodecIds();
+        var videoQualityList = new List<VideoQuality>();
+        var codeIds = Constant.GetCodecIds();
 
         if (playUrl.Dash.Video == null)
         {
             return videoQualityList;
         }
 
-        foreach (PlayUrlDashVideo video in playUrl.Dash.Video)
+        foreach (var video in playUrl.Dash.Video)
         {
             // 画质id大于设置画质时，跳过
             if (video.Id > defaultQuality)
@@ -197,8 +197,8 @@ internal static class Utils
                 }
             }
 
-            string qualityFormat = string.Empty;
-            PlayUrlSupportFormat selectedQuality = playUrl.SupportFormats.FirstOrDefault(t => t.Quality == video.Id);
+            var qualityFormat = string.Empty;
+            var selectedQuality = playUrl.SupportFormats.FirstOrDefault(t => t.Quality == video.Id);
             if (selectedQuality != null)
             {
                 qualityFormat = selectedQuality.NewDescription;
@@ -207,17 +207,17 @@ internal static class Utils
             // 寻找是否已存在这个画质
             // 不存在则添加，存在则修改
             //string codecName = GetVideoCodecName(video.Codecs);
-            string codecName = codeIds.FirstOrDefault(t => t.Id == video.CodecId).Name;
-            VideoQuality videoQualityExist = videoQualityList.FirstOrDefault(t => t.Quality == video.Id);
+            var codecName = codeIds.FirstOrDefault(t => t.Id == video.CodecId).Name;
+            var videoQualityExist = videoQualityList.FirstOrDefault(t => t.Quality == video.Id);
             if (videoQualityExist == null)
             {
-                List<string> videoCodecList = new List<string>();
+                var videoCodecList = new List<string>();
                 if (codecName != string.Empty)
                 {
                     ListHelper.AddUnique(videoCodecList, codecName);
                 }
 
-                VideoQuality videoQuality = new VideoQuality()
+                var videoQuality = new VideoQuality
                 {
                     Quality = video.Id,
                     QualityFormat = qualityFormat,
@@ -238,23 +238,22 @@ internal static class Utils
             }
 
             // 设置选中的视频编码
-            VideoQuality selectedVideoQuality = videoQualityList.FirstOrDefault(t => t.Quality == video.Id);
+            var selectedVideoQuality = videoQualityList.FirstOrDefault(t => t.Quality == video.Id);
             if (selectedVideoQuality == null)
             {
                 continue;
             }
 
             // 设置选中的视频编码
-            string videoCodecsName = codeIds.FirstOrDefault(t => t.Id == videoCodecs).Name;
-            if (videoQualityList[videoQualityList.IndexOf(selectedVideoQuality)].VideoCodecList
-                .Contains(videoCodecsName))
+            var videoCodecsName = codeIds.FirstOrDefault(t => t.Id == videoCodecs).Name;
+            if (videoQualityList[videoQualityList.IndexOf(selectedVideoQuality)].VideoCodecList.Contains(videoCodecsName))
             {
                 videoQualityList[videoQualityList.IndexOf(selectedVideoQuality)].SelectedVideoCodec = videoCodecsName;
             }
             else
             {
                 // 当获取的视频没有设置的视频编码时
-                foreach (Quality codec in codeIds)
+                foreach (var codec in codeIds)
                 {
                     if (videoQualityList[videoQualityList.IndexOf(selectedVideoQuality)].VideoCodecList
                         .Contains(codec.Name))

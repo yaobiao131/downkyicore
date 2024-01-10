@@ -24,8 +24,8 @@ public class AlertService
     /// <returns></returns>
     public Task<ButtonResult> ShowInfo(string message, int buttonNumber = 2)
     {
-        VectorImage image = SystemIcon.Instance().Info;
-        string title = DictionaryResource.GetString("Info");
+        var image = SystemIcon.Instance().Info;
+        var title = DictionaryResource.GetString("Info");
         return ShowMessage(image, title, message, buttonNumber);
     }
 
@@ -37,8 +37,8 @@ public class AlertService
     /// <returns></returns>
     public Task<ButtonResult> ShowWarning(string message, int buttonNumber = 1)
     {
-        VectorImage image = SystemIcon.Instance().Warning;
-        string title = DictionaryResource.GetString("Warning");
+        var image = SystemIcon.Instance().Warning;
+        var title = DictionaryResource.GetString("Warning");
         return ShowMessage(image, title, message, buttonNumber);
     }
 
@@ -49,8 +49,8 @@ public class AlertService
     /// <returns></returns>
     public Task<ButtonResult> ShowError(string message)
     {
-        VectorImage image = SystemIcon.Instance().Error;
-        string title = DictionaryResource.GetString("Error");
+        var image = SystemIcon.Instance().Error;
+        var title = DictionaryResource.GetString("Error");
         return ShowMessage(image, title, message, 1);
     }
 
@@ -70,11 +70,7 @@ public class AlertService
             { "button_number", buttonNumber }
         };
 
-        await dialogService.ShowDialogAsync(ViewAlertDialogViewModel.Tag, param,
-            buttonResult =>
-            {
-                result = buttonResult.Result;
-            });
+        await dialogService.ShowDialogAsync(ViewAlertDialogViewModel.Tag, param, buttonResult => { result = buttonResult.Result; });
         return result;
     }
 }

@@ -8,10 +8,9 @@ namespace DownKyi.CustomAction;
 
 public class KeyUpBehavior : Trigger<Control>
 {
-    private Key key = Key.None;
+    private Key _key = Key.None;
 
-    public static readonly StyledProperty<Key> KeyProperty =
-        AvaloniaProperty.Register<KeyUpBehavior, Key>(nameof(Key));
+    public static readonly StyledProperty<Key> KeyProperty = AvaloniaProperty.Register<KeyUpBehavior, Key>(nameof(Key));
 
     public Key Key
     {
@@ -37,13 +36,13 @@ public class KeyUpBehavior : Trigger<Control>
 
     private void AssociatedObject_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (AssociatedObject is null || Key != key) return;
-        key = Key.None;
+        if (AssociatedObject is null || Key != _key) return;
+        _key = Key.None;
         Interaction.ExecuteActions(AssociatedObject, Actions, e);
     }
 
     private void Button_OnKeyDown(object? sender, KeyEventArgs e)
     {
-        key = e.Key;
+        _key = e.Key;
     }
 }

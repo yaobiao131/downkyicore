@@ -50,11 +50,11 @@ public class CustomPagerViewModel : INotifyPropertyChanged
         }
     }
 
-    private int count;
+    private int _count;
 
     public int Count
     {
-        get { return count; }
+        get => _count;
         set
         {
             if (value < Current || value < 0)
@@ -65,11 +65,11 @@ public class CustomPagerViewModel : INotifyPropertyChanged
             }
             else
             {
-                count = value;
+                _count = value;
 
-                Visibility = count > 1;
+                Visibility = _count > 1;
 
-                OnCountChanged(count);
+                OnCountChanged(_count);
 
                 SetView();
 
@@ -99,7 +99,7 @@ public class CustomPagerViewModel : INotifyPropertyChanged
             }
             else
             {
-                bool isSuccess = OnCurrentChanged(_current, value);
+                var isSuccess = OnCurrentChanged(_current, value);
                 if (isSuccess)
                 {
                     _current = value;
@@ -116,7 +116,7 @@ public class CustomPagerViewModel : INotifyPropertyChanged
 
     public int First
     {
-        get { return _first; }
+        get => _first;
         set
         {
             _first = value;

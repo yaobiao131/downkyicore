@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -24,12 +23,12 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #region 页面属性申明
 
-        private ObservableCollection<DownloadingItem> downloadingList;
+        private ObservableCollection<DownloadingItem> _downloadingList;
 
         public ObservableCollection<DownloadingItem> DownloadingList
         {
-            get => downloadingList;
-            set => SetProperty(ref downloadingList, value);
+            get => _downloadingList;
+            set => SetProperty(ref _downloadingList, value);
         }
 
         #endregion
@@ -52,19 +51,16 @@ namespace DownKyi.ViewModels.DownloadManager
         #region 命令申明
 
         // 暂停所有下载事件
-        private DelegateCommand pauseAllDownloadingCommand;
+        private DelegateCommand? _pauseAllDownloadingCommand;
 
-        public DelegateCommand PauseAllDownloadingCommand => pauseAllDownloadingCommand ??
-                                                             (pauseAllDownloadingCommand =
-                                                                 new DelegateCommand(
-                                                                     ExecutePauseAllDownloadingCommand));
+        public DelegateCommand PauseAllDownloadingCommand => _pauseAllDownloadingCommand ??= new DelegateCommand(ExecutePauseAllDownloadingCommand);
 
         /// <summary>
         /// 暂停所有下载事件
         /// </summary>
         private void ExecutePauseAllDownloadingCommand()
         {
-            foreach (DownloadingItem downloading in downloadingList)
+            foreach (var downloading in _downloadingList)
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
@@ -99,19 +95,16 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 继续所有下载事件
-        private DelegateCommand continueAllDownloadingCommand;
+        private DelegateCommand? _continueAllDownloadingCommand;
 
-        public DelegateCommand ContinueAllDownloadingCommand => continueAllDownloadingCommand ??
-                                                                (continueAllDownloadingCommand =
-                                                                    new DelegateCommand(
-                                                                        ExecuteContinueAllDownloadingCommand));
+        public DelegateCommand ContinueAllDownloadingCommand => _continueAllDownloadingCommand ??= new DelegateCommand(ExecuteContinueAllDownloadingCommand);
 
         /// <summary>
         /// 继续所有下载事件
         /// </summary>
         private void ExecuteContinueAllDownloadingCommand()
         {
-            foreach (DownloadingItem downloading in downloadingList)
+            foreach (var downloading in _downloadingList)
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
@@ -150,10 +143,9 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 删除所有下载事件
-        private DelegateCommand? deleteAllDownloadingCommand;
+        private DelegateCommand? _deleteAllDownloadingCommand;
 
-        public DelegateCommand DeleteAllDownloadingCommand => deleteAllDownloadingCommand ??=
-            new DelegateCommand(ExecuteDeleteAllDownloadingCommand);
+        public DelegateCommand DeleteAllDownloadingCommand => _deleteAllDownloadingCommand ??= new DelegateCommand(ExecuteDeleteAllDownloadingCommand);
 
         /// <summary>
         /// 删除所有下载事件
@@ -188,7 +180,7 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 await Task.Run(() =>
                 {
-                    List<DownloadingItem> list = DownloadingList.ToList();
+                    var list = DownloadingList.ToList();
                     foreach (var item in list)
                     {
                         if (item != null && item.DialogService == null)

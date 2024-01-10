@@ -24,7 +24,7 @@ public class ViewFollowingViewModel : ViewModelBase
     private long _mid = -1;
 
     // 每页数量，暂时在此写死，以后在设置中增加选项
-    private readonly int NumberInPage = 20;
+    private const int NumberInPage = 20;
 
     #region 页面属性申明
 

@@ -13,13 +13,10 @@ public interface IFavoritesService
 
     //void GetFavoritesMediaList(long mediaId, ObservableCollection<FavoritesMedia> result, IEventAggregator eventAggregator, CancellationToken cancellationToken);
     //void GetFavoritesMediaList(long mediaId, int pn, int ps, ObservableCollection<FavoritesMedia> result, IEventAggregator eventAggregator, CancellationToken cancellationToken);
-    void GetFavoritesMediaList(List<FavoritesMedia> medias,
-        ObservableCollection<ViewModels.PageViewModels.FavoritesMedia> result, IEventAggregator eventAggregator,
+    void GetFavoritesMediaList(List<FavoritesMedia> medias, ObservableCollection<ViewModels.PageViewModels.FavoritesMedia> result, IEventAggregator eventAggregator,
         CancellationToken cancellationToken);
 
-    void GetCreatedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders,
-        CancellationToken cancellationToken);
+    void GetCreatedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders, CancellationToken cancellationToken);
 
-    void GetCollectedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders,
-        CancellationToken cancellationToken);
+    void GetCollectedFavorites(long mid, ObservableCollection<TabHeader> tabHeaders, CancellationToken cancellationToken);
 }

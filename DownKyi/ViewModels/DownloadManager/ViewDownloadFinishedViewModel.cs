@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -23,18 +22,18 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #region 页面属性申明
 
-        private ObservableCollection<DownloadedItem> downloadedList;
+        private ObservableCollection<DownloadedItem> _downloadedList;
         public ObservableCollection<DownloadedItem> DownloadedList
         {
-            get => downloadedList;
-            set => SetProperty(ref downloadedList, value);
+            get => _downloadedList;
+            set => SetProperty(ref _downloadedList, value);
         }
 
-        private int finishedSortBy;
+        private int _finishedSortBy;
         public int FinishedSortBy
         {
-            get => finishedSortBy;
-            set => SetProperty(ref finishedSortBy, value);
+            get => _finishedSortBy;
+            set => SetProperty(ref _finishedSortBy, value);
         }
 
         #endregion
@@ -53,26 +52,20 @@ namespace DownKyi.ViewModels.DownloadManager
             SetDialogService();
 
             DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
-            switch (finishedSort)
+            FinishedSortBy = finishedSort switch
             {
-                case DownloadFinishedSort.DOWNLOAD:
-                    FinishedSortBy = 0;
-                    break;
-                case DownloadFinishedSort.NUMBER:
-                    FinishedSortBy = 1;
-                    break;
-                default:
-                    FinishedSortBy = 0;
-                    break;
-            }
+                DownloadFinishedSort.DOWNLOAD => 0,
+                DownloadFinishedSort.NUMBER => 1,
+                _ => 0
+            };
             App.SortDownloadedList(finishedSort);
         }
 
         #region 命令申明
 
         // 下载完成列表排序事件
-        private DelegateCommand<object> finishedSortCommand;
-        public DelegateCommand<object> FinishedSortCommand => finishedSortCommand ?? (finishedSortCommand = new DelegateCommand<object>(ExecuteFinishedSortCommand));
+        private DelegateCommand<object>? _finishedSortCommand;
+        public DelegateCommand<object> FinishedSortCommand => _finishedSortCommand ??= new DelegateCommand<object>(ExecuteFinishedSortCommand);
 
         /// <summary>
         /// 下载完成列表排序事件
@@ -103,16 +96,16 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 清空下载完成列表事件
-        private DelegateCommand clearAllDownloadedCommand;
-        public DelegateCommand ClearAllDownloadedCommand => clearAllDownloadedCommand ?? (clearAllDownloadedCommand = new DelegateCommand(ExecuteClearAllDownloadedCommand));
+        private DelegateCommand? _clearAllDownloadedCommand;
+        public DelegateCommand ClearAllDownloadedCommand => _clearAllDownloadedCommand ??= new DelegateCommand(ExecuteClearAllDownloadedCommand);
 
         /// <summary>
         /// 清空下载完成列表事件
         /// </summary>
         private async void ExecuteClearAllDownloadedCommand()
         {
-            AlertService alertService = new AlertService(DialogService);
-            ButtonResult result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
+            var alertService = new AlertService(DialogService);
+            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"));
             if (result != ButtonResult.OK)
             {
                 return;
@@ -123,8 +116,8 @@ namespace DownKyi.ViewModels.DownloadManager
             // DownloadingList中元素被删除后不能继续遍历
             await Task.Run(() =>
             {
-                List<DownloadedItem> list = DownloadedList.ToList();
-                foreach (DownloadedItem item in list)
+                var list = DownloadedList.ToList();
+                foreach (var item in list)
                 {
                     App.PropertyChangeAsync(() =>
                     {
@@ -142,7 +135,7 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 await Task.Run(() =>
                 {
-                    List<DownloadedItem> list = DownloadedList.ToList();
+                    var list = DownloadedList.ToList();
                     foreach (var item in list)
                     {
                         if (item != null && item.DialogService == null)
