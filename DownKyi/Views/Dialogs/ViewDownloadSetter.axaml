@@ -90,7 +90,6 @@
                     <ComboBox
                         Grid.Row="0"
                         Grid.Column="1"
-                        Height="25"
                         Margin="10,0"
                         VerticalAlignment="Center"
                         VerticalContentAlignment="Center"

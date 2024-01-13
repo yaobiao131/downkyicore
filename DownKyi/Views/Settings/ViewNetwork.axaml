@@ -35,7 +35,6 @@
 
             <TextBox
                 Name="NameUserAgent"
-                Height="25"
                 Margin="0,10,0,0"
                 HorizontalAlignment="Stretch"
                 Text="{Binding UserAgent}">

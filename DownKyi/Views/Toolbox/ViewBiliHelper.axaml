@@ -30,7 +30,6 @@
                             <TextBox
                                 x:Name="NameAvid"
                                 Width="150"
-                                Height="25"
                                 Margin="10"
                                 VerticalContentAlignment="Center"
                                 Text="{Binding Avid, Mode=TwoWay}">
@@ -52,7 +51,6 @@
                             <TextBox
                                 x:Name="NameBvid"
                                 Width="150"
-                                Height="25"
                                 Margin="10"
                                 VerticalContentAlignment="Center"
                                 Text="{Binding Bvid, Mode=TwoWay}">
@@ -95,7 +93,6 @@
                         <TextBox
                             Name="NameUserId"
                             Width="150"
-                            Height="25"
                             Margin="10"
                             VerticalContentAlignment="Center"
                             Text="{Binding DanmakuUserId, Mode=TwoWay}" />

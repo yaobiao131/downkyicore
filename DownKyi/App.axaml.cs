@@ -38,15 +38,10 @@ public partial class App : PrismApplication
     public static ObservableCollection<DownloadedItem>? DownloadedList { get; set; }
     public new static App Current => (App)Application.Current!;
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
-    private IClassicDesktopStyleApplicationLifetime _appLife;
+    public IClassicDesktopStyleApplicationLifetime? AppLife;
 
     // 下载服务
     private IDownloadService? _downloadService;
-
-    public static AppBuilder BuildAvaloniaApp() =>
-        AppBuilder
-            .Configure<App>()
-            .UsePlatformDetect();
 
     public override void Initialize()
     {
@@ -54,9 +49,9 @@ public partial class App : PrismApplication
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Exit += OnExit!;
-            _appLife = desktop;
+            AppLife = desktop;
         }
-
+        
         base.Initialize();
     }
 
@@ -209,7 +204,7 @@ public partial class App : PrismApplication
                 _downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
             case Downloader.CUSTOM_ARIA:
-                // downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+                _downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
         }
 
@@ -218,7 +213,6 @@ public partial class App : PrismApplication
         {
             _downloadService?.Start();
         }
-
 
         return Container.Resolve<MainWindow>();
     }
@@ -278,6 +272,6 @@ public partial class App : PrismApplication
 
     private void NativeMenuItem_OnClick(object? sender, EventArgs e)
     {
-        _appLife.Shutdown();
+        AppLife?.Shutdown();
     }
 }

@@ -45,7 +45,7 @@ public class MainWindowViewModel : BindableBase
         set => SetProperty(ref _message, value);
     }
 
-    private DelegateCommand? LoadedCommand { get; }
+    public DelegateCommand? LoadedCommand { get; }
     public DelegateCommand<PointerPressedEventArgs> DragMoveCommand { get; private set; }
 
     private DelegateCommand? _closingCommand;
@@ -144,9 +144,6 @@ public class MainWindowViewModel : BindableBase
                 // ignored
             }
         });
-
-
-        Dispatcher.UIThread.InvokeAsync(() => { LoadedCommand.Execute(); });
     }
 
     #region 剪贴板

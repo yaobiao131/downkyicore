@@ -62,7 +62,6 @@
                 <TextBox
                     Name="NameScreenWidth"
                     Width="95"
-                    Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenWidth, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
@@ -82,7 +81,6 @@
                 <TextBox
                     Name="NameScreenHeight"
                     Width="95"
-                    Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenHeight, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
@@ -127,7 +125,6 @@
                 <TextBox
                     x:Name="NameFontSize"
                     Width="200"
-                    Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding FontSize}">
                     <i:Interaction.Behaviors>
@@ -150,7 +147,6 @@
                 <TextBox
                     Name="NameLineCount"
                     Width="200"
-                    Height="25"
                     VerticalContentAlignment="Center"
                     Text="{Binding LineCount}">
                     <i:Interaction.Behaviors>

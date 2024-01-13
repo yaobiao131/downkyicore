@@ -19,6 +19,9 @@
         <ia:EventTriggerBehavior EventName="Closing">
             <ia:InvokeCommandAction Command="{Binding ClosingCommand}" />
         </ia:EventTriggerBehavior>
+        <ia:EventTriggerBehavior EventName="Opened">
+            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="*">
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
