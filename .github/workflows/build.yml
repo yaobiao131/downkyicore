@@ -74,7 +74,7 @@ jobs:
           artifacts: script/pupnet/output/DownKyi-${{ steps.version.outputs.content }}-1.win-${{ matrix.cpu }}.${{ matrix.kind }}
           body: ${{ needs.changelog.outputs.release_body }}
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: changelog
     strategy:
       matrix:
