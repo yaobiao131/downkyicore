@@ -36,6 +36,9 @@ download_ffmpeg_linux() {
   x64)
     filename=ffmpeg-x86_64-linux-musl_static.zip
     ;;
+  arm64)
+    filename=ffmpeg-aarch64-linux-musl_static.zip
+    ;;
   esac
   local url="https://github.com/yaobiao131/downkyi-ffmpeg-build/releases/download/continuous/$filename"
   create_dir "$ffmpeg_save_path/linux-$arch/ffmpeg"

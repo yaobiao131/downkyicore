@@ -20,6 +20,10 @@ download_aria2() {
     save="$save_path/$1/aria2"
     download_url="https://github.com/abcfy2/aria2-static-build/releases/download/1.37.0/aria2-x86_64-linux-musl_static.zip"
     ;;
+  linux-arm64)
+    save="$save_path/$1/aria2"
+    download_url="https://github.com/abcfy2/aria2-static-build/releases/download/1.37.0/aria2-aarch64-linux-musl_static.zip"
+    ;;
   esac
 
   curl -kL "$download_url" -o "$download_dir/aria2.zip"
