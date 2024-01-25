@@ -161,7 +161,7 @@ public class FileName
                     path += videoPublishTime;
                     break;
                 case FileNamePart.AVID:
-                    path += avid;
+                    path += $"av{avid}";
                     break;
                 case FileNamePart.BVID:
                     path += bvid;
