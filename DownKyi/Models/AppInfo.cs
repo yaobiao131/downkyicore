@@ -11,7 +11,7 @@ public class AppInfo
 
     private const int A = 1;
     private const int B = 0;
-    private const int C = 6;
+    private const int C = 7;
 
     public AppInfo()
     {
