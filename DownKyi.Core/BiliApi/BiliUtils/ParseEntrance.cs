@@ -13,7 +13,7 @@ namespace DownKyi.Core.BiliApi.BiliUtils;
 /// 番剧（电影、电视剧）md号：md28228367, MD28228367, https://www.bilibili.com/bangumi/media/md28228367 <para/>
 /// 课程ss号：https://www.bilibili.com/cheese/play/ss205 <para/>
 /// 课程ep号：https://www.bilibili.com/cheese/play/ep3489 <para/>
-/// 收藏夹：ml1329019876, ML1329019876, https://www.bilibili.com/medialist/detail/ml1329019876, https://www.bilibili.com/medialist/play/ml1329019876/ <para/>
+/// 收藏夹：ml1329019876, ML1329019876, https://www.bilibili.com/medialist/detail/ml1329019876, https://www.bilibili.com/medialist/play/ml1329019876/, https://www.bilibili.com/list/ml1329019876 <para/>
 /// 用户空间：uid928123, UID928123, uid:928123, UID:928123, https://space.bilibili.com/928123
 /// </summary>
 public static class ParseEntrance
@@ -31,6 +31,7 @@ public static class ParseEntrance
     public static readonly string CheeseUrl = $"{WwwUrl}/cheese/play/";
     public static readonly string FavoritesUrl1 = $"{WwwUrl}/medialist/detail/";
     public static readonly string FavoritesUrl2 = $"{WwwUrl}/medialist/play/";
+    public static readonly string FavoritesUrl3 = $"{WwwUrl}/list/";
 
     #region 视频
 
@@ -315,7 +316,7 @@ public static class ParseEntrance
     /// <returns></returns>
     public static bool IsFavoritesUrl(string input)
     {
-        return IsFavoritesUrl1(input) || IsFavoritesUrl2(input);
+        return IsFavoritesUrl1(input) || IsFavoritesUrl2(input) || IsFavoritesUrl3(input);
     }
 
     /// <summary>
@@ -325,7 +326,7 @@ public static class ParseEntrance
     /// <returns></returns>
     private static bool IsFavoritesUrl1(string input)
     {
-        string favoritesId = GetId(input, FavoritesUrl1);
+        var favoritesId = GetId(input, FavoritesUrl1);
         return IsFavoritesId(favoritesId);
     }
 
@@ -336,8 +337,19 @@ public static class ParseEntrance
     /// <returns></returns>
     private static bool IsFavoritesUrl2(string input)
     {
-        string favoritesId = GetId(input, FavoritesUrl2);
+        var favoritesId = GetId(input, FavoritesUrl2);
         return IsFavoritesId(favoritesId.Split('/')[0]);
+    }
+
+    /// <summary>
+    /// 是否为收藏夹ur2
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    private static bool IsFavoritesUrl3(string input)
+    {
+        var favoritesId = GetId(input, FavoritesUrl3);
+        return IsFavoritesId(favoritesId);
     }
 
     /// <summary>
@@ -351,18 +363,23 @@ public static class ParseEntrance
         {
             return Number.GetInt(input.Remove(0, 2));
         }
-        else if (IsFavoritesUrl1(input))
+
+        if (IsFavoritesUrl1(input))
         {
             return Number.GetInt(GetId(input, FavoritesUrl1).Remove(0, 2));
         }
-        else if (IsFavoritesUrl2(input))
+
+        if (IsFavoritesUrl2(input))
         {
             return Number.GetInt(GetId(input, FavoritesUrl2).Remove(0, 2).Split('/')[0]);
         }
-        else
+
+        if (IsFavoritesUrl3(input))
         {
-            return -1;
+            return Number.GetInt(GetId(input, FavoritesUrl3).Remove(0, 2));
         }
+
+        return -1;
     }
 
     #endregion
@@ -429,7 +446,7 @@ public static class ParseEntrance
         }
         else if (IsUserUrl(input))
         {
-            string url = EnableHttps(input);
+            var url = EnableHttps(input);
             url = DeleteUrlParam(url);
             var match = Regex.Match(url, @"\d+");
             if (match.Success)
@@ -480,7 +497,7 @@ public static class ParseEntrance
     /// <returns></returns>
     private static string DeleteUrlParam(string url)
     {
-        string[] strList = url.Split('?');
+        var strList = url.Split('?');
 
         return strList[0].EndsWith("/") ? strList[0].TrimEnd('/') : strList[0];
     }
@@ -502,7 +519,7 @@ public static class ParseEntrance
     /// <returns></returns>
     private static string GetBangumiId(string input)
     {
-        string id = GetId(input, BangumiUrl);
+        var id = GetId(input, BangumiUrl);
         if (id != "")
         {
             return id;
@@ -550,7 +567,7 @@ public static class ParseEntrance
             return "";
         }
 
-        string url = EnableHttps(input);
+        var url = EnableHttps(input);
         url = DeleteUrlParam(url);
 
         url = url.Replace(ShareWwwUrl, WwwUrl);
