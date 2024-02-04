@@ -102,10 +102,9 @@ jobs:
             cpu: arm64
             package-tail: _arm64
             package-head: downkyi_
-          - kind: rpm
+        exclude:
+          - package-type: rpm
             cpu: arm64
-            package-tail: .arm64
-            package-head: downkyi_
     steps:
       - name: Checkout
         uses: actions/checkout@v3
