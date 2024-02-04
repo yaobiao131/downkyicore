@@ -19,9 +19,12 @@ public partial class SettingsManager
 
     // 下载完成列表排序
     private readonly DownloadFinishedSort _finishedSort = DownloadFinishedSort.DOWNLOAD;
-    
+
     // 重复下载策略
     private readonly RepeatDownloadStrategy _repeatDownloadStrategy = RepeatDownloadStrategy.Ask;
+
+    // 重复文件自动添加数字后缀
+    private readonly bool _repeatFileAutoAddNumberSuffix = false;
 
     /// <summary>
     /// 获取下载完成后的操作
@@ -190,7 +193,7 @@ public partial class SettingsManager
         appSettings.Basic.DownloadFinishedSort = finishedSort;
         return SetSettings();
     }
-    
+
     /// <summary>
     /// 获取重复下载策略
     /// </summary>
@@ -216,6 +219,35 @@ public partial class SettingsManager
     public bool SetRepeatDownloadStrategy(RepeatDownloadStrategy repeatDownloadStrategy)
     {
         appSettings.Basic.RepeatDownloadStrategy = repeatDownloadStrategy;
+        return SetSettings();
+    }
+
+    /// <summary>
+    /// 重复文件自动添加数字后缀
+    /// </summary>
+    /// <returns></returns>
+    public bool IsRepeatFileAutoAddNumberSuffix()
+    {
+        appSettings = GetSettings();
+        if (appSettings.Basic.RepeatFileAutoAddNumberSuffix == false)
+        {
+            // 第一次获取，先设置默认值
+            IsRepeatFileAutoAddNumberSuffix(_repeatFileAutoAddNumberSuffix);
+            return _repeatFileAutoAddNumberSuffix;
+        }
+
+        return appSettings.Basic.RepeatFileAutoAddNumberSuffix;
+    }
+
+    /// <summary>
+    /// 设置重复文件自动添加数字后缀
+    /// </summary>
+    /// <param name="repeatFileAutoAddNumberSuffix"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public bool IsRepeatFileAutoAddNumberSuffix(bool repeatFileAutoAddNumberSuffix)
+    {
+        appSettings.Basic.RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
         return SetSettings();
     }
 }

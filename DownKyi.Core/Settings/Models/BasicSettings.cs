@@ -12,4 +12,5 @@ public class BasicSettings
     public AllowStatus IsAutoDownloadAll { get; set; } = AllowStatus.NONE;
     public DownloadFinishedSort DownloadFinishedSort { get; set; } = DownloadFinishedSort.NOT_SET;
     public RepeatDownloadStrategy RepeatDownloadStrategy { get; set; } = RepeatDownloadStrategy.Ask;
+    public bool RepeatFileAutoAddNumberSuffix { get; set; } = false;
 }

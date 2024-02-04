@@ -445,6 +445,27 @@ public class AddToDownloadService
                 // 合成绝对路径
                 var filePath = Path.Combine(directory, fileName.RelativePath());
 
+                if (SettingsManager.GetInstance().IsRepeatFileAutoAddNumberSuffix())
+                {
+                    // 如果存在同名文件，自动重命名
+                    // todo 如果重新下载呢。还没想好
+                    var directoryName = Path.GetDirectoryName(filePath);
+                    var files = Directory.GetFiles(directoryName).Select(Path.GetFileNameWithoutExtension).Distinct().ToList();
+
+                    if (files.Contains(Path.GetFileNameWithoutExtension(filePath)))
+                    {
+                        var count = 1;
+                        var newFilePath = filePath;
+                        while (files.Contains(Path.GetFileNameWithoutExtension(newFilePath)))
+                        {
+                            newFilePath = Path.Combine(directory, $"{fileName.RelativePath()}({count})");
+                            count++;
+                        }
+
+                        filePath = newFilePath;
+                    }
+                }
+
                 // 视频类别
                 PlayStreamType playStreamType;
                 switch (_videoInfoView.TypeId)

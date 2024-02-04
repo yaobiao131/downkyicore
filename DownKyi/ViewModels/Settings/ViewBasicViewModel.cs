@@ -81,6 +81,14 @@ public class ViewBasicViewModel : ViewModelBase
         get => _autoDownloadAll;
         set => SetProperty(ref _autoDownloadAll, value);
     }
+    
+    private bool _repeatFileAutoAddNumberSuffix;
+
+    public bool RepeatFileAutoAddNumberSuffix
+    {
+        get => _repeatFileAutoAddNumberSuffix;
+        set => SetProperty(ref _repeatFileAutoAddNumberSuffix, value);
+    }
 
     private List<RepeatDownloadStrategyDisplay> _repeatDownloadStrategy;
 
@@ -260,13 +268,23 @@ public class ViewBasicViewModel : ViewModelBase
         PublishTip(isSucceed);
     }
 
-    // 解析范围事件
+    private DelegateCommand? _repeatFileAutoAddNumberSuffixCommand;
+    
+    public DelegateCommand RepeatFileAutoAddNumberSuffixCommand => _repeatFileAutoAddNumberSuffixCommand ??= new DelegateCommand(ExecuteRepeatFileAutoAddNumberSuffixCommand);
+    
+    private void ExecuteRepeatFileAutoAddNumberSuffixCommand()
+    {
+        var isSucceed = SettingsManager.GetInstance().IsRepeatFileAutoAddNumberSuffix(RepeatFileAutoAddNumberSuffix);
+        PublishTip(isSucceed);
+    }
+
+    // 重复下载策略事件
     private DelegateCommand<object>? _repeatDownloadStrategyCommand;
 
     public DelegateCommand<object> RepeatDownloadStrategyCommand => _repeatDownloadStrategyCommand ??= new DelegateCommand<object>(ExecuteRepeatDownloadStrategyCommand);
 
     /// <summary>
-    /// 解析范围事件
+    /// 重复下载策略事件
     /// </summary>
     /// <param name="parameter"></param>
     private void ExecuteRepeatDownloadStrategyCommand(object parameter)

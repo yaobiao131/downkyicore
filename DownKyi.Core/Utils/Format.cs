@@ -211,6 +211,6 @@ public static class Format
         destName = destName.Trim('.');
 
         // 如果只有空白字符、dot符
-        return destName is "" or "." ? "[empty title]" : destName;
+        return destName is " " or "." ? "[empty title]" : destName;
     }
 }
