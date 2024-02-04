@@ -88,11 +88,11 @@ public class SearchService
         // 收藏夹
         else if (ParseEntrance.IsFavoritesId(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
+            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(justId));
         }
         else if (ParseEntrance.IsFavoritesUrl(justId))
         {
-            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(input));
+            NavigateToView.NavigationView(eventAggregator, ViewPublicFavoritesViewModel.Tag, parentViewName, ParseEntrance.GetFavoritesId(justId));
         }
         else
         {
