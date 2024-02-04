@@ -160,10 +160,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     #region 命令申明
 
     // 返回
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回
@@ -183,11 +182,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
@@ -204,10 +201,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 复制封面事件
-    private DelegateCommand copyCoverCommand;
+    private DelegateCommand? _copyCoverCommand;
 
-    public DelegateCommand CopyCoverCommand =>
-        copyCoverCommand ?? (copyCoverCommand = new DelegateCommand(ExecuteCopyCoverCommand));
+    public DelegateCommand CopyCoverCommand => _copyCoverCommand ??= new DelegateCommand(ExecuteCopyCoverCommand);
 
     /// <summary>
     /// 复制封面事件
@@ -220,11 +216,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 复制封面URL事件
-    private DelegateCommand copyCoverUrlCommand;
+    private DelegateCommand? _copyCoverUrlCommand;
 
-    public DelegateCommand CopyCoverUrlCommand => copyCoverUrlCommand ??
-                                                  (copyCoverUrlCommand =
-                                                      new DelegateCommand(ExecuteCopyCoverUrlCommand));
+    public DelegateCommand CopyCoverUrlCommand => _copyCoverUrlCommand ??= new DelegateCommand(ExecuteCopyCoverUrlCommand);
 
     /// <summary>
     /// 复制封面URL事件
@@ -237,8 +231,8 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 前往UP主页事件
-    private DelegateCommand upperCommand;
-    public DelegateCommand UpperCommand => upperCommand ?? (upperCommand = new DelegateCommand(ExecuteUpperCommand));
+    private DelegateCommand? _upperCommand;
+    public DelegateCommand UpperCommand => _upperCommand ??= new DelegateCommand(ExecuteUpperCommand);
 
     /// <summary>
     /// 前往UP主页事件
@@ -249,11 +243,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -264,11 +256,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand? _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand => _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -279,12 +269,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> favoritesMediasCommand;
+    private DelegateCommand<object>? _favoritesMediasCommand;
 
-    public DelegateCommand<object> FavoritesMediasCommand => favoritesMediasCommand ??
-                                                             (favoritesMediasCommand =
-                                                                 new DelegateCommand<object>(
-                                                                     ExecuteFavoritesMediasCommand));
+    public DelegateCommand<object> FavoritesMediasCommand => _favoritesMediasCommand ??= new DelegateCommand<object>(ExecuteFavoritesMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -401,7 +388,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
 
         MediaLoadingVisibility = true;
 
-        List<Core.BiliApi.Favorites.Models.FavoritesMedia> medias = FavoritesResource.GetAllFavoritesMedia(favoritesId);
+        var medias = FavoritesResource.GetAllFavoritesMedia(favoritesId);
         if (medias == null || medias.Count == 0)
         {
             MediaLoadingVisibility = false;
@@ -426,18 +413,18 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 根据传入参数不同执行不同任务
-        long parameter = navigationContext.Parameters.GetValue<long>("Parameter");
+        var parameter = navigationContext.Parameters.GetValue<long>("Parameter");
         if (parameter == 0)
         {
             return;
         }
 
         InitView();
-        await Task.Run(new Action(() =>
+        await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = tokenSource.Token;
 
             UpdateView(new FavoritesService(), parameter, cancellationToken);
-        }), (tokenSource = new CancellationTokenSource()).Token);
+        }, (tokenSource = new CancellationTokenSource()).Token);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using DownKyi.Images;
+using DownKyi.Utils;
 using Prism.Mvvm;
 
 namespace DownKyi.ViewModels.PageViewModels;
@@ -133,17 +134,17 @@ public class Favorites : BindableBase
     {
         #region 属性初始化
 
-        // Play = NormalIcon.Instance().Play;
-        // Play.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        //
-        // Like = NormalIcon.Instance().Like;
-        // Like.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        //
-        // Favorite = NormalIcon.Instance().Favorite;
-        // Favorite.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        //
-        // Share = NormalIcon.Instance().Share;
-        // Share.Fill = DictionaryResource.GetColor("ColorTextGrey2");
+        Play = NormalIcon.Instance().Play;
+        Play.Fill = DictionaryResource.GetColor("ColorTextGrey2");
+        
+        Like = NormalIcon.Instance().Like;
+        Like.Fill = DictionaryResource.GetColor("ColorTextGrey2");
+        
+        Favorite = NormalIcon.Instance().Favorite;
+        Favorite.Fill = DictionaryResource.GetColor("ColorTextGrey2");
+        
+        Share = NormalIcon.Instance().Share;
+        Share.Fill = DictionaryResource.GetColor("ColorTextGrey2");
 
         #endregion
     }

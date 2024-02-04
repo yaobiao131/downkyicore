@@ -112,7 +112,8 @@
                     <StackPanel
                         Grid.Column="1"
                         HorizontalAlignment="Right"
-                        Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        IsVisible="{Binding Favorites.MediaCount}">
                         <TextBlock
                             FontSize="12"
                             Foreground="{DynamicResource BrushTextGrey}"
@@ -121,18 +122,6 @@
                             FontSize="12"
                             Foreground="{DynamicResource BrushTextGrey}"
                             Text="{DynamicResource FavoritesMediaCount}" />
-                        <!--<StackPanel.Style>
-                            <Style TargetType="{x:Type StackPanel}">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Favorites.MediaCount}" Value="0">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding Favorites.MediaCount}" Value="{x:Null}">
-                                        <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>-->
                     </StackPanel>
                 </Grid>
 
@@ -280,7 +269,7 @@
 
             <!--  右侧内容区  -->
             <ListBox
-                x:Name="nameFavoritesMedias"
+                x:Name="NameFavoritesMedias"
                 Grid.Column="1"
                 Margin="30,0,0,0"
                 ItemsSource="{Binding FavoritesMedias, Mode=TwoWay}"
@@ -288,7 +277,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding FavoritesMediasCommand}"
-                                                CommandParameter="{Binding ElementName=nameFavoritesMedias, Path=SelectedItem}" />
+                                                CommandParameter="{Binding ElementName=NameFavoritesMedias, Path=SelectedItem}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <ListBox.Template>
@@ -296,7 +285,9 @@
                         <ScrollViewer
                             HorizontalScrollBarVisibility="Disabled"
                             VerticalScrollBarVisibility="Auto">
-                            <StackPanel Orientation="Vertical" />
+                            <StackPanel Orientation="Vertical">
+                                <ItemsPresenter />
+                            </StackPanel>
                         </ScrollViewer>
                     </ControlTemplate>
                 </ListBox.Template>
@@ -306,13 +297,8 @@
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                    <Grid Margin="0,10" Background="{DynamicResource BrushBackground}">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition Width="150" />
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="auto" />
-                                        </Grid.ColumnDefinitions>
+                                    <Grid Margin="0,10" Background="{DynamicResource BrushBackground}"
+                                          ColumnDefinitions="auto,150,*,auto">
 
                                         <TextBlock
                                             Grid.Column="0"
@@ -365,21 +351,20 @@
                                                 <i:Interaction.Behaviors>
                                                     <ia:EventTriggerBehavior EventName="PointerReleased">
                                                         <ia:InvokeCommandAction Command="{Binding TitleCommand}"
-                                                                               CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                                     </ia:EventTriggerBehavior>
                                                 </i:Interaction.Behaviors>
-                                                <TextBlock.Theme>
-                                                    <ControlTheme TargetType="{x:Type TextBlock}">
+                                                <TextBlock.Styles>
+                                                    <Style Selector="TextBlock">
                                                         <Setter Property="Foreground"
                                                                 Value="{DynamicResource BrushTextDark}" />
-                                                        <!--<Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground"
-                                                                        Value="{DynamicResource BrushPrimary}" />
-                                                            </Trigger>
-                                                        </Style.Triggers>-->
-                                                    </ControlTheme>
-                                                </TextBlock.Theme>
+                                                        <Style Selector="^:pointerover">
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource BrushPrimary}">
+                                                            </Setter>
+                                                        </Style>
+                                                    </Style>
+                                                </TextBlock.Styles>
                                             </TextBlock>
 
                                             <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -427,42 +412,36 @@
                                                 FontSize="12"
                                                 Text="{Binding UpName, StringFormat={}UP: {0}}">
                                                 <i:Interaction.Behaviors>
-                                                    <ia:EventTriggerBehavior EventName="MouseLeftButtonUp">
+                                                    <ia:EventTriggerBehavior EventName="PointerReleased">
                                                         <ia:InvokeCommandAction Command="{Binding VideoUpperCommand}"
-                                                                               CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                                     </ia:EventTriggerBehavior>
                                                 </i:Interaction.Behaviors>
-                                                <TextBlock.Theme>
-                                                    <ControlTheme TargetType="{x:Type TextBlock}">
+                                                <TextBlock.Styles>
+                                                    <Style Selector="TextBlock">
                                                         <Setter Property="Foreground"
                                                                 Value="{DynamicResource BrushTextGrey}" />
-                                                        <!--<Style.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter Property="Foreground"
-                                                                        Value="{DynamicResource BrushPrimary}" />
-                                                            </Trigger>
-                                                        </Style.Triggers>-->
-                                                    </ControlTheme>
-                                                </TextBlock.Theme>
+                                                        <Style Selector="^:pointerover">
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource BrushPrimary}" />
+                                                        </Style>
+                                                    </Style>
+                                                </TextBlock.Styles>
                                             </TextBlock>
                                         </Grid>
-
                                     </Grid>
-
-                                    <!--<ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="nameInfoPanel" Property="Visibility" Value="Visible" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter TargetName="nameIsSelected" Property="Visibility" Value="Visible" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="False">
-                                            <Setter TargetName="nameIsSelected" Property="Visibility" Value="Collapsed" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>-->
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
+                        <Style Selector="^ /template/ Image#nameIsSelected">
+                            <Setter Property="IsVisible" Value="False" />
+                        </Style>
+                        <Style Selector="^:selected /template/ Image#nameIsSelected">
+                            <Setter Property="IsVisible" Value="True" />
+                        </Style>
+                        <Style Selector="^:pointerover /template/ Border#nameInfoPanel">
+                            <Setter Property="IsVisible" Value="True" />
+                        </Style>
                     </ControlTheme>
                 </ListBox.ItemContainerTheme>
             </ListBox>
@@ -480,7 +459,7 @@
                     Foreground="Gray"
                     IsActive="{Binding MediaLoading}" />
             </StackPanel>
-            
+
         </Grid>
         <!--  加载gif  -->
         <StackPanel
