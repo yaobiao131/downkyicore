@@ -164,7 +164,11 @@ public class ViewBasicViewModel : ViewModelBase
         // 重复下载策略
         var repeatDownloadStrategy = SettingsManager.GetInstance().GetRepeatDownloadStrategy();
         SelectedRepeatDownloadStrategy = RepeatDownloadStrategy.FirstOrDefault(t => { return t.RepeatDownloadStrategy == repeatDownloadStrategy; });
-
+        
+        // 重复下载文件自动添加数字后缀
+        var repeatFileAutoAddNumberSuffix = SettingsManager.GetInstance().IsRepeatFileAutoAddNumberSuffix();
+        RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
+        
         _isOnNavigatedTo = false;
     }
 
