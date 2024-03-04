@@ -25,6 +25,8 @@ public class VideoPage : BindableBase
 
     public string FirstFrame { get; set; }
 
+    public int Page { get; set; }
+
     private bool isSelected;
 
     public bool IsSelected

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
@@ -97,7 +98,8 @@ public class VideoInfoService : IInfoService
                 FirstFrame = page.FirstFrame,
                 Order = order,
                 Name = name,
-                Duration = "N/A"
+                Duration = "N/A",
+                Page = page.Page
             };
 
             // UP主信息
@@ -185,7 +187,8 @@ public class VideoInfoService : IInfoService
                     Name = episode.Title,
                     Duration = "N/A",
                     // UP主信息
-                    Owner = _videoView.Owner
+                    Owner = _videoView.Owner,
+                    Page = episode.Page.Page
                 };
 
                 if (page.Owner == null)
@@ -232,7 +235,13 @@ public class VideoInfoService : IInfoService
     /// <param name="page"></param>
     public void GetVideoStream(VideoPage page)
     {
-        var playUrl = VideoStream.GetVideoPlayUrl(page.Avid, page.Bvid, page.Cid);
+        var playUrl = SettingsManager.GetInstance().GetVideoParseType() switch
+        {
+            0 => VideoStream.GetVideoPlayUrl(page.Avid, page.Bvid, page.Cid),
+            1 => VideoStream.GetVideoPlayUrlWebPage(page.Avid, page.Bvid, page.Page),
+            _ => null
+        };
+
         Dispatcher.UIThread.Invoke(() => { Utils.VideoPageInfo(playUrl, page); });
     }
 

@@ -522,7 +522,8 @@ public class AddToDownloadService
                         Duration = page.Duration,
                         VideoCodecName = page.VideoQuality.SelectedVideoCodec,
                         Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
-                        AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; })
+                        AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; }),
+                        Page = page.Page
                     };
                     var downloading = new Downloading
                     {

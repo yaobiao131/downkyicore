@@ -48,156 +48,172 @@ public class ViewVideoViewModel : ViewModelBase
         set => SetProperty(ref videoQualityList, value);
     }
 
-    private Quality selectedVideoQuality;
+    private Quality _selectedVideoQuality;
 
     public Quality SelectedVideoQuality
     {
-        get => selectedVideoQuality;
-        set => SetProperty(ref selectedVideoQuality, value);
+        get => _selectedVideoQuality;
+        set => SetProperty(ref _selectedVideoQuality, value);
     }
 
-    private List<Quality> audioQualityList;
+    private List<Quality> _audioQualityList;
 
     public List<Quality> AudioQualityList
     {
-        get => audioQualityList;
-        set => SetProperty(ref audioQualityList, value);
+        get => _audioQualityList;
+        set => SetProperty(ref _audioQualityList, value);
     }
 
-    private Quality selectedAudioQuality;
+    private Quality _selectedAudioQuality;
 
     public Quality SelectedAudioQuality
     {
-        get => selectedAudioQuality;
-        set => SetProperty(ref selectedAudioQuality, value);
+        get => _selectedAudioQuality;
+        set => SetProperty(ref _selectedAudioQuality, value);
     }
 
-    private bool isTranscodingFlvToMp4;
+    private List<VideoParseType> _videoParseTypeList;
+
+    public List<VideoParseType> VideoParseTypeList
+    {
+        get => _videoParseTypeList;
+        set => SetProperty(ref _videoParseTypeList, value);
+    }
+
+    private VideoParseType _selectedVideoParseType;
+
+    public VideoParseType SelectedVideoParseType
+    {
+        get => _selectedVideoParseType;
+        set => SetProperty(ref _selectedVideoParseType, value);
+    }
+
+    private bool _isTranscodingFlvToMp4;
 
     public bool IsTranscodingFlvToMp4
     {
-        get => isTranscodingFlvToMp4;
-        set => SetProperty(ref isTranscodingFlvToMp4, value);
+        get => _isTranscodingFlvToMp4;
+        set => SetProperty(ref _isTranscodingFlvToMp4, value);
     }
 
-    private bool isUseDefaultDirectory;
+    private bool _isUseDefaultDirectory;
 
     public bool IsUseDefaultDirectory
     {
-        get => isUseDefaultDirectory;
-        set => SetProperty(ref isUseDefaultDirectory, value);
+        get => _isUseDefaultDirectory;
+        set => SetProperty(ref _isUseDefaultDirectory, value);
     }
 
-    private string saveVideoDirectory;
+    private string _saveVideoDirectory;
 
     public string SaveVideoDirectory
     {
-        get => saveVideoDirectory;
-        set => SetProperty(ref saveVideoDirectory, value);
+        get => _saveVideoDirectory;
+        set => SetProperty(ref _saveVideoDirectory, value);
     }
 
-    private bool downloadAll;
+    private bool _downloadAll;
 
     public bool DownloadAll
     {
-        get { return downloadAll; }
-        set { SetProperty(ref downloadAll, value); }
+        get => _downloadAll;
+        set => SetProperty(ref _downloadAll, value);
     }
 
-    private bool downloadAudio;
+    private bool _downloadAudio;
 
     public bool DownloadAudio
     {
-        get { return downloadAudio; }
-        set { SetProperty(ref downloadAudio, value); }
+        get => _downloadAudio;
+        set => SetProperty(ref _downloadAudio, value);
     }
 
-    private bool downloadVideo;
+    private bool _downloadVideo;
 
     public bool DownloadVideo
     {
-        get { return downloadVideo; }
-        set { SetProperty(ref downloadVideo, value); }
+        get => _downloadVideo;
+        set => SetProperty(ref _downloadVideo, value);
     }
 
-    private bool downloadDanmaku;
+    private bool _downloadDanmaku;
 
     public bool DownloadDanmaku
     {
-        get { return downloadDanmaku; }
-        set { SetProperty(ref downloadDanmaku, value); }
+        get => _downloadDanmaku;
+        set => SetProperty(ref _downloadDanmaku, value);
     }
 
-    private bool downloadSubtitle;
+    private bool _downloadSubtitle;
 
     public bool DownloadSubtitle
     {
-        get { return downloadSubtitle; }
-        set { SetProperty(ref downloadSubtitle, value); }
+        get => _downloadSubtitle;
+        set => SetProperty(ref _downloadSubtitle, value);
     }
 
-    private bool downloadCover;
+    private bool _downloadCover;
 
     public bool DownloadCover
     {
-        get { return downloadCover; }
-        set { SetProperty(ref downloadCover, value); }
+        get => _downloadCover;
+        set => SetProperty(ref _downloadCover, value);
     }
 
-    private ObservableCollection<DisplayFileNamePart> selectedFileName;
+    private ObservableCollection<DisplayFileNamePart> _selectedFileName;
 
     public ObservableCollection<DisplayFileNamePart> SelectedFileName
     {
-        get => selectedFileName;
-        set => SetProperty(ref selectedFileName, value);
+        get => _selectedFileName;
+        set => SetProperty(ref _selectedFileName, value);
     }
 
-    private ObservableCollection<DisplayFileNamePart> optionalFields;
+    private ObservableCollection<DisplayFileNamePart> _optionalFields;
 
     public ObservableCollection<DisplayFileNamePart> OptionalFields
     {
-        get => optionalFields;
-        set => SetProperty(ref optionalFields, value);
+        get => _optionalFields;
+        set => SetProperty(ref _optionalFields, value);
     }
 
-    private int selectedOptionalField;
+    private int _selectedOptionalField;
 
     public int SelectedOptionalField
     {
-        get => selectedOptionalField;
-        set => SetProperty(ref selectedOptionalField, value);
+        get => _selectedOptionalField;
+        set => SetProperty(ref _selectedOptionalField, value);
     }
 
-    private List<string> fileNamePartTimeFormatList;
+    private List<string> _fileNamePartTimeFormatList;
 
     public List<string> FileNamePartTimeFormatList
     {
-        get => fileNamePartTimeFormatList;
-        set => SetProperty(ref fileNamePartTimeFormatList, value);
+        get => _fileNamePartTimeFormatList;
+        set => SetProperty(ref _fileNamePartTimeFormatList, value);
     }
 
-    private string selectedFileNamePartTimeFormat;
+    private string _selectedFileNamePartTimeFormat;
 
     public string SelectedFileNamePartTimeFormat
     {
-        get => selectedFileNamePartTimeFormat;
-        set => SetProperty(ref selectedFileNamePartTimeFormat, value);
+        get => _selectedFileNamePartTimeFormat;
+        set => SetProperty(ref _selectedFileNamePartTimeFormat, value);
     }
 
-    private List<OrderFormatDisplay> orderFormatList;
+    private List<OrderFormatDisplay> _orderFormatList;
 
     public List<OrderFormatDisplay> OrderFormatList
     {
-        get => orderFormatList;
-        set => SetProperty(ref orderFormatList, value);
+        get => _orderFormatList;
+        set => SetProperty(ref _orderFormatList, value);
     }
 
-    private OrderFormatDisplay orderFormatDisplay;
+    private OrderFormatDisplay _orderFormatDisplay;
 
     public OrderFormatDisplay OrderFormatDisplay
     {
-        get => orderFormatDisplay;
-        set => SetProperty(ref orderFormatDisplay, value);
+        get => _orderFormatDisplay;
+        set => SetProperty(ref _orderFormatDisplay, value);
     }
 
     #endregion
@@ -220,29 +236,32 @@ public class ViewVideoViewModel : ViewModelBase
         // 优先下载音质
         AudioQualityList = Constant.GetAudioQualities();
         //AudioQualityList.RemoveAt(3);
-        AudioQualityList[3].Id = AudioQualityList[3].Id + 1000;
-        AudioQualityList[4].Id = AudioQualityList[4].Id + 1000;
+        AudioQualityList[3].Id += 1000;
+        AudioQualityList[4].Id += 1000;
+
+        // 首选视频解析方式
+        VideoParseTypeList = new List<VideoParseType>
+        {
+            new() { Name = "API(解析快、易风控)", Id = 0 },
+            new() { Name = "WebPage(解析慢、不易风控)", Id = 1 },
+        };
 
         // 文件命名格式
         SelectedFileName = new ObservableCollection<DisplayFileNamePart>();
 
-        SelectedFileName.CollectionChanged += new NotifyCollectionChangedEventHandler((sender, e) =>
+        SelectedFileName.CollectionChanged += (sender, e) =>
         {
             // 当前显示的命名格式part
-            List<FileNamePart> fileName = new List<FileNamePart>();
-            foreach (DisplayFileNamePart item in SelectedFileName)
-            {
-                fileName.Add(item.Id);
-            }
+            var fileName = SelectedFileName.Select(item => item.Id).ToList();
 
-            bool isSucceed = SettingsManager.GetInstance().SetFileNameParts(fileName);
+            var isSucceed = SettingsManager.GetInstance().SetFileNameParts(fileName);
             PublishTip(isSucceed);
-        });
+        };
 
         OptionalFields = new ObservableCollection<DisplayFileNamePart>();
         foreach (FileNamePart item in Enum.GetValues(typeof(FileNamePart)))
         {
-            string display = DisplayFileNamePart(item);
+            var display = DisplayFileNamePart(item);
             OptionalFields.Add(new DisplayFileNamePart { Id = item, Title = display });
         }
 
@@ -279,31 +298,35 @@ public class ViewVideoViewModel : ViewModelBase
         isOnNavigatedTo = true;
 
         // 优先下载的视频编码
-        int videoCodecs = SettingsManager.GetInstance().GetVideoCodecs();
+        var videoCodecs = SettingsManager.GetInstance().GetVideoCodecs();
         //SelectedVideoCodec = GetVideoCodecsString(videoCodecs);
         SelectedVideoCodec = VideoCodecs.FirstOrDefault(t => { return t.Id == videoCodecs; });
 
         // 优先下载画质
-        int quality = SettingsManager.GetInstance().GetQuality();
-        SelectedVideoQuality = VideoQualityList.FirstOrDefault(t => { return t.Id == quality; });
+        var quality = SettingsManager.GetInstance().GetQuality();
+        SelectedVideoQuality = VideoQualityList.FirstOrDefault(t => t.Id == quality);
 
         // 优先下载音质
-        int audioQuality = SettingsManager.GetInstance().GetAudioQuality();
-        SelectedAudioQuality = AudioQualityList.FirstOrDefault(t => { return t.Id == audioQuality; });
+        var audioQuality = SettingsManager.GetInstance().GetAudioQuality();
+        SelectedAudioQuality = AudioQualityList.FirstOrDefault(t => t.Id == audioQuality);
+
+        // 首选视频解析方式
+        var videoParseType = SettingsManager.GetInstance().GetVideoParseType();
+        SelectedVideoParseType = VideoParseTypeList.FirstOrDefault(t => t.Id == videoParseType);
 
         // 是否下载flv视频后转码为mp4
-        AllowStatus isTranscodingFlvToMp4 = SettingsManager.GetInstance().IsTranscodingFlvToMp4();
+        var isTranscodingFlvToMp4 = SettingsManager.GetInstance().IsTranscodingFlvToMp4();
         IsTranscodingFlvToMp4 = isTranscodingFlvToMp4 == AllowStatus.YES;
 
         // 是否使用默认下载目录
-        AllowStatus isUseSaveVideoRootPath = SettingsManager.GetInstance().IsUseSaveVideoRootPath();
+        var isUseSaveVideoRootPath = SettingsManager.GetInstance().IsUseSaveVideoRootPath();
         IsUseDefaultDirectory = isUseSaveVideoRootPath == AllowStatus.YES;
 
         // 默认下载目录
         SaveVideoDirectory = SettingsManager.GetInstance().GetSaveVideoRootPath();
 
         // 下载内容
-        VideoContentSettings videoContent = SettingsManager.GetInstance().GetVideoContent();
+        var videoContent = SettingsManager.GetInstance().GetVideoContent();
 
         DownloadAudio = videoContent.DownloadAudio;
         DownloadVideo = videoContent.DownloadVideo;
@@ -321,11 +344,11 @@ public class ViewVideoViewModel : ViewModelBase
         }
 
         // 文件命名格式
-        List<FileNamePart> fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
+        var fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
         SelectedFileName.Clear();
-        foreach (FileNamePart item in fileNameParts)
+        foreach (var item in fileNameParts)
         {
-            string display = DisplayFileNamePart(item);
+            var display = DisplayFileNamePart(item);
             SelectedFileName.Add(new DisplayFileNamePart { Id = item, Title = display });
         }
 
@@ -342,11 +365,9 @@ public class ViewVideoViewModel : ViewModelBase
     #region 命令申明
 
     // 优先下载的视频编码事件
-    private DelegateCommand<object> videoCodecsCommand;
+    private DelegateCommand<object>? _videoCodecsCommand;
 
-    public DelegateCommand<object> VideoCodecsCommand => videoCodecsCommand ??
-                                                         (videoCodecsCommand =
-                                                             new DelegateCommand<object>(ExecuteVideoCodecsCommand));
+    public DelegateCommand<object> VideoCodecsCommand => _videoCodecsCommand ??= new DelegateCommand<object>(ExecuteVideoCodecsCommand);
 
     /// <summary>
     /// 优先下载的视频编码事件
@@ -356,21 +377,19 @@ public class ViewVideoViewModel : ViewModelBase
     {
         //VideoCodecs videoCodecs = GetVideoCodecs(parameter);
 
-        if (!(parameter is Quality videoCodecs))
+        if (parameter is not Quality videoCodecs)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetVideoCodecs(videoCodecs.Id);
+        var isSucceed = SettingsManager.GetInstance().SetVideoCodecs(videoCodecs.Id);
         PublishTip(isSucceed);
     }
 
     // 优先下载画质事件
-    private DelegateCommand<object> videoQualityCommand;
+    private DelegateCommand<object>? _videoQualityCommand;
 
-    public DelegateCommand<object> VideoQualityCommand => videoQualityCommand ??
-                                                          (videoQualityCommand =
-                                                              new DelegateCommand<object>(ExecuteVideoQualityCommand));
+    public DelegateCommand<object> VideoQualityCommand => _videoQualityCommand ??= new DelegateCommand<object>(ExecuteVideoQualityCommand);
 
     /// <summary>
     /// 优先下载画质事件
@@ -388,11 +407,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 优先下载音质事件
-    private DelegateCommand<object> audioQualityCommand;
+    private DelegateCommand<object>? _audioQualityCommand;
 
-    public DelegateCommand<object> AudioQualityCommand => audioQualityCommand ??
-                                                          (audioQualityCommand =
-                                                              new DelegateCommand<object>(ExecuteAudioQualityCommand));
+    public DelegateCommand<object> AudioQualityCommand => _audioQualityCommand ??= new DelegateCommand<object>(ExecuteAudioQualityCommand);
 
     /// <summary>
     /// 优先下载音质事件
@@ -409,51 +426,63 @@ public class ViewVideoViewModel : ViewModelBase
         PublishTip(isSucceed);
     }
 
-    // 是否下载flv视频后转码为mp4事件
-    private DelegateCommand isTranscodingFlvToMp4Command;
 
-    public DelegateCommand IsTranscodingFlvToMp4Command => isTranscodingFlvToMp4Command ??
-                                                           (isTranscodingFlvToMp4Command =
-                                                               new DelegateCommand(
-                                                                   ExecuteIsTranscodingFlvToMp4Command));
+    // 首选视频解析线路事件
+    private DelegateCommand<object>? _videoParseTypeCommand;
+
+    public DelegateCommand<object> VideoParseTypeCommand => _videoParseTypeCommand ??= new DelegateCommand<object>(ExecuteVideoParseTypeCommand);
+
+    /// <summary>
+    /// 首选视频解析线路事件
+    /// </summary>
+    /// <param name="parameter"></param>
+    private void ExecuteVideoParseTypeCommand(object parameter)
+    {
+        if (parameter is not VideoParseType type)
+        {
+            return;
+        }
+
+        var isSucceed = SettingsManager.GetInstance().SetVideoParseType(type.Id ?? 1);
+        PublishTip(isSucceed);
+    }
+
+    // 是否下载flv视频后转码为mp4事件
+    private DelegateCommand? _isTranscodingFlvToMp4Command;
+
+    public DelegateCommand IsTranscodingFlvToMp4Command => _isTranscodingFlvToMp4Command ??= new DelegateCommand(ExecuteIsTranscodingFlvToMp4Command);
 
     /// <summary>
     /// 是否下载flv视频后转码为mp4事件
     /// </summary>
     private void ExecuteIsTranscodingFlvToMp4Command()
     {
-        AllowStatus isTranscodingFlvToMp4 = IsTranscodingFlvToMp4 ? AllowStatus.YES : AllowStatus.NO;
+        var isTranscodingFlvToMp4 = IsTranscodingFlvToMp4 ? AllowStatus.YES : AllowStatus.NO;
 
-        bool isSucceed = SettingsManager.GetInstance().IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
+        var isSucceed = SettingsManager.GetInstance().IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
         PublishTip(isSucceed);
     }
 
     // 是否使用默认下载目录事件
-    private DelegateCommand isUseDefaultDirectoryCommand;
+    private DelegateCommand? _isUseDefaultDirectoryCommand;
 
-    public DelegateCommand IsUseDefaultDirectoryCommand => isUseDefaultDirectoryCommand ??
-                                                           (isUseDefaultDirectoryCommand =
-                                                               new DelegateCommand(
-                                                                   ExecuteIsUseDefaultDirectoryCommand));
+    public DelegateCommand IsUseDefaultDirectoryCommand => _isUseDefaultDirectoryCommand ??= new DelegateCommand(ExecuteIsUseDefaultDirectoryCommand);
 
     /// <summary>
     /// 是否使用默认下载目录事件
     /// </summary>
     private void ExecuteIsUseDefaultDirectoryCommand()
     {
-        AllowStatus isUseDefaultDirectory = IsUseDefaultDirectory ? AllowStatus.YES : AllowStatus.NO;
+        var isUseDefaultDirectory = IsUseDefaultDirectory ? AllowStatus.YES : AllowStatus.NO;
 
-        bool isSucceed = SettingsManager.GetInstance().IsUseSaveVideoRootPath(isUseDefaultDirectory);
+        var isSucceed = SettingsManager.GetInstance().IsUseSaveVideoRootPath(isUseDefaultDirectory);
         PublishTip(isSucceed);
     }
 
     // 修改默认下载目录事件
-    private DelegateCommand changeSaveVideoDirectoryCommand;
+    private DelegateCommand? _changeSaveVideoDirectoryCommand;
 
-    public DelegateCommand ChangeSaveVideoDirectoryCommand => changeSaveVideoDirectoryCommand ??
-                                                              (changeSaveVideoDirectoryCommand =
-                                                                  new DelegateCommand(
-                                                                      ExecuteChangeSaveVideoDirectoryCommand));
+    public DelegateCommand ChangeSaveVideoDirectoryCommand => _changeSaveVideoDirectoryCommand ??= new DelegateCommand(ExecuteChangeSaveVideoDirectoryCommand);
 
     /// <summary>
     /// 修改默认下载目录事件
@@ -461,11 +490,14 @@ public class ViewVideoViewModel : ViewModelBase
     private async void ExecuteChangeSaveVideoDirectoryCommand()
     {
         var directory = await DialogUtils.SetDownloadDirectory();
-        if (string.IsNullOrEmpty(directory)) { return; }
-        
-        bool isSucceed = SettingsManager.GetInstance().SetSaveVideoRootPath(directory);
+        if (string.IsNullOrEmpty(directory))
+        {
+            return;
+        }
+
+        var isSucceed = SettingsManager.GetInstance().SetSaveVideoRootPath(directory);
         PublishTip(isSucceed);
-        
+
         if (isSucceed)
         {
             SaveVideoDirectory = directory;
@@ -473,10 +505,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 所有内容选择事件
-    private DelegateCommand downloadAllCommand;
+    private DelegateCommand? _downloadAllCommand;
 
-    public DelegateCommand DownloadAllCommand =>
-        downloadAllCommand ?? (downloadAllCommand = new DelegateCommand(ExecuteDownloadAllCommand));
+    public DelegateCommand DownloadAllCommand => _downloadAllCommand ??= new DelegateCommand(ExecuteDownloadAllCommand);
 
     /// <summary>
     /// 所有内容选择事件
@@ -504,11 +535,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 音频选择事件
-    private DelegateCommand downloadAudioCommand;
+    private DelegateCommand? _downloadAudioCommand;
 
-    public DelegateCommand DownloadAudioCommand => downloadAudioCommand ??
-                                                   (downloadAudioCommand =
-                                                       new DelegateCommand(ExecuteDownloadAudioCommand));
+    public DelegateCommand DownloadAudioCommand => _downloadAudioCommand ??= new DelegateCommand(ExecuteDownloadAudioCommand);
 
     /// <summary>
     /// 音频选择事件
@@ -529,11 +558,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 视频选择事件
-    private DelegateCommand downloadVideoCommand;
+    private DelegateCommand? _downloadVideoCommand;
 
-    public DelegateCommand DownloadVideoCommand => downloadVideoCommand ??
-                                                   (downloadVideoCommand =
-                                                       new DelegateCommand(ExecuteDownloadVideoCommand));
+    public DelegateCommand DownloadVideoCommand => _downloadVideoCommand ??= new DelegateCommand(ExecuteDownloadVideoCommand);
 
     /// <summary>
     /// 视频选择事件
@@ -554,11 +581,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 弹幕选择事件
-    private DelegateCommand downloadDanmakuCommand;
+    private DelegateCommand? _downloadDanmakuCommand;
 
-    public DelegateCommand DownloadDanmakuCommand => downloadDanmakuCommand ??
-                                                     (downloadDanmakuCommand =
-                                                         new DelegateCommand(ExecuteDownloadDanmakuCommand));
+    public DelegateCommand DownloadDanmakuCommand => _downloadDanmakuCommand ??= new DelegateCommand(ExecuteDownloadDanmakuCommand);
 
     /// <summary>
     /// 弹幕选择事件
@@ -579,11 +604,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 字幕选择事件
-    private DelegateCommand downloadSubtitleCommand;
+    private DelegateCommand? _downloadSubtitleCommand;
 
-    public DelegateCommand DownloadSubtitleCommand => downloadSubtitleCommand ??
-                                                      (downloadSubtitleCommand =
-                                                          new DelegateCommand(ExecuteDownloadSubtitleCommand));
+    public DelegateCommand DownloadSubtitleCommand => _downloadSubtitleCommand ??= new DelegateCommand(ExecuteDownloadSubtitleCommand);
 
     /// <summary>
     /// 字幕选择事件
@@ -604,11 +627,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 封面选择事件
-    private DelegateCommand downloadCoverCommand;
+    private DelegateCommand? _downloadCoverCommand;
 
-    public DelegateCommand DownloadCoverCommand => downloadCoverCommand ??
-                                                   (downloadCoverCommand =
-                                                       new DelegateCommand(ExecuteDownloadCoverCommand));
+    public DelegateCommand DownloadCoverCommand => _downloadCoverCommand ??= new DelegateCommand(ExecuteDownloadCoverCommand);
 
     /// <summary>
     /// 封面选择事件
@@ -629,12 +650,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 选中文件名字段右键点击事件
-    private DelegateCommand<object> selectedFileNameRightCommand;
+    private DelegateCommand<object>? _selectedFileNameRightCommand;
 
-    public DelegateCommand<object> SelectedFileNameRightCommand => selectedFileNameRightCommand ??
-                                                                   (selectedFileNameRightCommand =
-                                                                       new DelegateCommand<object>(
-                                                                           ExecuteSelectedFileNameRightCommand));
+    public DelegateCommand<object> SelectedFileNameRightCommand => _selectedFileNameRightCommand ??= new DelegateCommand<object>(ExecuteSelectedFileNameRightCommand);
 
     /// <summary>
     /// 选中文件名字段右键点击事件
@@ -667,12 +685,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 可选文件名字段点击事件
-    private DelegateCommand<object> optionalFieldsCommand;
+    private DelegateCommand<object>? _optionalFieldsCommand;
 
-    public DelegateCommand<object> OptionalFieldsCommand => optionalFieldsCommand ??
-                                                            (optionalFieldsCommand =
-                                                                new DelegateCommand<object>(
-                                                                    ExecuteOptionalFieldsCommand));
+    public DelegateCommand<object> OptionalFieldsCommand => _optionalFieldsCommand ??= new DelegateCommand<object>(ExecuteOptionalFieldsCommand);
 
     /// <summary>
     /// 可选文件名字段点击事件
@@ -687,35 +702,35 @@ public class ViewVideoViewModel : ViewModelBase
 
         SelectedFileName.Add((DisplayFileNamePart)parameter);
 
-        List<FileNamePart> fileName = new List<FileNamePart>();
-        foreach (DisplayFileNamePart item in SelectedFileName)
+        var fileName = new List<FileNamePart>();
+        foreach (var item in SelectedFileName)
         {
             fileName.Add(item.Id);
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetFileNameParts(fileName);
+        var isSucceed = SettingsManager.GetInstance().SetFileNameParts(fileName);
         PublishTip(isSucceed);
 
         SelectedOptionalField = -1;
     }
 
     // 重置选中文件名字段
-    private DelegateCommand resetCommand;
-    public DelegateCommand ResetCommand => resetCommand ?? (resetCommand = new DelegateCommand(ExecuteResetCommand));
+    private DelegateCommand? _resetCommand;
+    public DelegateCommand ResetCommand => _resetCommand ??= new DelegateCommand(ExecuteResetCommand);
 
     /// <summary>
     /// 重置选中文件名字段
     /// </summary>
     private void ExecuteResetCommand()
     {
-        bool isSucceed = SettingsManager.GetInstance().SetFileNameParts(null);
+        var isSucceed = SettingsManager.GetInstance().SetFileNameParts(null);
         PublishTip(isSucceed);
 
-        List<FileNamePart> fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
+        var fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
         SelectedFileName.Clear();
-        foreach (FileNamePart item in fileNameParts)
+        foreach (var item in fileNameParts)
         {
-            string display = DisplayFileNamePart(item);
+            var display = DisplayFileNamePart(item);
             SelectedFileName.Add(new DisplayFileNamePart { Id = item, Title = display });
         }
 
@@ -723,12 +738,9 @@ public class ViewVideoViewModel : ViewModelBase
     }
 
     // 文件命名中的时间格式事件
-    private DelegateCommand<object> fileNamePartTimeFormatCommand;
+    private DelegateCommand<object>? _fileNamePartTimeFormatCommand;
 
-    public DelegateCommand<object> FileNamePartTimeFormatCommand => fileNamePartTimeFormatCommand ??
-                                                                    (fileNamePartTimeFormatCommand =
-                                                                        new DelegateCommand<object>(
-                                                                            ExecuteFileNamePartTimeFormatCommand));
+    public DelegateCommand<object> FileNamePartTimeFormatCommand => _fileNamePartTimeFormatCommand ??= new DelegateCommand<object>(ExecuteFileNamePartTimeFormatCommand);
 
     /// <summary>
     /// 文件命名中的时间格式事件
@@ -736,22 +748,19 @@ public class ViewVideoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteFileNamePartTimeFormatCommand(object parameter)
     {
-        if (!(parameter is string timeFormat))
+        if (parameter is not string timeFormat)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetFileNamePartTimeFormat(timeFormat);
+        var isSucceed = SettingsManager.GetInstance().SetFileNamePartTimeFormat(timeFormat);
         PublishTip(isSucceed);
     }
 
     // 文件命名中的序号格式事件
-    private DelegateCommand<object> orderFormatCommand;
+    private DelegateCommand<object>? _orderFormatCommand;
 
-    public DelegateCommand<object> OrderFormatCommand => orderFormatCommand ??
-                                                         (orderFormatCommand =
-                                                             new DelegateCommand<object>(
-                                                                 ExecuteOrderFormatCommandCommand));
+    public DelegateCommand<object> OrderFormatCommand => _orderFormatCommand ??= new DelegateCommand<object>(ExecuteOrderFormatCommandCommand);
 
     /// <summary>
     /// 文件命名中的序号格式事件
@@ -759,12 +768,12 @@ public class ViewVideoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteOrderFormatCommandCommand(object parameter)
     {
-        if (!(parameter is OrderFormatDisplay orderFormatDisplay))
+        if (parameter is not OrderFormatDisplay orderFormatDisplay)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetOrderFormat(orderFormatDisplay.OrderFormat);
+        var isSucceed = SettingsManager.GetInstance().SetOrderFormat(orderFormatDisplay.OrderFormat);
         PublishTip(isSucceed);
     }
 
@@ -824,7 +833,7 @@ public class ViewVideoViewModel : ViewModelBase
     /// </summary>
     private void SetVideoContent()
     {
-        VideoContentSettings videoContent = new VideoContentSettings
+        var videoContent = new VideoContentSettings
         {
             DownloadAudio = DownloadAudio,
             DownloadVideo = DownloadVideo,
@@ -833,7 +842,7 @@ public class ViewVideoViewModel : ViewModelBase
             DownloadCover = DownloadCover
         };
 
-        bool isSucceed = SettingsManager.GetInstance().SetVideoContent(videoContent);
+        var isSucceed = SettingsManager.GetInstance().SetVideoContent(videoContent);
         PublishTip(isSucceed);
     }
 
@@ -844,54 +853,26 @@ public class ViewVideoViewModel : ViewModelBase
     /// <returns></returns>
     private string DisplayFileNamePart(FileNamePart item)
     {
-        string display = string.Empty;
-        switch (item)
+        var display = item switch
         {
-            case FileNamePart.ORDER:
-                display = DictionaryResource.GetString("DisplayOrder");
-                break;
-            case FileNamePart.SECTION:
-                display = DictionaryResource.GetString("DisplaySection");
-                break;
-            case FileNamePart.MAIN_TITLE:
-                display = DictionaryResource.GetString("DisplayMainTitle");
-                break;
-            case FileNamePart.PAGE_TITLE:
-                display = DictionaryResource.GetString("DisplayPageTitle");
-                break;
-            case FileNamePart.VIDEO_ZONE:
-                display = DictionaryResource.GetString("DisplayVideoZone");
-                break;
-            case FileNamePart.AUDIO_QUALITY:
-                display = DictionaryResource.GetString("DisplayAudioQuality");
-                break;
-            case FileNamePart.VIDEO_QUALITY:
-                display = DictionaryResource.GetString("DisplayVideoQuality");
-                break;
-            case FileNamePart.VIDEO_CODEC:
-                display = DictionaryResource.GetString("DisplayVideoCodec");
-                break;
-            case FileNamePart.VIDEO_PUBLISH_TIME:
-                display = DictionaryResource.GetString("DisplayVideoPublishTime");
-                break;
-            case FileNamePart.AVID:
-                display = "avid";
-                break;
-            case FileNamePart.BVID:
-                display = "bvid";
-                break;
-            case FileNamePart.CID:
-                display = "cid";
-                break;
-            case FileNamePart.UP_MID:
-                display = DictionaryResource.GetString("DisplayUpMid");
-                break;
-            case FileNamePart.UP_NAME:
-                display = DictionaryResource.GetString("DisplayUpName");
-                break;
-        }
+            FileNamePart.ORDER => DictionaryResource.GetString("DisplayOrder"),
+            FileNamePart.SECTION => DictionaryResource.GetString("DisplaySection"),
+            FileNamePart.MAIN_TITLE => DictionaryResource.GetString("DisplayMainTitle"),
+            FileNamePart.PAGE_TITLE => DictionaryResource.GetString("DisplayPageTitle"),
+            FileNamePart.VIDEO_ZONE => DictionaryResource.GetString("DisplayVideoZone"),
+            FileNamePart.AUDIO_QUALITY => DictionaryResource.GetString("DisplayAudioQuality"),
+            FileNamePart.VIDEO_QUALITY => DictionaryResource.GetString("DisplayVideoQuality"),
+            FileNamePart.VIDEO_CODEC => DictionaryResource.GetString("DisplayVideoCodec"),
+            FileNamePart.VIDEO_PUBLISH_TIME => DictionaryResource.GetString("DisplayVideoPublishTime"),
+            FileNamePart.AVID => "avid",
+            FileNamePart.BVID => "bvid",
+            FileNamePart.CID => "cid",
+            FileNamePart.UP_MID => DictionaryResource.GetString("DisplayUpMid"),
+            FileNamePart.UP_NAME => DictionaryResource.GetString("DisplayUpName"),
+            _ => string.Empty
+        };
 
-        if (((int)item) >= 100)
+        if ((int)item >= 100)
         {
             display = HyphenSeparated.Hyphen[(int)item];
         }

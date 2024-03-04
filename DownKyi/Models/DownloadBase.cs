@@ -70,4 +70,7 @@ public class DownloadBase
 
     // 文件大小
     public string FileSize { get; set; }
+
+    // 视频分p(默认为1)
+    public int Page { get; set; } = 1;
 }

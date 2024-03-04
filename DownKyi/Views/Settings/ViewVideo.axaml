@@ -77,6 +77,27 @@
                     </i:Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource VideoParseType}" />
+                <ComboBox
+                    Name="NameVideoParseTypeList"
+                    Width="200"
+                    VerticalContentAlignment="Center"
+                    DisplayMemberBinding="{Binding Name}"
+                    ItemsSource="{Binding VideoParseTypeList}"
+                    SelectedItem="{Binding SelectedVideoParseType}">
+                    <i:Interaction.Behaviors>
+                        <ia:EventTriggerBehavior EventName="SelectionChanged">
+                            <ia:InvokeCommandAction Command="{Binding VideoParseTypeCommand}"
+                                                    CommandParameter="{Binding ElementName=NameVideoParseTypeList,Path=SelectedValue}" />
+                        </ia:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </ComboBox>
+            </StackPanel>
             <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"

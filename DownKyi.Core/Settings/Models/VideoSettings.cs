@@ -10,6 +10,7 @@ public class VideoSettings
     public int VideoCodecs { get; set; } = -1; // AVC or HEVC
     public int Quality { get; set; } = -1; // 画质
     public int AudioQuality { get; set; } = -1; // 音质
+    public int VideoParseType { get; set; } = 1; // 视频解析类型
     public AllowStatus IsTranscodingFlvToMp4 { get; set; } = AllowStatus.NONE; // 是否将flv转为mp4
     public string SaveVideoRootPath { get; set; } = null; // 视频保存路径
     public List<string> HistoryVideoRootPaths { get; set; } = null; // 历史视频保存路径

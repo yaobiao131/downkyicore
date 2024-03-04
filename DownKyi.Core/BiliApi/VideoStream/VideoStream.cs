@@ -1,4 +1,5 @@
-﻿using DownKyi.Core.BiliApi.Models.Json;
+﻿using System.Text.RegularExpressions;
+using DownKyi.Core.BiliApi.Models.Json;
 using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Logging;
@@ -128,10 +129,32 @@ public static class VideoStream
             return null;
         }
 
-        string query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
-        string url = $"https://api.bilibili.com/x/player/wbi/playurl?{query}";
+        var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
+        var url = $"https://api.bilibili.com/x/player/wbi/playurl?{query}";
 
         return GetPlayUrl(url);
+    }
+
+    /// <summary>
+    /// 获取普通视频的视频流（WebPage方式）
+    /// </summary>
+    /// <param name="avid"></param>
+    /// <param name="bvid"></param>
+    /// <param name="p"></param>
+    /// <returns></returns>
+    public static PlayUrl GetVideoPlayUrlWebPage(long avid, string bvid, int p)
+    {
+        var url = "https://www.bilibili.com/video";
+        if (bvid == string.Empty)
+        {
+            url = $"{url}/{bvid}/?p={p}";
+        }
+        else if (avid > -1)
+        {
+            url = $"{url}/av{avid}/?p={p}";
+        }
+
+        return GetPlayUrlWebPage(url);
     }
 
     /// <summary>
@@ -205,8 +228,8 @@ public static class VideoStream
     /// <returns></returns>
     private static PlayUrl GetPlayUrl(string url)
     {
-        string referer = "https://m.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        const string referer = "https://m.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -232,6 +255,51 @@ public static class VideoStream
         {
             Console.PrintLine("GetPlayUrl()发生异常: {0}", e);
             LogManager.Error("GetPlayUrl()", e);
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 获取视频流（WebPage方式）
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
+    private static PlayUrl GetPlayUrlWebPage(string url)
+    {
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
+
+        try
+        {
+            var regex = new Regex(@"<script>window\.__playinfo__=(.*?)<\/script>");
+            var m = regex.Match(response);
+            PlayUrlOrigin? playUrl = null;
+            if (m.Success)
+            {
+                playUrl = JsonConvert.DeserializeObject<PlayUrlOrigin>(m.Groups[1].ToString());
+            }
+
+            if (playUrl == null)
+            {
+                return null;
+            }
+            else if (playUrl.Data != null)
+            {
+                return playUrl.Data;
+            }
+            else if (playUrl.Result != null)
+            {
+                return playUrl.Result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("GetPlayUrlPc()发生异常: {0}", e);
+            LogManager.Error("GetPlayUrlPc()", e);
             return null;
         }
     }

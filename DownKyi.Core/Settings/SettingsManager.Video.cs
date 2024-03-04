@@ -14,6 +14,9 @@ public partial class SettingsManager
 
     // 设置优先下载音质
     private readonly int audioQuality = 30280;
+    
+    // 设置首选视频解析方式
+    private const int VideoParseType = 1;
 
     // 是否下载flv视频后转码为mp4
     private readonly AllowStatus isTranscodingFlvToMp4 = AllowStatus.YES;
@@ -133,6 +136,34 @@ public partial class SettingsManager
     public bool SetAudioQuality(int quality)
     {
         appSettings.Video.AudioQuality = quality;
+        return SetSettings();
+    }
+    
+    /// <summary>
+    /// 获取首选视频解析方式
+    /// </summary>
+    /// <returns></returns>
+    public int GetVideoParseType()
+    {
+        appSettings = GetSettings();
+        if (appSettings.Video.VideoParseType == null)
+        {
+            // 第一次获取，先设置默认值
+            SetVideoParseType(VideoParseType);
+            return VideoParseType;
+        }
+
+        return appSettings.Video.VideoParseType;
+    }
+    
+    /// <summary>
+    /// 设置首选视频解析方式
+    /// </summary>
+    /// <param name="videoParseType"></param>
+    /// <returns></returns>
+    public bool SetVideoParseType(int videoParseType)
+    {
+        appSettings.Video.VideoParseType = videoParseType;
         return SetSettings();
     }
 

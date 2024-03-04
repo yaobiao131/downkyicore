@@ -358,8 +358,12 @@ public abstract class DownloadService
         switch (downloading.Downloading.PlayStreamType)
         {
             case PlayStreamType.VIDEO:
-                downloading.PlayUrl = VideoStream.GetVideoPlayUrl(downloading.DownloadBase.Avid,
-                    downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid);
+                downloading.PlayUrl = SettingsManager.GetInstance().GetVideoParseType() switch
+                {
+                    0 => VideoStream.GetVideoPlayUrl(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid),
+                    1 => VideoStream.GetVideoPlayUrlWebPage(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Page),
+                    _ => null
+                };
                 break;
             case PlayStreamType.BANGUMI:
                 downloading.PlayUrl = VideoStream.GetBangumiPlayUrl(downloading.DownloadBase.Avid,
