@@ -21,162 +21,163 @@ public class ViewUserSpaceViewModel : ViewModelBase
 {
     public const string Tag = "PageUserSpace";
 
-    private readonly IRegionManager regionManager;
+    private readonly IRegionManager _regionManager;
 
     // mid
     private long mid = -1;
 
     #region 页面属性申明
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private bool loading;
+    private bool _loading;
+
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool viewVisibility;
+    private bool _viewVisibility;
 
     public bool ViewVisibility
     {
-        get => viewVisibility;
-        set => SetProperty(ref viewVisibility, value);
+        get => _viewVisibility;
+        set => SetProperty(ref _viewVisibility, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private string topNavigationBg;
+    private string _topNavigationBg;
 
     public string TopNavigationBg
     {
-        get => topNavigationBg;
-        set => SetProperty(ref topNavigationBg, value);
+        get => _topNavigationBg;
+        set => SetProperty(ref _topNavigationBg, value);
     }
 
-    private Bitmap background;
+    private Bitmap _background;
 
     public Bitmap Background
     {
-        get => background;
-        set => SetProperty(ref background, value);
+        get => _background;
+        set => SetProperty(ref _background, value);
     }
 
-    private Bitmap header;
+    private Bitmap _header;
 
     public Bitmap Header
     {
-        get => header;
-        set => SetProperty(ref header, value);
+        get => _header;
+        set => SetProperty(ref _header, value);
     }
 
-    private string userName;
+    private string _userName;
 
     public string UserName
     {
-        get => userName;
-        set => SetProperty(ref userName, value);
+        get => _userName;
+        set => SetProperty(ref _userName, value);
     }
 
-    private Bitmap sex;
+    private Bitmap _sex;
 
     public Bitmap Sex
     {
-        get => sex;
-        set => SetProperty(ref sex, value);
+        get => _sex;
+        set => SetProperty(ref _sex, value);
     }
 
-    private Bitmap level;
+    private Bitmap _level;
 
     public Bitmap Level
     {
-        get => level;
-        set => SetProperty(ref level, value);
+        get => _level;
+        set => SetProperty(ref _level, value);
     }
 
-    private bool vipTypeVisibility;
+    private bool _vipTypeVisibility;
 
     public bool VipTypeVisibility
     {
-        get => vipTypeVisibility;
-        set => SetProperty(ref vipTypeVisibility, value);
+        get => _vipTypeVisibility;
+        set => SetProperty(ref _vipTypeVisibility, value);
     }
 
-    private string vipType;
+    private string _vipType;
 
     public string VipType
     {
-        get => vipType;
-        set => SetProperty(ref vipType, value);
+        get => _vipType;
+        set => SetProperty(ref _vipType, value);
     }
 
-    private string sign;
+    private string _sign;
 
     public string Sign
     {
-        get => sign;
-        set => SetProperty(ref sign, value);
+        get => _sign;
+        set => SetProperty(ref _sign, value);
     }
 
-    private string isFollowed;
+    private string _isFollowed;
 
     public string IsFollowed
     {
-        get => isFollowed;
-        set => SetProperty(ref isFollowed, value);
+        get => _isFollowed;
+        set => SetProperty(ref _isFollowed, value);
     }
 
-    private ObservableCollection<TabLeftBanner> tabLeftBanners;
+    private ObservableCollection<TabLeftBanner> _tabLeftBanners;
 
     public ObservableCollection<TabLeftBanner> TabLeftBanners
     {
-        get => tabLeftBanners;
-        set => SetProperty(ref tabLeftBanners, value);
+        get => _tabLeftBanners;
+        set => SetProperty(ref _tabLeftBanners, value);
     }
 
-    private ObservableCollection<TabRightBanner> tabRightBanners;
+    private ObservableCollection<TabRightBanner> _tabRightBanners;
 
     public ObservableCollection<TabRightBanner> TabRightBanners
     {
-        get => tabRightBanners;
-        set => SetProperty(ref tabRightBanners, value);
+        get => _tabRightBanners;
+        set => SetProperty(ref _tabRightBanners, value);
     }
 
-    private int selectedRightBanner;
+    private int _selectedRightBanner;
 
     public int SelectedRightBanner
     {
-        get => selectedRightBanner;
-        set => SetProperty(ref selectedRightBanner, value);
+        get => _selectedRightBanner;
+        set => SetProperty(ref _selectedRightBanner, value);
     }
 
     #endregion
@@ -184,7 +185,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
     public ViewUserSpaceViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(
         eventAggregator)
     {
-        this.regionManager = regionManager;
+        this._regionManager = regionManager;
 
         #region 属性初始化
 
@@ -206,17 +207,16 @@ public class ViewUserSpaceViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
     /// </summary>
     private void ExecuteBackSpace()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -226,12 +226,9 @@ public class ViewUserSpaceViewModel : ViewModelBase
     }
 
     // 左侧tab点击事件
-    private DelegateCommand<object> tabLeftBannersCommand;
+    private DelegateCommand<object>? _tabLeftBannersCommand;
 
-    public DelegateCommand<object> TabLeftBannersCommand => tabLeftBannersCommand ??
-                                                            (tabLeftBannersCommand =
-                                                                new DelegateCommand<object>(
-                                                                    ExecuteTabLeftBannersCommand));
+    public DelegateCommand<object> TabLeftBannersCommand => _tabLeftBannersCommand ??= new DelegateCommand<object>(ExecuteTabLeftBannersCommand);
 
     /// <summary>
     /// 左侧tab点击事件
@@ -239,12 +236,12 @@ public class ViewUserSpaceViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteTabLeftBannersCommand(object parameter)
     {
-        if (!(parameter is TabLeftBanner banner))
+        if (parameter is not TabLeftBanner banner)
         {
             return;
         }
 
-        NavigationParameters param = new NavigationParameters()
+        var param = new NavigationParameters
         {
             { "object", banner.Object },
             { "mid", mid },
@@ -253,25 +250,22 @@ public class ViewUserSpaceViewModel : ViewModelBase
         switch (banner.Id)
         {
             case 0: // 投稿
-                regionManager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
+                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
                 break;
             case 1: // 频道（弃用）
-                regionManager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
+                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
                 break;
             case 2: // 合集和列表
-                regionManager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
+                _regionManager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
                     param);
                 break;
         }
     }
 
     // 右侧tab点击事件
-    private DelegateCommand<object> tabRightBannersCommand;
+    private DelegateCommand<object>? _tabRightBannersCommand;
 
-    public DelegateCommand<object> TabRightBannersCommand => tabRightBannersCommand ??
-                                                             (tabRightBannersCommand =
-                                                                 new DelegateCommand<object>(
-                                                                     ExecuteTabRightBannersCommand));
+    public DelegateCommand<object> TabRightBannersCommand => _tabRightBannersCommand ??= new DelegateCommand<object>(ExecuteTabRightBannersCommand);
 
     /// <summary>
     /// 右侧tab点击事件
@@ -339,7 +333,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         SelectedRightBanner = -1;
 
         // 将内容置空，使其不指向任何页面
-        regionManager.RequestNavigate("UserSpaceContentRegion", "");
+        _regionManager.RequestNavigate("UserSpaceContentRegion", "");
 
         ContentVisibility = false;
         ViewVisibility = false;
@@ -352,20 +346,20 @@ public class ViewUserSpaceViewModel : ViewModelBase
     /// </summary>
     private async void UpdateSpaceInfo()
     {
-        bool isNoData = true;
-        Uri toutuUri = null;
-        string headerUri = null;
-        Uri sexUri = null;
-        Uri levelUri = null;
+        var isNoData = true;
+        Uri? toutuUri = null;
+        string? headerUri = null;
+        Uri? sexUri = null;
+        Uri? levelUri = null;
 
         await Task.Run(() =>
         {
             // 背景图片
-            SpaceSettings spaceSettings = Core.BiliApi.Users.UserSpace.GetSpaceSettings(mid);
+            var spaceSettings = Core.BiliApi.Users.UserSpace.GetSpaceSettings(mid);
             if (spaceSettings != null)
             {
-                StorageCover storageCover = new StorageCover();
-                string toutu = storageCover.GetCover($"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}");
+                var storageCover = new StorageCover();
+                var toutu = storageCover.GetCover($"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}");
                 toutuUri = new Uri(toutu);
             }
             else
@@ -374,28 +368,26 @@ public class ViewUserSpaceViewModel : ViewModelBase
             }
 
             // 用户信息
-            UserInfoForSpace userInfo = UserInfo.GetUserInfoForSpace(mid);
+            var userInfo = UserInfo.GetUserInfoForSpace(mid);
             if (userInfo != null)
             {
                 isNoData = false;
 
                 // 头像
-                StorageHeader storageHeader = new StorageHeader();
+                var storageHeader = new StorageHeader();
                 headerUri = storageHeader.GetHeader(mid, userInfo.Name, userInfo.Face);
                 // 用户名
                 UserName = userInfo.Name;
-                // 性别
-                if (userInfo.Sex == "男")
+                sexUri = userInfo.Sex switch
                 {
-                    sexUri = new Uri("avares://DownKyi/Resources/sex/male.png");
-                }
-                else if (userInfo.Sex == "女")
-                {
-                    sexUri = new Uri("avares://DownKyi/Resources/sex/female.png");
-                }
+                    // 性别
+                    "男" => new Uri("avares://DownKyi/Resources/sex/male.png"),
+                    "女" => new Uri("avares://DownKyi/Resources/sex/female.png"),
+                    _ => sexUri
+                };
 
                 // 显示vip信息
-                if (userInfo.Vip.Label.Text == null || userInfo.Vip.Label.Text == "")
+                if (userInfo.Vip?.Label?.Text is null or "")
                 {
                     VipTypeVisibility = false;
                 }
@@ -440,7 +432,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         else
         {
             // 头像
-            StorageHeader storageHeader = new StorageHeader();
+            var storageHeader = new StorageHeader();
             Header = storageHeader.GetHeaderThumbnail(headerUri, 64, 64);
             // 性别
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
@@ -459,7 +451,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         ContentVisibility = true;
 
         // 投稿视频
-        List<SpacePublicationListTypeVideoZone> publicationTypes = null;
+        List<SpacePublicationListTypeVideoZone>? publicationTypes = null;
         await Task.Run(() => { publicationTypes = Core.BiliApi.Users.UserSpace.GetPublicationType(mid); });
         if (publicationTypes != null && publicationTypes.Count > 0)
         {
@@ -493,9 +485,9 @@ public class ViewUserSpaceViewModel : ViewModelBase
         //}
 
         // 合集和列表
-        SpaceSeasonsSeries seasonsSeries = null;
+        SpaceSeasonsSeries? seasonsSeries = null;
         await Task.Run(() => { seasonsSeries = Core.BiliApi.Users.UserSpace.GetSeasonsSeries(mid, 1, 20); });
-        if (seasonsSeries != null && seasonsSeries.Page.Total > 0)
+        if (seasonsSeries is { Page.Total: > 0 })
         {
             TabLeftBanners.Add(new TabLeftBanner
             {
@@ -511,7 +503,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         // 订阅
 
         // 关系状态数
-        UserRelationStat relationStat = null;
+        UserRelationStat? relationStat = null;
         await Task.Run(() => { relationStat = UserStatus.GetUserRelationStat(mid); });
         if (relationStat != null)
         {
@@ -536,9 +528,9 @@ public class ViewUserSpaceViewModel : ViewModelBase
         }
 
         // UP主状态数，需要任意用户登录，否则不会返回任何数据
-        UpStat upStat = null;
+        UpStat? upStat = null;
         await Task.Run(() => { upStat = UserStatus.GetUpStat(mid); });
-        if (upStat != null && upStat.Archive != null && upStat.Article != null)
+        if (upStat is { Archive: not null, Article: not null })
         {
             TabRightBanners.Add(new TabRightBanner
             {
@@ -551,7 +543,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
             });
 
             long archiveView = 0;
-            if (upStat.Archive != null)
+            if (upStat?.Archive != null)
             {
                 archiveView = upStat.Archive.View;
             }
@@ -567,7 +559,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
             });
 
             long articleView = 0;
-            if (upStat.Article != null)
+            if (upStat?.Article != null)
             {
                 articleView = upStat.Article.View;
             }
@@ -593,7 +585,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 根据传入参数不同执行不同任务
-        long parameter = navigationContext.Parameters.GetValue<long>("Parameter");
+        var parameter = navigationContext.Parameters.GetValue<long>("Parameter");
         if (parameter == 0)
         {
             return;

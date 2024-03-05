@@ -15,22 +15,17 @@ public static class UserInfo
     /// 导航栏用户信息
     /// </summary>
     /// <returns></returns>
-    public static UserInfoForNavigation GetUserInfoForNavigation()
+    public static UserInfoForNavigation? GetUserInfoForNavigation()
     {
-        string url = "https://api.bilibili.com/x/web-interface/nav";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        const string url = "https://api.bilibili.com/x/web-interface/nav";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            UserInfoForNavigationOrigin userInfo =
-                JsonConvert.DeserializeObject<UserInfoForNavigationOrigin>(response);
-            if (userInfo == null || userInfo.Data == null)
-            {
-                return null;
-            }
+            var userInfo = JsonConvert.DeserializeObject<UserInfoForNavigationOrigin>(response);
 
-            return userInfo.Data;
+            return userInfo?.Data;
         }
         catch (Exception e)
         {
@@ -45,26 +40,22 @@ public static class UserInfo
     /// </summary>
     /// <param name="mid"></param>
     /// <returns></returns>
-    public static UserInfoForSpace GetUserInfoForSpace(long mid)
+    public static UserInfoForSpace? GetUserInfoForSpace(long mid)
     {
         var parameters = new Dictionary<string, object>
         {
             { "mid", mid }
         };
-        string query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
-        string url = $"https://api.bilibili.com/x/space/wbi/acc/info?{query}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
+        var url = $"https://api.bilibili.com/x/space/wbi/acc/info?{query}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer, needRandomBvuid3: true);
 
         try
         {
-            UserInfoForSpaceOrigin spaceInfo = JsonConvert.DeserializeObject<UserInfoForSpaceOrigin>(response);
-            if (spaceInfo == null || spaceInfo.Data == null)
-            {
-                return null;
-            }
+            var spaceInfo = JsonConvert.DeserializeObject<UserInfoForSpaceOrigin>(response);
 
-            return spaceInfo.Data;
+            return spaceInfo?.Data;
         }
         catch (Exception e)
         {
@@ -78,21 +69,17 @@ public static class UserInfo
     /// 本用户详细信息
     /// </summary>
     /// <returns></returns>
-    public static MyInfo GetMyInfo()
+    public static MyInfo? GetMyInfo()
     {
-        string url = "https://api.bilibili.com/x/space/myinfo";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        const string url = "https://api.bilibili.com/x/space/myinfo";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            MyInfoOrigin myInfo = JsonConvert.DeserializeObject<MyInfoOrigin>(response);
-            if (myInfo == null || myInfo.Data == null)
-            {
-                return null;
-            }
+            var myInfo = JsonConvert.DeserializeObject<MyInfoOrigin>(response);
 
-            return myInfo.Data;
+            return myInfo?.Data;
         }
         catch (Exception e)
         {

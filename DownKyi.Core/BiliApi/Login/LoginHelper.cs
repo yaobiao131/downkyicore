@@ -59,9 +59,9 @@ namespace DownKyi.Core.BiliApi.Login
         /// 获得登录的cookies
         /// </summary>
         /// <returns></returns>
-        public static CookieContainer GetLoginInfoCookies()
+        public static CookieContainer? GetLoginInfoCookies()
         {
-            string tempFile = LOCAL_LOGIN_INFO + "-" + Guid.NewGuid().ToString("N");
+            var tempFile = LOCAL_LOGIN_INFO + "-" + Guid.NewGuid().ToString("N");
 
             if (File.Exists(LOCAL_LOGIN_INFO))
             {

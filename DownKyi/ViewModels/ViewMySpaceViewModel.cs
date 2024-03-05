@@ -553,13 +553,13 @@ public class ViewMySpaceViewModel : ViewModelBase
             }
 
             // 我的用户信息
-            MyInfo myInfo = UserInfo.GetMyInfo();
+            var myInfo = UserInfo.GetMyInfo();
             if (myInfo != null)
             {
                 isNoData = false;
 
                 // 头像
-                StorageHeader storageHeader = new StorageHeader();
+                var storageHeader = new StorageHeader();
                 headerUri = storageHeader.GetHeader(mid, myInfo.Name, myInfo.Face);
                 // 用户名
                 UserName = myInfo.Name;
@@ -663,7 +663,7 @@ public class ViewMySpaceViewModel : ViewModelBase
         else
         {
             // 头像
-            StorageHeader storageHeader = new StorageHeader();
+            var storageHeader = new StorageHeader();
             Header = storageHeader.GetHeaderThumbnail(headerUri, 64, 64);
             // 性别
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
@@ -683,7 +683,7 @@ public class ViewMySpaceViewModel : ViewModelBase
         await Task.Run(() =>
         {
             // 导航栏信息
-            UserInfoForNavigation navData = UserInfo.GetUserInfoForNavigation();
+            var navData = UserInfo.GetUserInfoForNavigation();
             if (navData != null)
             {
                 ContentVisibility = true;
@@ -695,7 +695,7 @@ public class ViewMySpaceViewModel : ViewModelBase
             }
 
             //用户的关系状态数
-            UserRelationStat relationStat = UserStatus.GetUserRelationStat(mid);
+            var relationStat = UserStatus.GetUserRelationStat(mid);
             if (relationStat != null)
             {
                 // 关注数

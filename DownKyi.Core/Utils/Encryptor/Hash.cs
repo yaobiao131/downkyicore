@@ -10,25 +10,25 @@ public static class Hash
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    public static string GetMd5Hash(string input)
+    public static string GetMd5Hash(string? input)
     {
         if (input == null)
         {
             return null;
         }
 
-        MD5 md5Hash = MD5.Create();
+        var md5Hash = MD5.Create();
 
         // 将输入字符串转换为字节数组并计算哈希数据
-        byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+        var data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
 
         // 创建一个 Stringbuilder 来收集字节并创建字符串
-        StringBuilder sBuilder = new StringBuilder();
+        var sBuilder = new StringBuilder();
 
         // 循环遍历哈希数据的每一个字节并格式化为十六进制字符串
-        for (int i = 0; i < data.Length; i++)
+        foreach (var t in data)
         {
-            sBuilder.Append(data[i].ToString("x2"));
+            sBuilder.Append(t.ToString("x2"));
         }
 
         // 返回十六进制字符串
@@ -44,15 +44,15 @@ public static class Hash
     {
         try
         {
-            FileStream file = new FileStream(fileName, FileMode.Open);
+            var file = new FileStream(fileName, FileMode.Open);
             MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] retVal = md5.ComputeHash(file);
+            var retVal = md5.ComputeHash(file);
             file.Close();
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < retVal.Length; i++)
+            var sb = new StringBuilder();
+            foreach (var t in retVal)
             {
-                sb.Append(retVal[i].ToString("x2"));
+                sb.Append(t.ToString("x2"));
             }
 
             return sb.ToString();

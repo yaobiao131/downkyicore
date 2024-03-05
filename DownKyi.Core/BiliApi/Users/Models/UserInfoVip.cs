@@ -12,7 +12,7 @@ public class UserInfoVip : BaseModel
 
     // vip_pay_type
     // theme_type
-    [JsonProperty("label")] public UserInfoVipLabel Label { get; set; }
+    [JsonProperty("label")] public UserInfoVipLabel? Label { get; set; }
     [JsonProperty("avatar_subscript")] public int AvatarSubscript { get; set; }
 
     [JsonProperty("nickname_color")] public string NicknameColor { get; set; }

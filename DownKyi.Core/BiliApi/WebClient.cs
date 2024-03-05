@@ -9,6 +9,20 @@ namespace DownKyi.Core.BiliApi;
 
 internal static class WebClient
 {
+    private static string GetRandomBuvid3()
+    {
+        // 随机生成10位字符串
+        const string str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var random = new Random();
+        var result = new StringBuilder();
+        for (var i = 0; i < 10; i++)
+        {
+            result.Append(str[random.Next(str.Length)]);
+        }
+
+        return result.ToString();
+    }
+
     /// <summary>
     /// 发送get或post请求
     /// </summary>
@@ -16,9 +30,10 @@ internal static class WebClient
     /// <param name="referer"></param>
     /// <param name="method"></param>
     /// <param name="parameters"></param>
+    /// <param name="retry"></param>
     /// <returns></returns>
-    public static string RequestWeb(string url, string referer = null, string method = "GET",
-        Dictionary<string, string> parameters = null, int retry = 3)
+    public static string RequestWeb(string url, string? referer = null, string method = "GET",
+        Dictionary<string, string>? parameters = null, int retry = 3, bool needRandomBvuid3 = false)
     {
         // 重试次数
         if (retry <= 0)
@@ -29,25 +44,25 @@ internal static class WebClient
         // post请求，发送参数
         if (method == "POST" && parameters != null)
         {
-            StringBuilder builder = new StringBuilder();
-            int i = 0;
+            var builder = new StringBuilder();
+            var i = 0;
             foreach (var item in parameters)
             {
                 if (i > 0)
                 {
-                    builder.Append("&");
+                    builder.Append('&');
                 }
 
-                builder.AppendFormat("{0}={1}", item.Key, item.Value);
+                builder.Append($"{item.Key}={item.Value}");
                 i++;
             }
 
-            url += "?" + builder.ToString();
+            url += "?" + builder;
         }
 
         try
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method;
             request.Timeout = 30 * 1000;
 
@@ -68,58 +83,46 @@ internal static class WebClient
             {
                 request.Headers["origin"] = "https://m.bilibili.com";
 
-                CookieContainer cookies = LoginHelper.GetLoginInfoCookies();
+                var cookies = LoginHelper.GetLoginInfoCookies();
                 if (cookies != null)
                 {
                     request.CookieContainer = cookies;
                 }
-            }
-
-            string html = string.Empty;
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                if (response.ContentEncoding.ToLower().Contains("gzip"))
-                {
-                    using (GZipStream stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress))
-                    {
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            html = reader.ReadToEnd();
-                        }
-                    }
-                }
-                else if (response.ContentEncoding.ToLower().Contains("deflate"))
-                {
-                    using (DeflateStream stream =
-                           new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress))
-                    {
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            html = reader.ReadToEnd();
-                        }
-                    }
-                }
-                else if (response.ContentEncoding.ToLower().Contains("br"))
-                {
-                    using (BrotliStream stream =
-                           new BrotliStream(response.GetResponseStream(), CompressionMode.Decompress))
-                    {
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            html = reader.ReadToEnd();
-                        }
-                    }
-                }
                 else
                 {
-                    using (Stream stream = response.GetResponseStream())
+                    request.CookieContainer = new CookieContainer();
+                    if (needRandomBvuid3)
                     {
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            html = reader.ReadToEnd();
-                        }
+                        request.CookieContainer.Add(new Cookie("buvid3", GetRandomBuvid3(), "/", ".bilibili.com"));
                     }
                 }
+            }
+
+            var html = string.Empty;
+            using var response = (HttpWebResponse)request.GetResponse();
+            if (response.ContentEncoding.ToLower().Contains("gzip"))
+            {
+                using var stream = new GZipStream(response.GetResponseStream(), CompressionMode.Decompress);
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                html = reader.ReadToEnd();
+            }
+            else if (response.ContentEncoding.ToLower().Contains("deflate"))
+            {
+                using var stream = new DeflateStream(response.GetResponseStream(), CompressionMode.Decompress);
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                html = reader.ReadToEnd();
+            }
+            else if (response.ContentEncoding.ToLower().Contains("br"))
+            {
+                using var stream = new BrotliStream(response.GetResponseStream(), CompressionMode.Decompress);
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                html = reader.ReadToEnd();
+            }
+            else
+            {
+                using var stream = response.GetResponseStream();
+                using var reader = new StreamReader(stream, Encoding.UTF8);
+                html = reader.ReadToEnd();
             }
 
             return html;

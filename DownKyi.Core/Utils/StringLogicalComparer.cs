@@ -8,19 +8,19 @@ public class StringLogicalComparer<T> : IComparer<T>
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    public int Compare(T x, T y)
+    public int Compare(T? x, T? y)
     {
         if (x == null || y == null)
         {
             throw new ArgumentException("Parameters can't be null");
         }
 
-        string fileA = x as string;
-        string fileB = y as string;
-        char[] arr1 = fileA.ToCharArray();
-        char[] arr2 = fileB.ToCharArray();
+        var fileA = x as string;
+        var fileB = y as string;
+        var arr1 = fileA?.ToCharArray();
+        var arr2 = fileB?.ToCharArray();
         int i = 0, j = 0;
-        while (i < arr1.Length && j < arr2.Length)
+        while (i < arr1?.Length && j < arr2?.Length)
         {
             if (char.IsDigit(arr1[i]) && char.IsDigit(arr2[j]))
             {
@@ -64,13 +64,11 @@ public class StringLogicalComparer<T> : IComparer<T>
             }
         }
 
-        if (arr1.Length == arr2.Length)
+        if (arr1?.Length == arr2?.Length)
         {
             return 0;
         }
-        else
-        {
-            return arr1.Length > arr2.Length ? 1 : -1;
-        }
+
+        return arr1?.Length > arr2?.Length ? 1 : -1;
     }
 }

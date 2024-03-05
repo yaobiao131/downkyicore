@@ -426,7 +426,7 @@ namespace DownKyi.ViewModels
 
             await Task.Run(() =>
             {
-                CancellationToken cancellationToken = tokenSource.Token;
+                var cancellationToken = tokenSource.Token;
 
                 var publications = Core.BiliApi.Users.UserSpace.GetPublication(mid, current, VideoNumberInPage, tab.Id);
                 if (publications == null)
@@ -449,7 +449,7 @@ namespace DownKyi.ViewModels
                 foreach (var video in videos)
                 {
                     // 查询、保存封面
-                    string coverUrl = video.Pic;
+                    var coverUrl = video.Pic;
                     Bitmap cover;
                     if (coverUrl == null || coverUrl == "")
                     {
@@ -462,12 +462,12 @@ namespace DownKyi.ViewModels
                             coverUrl = $"https:{video.Pic}";
                         }
 
-                        StorageCover storageCover = new StorageCover();
+                        var storageCover = new StorageCover();
                         cover = storageCover.GetCoverThumbnail(video.Aid, video.Bvid, -1, coverUrl, 200, 125);
                     }
 
                     // 播放数
-                    string play = string.Empty;
+                    var play = string.Empty;
                     if (video.Play > 0)
                     {
                         play = Format.FormatNumber(video.Play);
@@ -477,13 +477,13 @@ namespace DownKyi.ViewModels
                         play = "--";
                     }
 
-                    DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                    DateTime dateCTime = startTime.AddSeconds(video.Created);
-                    string ctime = dateCTime.ToString("yyyy-MM-dd");
+                    var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+                    var dateCTime = startTime.AddSeconds(video.Created);
+                    var ctime = dateCTime.ToString("yyyy-MM-dd");
 
                     App.PropertyChangeAsync(() =>
                     {
-                        PublicationMedia media = new PublicationMedia(EventAggregator)
+                        var media = new PublicationMedia(EventAggregator)
                         {
                             Avid = video.Aid,
                             Bvid = video.Bvid,

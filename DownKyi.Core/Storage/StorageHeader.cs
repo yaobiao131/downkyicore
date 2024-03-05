@@ -135,7 +135,7 @@ public class StorageHeader
         }
         else
         {
-            string md5 = DownloadImage(url);
+            var md5 = DownloadImage(url);
             if (md5 != null)
             {
                 Header newHeader = new Header

@@ -17,17 +17,16 @@ public static class UserSpace
     /// </summary>
     /// <param name="mid"></param>
     /// <returns></returns>
-    public static SpaceSettings GetSpaceSettings(long mid)
+    public static SpaceSettings? GetSpaceSettings(long mid)
     {
-        string url = $"https://space.bilibili.com/ajax/settings/getSettings?mid={mid}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://space.bilibili.com/ajax/settings/getSettings?mid={mid}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceSettingsOrigin settings = JsonConvert.DeserializeObject<SpaceSettingsOrigin>(response);
-            if (settings == null || settings.Data == null || !settings.Status) { return null; }
-            return settings.Data;
+            var settings = JsonConvert.DeserializeObject<SpaceSettingsOrigin>(response);
+            return settings is not { Status: true } ? null : settings.Data;
         }
         catch (Exception e)
         {
@@ -44,11 +43,11 @@ public static class UserSpace
     /// </summary>
     /// <param name="mid">用户id</param>
     /// <returns></returns>
-    public static List<SpacePublicationListTypeVideoZone> GetPublicationType(long mid)
+    public static List<SpacePublicationListTypeVideoZone?> GetPublicationType(long mid)
     {
-        int pn = 1;
-        int ps = 1;
-        SpacePublicationList publication = GetPublication(mid, pn, ps);
+        const int pn = 1;
+        const int ps = 1;
+        var publication = GetPublication(mid, pn, ps);
         return GetPublicationType(publication);
     }
 
@@ -57,18 +56,18 @@ public static class UserSpace
     /// </summary>
     /// <param name="mid">用户id</param>
     /// <returns></returns>
-    public static List<SpacePublicationListTypeVideoZone> GetPublicationType(SpacePublicationList publication)
+    public static List<SpacePublicationListTypeVideoZone?> GetPublicationType(SpacePublicationList? publication)
     {
-        if (publication == null || publication.Tlist == null)
+        if (publication?.Tlist == null)
         {
             return null;
         }
 
-        List<SpacePublicationListTypeVideoZone> result = new List<SpacePublicationListTypeVideoZone>();
-        JObject typeList = JObject.Parse(publication.Tlist.ToString("N"));
+        var result = new List<SpacePublicationListTypeVideoZone?>();
+        var typeList = JObject.Parse(publication.Tlist.ToString("N"));
         foreach (KeyValuePair<string, JToken> item in typeList)
         {
-            SpacePublicationListTypeVideoZone value = JsonConvert.DeserializeObject<SpacePublicationListTypeVideoZone>(item.Value.ToString());
+            var value = JsonConvert.DeserializeObject<SpacePublicationListTypeVideoZone>(item.Value.ToString());
             result.Add(value);
         }
         return result;
@@ -84,16 +83,16 @@ public static class UserSpace
     /// <returns></returns>
     public static List<SpacePublicationListVideo> GetAllPublication(long mid, int tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "")
     {
-        List<SpacePublicationListVideo> result = new List<SpacePublicationListVideo>();
+        var result = new List<SpacePublicationListVideo>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 100;
+            const int ps = 100;
 
-            SpacePublicationList data = GetPublication(mid, i, ps, tid, order, keyword);
-            if (data == null || data.Vlist == null || data.Vlist.Count == 0)
+            var data = GetPublication(mid, i, ps, tid, order, keyword);
+            if (data?.Vlist == null || data.Vlist.Count == 0)
             { break; }
 
             result.AddRange(data.Vlist);
@@ -112,7 +111,7 @@ public static class UserSpace
     /// <param name="tid">视频分区</param>
     /// <param name="keyword">搜索关键词</param>
     /// <returns></returns>
-    public static SpacePublicationList GetPublication(long mid, int pn, int ps, long tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "")
+    public static SpacePublicationList? GetPublication(long mid, int pn, int ps, long tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "")
     {
         var parameters = new Dictionary<string, object>
         {
@@ -123,15 +122,15 @@ public static class UserSpace
             { "tid", tid },
             { "keyword", keyword },
         };
-        string query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
-        string url = $"https://api.bilibili.com/x/space/wbi/arc/search?{query}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
+        var url = $"https://api.bilibili.com/x/space/wbi/arc/search?{query}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
             // 忽略play的值为“--”时的类型错误
-            JsonSerializerSettings settings = new JsonSerializerSettings
+            var settings = new JsonSerializerSettings
             {
                 Error = (sender, args) =>
                 {
@@ -143,9 +142,8 @@ public static class UserSpace
                 }
             };
 
-            SpacePublicationOrigin spacePublication = JsonConvert.DeserializeObject<SpacePublicationOrigin>(response, settings);
-            if (spacePublication == null || spacePublication.Data == null) { return null; }
-            return spacePublication.Data.List;
+            var spacePublication = JsonConvert.DeserializeObject<SpacePublicationOrigin>(response, settings);
+            return spacePublication?.Data?.List;
         }
         catch (Exception e)
         {
@@ -164,17 +162,16 @@ public static class UserSpace
     /// </summary>
     /// <param name="mid">用户id</param>
     /// <returns></returns>
-    public static List<SpaceChannelList> GetChannelList(long mid)
+    public static List<SpaceChannelList>? GetChannelList(long mid)
     {
-        string url = $"https://api.bilibili.com/x/space/channel/list?mid={mid}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/space/channel/list?mid={mid}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceChannelOrigin spaceChannel = JsonConvert.DeserializeObject<SpaceChannelOrigin>(response);
-            if (spaceChannel == null || spaceChannel.Data == null) { return null; }
-            return spaceChannel.Data.List;
+            var spaceChannel = JsonConvert.DeserializeObject<SpaceChannelOrigin>(response);
+            return spaceChannel?.Data.List;
         }
         catch (Exception e)
         {
@@ -190,18 +187,18 @@ public static class UserSpace
     /// <param name="mid"></param>
     /// <param name="cid"></param>
     /// <returns></returns>
-    public static List<SpaceChannelArchive> GetAllChannelVideoList(long mid, long cid)
+    public static List<SpaceChannelArchive?> GetAllChannelVideoList(long mid, long cid)
     {
-        List<SpaceChannelArchive> result = new List<SpaceChannelArchive>();
+        var result = new List<SpaceChannelArchive?>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 100;
+            const int ps = 100;
 
-            List<SpaceChannelArchive> data = GetChannelVideoList(mid, cid, i, ps);
-            if (data == null || data.Count == 0)
+            var data = GetChannelVideoList(mid, cid, i, ps);
+            if (data?.Count == 0)
             { break; }
 
             result.AddRange(data);
@@ -217,18 +214,16 @@ public static class UserSpace
     /// <param name="pn"></param>
     /// <param name="ps"></param>
     /// <returns></returns>
-    public static List<SpaceChannelArchive> GetChannelVideoList(long mid, long cid, int pn, int ps)
+    public static List<SpaceChannelArchive>? GetChannelVideoList(long mid, long cid, int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/x/space/channel/video?mid={mid}&cid={cid}&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/space/channel/video?mid={mid}&cid={cid}&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceChannelVideoOrigin spaceChannelVideo = JsonConvert.DeserializeObject<SpaceChannelVideoOrigin>(response);
-            if (spaceChannelVideo == null || spaceChannelVideo.Data == null || spaceChannelVideo.Data.List == null)
-            { return null; }
-            return spaceChannelVideo.Data.List.Archives;
+            var spaceChannelVideo = JsonConvert.DeserializeObject<SpaceChannelVideoOrigin>(response);
+            return spaceChannelVideo?.Data.List.Archives;
         }
         catch (Exception e)
         {
@@ -249,19 +244,17 @@ public static class UserSpace
     /// <param name="pageNum">第几页</param>
     /// <param name="pageSize">每页的数量；最大值为20</param>
     /// <returns></returns>
-    public static SpaceSeasonsSeries GetSeasonsSeries(long mid, int pageNum, int pageSize)
+    public static SpaceSeasonsSeries? GetSeasonsSeries(long mid, int pageNum, int pageSize)
     {
         // https://api.bilibili.com/x/polymer/space/seasons_series_list?mid=49246269&page_num=1&page_size=18
-        string url = $"https://api.bilibili.com/x/polymer/space/seasons_series_list?mid={mid}&page_num={pageNum}&page_size={pageSize}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/polymer/space/seasons_series_list?mid={mid}&page_num={pageNum}&page_size={pageSize}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceSeasonsSeriesOrigin origin = JsonConvert.DeserializeObject<SpaceSeasonsSeriesOrigin>(response);
-            if (origin == null || origin.Data == null || origin.Data.ItemsLists == null)
-            { return null; }
-            return origin.Data.ItemsLists;
+            var origin = JsonConvert.DeserializeObject<SpaceSeasonsSeriesOrigin>(response);
+            return origin?.Data.ItemsLists;
         }
         catch (Exception e)
         {
@@ -278,19 +271,17 @@ public static class UserSpace
     /// <param name="seasonId"></param>
     /// <param name="pageNum"></param>
     /// <param name="pageSize"></param>
-    public static SpaceSeasonsDetail GetSeasonsDetail(long mid, long seasonId, int pageNum, int pageSize)
+    public static SpaceSeasonsDetail? GetSeasonsDetail(long mid, long seasonId, int pageNum, int pageSize)
     {
         // https://api.bilibili.com/x/polymer/space/seasons_archives_list?mid=23947287&season_id=665&sort_reverse=false&page_num=1&page_size=30
-        string url = $"https://api.bilibili.com/x/polymer/space/seasons_archives_list?mid={mid}&season_id={seasonId}&page_num={pageNum}&page_size={pageSize}&sort_reverse=false";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/polymer/space/seasons_archives_list?mid={mid}&season_id={seasonId}&page_num={pageNum}&page_size={pageSize}&sort_reverse=false";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceSeasonsDetailOrigin origin = JsonConvert.DeserializeObject<SpaceSeasonsDetailOrigin>(response);
-            if (origin == null || origin.Data == null)
-            { return null; }
-            return origin.Data;
+            var origin = JsonConvert.DeserializeObject<SpaceSeasonsDetailOrigin>(response);
+            return origin?.Data;
         }
         catch (Exception e)
         {
@@ -305,19 +296,17 @@ public static class UserSpace
     /// </summary>
     /// <param name="seriesId"></param>
     /// <returns></returns>
-    public static SpaceSeriesMetaData GetSeriesMeta(long seriesId)
+    public static SpaceSeriesMetaData? GetSeriesMeta(long seriesId)
     {
         // https://api.bilibili.com/x/series/series?series_id=1253087
-        string url = $"https://api.bilibili.com/x/series/series?series_id={seriesId}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/series/series?series_id={seriesId}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceSeriesMetaOrigin origin = JsonConvert.DeserializeObject<SpaceSeriesMetaOrigin>(response);
-            if (origin == null || origin.Data == null)
-            { return null; }
-            return origin.Data;
+            var origin = JsonConvert.DeserializeObject<SpaceSeriesMetaOrigin>(response);
+            return origin?.Data;
         }
         catch (Exception e)
         {
@@ -335,20 +324,18 @@ public static class UserSpace
     /// <param name="pn"></param>
     /// <param name="ps"></param>
     /// <returns></returns>
-    public static SpaceSeriesDetail GetSeriesDetail(long mid, long seriesId, int pn, int ps)
+    public static SpaceSeriesDetail? GetSeriesDetail(long mid, long seriesId, int pn, int ps)
     {
         // https://api.bilibili.com/x/series/archives?mid=27899754&series_id=1253087&only_normal=true&sort=desc&pn=1&ps=30
 
-        string url = $"https://api.bilibili.com/x/series/archives?mid={mid}&series_id={seriesId}&only_normal=true&sort=desc&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/series/archives?mid={mid}&series_id={seriesId}&only_normal=true&sort=desc&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceSeriesDetailOrigin origin = JsonConvert.DeserializeObject<SpaceSeriesDetailOrigin>(response);
-            if (origin == null || origin.Data == null)
-            { return null; }
-            return origin.Data;
+            var origin = JsonConvert.DeserializeObject<SpaceSeriesDetailOrigin>(response);
+            return origin?.Data;
         }
         catch (Exception e)
         {
@@ -368,18 +355,16 @@ public static class UserSpace
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static List<SpaceCheese> GetCheese(long mid, int pn, int ps)
+    public static List<SpaceCheese>? GetCheese(long mid, int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/pugv/app/web/season/page?mid={mid}&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/pugv/app/web/season/page?mid={mid}&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            SpaceCheeseOrigin cheese = JsonConvert.DeserializeObject<SpaceCheeseOrigin>(response);
-            if (cheese == null || cheese.Data == null || cheese.Data.Items == null)
-            { return null; }
-            return cheese.Data.Items;
+            var cheese = JsonConvert.DeserializeObject<SpaceCheeseOrigin>(response);
+            return cheese?.Data.Items;
         }
         catch (Exception e)
         {
@@ -396,15 +381,15 @@ public static class UserSpace
     /// <returns></returns>
     public static List<SpaceCheese> GetAllCheese(long mid)
     {
-        List<SpaceCheese> result = new List<SpaceCheese>();
+        var result = new List<SpaceCheese>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 50;
+            var ps = 50;
 
-            List<SpaceCheese> data = GetCheese(mid, i, ps);
+            var data = GetCheese(mid, i, ps);
             if (data == null || data.Count == 0)
             { break; }
 
@@ -425,18 +410,16 @@ public static class UserSpace
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static BangumiFollowData GetBangumiFollow(long mid, BangumiType type, int pn, int ps)
+    public static BangumiFollowData? GetBangumiFollow(long mid, BangumiType type, int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/x/space/bangumi/follow/list?vmid={mid}&type={type:D}&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/space/bangumi/follow/list?vmid={mid}&type={type:D}&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            BangumiFollowOrigin bangumiFollow = JsonConvert.DeserializeObject<BangumiFollowOrigin>(response);
-            if (bangumiFollow == null || bangumiFollow.Data == null)
-            { return null; }
-            return bangumiFollow.Data;
+            var bangumiFollow = JsonConvert.DeserializeObject<BangumiFollowOrigin>(response);
+            return bangumiFollow?.Data;
         }
         catch (Exception e)
         {
@@ -454,16 +437,16 @@ public static class UserSpace
     /// <returns></returns>
     public static List<BangumiFollow> GetAllBangumiFollow(long mid, BangumiType type)
     {
-        List<BangumiFollow> result = new List<BangumiFollow>();
+        var result = new List<BangumiFollow>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 30;
+            const int ps = 30;
 
-            BangumiFollowData data = GetBangumiFollow(mid, type, i, ps);
-            if (data == null || data.List == null || data.List.Count == 0)
+            var data = GetBangumiFollow(mid, type, i, ps);
+            if (data?.List == null || data.List.Count == 0)
             { break; }
 
             result.AddRange(data.List);

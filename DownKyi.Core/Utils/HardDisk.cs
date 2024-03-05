@@ -17,9 +17,9 @@ public static class HardDisk
         try
         {
             hardDiskName = $"{hardDiskName}:\\";
-            DriveInfo[] drives = DriveInfo.GetDrives();
+            var drives = DriveInfo.GetDrives();
 
-            foreach (DriveInfo drive in drives)
+            foreach (var drive in drives)
             {
                 if (drive.Name == hardDiskName)
                 {
@@ -70,7 +70,7 @@ public static class HardDisk
         long freeSpace = 0;
         try
         {
-            DriveInfo driveInfo = new DriveInfo(path);
+            var driveInfo = new DriveInfo(path);
             // hardDiskName = $"{path}:\\";
             freeSpace = driveInfo.TotalFreeSpace;
         }

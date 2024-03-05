@@ -49,12 +49,12 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
 
-    private VectorImage textLogo;
+    private VectorImage _textLogo;
 
     public VectorImage TextLogo
     {
-        get => textLogo;
-        set => SetProperty(ref textLogo, value);
+        get => _textLogo;
+        set => SetProperty(ref _textLogo, value);
     }
 
     private string _inputText;
@@ -122,8 +122,8 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
     // 输入确认事件
-    public DelegateCommand<object> inputCommand;
-    public DelegateCommand<object> InputCommand => inputCommand ?? (inputCommand = new DelegateCommand<object>(ExecuteInput));
+    private DelegateCommand<object>? _inputCommand;
+    public DelegateCommand<object> InputCommand => _inputCommand ??= new DelegateCommand<object>(ExecuteInput);
 
     /// <summary>
     /// 处理输入事件
@@ -159,10 +159,9 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
     // 进入设置页面
-    private DelegateCommand settingsCommand;
+    private DelegateCommand? _settingsCommand;
 
-    public DelegateCommand SettingsCommand =>
-        settingsCommand ?? (settingsCommand = new DelegateCommand(ExecuteSettingsCommand));
+    public DelegateCommand SettingsCommand => _settingsCommand ??= new DelegateCommand(ExecuteSettingsCommand);
 
     /// <summary>
     /// 进入设置页面
@@ -173,11 +172,9 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
     // 进入下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 进入下载管理页面
@@ -187,11 +184,10 @@ public class ViewIndexViewModel : ViewModelBase
         NavigateToView.NavigationView(EventAggregator, ViewDownloadManagerViewModel.Tag, Tag, null);
     }
 
-// 进入工具箱页面
-    private DelegateCommand toolboxCommand;
+    // 进入工具箱页面
+    private DelegateCommand? _toolboxCommand;
 
-    public DelegateCommand ToolboxCommand =>
-        toolboxCommand ?? (toolboxCommand = new DelegateCommand(ExecuteToolboxCommand));
+    public DelegateCommand ToolboxCommand => _toolboxCommand ??= new DelegateCommand(ExecuteToolboxCommand);
 
     /// <summary>
     /// 进入工具箱页面
@@ -216,8 +212,8 @@ public class ViewIndexViewModel : ViewModelBase
 
         LogManager.Debug(Tag, $"InputText: {InputText}");
         InputText = Regex.Replace(InputText, @"[【]*[^【]*[^】]*[】 ]", "");
-        SearchService searchService = new SearchService();
-        bool isSupport = searchService.BiliInput(InputText, Tag, EventAggregator);
+        var searchService = new SearchService();
+        var isSupport = searchService.BiliInput(InputText, Tag, EventAggregator);
         if (!isSupport)
         {
             // 关键词搜索
@@ -228,9 +224,9 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
 
-    private async Task<UserInfoForNavigation> GetUserInfo()
+    private async Task<UserInfoForNavigation?> GetUserInfo()
     {
-        UserInfoForNavigation userInfo = null;
+        UserInfoForNavigation? userInfo = null;
         await Task.Run(() =>
         {
             // 获取用户信息
@@ -327,7 +323,7 @@ public class ViewIndexViewModel : ViewModelBase
         DownloadManager.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 根据传入参数不同执行不同任务
-        string parameter = navigationContext.Parameters.GetValue<string>("Parameter");
+        var parameter = navigationContext.Parameters.GetValue<string>("Parameter");
         if (parameter == null)
         {
             // 其他情况只更新设置的用户信息，不更新UI

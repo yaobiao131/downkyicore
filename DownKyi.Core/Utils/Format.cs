@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace DownKyi.Core.Utils;
+﻿namespace DownKyi.Core.Utils;
 
 public static class Format
 {
@@ -14,15 +12,8 @@ public static class Format
         string formatDuration;
         if (duration / 60 > 0)
         {
-            long dur = duration / 60;
-            if (dur / 60 > 0)
-            {
-                formatDuration = $"{dur / 60}h{dur % 60}m{duration % 60}s";
-            }
-            else
-            {
-                formatDuration = $"{duration / 60}m{duration % 60}s";
-            }
+            var dur = duration / 60;
+            formatDuration = dur / 60 > 0 ? $"{dur / 60}h{dur % 60}m{duration % 60}s" : $"{duration / 60}m{duration % 60}s";
         }
         else
         {
@@ -42,21 +33,12 @@ public static class Format
         string formatDuration;
         if (duration / 60 > 0)
         {
-            long dur = duration / 60;
-            if (dur / 60 > 0)
-            {
-                formatDuration = string.Format("{0:D2}", dur / 60) + ":" + string.Format("{0:D2}", dur % 60) + ":" +
-                                 string.Format("{0:D2}", duration % 60);
-            }
-            else
-            {
-                formatDuration = "00:" + string.Format("{0:D2}", duration / 60) + ":" +
-                                 string.Format("{0:D2}", duration % 60);
-            }
+            var dur = duration / 60;
+            formatDuration = dur / 60 > 0 ? $"{dur / 60:D2}:{dur % 60:D2}:{duration % 60:D2}" : $"00:{duration / 60:D2}:{duration % 60:D2}";
         }
         else
         {
-            formatDuration = "00:00:" + string.Format("{0:D2}", duration);
+            formatDuration = $"00:00:{duration:D2}";
         }
 
         return formatDuration;
@@ -72,20 +54,12 @@ public static class Format
         string formatDuration;
         if (duration / 60 > 0)
         {
-            long dur = duration / 60;
-            if (dur / 60 > 0)
-            {
-                formatDuration = string.Format("{0:D2}", dur / 60) + ":" + string.Format("{0:D2}", dur % 60) + ":" +
-                                 string.Format("{0:D2}", duration % 60);
-            }
-            else
-            {
-                formatDuration = string.Format("{0:D2}", duration / 60) + ":" + string.Format("{0:D2}", duration % 60);
-            }
+            var dur = duration / 60;
+            formatDuration = dur / 60 > 0 ? $"{dur / 60:D2}:{dur % 60:D2}:{duration % 60:D2}" : $"{duration / 60:D2}:{duration % 60:D2}";
         }
         else
         {
-            formatDuration = "00:" + string.Format("{0:D2}", duration);
+            formatDuration = $"00:{duration:D2}";
         }
 
         return formatDuration;
@@ -98,19 +72,12 @@ public static class Format
     /// <returns></returns>
     public static string FormatNumber(long number)
     {
-        if (number > 99999999)
+        return number switch
         {
-            return (number / 100000000.0f).ToString("F1") + "亿";
-        }
-
-        if (number > 9999)
-        {
-            return (number / 10000.0f).ToString("F1") + "万";
-        }
-        else
-        {
-            return number.ToString();
-        }
+            > 99999999 => (number / 100000000.0f).ToString("F1") + "亿",
+            > 9999 => (number / 10000.0f).ToString("F1") + "万",
+            _ => number.ToString()
+        };
     }
 
     /// <summary>
@@ -120,23 +87,13 @@ public static class Format
     /// <returns></returns>
     public static string FormatSpeed(float speed)
     {
-        string formatSpeed;
-        if (speed <= 0)
+        string formatSpeed = speed switch
         {
-            formatSpeed = "0B/s";
-        }
-        else if (speed < 1024)
-        {
-            formatSpeed = string.Format("{0:F2}", speed) + "B/s";
-        }
-        else if (speed < 1024 * 1024)
-        {
-            formatSpeed = string.Format("{0:F2}", speed / 1024) + "KB/s";
-        }
-        else
-        {
-            formatSpeed = string.Format("{0:F2}", speed / 1024 / 1024) + "MB/s";
-        }
+            <= 0 => "0B/s",
+            < 1024 => $"{speed:F2}B/s",
+            < 1024 * 1024 => $"{speed / 1024:F2}KB/s",
+            _ => $"{speed / 1024 / 1024:F2}MB/s"
+        };
 
         return formatSpeed;
     }
@@ -148,27 +105,14 @@ public static class Format
     /// <returns></returns>
     public static string FormatFileSize(long fileSize)
     {
-        string formatFileSize;
-        if (fileSize <= 0)
+        string formatFileSize = fileSize switch
         {
-            formatFileSize = "0B";
-        }
-        else if (fileSize < 1024)
-        {
-            formatFileSize = fileSize.ToString() + "B";
-        }
-        else if (fileSize < 1024 * 1024)
-        {
-            formatFileSize = (fileSize / 1024.0).ToString("#.##") + "KB";
-        }
-        else if (fileSize < 1024 * 1024 * 1024)
-        {
-            formatFileSize = (fileSize / 1024.0 / 1024.0).ToString("#.##") + "MB";
-        }
-        else
-        {
-            formatFileSize = (fileSize / 1024.0 / 1024.0 / 1024.0).ToString("#.##") + "GB";
-        }
+            <= 0 => "0B",
+            < 1024 => fileSize.ToString() + "B",
+            < 1024 * 1024 => (fileSize / 1024.0).ToString("#.##") + "KB",
+            < 1024 * 1024 * 1024 => (fileSize / 1024.0 / 1024.0).ToString("#.##") + "MB",
+            _ => (fileSize / 1024.0 / 1024.0 / 1024.0).ToString("#.##") + "GB"
+        };
 
         return formatFileSize;
     }
@@ -204,8 +148,8 @@ public static class Format
         destName = Path.GetInvalidFileNameChars().Aggregate(destName, (current, c) => current.Replace(c.ToString(), string.Empty));
 
         // 控制字符
-        
-        
+
+
         // 移除前导和尾部的空白字符、dot符
         destName = destName.Trim();
         destName = destName.Trim('.');

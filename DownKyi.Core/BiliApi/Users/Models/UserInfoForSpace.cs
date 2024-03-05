@@ -12,7 +12,7 @@ public class UserInfoForSpaceOrigin : BaseModel
     //public string Message { get; set; }
     //[JsonProperty("ttl")]
     //public int Ttl { get; set; }
-    [JsonProperty("data")] public UserInfoForSpace Data { get; set; }
+    [JsonProperty("data")] public UserInfoForSpace? Data { get; set; }
 }
 
 public class UserInfoForSpace : BaseModel
@@ -37,7 +37,7 @@ public class UserInfoForSpace : BaseModel
     //public bool FansBadge { get; set; }
     // fans_medal
     // official
-    [JsonProperty("vip")] public UserInfoVip Vip { get; set; }
+    [JsonProperty("vip")] public UserInfoVip? Vip { get; set; }
 
     // pendant
     // nameplate

@@ -16,40 +16,40 @@ public static class ObjectHelper
     /// <returns></returns>
     public static CookieContainer ParseCookie(string url)
     {
-        CookieContainer cookieContainer = new CookieContainer();
+        var cookieContainer = new CookieContainer();
 
-        if (url == null || url == "")
+        if (url is null or "")
         {
             return cookieContainer;
         }
 
-        string[] strList = url.Split('?');
-        if (strList.Count() < 2)
+        var strList = url.Split('?');
+        if (strList.Length < 2)
         {
             return cookieContainer;
         }
 
-        string[] strList2 = strList[1].Split('&');
-        if (strList2.Count() == 0)
+        var strList2 = strList[1].Split('&');
+        if (strList2.Length == 0)
         {
             return cookieContainer;
         }
 
         // 获取expires
-        string expires = strList2.FirstOrDefault(it => it.Contains("Expires")).Split('=')[1];
-        DateTime dateTime = DateTime.Now;
+        var expires = strList2.FirstOrDefault(it => it.Contains("Expires")).Split('=')[1];
+        var dateTime = DateTime.Now;
         dateTime = dateTime.AddSeconds(int.Parse(expires));
 
         foreach (var item in strList2)
         {
-            string[] strList3 = item.Split('=');
-            if (strList3.Count() < 2)
+            var strList3 = item.Split('=');
+            if (strList3.Length < 2)
             {
                 continue;
             }
 
-            string name = strList3[0];
-            string value = strList3[1];
+            var name = strList3[0];
+            var value = strList3[1];
 
             // 不需要
             if (name == "Expires" || name == "gourl")
@@ -73,15 +73,15 @@ public static class ObjectHelper
     /// <returns></returns>
     public static List<Cookie> GetAllCookies(CookieContainer cc)
     {
-        List<Cookie> lstCookies = new List<Cookie>();
+        var lstCookies = new List<Cookie>();
 
-        Hashtable table = (Hashtable)cc.GetType().InvokeMember("m_domainTable",
+        var table = (Hashtable)cc.GetType().InvokeMember("m_domainTable",
             BindingFlags.NonPublic | BindingFlags.GetField |
             BindingFlags.Instance, null, cc, new object[] { });
 
-        foreach (object pathList in table.Values)
+        foreach (var pathList in table.Values)
         {
-            SortedList lstCookieCol = (SortedList)pathList.GetType().InvokeMember("m_list",
+            var lstCookieCol = (SortedList)pathList.GetType().InvokeMember("m_list",
                 BindingFlags.NonPublic | BindingFlags.GetField
                                        | BindingFlags.Instance, null, pathList,
                 new object[] { });
@@ -128,16 +128,14 @@ public static class ObjectHelper
     {
         try
         {
-            using (Stream stream = File.Create(file))
-            {
-                Console.PrintLine("Writing object to disk... ");
+            using Stream stream = File.Create(file);
+            Console.PrintLine("Writing object to disk... ");
 
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, obj);
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(stream, obj);
 
-                Console.PrintLine("Done.");
-                return true;
-            }
+            Console.PrintLine("Done.");
+            return true;
         }
         catch (IOException e)
         {
@@ -162,13 +160,11 @@ public static class ObjectHelper
     {
         try
         {
-            using (Stream stream = File.Open(file, FileMode.Open))
-            {
-                Console.PrintLine("Reading object from disk... ");
-                BinaryFormatter formatter = new BinaryFormatter();
-                Console.PrintLine("Done.");
-                return formatter.Deserialize(stream);
-            }
+            using Stream stream = File.Open(file, FileMode.Open);
+            Console.PrintLine("Reading object from disk... ");
+            var formatter = new BinaryFormatter();
+            Console.PrintLine("Done.");
+            return formatter.Deserialize(stream);
         }
         catch (IOException e)
         {
