@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -45,13 +46,19 @@ public partial class App : PrismApplication
 
     public override void Initialize()
     {
+        var mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
+        if (!createdNew)
+        {
+            Environment.Exit(0);
+        }
+
         AvaloniaXamlLoader.Load(this);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Exit += OnExit!;
             AppLife = desktop;
         }
-        
+
         base.Initialize();
     }
 
