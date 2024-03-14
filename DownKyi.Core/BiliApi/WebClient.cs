@@ -146,4 +146,33 @@ internal static class WebClient
             return RequestWeb(url, referer, method, parameters, retry - 1);
         }
     }
+
+    public static void DownloadFile(string url, string destFile, string? referer = null)
+    {
+        var handler = new HttpClientHandler();
+
+        var client = new HttpClient(handler);
+        client.Timeout = TimeSpan.FromSeconds(30);
+        client.DefaultRequestHeaders.Add("User-Agent", SettingsManager.GetInstance().GetUserAgent());
+
+        if (referer != null)
+        {
+            client.DefaultRequestHeaders.Add("Referer", referer);
+        }
+
+        if (!url.Contains("getLogin"))
+        {
+            client.DefaultRequestHeaders.Add("origin", "https://m.bilibili.com");
+            var cookies = LoginHelper.GetLoginInfoCookies();
+            if (cookies != null)
+            {
+                handler.CookieContainer = cookies;
+            }
+        }
+
+        var responseMessage = client.GetAsync(url).Result;
+        if (!responseMessage.IsSuccessStatusCode) return;
+        using var fs = File.Create(destFile);
+        responseMessage.Content.ReadAsStream().CopyTo(fs);
+    }
 }

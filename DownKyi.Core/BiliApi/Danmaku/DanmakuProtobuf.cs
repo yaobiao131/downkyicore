@@ -14,14 +14,13 @@ public static class DanmakuProtobuf
     /// <param name="cid">视频CID</param>
     /// <param name="segmentIndex">分包，每6分钟一包</param>
     /// <returns></returns>
-    public static List<BiliDanmaku> GetDanmakuProto(long avid, long cid, int segmentIndex)
+    private static List<BiliDanmaku>? GetDanmakuProto(long avid, long cid, int segmentIndex)
     {
-        string url =
-            $"https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid={cid}&pid={avid}&segment_index={segmentIndex}";
-        //string referer = "https://www.bilibili.com";
+        var url = $"https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid={cid}&pid={avid}&segment_index={segmentIndex}";
+        const string referer = "https://www.bilibili.com";
 
-        string directory = Path.Combine(StorageManager.GetDanmaku(), $"{cid}");
-        string filePath = Path.Combine(directory, $"{segmentIndex}.proto");
+        var directory = Path.Combine(StorageManager.GetDanmaku(), $"{cid}");
+        var filePath = Path.Combine(directory, $"{segmentIndex}.proto");
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
@@ -29,8 +28,7 @@ public static class DanmakuProtobuf
 
         try
         {
-            System.Net.WebClient mywebclient = new System.Net.WebClient();
-            mywebclient.DownloadFile(url, filePath);
+            WebClient.DownloadFile(url, filePath, referer);
         }
         catch (Exception e)
         {
@@ -41,33 +39,27 @@ public static class DanmakuProtobuf
         var danmakuList = new List<BiliDanmaku>();
         try
         {
-            using (var input = File.OpenRead(filePath))
+            using var input = File.OpenRead(filePath);
+            var danmakus = DmSegMobileReply.Parser.ParseFrom(input);
+            if (danmakus?.Elems == null)
             {
-                DmSegMobileReply danmakus = DmSegMobileReply.Parser.ParseFrom(input);
-                if (danmakus == null || danmakus.Elems == null)
-                {
-                    return danmakuList;
-                }
-
-                foreach (var dm in danmakus.Elems)
-                {
-                    var danmaku = new BiliDanmaku
-                    {
-                        Id = dm.Id,
-                        Progress = dm.Progress,
-                        Mode = dm.Mode,
-                        Fontsize = dm.Fontsize,
-                        Color = dm.Color,
-                        MidHash = dm.MidHash,
-                        Content = dm.Content,
-                        Ctime = dm.Ctime,
-                        Weight = dm.Weight,
-                        //Action = dm.Action,
-                        Pool = dm.Pool
-                    };
-                    danmakuList.Add(danmaku);
-                }
+                return danmakuList;
             }
+
+            danmakuList.AddRange(danmakus.Elems.Select(dm => new BiliDanmaku
+            {
+                Id = dm.Id,
+                Progress = dm.Progress,
+                Mode = dm.Mode,
+                Fontsize = dm.Fontsize,
+                Color = dm.Color,
+                MidHash = dm.MidHash,
+                Content = dm.Content,
+                Ctime = dm.Ctime,
+                Weight = dm.Weight,
+                //Action = dm.Action,
+                Pool = dm.Pool
+            }));
         }
         catch (Exception e)
         {
@@ -89,7 +81,7 @@ public static class DanmakuProtobuf
     {
         var danmakuList = new List<BiliDanmaku>();
 
-        int segmentIndex = 0;
+        var segmentIndex = 0;
         while (true)
         {
             segmentIndex += 1;
