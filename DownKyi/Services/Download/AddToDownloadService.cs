@@ -100,10 +100,7 @@ public class AddToDownloadService
         {
             foreach (var item in section.VideoPages)
             {
-                if (selectedVideo.Contains(item.Order))
-                {
-                    item.IsSelected = true;
-                }
+                item.IsSelected = selectedVideo.Contains(item.Order);
             }
         }
     }

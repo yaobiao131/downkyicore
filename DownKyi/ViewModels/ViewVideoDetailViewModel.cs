@@ -87,9 +87,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         set => SetProperty(ref _downloadManage, value);
     }
 
-    private VideoInfoView _videoInfoView;
+    private VideoInfoView? _videoInfoView;
 
-    public VideoInfoView VideoInfoView
+    public VideoInfoView? VideoInfoView
     {
         get => _videoInfoView;
         set => SetProperty(ref _videoInfoView, value);
@@ -291,8 +291,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 复制封面事件
     private DelegateCommand? _copyCoverCommand;
 
-    public DelegateCommand CopyCoverCommand =>
-        _copyCoverCommand ??= new DelegateCommand(ExecuteCopyCoverCommand);
+    public DelegateCommand CopyCoverCommand => _copyCoverCommand ??= new DelegateCommand(ExecuteCopyCoverCommand);
 
     /// <summary>
     /// 复制封面事件
@@ -307,8 +306,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 复制封面URL事件
     private DelegateCommand? _copyCoverUrlCommand;
 
-    public DelegateCommand CopyCoverUrlCommand =>
-        _copyCoverUrlCommand ??= new DelegateCommand(ExecuteCopyCoverUrlCommand);
+    public DelegateCommand CopyCoverUrlCommand => _copyCoverUrlCommand ??= new DelegateCommand(ExecuteCopyCoverUrlCommand);
 
     /// <summary>
     /// 复制封面URL事件
@@ -349,15 +347,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             return;
         }
 
-        var isSelectAll = true;
-        foreach (var page in section.VideoPages)
-        {
-            if (!page.IsSelected)
-            {
-                isSelectAll = false;
-                break;
-            }
-        }
+        var isSelectAll = section.VideoPages.All(page => page.IsSelected);
 
         IsSelectAll = section.VideoPages.Count != 0 && isSelectAll;
     }
@@ -365,8 +355,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 // 视频page选择事件
     private DelegateCommand<IList>? _videoPagesCommand;
 
-    public DelegateCommand<IList> VideoPagesCommand =>
-        _videoPagesCommand ??= new DelegateCommand<IList>(ExecuteVideoPagesCommand);
+    public DelegateCommand<IList> VideoPagesCommand => _videoPagesCommand ??= new DelegateCommand<IList>(ExecuteVideoPagesCommand);
 
     /// <summary>
     /// 视频page选择事件
@@ -398,8 +387,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // Ctrl+A 全选事件
     private DelegateCommand<object>? _keySelectAllCommand;
 
-    public DelegateCommand<object> KeySelectAllCommand =>
-        _keySelectAllCommand ??= new DelegateCommand<object>(ExecuteKeySelectAllCommand);
+    public DelegateCommand<object> KeySelectAllCommand => _keySelectAllCommand ??= new DelegateCommand<object>(ExecuteKeySelectAllCommand);
 
     /// <summary>
     /// Ctrl+A 全选事件
@@ -447,8 +435,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 解析视频流事件
     private DelegateCommand<object>? _parseCommand;
 
-    public DelegateCommand<object> ParseCommand => _parseCommand ??= new DelegateCommand<object>(ExecuteParseCommand,
-        CanExecuteParseCommand);
+    public DelegateCommand<object> ParseCommand => _parseCommand ??= new DelegateCommand<object>(ExecuteParseCommand, CanExecuteParseCommand);
 
     /// <summary>
     /// 解析视频流事件
@@ -497,8 +484,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 解析所有视频流事件
     private DelegateCommand? _parseAllVideoCommand;
 
-    public DelegateCommand ParseAllVideoCommand => _parseAllVideoCommand ??=
-        new DelegateCommand(ExecuteParseAllVideoCommand, CanExecuteParseAllVideoCommand);
+    public DelegateCommand ParseAllVideoCommand => _parseAllVideoCommand ??= new DelegateCommand(ExecuteParseAllVideoCommand, CanExecuteParseAllVideoCommand);
 
     /// <summary>
     /// 解析所有视频流事件
@@ -506,7 +492,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private async void ExecuteParseAllVideoCommand()
     {
         // 解析范围
-        ParseScope parseScope = SettingsManager.GetInstance().GetParseScope();
+        var parseScope = SettingsManager.GetInstance().GetParseScope();
 
         // 是否选择了解析范围
         if (parseScope == ParseScope.NONE)
@@ -514,12 +500,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
             //打开解析选择器
             await DialogService?.ShowDialogAsync(ViewParsingSelectorViewModel.Tag, null, async result =>
             {
-                if (result.Result == ButtonResult.OK)
-                {
-                    // 选择的解析范围
-                    parseScope = result.Parameters.GetValue<ParseScope>("parseScope");
-                    await ExecuteParse(parseScope);
-                }
+                if (result.Result != ButtonResult.OK) return;
+                // 选择的解析范围
+                parseScope = result.Parameters.GetValue<ParseScope>("parseScope");
+                await ExecuteParse(parseScope);
             });
         }
         else
@@ -621,8 +605,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 添加到下载列表事件
     private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??=
-        new DelegateCommand(ExecuteAddToDownloadCommand, CanExecuteAddToDownloadCommand);
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand, CanExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加到下载列表事件
@@ -663,8 +646,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <param name="input"></param>
     /// <param name="page"></param>
     /// <param name="refresh"></param>
-    private void UnityUpdateView(Action<IInfoService, VideoPage> action, string input, VideoPage page,
-        bool refresh = false)
+    private void UnityUpdateView(Action<IInfoService, VideoPage> action, string input, VideoPage page, bool refresh = false)
     {
         if (_infoService == null || refresh)
         {
@@ -815,8 +797,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         await Task.Run(async () =>
         {
             // 传递video对象
-            addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList(),
-                selectedVideoPages.Select(video => video.Order).ToList());
+            addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList(), selectedVideoPages.Select(video => video.Order).ToList());
             // 下载
             i = await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory, isAll);
         });
