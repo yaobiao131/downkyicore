@@ -18,7 +18,7 @@
                   IsVisible="{Binding LoginPanelVisibility}" ColumnDefinitions="*,*">
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="PointerReleased">
-                        <InvokeCommandAction Command="{Binding LoginCommand}"></InvokeCommandAction>
+                        <InvokeCommandAction Command="{Binding LoginCommand}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <Image
@@ -74,7 +74,7 @@
                 BorderThickness="2"
                 CornerRadius="20">
                 <TextBox
-                    x:Name="nameInputUrl"
+                    x:Name="NameInputUrl"
                     Height="35"
                     Margin="20,0,40,0"
                     VerticalContentAlignment="Center"
@@ -83,9 +83,6 @@
                     Watermark="{DynamicResource IndexHintText}"
                     Text="{Binding InputText,Mode=TwoWay}">
                     <i:Interaction.Behaviors>
-                        <!--<ia:EventTriggerBehavior EventName="KeyUp">
-                            <ia:InvokeCommandAction Command="{Binding InputCommand}" />
-                        </ia:EventTriggerBehavior>-->
                         <iac:KeyUpBehavior Key="Enter">
                             <ia:InvokeCommandAction Command="{Binding InputCommand}" />
                         </iac:KeyUpBehavior>

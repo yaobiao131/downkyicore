@@ -1,7 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="DownKyi.App"
-             RequestedThemeVariant="Light">
+             x:Class="DownKyi.App">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.Resources>
@@ -35,7 +34,7 @@
                                 ZIndex="1"
                                 CornerRadius="{TemplateBinding CornerRadius}"
                                 Padding="5,0,5,0"
-                                Background="White"
+                                Background="{DynamicResource ThemeBackgroundBrush}"
                                 Margin="5,0,0,0">
                                 <TextBlock
                                     Text="{TemplateBinding Header}"

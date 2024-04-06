@@ -208,7 +208,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
     /// <param name="audioUid"></param>
     /// <param name="videoUid"></param>
     /// <returns></returns>
-    public override string MixedFlow(DownloadingItem downloading, string audioUid, string videoUid)
+    public override string MixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid)
     {
         if (videoUid == nullMark)
         {

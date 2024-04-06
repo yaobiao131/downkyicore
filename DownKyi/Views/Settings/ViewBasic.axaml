@@ -53,6 +53,43 @@
                         Theme="{StaticResource RadioStyle}" />
                 </StackPanel>
             </StackPanel>
+            <StackPanel Margin="0,20,0,0" Orientation="Vertical">
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource Theme}" />
+                <StackPanel Margin="0,10,0,0" Orientation="Horizontal">
+                    <RadioButton
+                        Command="{Binding ThemeCommand}"
+                        CommandParameter="Light"
+                        GroupName="Theme"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        FontSize="12"
+                        Content="{StaticResource ThemeLight}"
+                        IsChecked="{Binding ThemeLight}"
+                        Theme="{StaticResource RadioStyle}" />
+                    <RadioButton
+                        Margin="20,0,0,0"
+                        GroupName="Theme"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        FontSize="12"
+                        Command="{Binding ThemeCommand}"
+                        CommandParameter="Dark"
+                        IsChecked="{Binding ThemeDark}"
+                        Content="{StaticResource ThemeDark}"
+                        Theme="{StaticResource RadioStyle}" />
+                    <RadioButton
+                        Margin="20,0,0,0"
+                        GroupName="Theme"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        FontSize="12"
+                        Command="{Binding ThemeCommand}"
+                        CommandParameter="Auto"
+                        IsChecked="{Binding ThemeAuto}"
+                        Content="{StaticResource ThemeAuto}"
+                        Theme="{StaticResource RadioStyle}" />
+                </StackPanel>
+            </StackPanel>
             <TextBlock
                 Height="1"
                 Margin="0,20,0,0"

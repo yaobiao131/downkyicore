@@ -25,6 +25,25 @@ public partial class SettingsManager
 
     // 重复文件自动添加数字后缀
     private readonly bool _repeatFileAutoAddNumberSuffix = false;
+    
+    public ThemeMode GetThemeMode()
+    {
+        appSettings = GetSettings();
+        if (appSettings.Basic.ThemeMode == ThemeMode.Default)
+        {
+            // 第一次获取，先设置默认值
+            SetThemeMode(ThemeMode.Default);
+            return ThemeMode.Default;
+        }
+
+        return appSettings.Basic.ThemeMode;
+    }
+    
+    public bool SetThemeMode(ThemeMode themeMode)
+    {
+        appSettings.Basic.ThemeMode = themeMode;
+        return SetSettings();
+    }
 
     /// <summary>
     /// 获取下载完成后的操作

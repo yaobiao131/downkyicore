@@ -294,7 +294,7 @@ public abstract class DownloadService
         return srtFiles;
     }
 
-    protected string BaseMixedFlow(DownloadingItem downloading, string audioUid, string videoUid)
+    protected string BaseMixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid)
     {
         // 更新状态显示
         downloading.DownloadStatusTitle = DictionaryResource.GetString("MixedFlow");
@@ -853,7 +853,7 @@ public abstract class DownloadService
     public abstract string DownloadDanmaku(DownloadingItem downloading);
     public abstract List<string> DownloadSubtitle(DownloadingItem downloading);
     public abstract string DownloadCover(DownloadingItem downloading, string coverUrl, string fileName);
-    public abstract string MixedFlow(DownloadingItem downloading, string audioUid, string videoUid);
+    public abstract string MixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid);
 
     protected abstract void Pause(DownloadingItem downloading);
 

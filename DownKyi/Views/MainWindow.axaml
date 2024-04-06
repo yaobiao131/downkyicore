@@ -23,7 +23,7 @@
             <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
         </ia:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="*">
+    <Grid RowDefinitions="*">
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
 
         <Border
@@ -31,7 +31,6 @@
             Margin="0,0,0,20"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
-            Background="{DynamicResource BrushBackgroundDark}"
             CornerRadius="15"
             IsVisible="{Binding MessageVisibility}">
             <TextBlock

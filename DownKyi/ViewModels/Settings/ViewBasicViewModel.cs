@@ -18,6 +18,30 @@ public class ViewBasicViewModel : ViewModelBase
 
     #region 页面属性申明
 
+    private bool _themeLight;
+
+    public bool ThemeLight
+    {
+        get => _themeLight;
+        set => SetProperty(ref _themeLight, value);
+    }
+
+    private bool _themeDark;
+
+    public bool ThemeDark
+    {
+        get => _themeDark;
+        set => SetProperty(ref _themeDark, value);
+    }
+
+    private bool _themeAuto;
+
+    public bool ThemeAuto
+    {
+        get => _themeAuto;
+        set => SetProperty(ref _themeAuto, value);
+    }
+
     private bool _none;
 
     public bool None
@@ -81,7 +105,7 @@ public class ViewBasicViewModel : ViewModelBase
         get => _autoDownloadAll;
         set => SetProperty(ref _autoDownloadAll, value);
     }
-    
+
     private bool _repeatFileAutoAddNumberSuffix;
 
     public bool RepeatFileAutoAddNumberSuffix
@@ -141,6 +165,21 @@ public class ViewBasicViewModel : ViewModelBase
 
         _isOnNavigatedTo = true;
 
+        // 主题
+        var themeMode = SettingsManager.GetInstance().GetThemeMode();
+        switch (themeMode)
+        {
+            case ThemeMode.Light:
+                ThemeLight = true;
+                break;
+            case ThemeMode.Dark:
+                ThemeDark = true;
+                break;
+            case ThemeMode.Default:
+                ThemeAuto = true;
+                break;
+        }
+
         // 下载完成后的操作
         var afterDownload = SettingsManager.GetInstance().GetAfterDownloadOperation();
         SetAfterDownloadOperation(afterDownload);
@@ -164,15 +203,38 @@ public class ViewBasicViewModel : ViewModelBase
         // 重复下载策略
         var repeatDownloadStrategy = SettingsManager.GetInstance().GetRepeatDownloadStrategy();
         SelectedRepeatDownloadStrategy = RepeatDownloadStrategy.FirstOrDefault(t => { return t.RepeatDownloadStrategy == repeatDownloadStrategy; });
-        
+
         // 重复下载文件自动添加数字后缀
         var repeatFileAutoAddNumberSuffix = SettingsManager.GetInstance().IsRepeatFileAutoAddNumberSuffix();
         RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
-        
+
         _isOnNavigatedTo = false;
     }
 
     #region 命令申明
+
+    // 主题事件
+    private DelegateCommand<string>? _themeCommand;
+
+    public DelegateCommand<string> ThemeCommand => _themeCommand ??= new DelegateCommand<string>(ExecuteThemeCommand);
+
+    /// <summary>
+    /// 主题事件
+    /// </summary>
+    private void ExecuteThemeCommand(string parameter)
+    {
+        var themeMode = parameter switch
+        {
+            "Light" => ThemeMode.Light,
+            "Dark" => ThemeMode.Dark,
+            "Default" => ThemeMode.Default,
+            _ => ThemeMode.Default
+        };
+
+        var isSucceed = SettingsManager.GetInstance().SetThemeMode(themeMode);
+        PublishTip(isSucceed);
+        ThemeHelper.SetTheme(themeMode);
+    }
 
     // 下载完成后的操作事件
     private DelegateCommand<string>? _afterDownloadOperationCommand;
@@ -273,9 +335,9 @@ public class ViewBasicViewModel : ViewModelBase
     }
 
     private DelegateCommand? _repeatFileAutoAddNumberSuffixCommand;
-    
+
     public DelegateCommand RepeatFileAutoAddNumberSuffixCommand => _repeatFileAutoAddNumberSuffixCommand ??= new DelegateCommand(ExecuteRepeatFileAutoAddNumberSuffixCommand);
-    
+
     private void ExecuteRepeatFileAutoAddNumberSuffixCommand()
     {
         var isSucceed = SettingsManager.GetInstance().IsRepeatFileAutoAddNumberSuffix(RepeatFileAutoAddNumberSuffix);

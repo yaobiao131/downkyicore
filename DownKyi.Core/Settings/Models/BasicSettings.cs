@@ -5,6 +5,7 @@
 /// </summary>
 public class BasicSettings
 {
+    public ThemeMode ThemeMode { get; set; } = ThemeMode.Default;
     public AfterDownloadOperation AfterDownload { get; set; } = AfterDownloadOperation.NOT_SET;
     public AllowStatus IsListenClipboard { get; set; } = AllowStatus.NONE;
     public AllowStatus IsAutoParseVideo { get; set; } = AllowStatus.NONE;

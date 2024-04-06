@@ -12,6 +12,7 @@ using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services.Download;
+using DownKyi.Utils;
 using DownKyi.ViewModels;
 using DownKyi.ViewModels.Dialogs;
 using DownKyi.ViewModels.DownloadManager;
@@ -46,10 +47,13 @@ public partial class App : PrismApplication
 
     public override void Initialize()
     {
-        var mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
-        if (!createdNew)
+        if (!Design.IsDesignMode)
         {
-            Environment.Exit(0);
+            var mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
+            if (!createdNew)
+            {
+                Environment.Exit(0);
+            }
         }
 
         AvaloniaXamlLoader.Load(this);
@@ -226,6 +230,7 @@ public partial class App : PrismApplication
 
     protected override void OnInitialized()
     {
+        ThemeHelper.SetTheme(SettingsManager.GetInstance().GetThemeMode());
         // var regionManager = Container.Resolve<IRegionManager>();
         // regionManager.RegisterViewWithRegion("ContentRegion", typeof(ViewIndex));
         // regionManager.RegisterViewWithRegion("DownloadManagerContentRegion", typeof(ViewDownloading));
@@ -265,10 +270,7 @@ public partial class App : PrismApplication
         // 更新下载完成列表
         // 如果有更好的方法再重写
         DownloadedList?.Clear();
-        foreach (var item in list)
-        {
-            DownloadedList?.Add(item);
-        }
+        list?.ForEach(item => DownloadedList?.Add(item));
     }
 
     private void OnExit(object sender, ControlledApplicationLifetimeExitEventArgs e)

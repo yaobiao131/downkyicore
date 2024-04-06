@@ -29,7 +29,7 @@ public class FFMpeg
     /// <param name="audio">音频</param>
     /// <param name="video">视频</param>
     /// <param name="destVideo"></param>
-    public bool MergeVideo(string audio, string video, string destVideo)
+    public bool MergeVideo(string? audio, string? video, string destVideo)
     {
         if (!File.Exists(audio) && !File.Exists(video)) return false;
 

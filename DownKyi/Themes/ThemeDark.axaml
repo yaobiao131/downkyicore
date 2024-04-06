@@ -4,7 +4,7 @@
         <!--  每个主题都相同  -->
         <ResourceInclude Source="/Themes/ColorBrush.axaml" />
         <!--  根据实际需要调整  -->
-        <!-- <ResourceInclude Source="/Themes/Colors/ColorDefault.axaml" /> -->
+
         <ResourceInclude Source="/Themes/Styles/StyleBtn.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleImageBtn.axaml" />
         <ResourceInclude Source="/Themes/Styles/StyleSystemBtn.axaml" />
@@ -14,11 +14,6 @@
         <ResourceInclude Source="/Themes/Styles/StyleRadio.axaml" />
     </ResourceDictionary.MergedDictionaries>
     <ResourceDictionary.ThemeDictionaries>
-        <ResourceDictionary x:Key="Default">
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceInclude Source="/Themes/Colors/ColorDefault.axaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
         <ResourceDictionary x:Key="Dark">
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="/Themes/Colors/ColorDark.axaml" />

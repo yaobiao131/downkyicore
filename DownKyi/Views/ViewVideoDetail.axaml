@@ -294,7 +294,7 @@
                     SelectionMode="Extended">
                     <DataGrid.ColumnHeaderTheme>
                         <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="Background" Value="{DynamicResource BrushHeaderGrey}" />
+                            <!-- <Setter Property="Background" Value="{DynamicResource BrushHeaderGrey}" /> -->
                             <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
                             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                             <Setter Property="Template">

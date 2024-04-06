@@ -31,7 +31,6 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="16"
-                        Foreground="{DynamicResource BrushTextDark}"
                         Text="{DynamicResource Settings}" />
                 </StackPanel>
             </Button>

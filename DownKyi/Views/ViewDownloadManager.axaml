@@ -39,7 +39,7 @@
         <Grid Grid.Row="2" ColumnDefinitions="200,*">
 
             <ListBox
-                Name="nameLeftTabHeaders"
+                Name="NameLeftTabHeaders"
                 Grid.Column="0"
                 BorderThickness="0"
                 ItemsSource="{Binding TabHeaders}"
@@ -49,7 +49,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=nameLeftTabHeaders, Path=SelectedItem}" />
+                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListBox>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Utils;
@@ -63,11 +64,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         {
             SetProperty(ref _directory, value);
 
-            if (!string.IsNullOrEmpty(_directory))
-            {
-                DriveName = _directory[..1].ToUpper();
-                DriveNameFreeSpace = Format.FormatFileSize(HardDisk.GetHardDiskFreeSpace(DriveName));
-            }
+            if (string.IsNullOrEmpty(_directory)) return;
+            DriveName = _directory[..1].ToUpper();
+            DriveNameFreeSpace = Format.FormatFileSize(HardDisk.GetHardDiskFreeSpace(DriveName));
         }
     }
 
@@ -201,8 +200,8 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
         if (directory == null)
         {
-            // eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
-            // Directory = string.Empty;
+            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
+            Directory = string.Empty;
         }
         else
         {

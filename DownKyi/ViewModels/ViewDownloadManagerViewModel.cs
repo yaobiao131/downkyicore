@@ -73,17 +73,16 @@ public class ViewDownloadManagerViewModel : ViewModelBase
     #region 命令申明
 
 // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
     /// </summary>
     private void ExecuteBackSpace()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -93,12 +92,9 @@ public class ViewDownloadManagerViewModel : ViewModelBase
     }
 
     // 左侧tab点击事件
-    private DelegateCommand<object> leftTabHeadersCommand;
+    private DelegateCommand<object>? _leftTabHeadersCommand;
 
-    public DelegateCommand<object> LeftTabHeadersCommand => leftTabHeadersCommand ??
-                                                            (leftTabHeadersCommand =
-                                                                new DelegateCommand<object>(
-                                                                    ExecuteLeftTabHeadersCommand));
+    public DelegateCommand<object> LeftTabHeadersCommand => _leftTabHeadersCommand ??= new DelegateCommand<object>(ExecuteLeftTabHeadersCommand);
 
     /// <summary>
     /// 左侧tab点击事件
@@ -106,7 +102,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLeftTabHeadersCommand(object parameter)
     {
-        if (!(parameter is TabHeader tabHeader))
+        if (parameter is not TabHeader tabHeader)
         {
             return;
         }
@@ -139,11 +135,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         //// 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() =>
-        {
-            regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag,
-                new NavigationParameters());
-        });
+        PropertyChangeAsync(() => { regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
 
         ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
     }

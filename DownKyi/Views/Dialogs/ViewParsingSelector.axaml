@@ -17,7 +17,7 @@
     </prismExtension:Dialog.Theme>
 
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
-        <Grid Background="{DynamicResource BrushBackground}" RowDefinitions="40,*">
+        <Grid RowDefinitions="40,*">
 
             <Grid
                 Grid.Row="0"
