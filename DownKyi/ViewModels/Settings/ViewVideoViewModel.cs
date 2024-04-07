@@ -95,6 +95,14 @@ public class ViewVideoViewModel : ViewModelBase
         get => _isTranscodingFlvToMp4;
         set => SetProperty(ref _isTranscodingFlvToMp4, value);
     }
+    
+    private bool _isTranscodingAacToMp3;
+
+    public bool IsTranscodingAacToMp3
+    {
+        get => _isTranscodingAacToMp3;
+        set => SetProperty(ref _isTranscodingAacToMp3, value);
+    }
 
     private bool _isUseDefaultDirectory;
 
@@ -317,6 +325,10 @@ public class ViewVideoViewModel : ViewModelBase
         // 是否下载flv视频后转码为mp4
         var isTranscodingFlvToMp4 = SettingsManager.GetInstance().IsTranscodingFlvToMp4();
         IsTranscodingFlvToMp4 = isTranscodingFlvToMp4 == AllowStatus.YES;
+        
+        // 是否下载aac音频后转码为mp3
+        var isTranscodingAacToMp3 = SettingsManager.GetInstance().IsTranscodingAacToMp3();
+        IsTranscodingAacToMp3 = isTranscodingAacToMp3 == AllowStatus.YES;
 
         // 是否使用默认下载目录
         var isUseSaveVideoRootPath = SettingsManager.GetInstance().IsUseSaveVideoRootPath();
@@ -460,6 +472,22 @@ public class ViewVideoViewModel : ViewModelBase
         var isTranscodingFlvToMp4 = IsTranscodingFlvToMp4 ? AllowStatus.YES : AllowStatus.NO;
 
         var isSucceed = SettingsManager.GetInstance().IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
+        PublishTip(isSucceed);
+    }
+    
+    // 是否下载aac音频后转码为mp3事件
+    private DelegateCommand? _isTranscodingAacToMp3Command;
+    
+    public DelegateCommand IsTranscodingAacToMp3Command => _isTranscodingAacToMp3Command ??= new DelegateCommand(ExecuteIsTranscodingAacToMp3Command);
+    
+    /// <summary>
+    /// 是否下载aac音频后转码为mp3事件
+    /// </summary>
+    private void ExecuteIsTranscodingAacToMp3Command()
+    {
+        var isTranscodingAacToMp3 = IsTranscodingAacToMp3 ? AllowStatus.YES : AllowStatus.NO;
+    
+        var isSucceed = SettingsManager.GetInstance().IsTranscodingAacToMp3(isTranscodingAacToMp3);
         PublishTip(isSucceed);
     }
 

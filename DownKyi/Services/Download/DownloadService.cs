@@ -312,7 +312,9 @@ public abstract class DownloadService
         var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
         if (videoUid == null)
         {
-            finalFile = $"{downloading.DownloadBase.FilePath}.aac";
+            finalFile = SettingsManager.GetInstance().IsTranscodingAacToMp3() == AllowStatus.YES
+                ? $"{downloading.DownloadBase.FilePath}.mp3"
+                : $"{downloading.DownloadBase.FilePath}.aac";
         }
 
         // 合并音视频

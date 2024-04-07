@@ -1,4 +1,5 @@
 ﻿using DownKyi.Core.Logging;
+using DownKyi.Core.Settings;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Helpers;
@@ -53,11 +54,22 @@ public class FFMpeg
 
         if (video == null || !File.Exists(video))
         {
-            arguments = FFMpegArguments.FromFileInput(audio).OutputToFile(
-                destVideo,
-                true,
-                options => options.WithCustomArgument("-strict -2").DisableChannel(Channel.Video).WithAudioCodec("copy")
-            );
+            if (SettingsManager.GetInstance().IsTranscodingAacToMp3() == AllowStatus.YES)
+            {
+                arguments = FFMpegArguments.FromFileInput(audio).OutputToFile(
+                    destVideo,
+                    true,
+                    options => options.WithCustomArgument("-strict -2").DisableChannel(Channel.Video).ForceFormat("mp3")
+                );
+            }
+            else
+            {
+                arguments = FFMpegArguments.FromFileInput(audio).OutputToFile(
+                    destVideo,
+                    true,
+                    options => options.WithCustomArgument("-strict -2").DisableChannel(Channel.Video).WithAudioCodec("copy")
+                );
+            }
         }
 
         LogManager.Debug(Tag, arguments.Arguments);

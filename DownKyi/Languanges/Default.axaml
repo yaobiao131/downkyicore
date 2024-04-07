@@ -217,6 +217,7 @@
     <system:String x:Key="FirstAudioQuality">优先下载的视频音质：</system:String>
     <system:String x:Key="VideoParseType">首选视频解析方式：</system:String>
     <system:String x:Key="IsTranscodingFlvToMp4">下载FLV视频后转码为mp4</system:String>
+    <system:String x:Key="IsTranscodingAacToMp3">下载AAC音频后转码为mp3</system:String>
     <system:String x:Key="IsUseDefaultDirectory">使用默认下载目录</system:String>
     <system:String x:Key="DefaultDirectory">默认下载目录：</system:String>
     <system:String x:Key="DefaultDirectoryTip">默认将文件下载到该文件夹中</system:String>

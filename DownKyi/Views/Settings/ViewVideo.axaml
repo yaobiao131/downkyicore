@@ -107,7 +107,17 @@
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding IsTranscodingFlvToMp4, Mode=TwoWay}" />
-
+            
+            <CheckBox
+                Margin="0,20,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Command="{Binding IsTranscodingAacToMp3Command}"
+                Content="{DynamicResource IsTranscodingAacToMp3}"
+                FontSize="12"
+                Foreground="{DynamicResource BrushTextDark}"
+                IsChecked="{Binding IsTranscodingAacToMp3, Mode=TwoWay}" />
+            
             <TextBlock
                 Height="1"
                 Margin="0,20,0,0"

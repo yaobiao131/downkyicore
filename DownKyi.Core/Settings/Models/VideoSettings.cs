@@ -12,6 +12,7 @@ public class VideoSettings
     public int AudioQuality { get; set; } = -1; // 音质
     public int VideoParseType { get; set; } = 1; // 视频解析类型
     public AllowStatus IsTranscodingFlvToMp4 { get; set; } = AllowStatus.NONE; // 是否将flv转为mp4
+    public AllowStatus IsTranscodingAacToMp3 { get; set; } = AllowStatus.NONE; // 是否将aac转为mp3
     public string SaveVideoRootPath { get; set; } = null; // 视频保存路径
     public List<string> HistoryVideoRootPaths { get; set; } = null; // 历史视频保存路径
     public AllowStatus IsUseSaveVideoRootPath { get; set; } = AllowStatus.NONE; // 是否使用默认视频保存路径
