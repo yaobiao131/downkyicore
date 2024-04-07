@@ -7,7 +7,7 @@
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
     <Grid RowDefinitions="*">
 
-        <ListBox Name="namePublicationZones"
+        <ListBox Name="NamePublicationZones"
                  Margin="30,0,0,0"
                  ItemsSource="{Binding PublicationZones}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -15,7 +15,7 @@
             <i:Interaction.Behaviors>
                 <ia:EventTriggerBehavior EventName="SelectionChanged">
                     <ia:InvokeCommandAction Command="{Binding PublicationZonesCommand}"
-                                            CommandParameter="{Binding ElementName=namePublicationZones, Path=SelectedItem}" />
+                                            CommandParameter="{Binding ElementName=NamePublicationZones, Path=SelectedItem}" />
                 </ia:EventTriggerBehavior>
             </i:Interaction.Behaviors>
             <ListBox.ItemsPanel>

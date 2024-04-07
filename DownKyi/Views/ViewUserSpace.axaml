@@ -222,7 +222,7 @@
                 <!--  内容区top banner  -->
                 <Grid Grid.Row="0" Margin="20,0" ColumnDefinitions="*,*">
                     <ListBox
-                        Name="nameTabLeftBanners"
+                        Name="NameTabLeftBanners"
                         Grid.Column="0"
                         ItemsSource="{Binding TabLeftBanners}"
                         ItemContainerTheme="{StaticResource TabLeftBannerStyle}"
@@ -239,12 +239,12 @@
                         <i:Interaction.Behaviors>
                             <ia:EventTriggerBehavior EventName="SelectionChanged">
                                 <ia:InvokeCommandAction Command="{Binding TabLeftBannersCommand}"
-                                                        CommandParameter="{Binding ElementName=nameTabLeftBanners, Path=SelectedItem}" />
+                                                        CommandParameter="{Binding ElementName=NameTabLeftBanners, Path=SelectedItem}" />
                             </ia:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ListBox>
                     <ListBox
-                        Name="nameTabRightBanners"
+                        Name="NameTabRightBanners"
                         Grid.Column="1"
                         ItemsSource="{Binding TabRightBanners}"
                         ScrollViewer.VerticalScrollBarVisibility="Disabled"
@@ -262,7 +262,7 @@
                         <i:Interaction.Behaviors>
                             <ia:EventTriggerBehavior EventName="SelectionChanged">
                                 <ia:InvokeCommandAction Command="{Binding TabRightBannersCommand}"
-                                                        CommandParameter="{Binding ElementName=nameTabRightBanners, Path=SelectedItem}" />
+                                                        CommandParameter="{Binding ElementName=NameTabRightBanners, Path=SelectedItem}" />
                             </ia:EventTriggerBehavior>
                         </i:Interaction.Behaviors>
                     </ListBox>

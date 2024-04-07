@@ -71,7 +71,6 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             FontSize="14"
-                            Foreground="{DynamicResource BrushTextDark}"
                             Text="{Binding Message}"
                             TextTrimming="CharacterEllipsis"
                             TextWrapping="WrapWithOverflow" />

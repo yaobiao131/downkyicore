@@ -3,7 +3,7 @@
              x:Class="DownKyi.CustomControl.CustomPager"
              xmlns:vmc="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmc:CustomPagerViewModel">
-    
+
     <UserControl.Resources>
         <DrawingImage x:Key="ToLeftDrawingImage">
             <DrawingImage.Drawing>
@@ -50,8 +50,8 @@
                 </DrawingGroup>
             </DrawingImage.Drawing>
         </DrawingImage>
-        
-        <ControlTheme x:Key="pagerBorder" TargetType="{x:Type Border}">
+
+        <ControlTheme x:Key="PagerBorder" TargetType="{x:Type Border}">
             <Setter Property="Background" Value="#FFFFFFFF" />
             <Setter Property="BorderBrush" Value="#FFD7DDE4" />
             <Setter Property="BorderThickness" Value="1" />
@@ -61,7 +61,7 @@
             <Setter Property="Cursor" Value="Hand" />
         </ControlTheme>
 
-        <ControlTheme x:Key="pagerButton" TargetType="Button">
+        <ControlTheme x:Key="PagerButton" TargetType="Button">
             <Setter Property="Background" Value="#FFFFFFFF" />
             <Setter Property="BorderBrush" Value="#FFD7DDE4" />
             <Setter Property="BorderThickness" Value="1" />
@@ -89,10 +89,10 @@
     </UserControl.Resources>
     <StackPanel Orientation="Horizontal" IsVisible="{Binding Visibility}">
         <Button
-            x:Name="namePrevious"
+            x:Name="NamePrevious"
             Margin="0,0,8,0"
             Command="{Binding PreviousCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding PreviousVisibility}">
             <Image
                 Width="16"
@@ -101,12 +101,12 @@
                 VerticalAlignment="Center"
                 Source="{StaticResource ToLeftDrawingImage}" />
         </Button>
-        
+
         <Button
-            x:Name="nameFirst"
+            x:Name="NameFirst"
             Margin="0,0,4,0"
             Command="{Binding FirstCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding FirstVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -115,7 +115,7 @@
                 FontSize="14"
                 Text="{Binding First, Mode=TwoWay}" />
         </Button>
-        
+
         <Border
             Width="20"
             Height="40"
@@ -127,12 +127,12 @@
                 Foreground="#FF666666"
                 Text="&#x2022;&#x2022;&#x2022;" />
         </Border>
-        
+
         <Button
-            x:Name="namePreviousSecond"
+            x:Name="NamePreviousSecond"
             Margin="0,0,4,0"
             Command="{Binding PreviousSecondCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding PreviousSecondVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -141,12 +141,12 @@
                 FontSize="14"
                 Text="{Binding PreviousSecond, Mode=TwoWay}" />
         </Button>
-        
+
         <Button
-            x:Name="namePreviousFirst"
+            x:Name="NamePreviousFirst"
             Margin="0,0,4,0"
             Command="{Binding PreviousFirstCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding PreviousFirstVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -158,20 +158,20 @@
         <Border
             Margin="0,0,4,0"
             Background="#FF00A1D6"
-            Theme="{StaticResource pagerBorder}"
+            Theme="{StaticResource PagerBorder}"
             BorderThickness="0">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="14"
-                Foreground="#FFFFFFFF"
+                Foreground="{StaticResource ColorText}"
                 Text="{Binding Current, Mode=TwoWay}" />
         </Border>
         <Button
-            x:Name="nameNextFirst"
+            x:Name="NameNextFirst"
             Margin="0,0,4,0"
             Command="{Binding NextFirstCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding NextFirstVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -180,12 +180,12 @@
                 FontSize="14"
                 Text="{Binding NextFirst, Mode=TwoWay}" />
         </Button>
-        
+
         <Button
-            x:Name="nameNextSecond"
+            x:Name="NameNextSecond"
             Margin="0,0,4,0"
             Command="{Binding NextSecondCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding NextSecondVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -194,7 +194,7 @@
                 FontSize="14"
                 Text="{Binding NextSecond, Mode=TwoWay}" />
         </Button>
-        
+
         <Border
             Width="20"
             Height="40"
@@ -206,12 +206,12 @@
                 Foreground="#FF666666"
                 Text="&#x2022;&#x2022;&#x2022;" />
         </Border>
-        
+
         <Button
-            x:Name="nameLast"
+            x:Name="NameLast"
             Margin="0,0,4,0"
             Command="{Binding LastCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding LastVisibility}">
             <TextBlock
                 Padding="10,0"
@@ -221,10 +221,10 @@
                 Text="{Binding Count}" />
         </Button>
         <Button
-            x:Name="nameNext"
+            x:Name="NameNext"
             Margin="4,0,4,0"
             Command="{Binding NextCommand}"
-            Theme="{StaticResource pagerButton}"
+            Theme="{StaticResource PagerButton}"
             IsVisible="{Binding NextVisibility}">
             <Image
                 Width="16"

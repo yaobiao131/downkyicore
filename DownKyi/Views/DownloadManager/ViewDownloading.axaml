@@ -254,7 +254,7 @@
                     Command="{Binding PauseAllDownloadingCommand}"
                     Content="{DynamicResource PauseAllDownloading}"
                     FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    Theme="{StaticResource BtnStyle}" />
                 <Button
                     Grid.Column="2"
                     Width="75"
@@ -263,7 +263,7 @@
                     Command="{Binding ContinueAllDownloadingCommand}"
                     Content="{DynamicResource ContinueAllDownloading}"
                     FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    Theme="{StaticResource BtnStyle}" />
                 <Button
                     Grid.Column="3"
                     Width="75"
@@ -272,7 +272,7 @@
                     Command="{Binding DeleteAllDownloadingCommand}"
                     Content="{DynamicResource DeleteAllDownloading}"
                     FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    Theme="{StaticResource BtnStyle}" />
             </Grid>
         </Grid>
         <!--  TODO 没有数据时显示图片或文字  -->

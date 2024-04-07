@@ -93,8 +93,7 @@
                     FontSize="12"
                     Content="{DynamicResource SetParseDefault}"
                     IsChecked="{Binding IsParseDefault, Mode=TwoWay}"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    Foreground="{DynamicResource BrushTextDark}" />
             </StackPanel>
         </Grid>
     </Border>

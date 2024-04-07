@@ -106,8 +106,7 @@
                 Content="{DynamicResource IsTranscodingFlvToMp4}"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding IsTranscodingFlvToMp4, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding IsTranscodingFlvToMp4, Mode=TwoWay}" />
 
             <TextBlock
                 Height="1"
@@ -123,8 +122,7 @@
                 Content="{DynamicResource IsUseDefaultDirectory}"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding IsUseDefaultDirectory, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding IsUseDefaultDirectory, Mode=TwoWay}" />
 
             <StackPanel
                 Margin="0,20,0,0"
@@ -158,8 +156,7 @@
                         Margin="30,0,0,0"
                         Command="{Binding ChangeSaveVideoDirectoryCommand}"
                         Content="{DynamicResource ChangeDirectory}"
-                        FontSize="12"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        FontSize="12" />
                 </StackPanel>
             </StackPanel>
 
@@ -176,43 +173,37 @@
                         Command="{Binding DownloadAllCommand}"
                         Content="{DynamicResource DownloadAll}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadAll, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadAll, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding DownloadAudioCommand}"
                         Content="{DynamicResource DownloadAudio}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding DownloadVideoCommand}"
                         Content="{DynamicResource DownloadVideo}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding DownloadDanmakuCommand}"
                         Content="{DynamicResource DownloadDanmaku}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding DownloadSubtitleCommand}"
                         Content="{DynamicResource DownloadSubtitle}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding DownloadCoverCommand}"
                         Content="{DynamicResource DownloadCover}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadCover, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadCover, Mode=TwoWay}" />
                 </StackPanel>
             </HeaderedContentControl>
 

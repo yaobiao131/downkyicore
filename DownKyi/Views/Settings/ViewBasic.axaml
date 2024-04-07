@@ -66,8 +66,7 @@
                         Foreground="{DynamicResource BrushTextDark}"
                         FontSize="12"
                         Content="{StaticResource ThemeLight}"
-                        IsChecked="{Binding ThemeLight}"
-                        Theme="{StaticResource RadioStyle}" />
+                        IsChecked="{Binding ThemeLight}" />
                     <RadioButton
                         Margin="20,0,0,0"
                         GroupName="Theme"
@@ -76,8 +75,7 @@
                         Command="{Binding ThemeCommand}"
                         CommandParameter="Dark"
                         IsChecked="{Binding ThemeDark}"
-                        Content="{StaticResource ThemeDark}"
-                        Theme="{StaticResource RadioStyle}" />
+                        Content="{StaticResource ThemeDark}" />
                     <RadioButton
                         Margin="20,0,0,0"
                         GroupName="Theme"
@@ -86,8 +84,7 @@
                         Command="{Binding ThemeCommand}"
                         CommandParameter="Auto"
                         IsChecked="{Binding ThemeAuto}"
-                        Content="{StaticResource ThemeAuto}"
-                        Theme="{StaticResource RadioStyle}" />
+                        Content="{StaticResource ThemeAuto}" />
                 </StackPanel>
             </StackPanel>
             <TextBlock
@@ -101,8 +98,7 @@
                 Command="{Binding ListenClipboardCommand}"
                 Content="{DynamicResource ListenClipboard}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding ListenClipboard, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding ListenClipboard, Mode=TwoWay}" />
             <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
@@ -110,8 +106,7 @@
                 Command="{Binding AutoParseVideoCommand}"
                 Content="{DynamicResource VideoAutoParse}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding AutoParseVideo, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding AutoParseVideo, Mode=TwoWay}" />
 
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <TextBlock
@@ -142,8 +137,7 @@
                 Command="{Binding AutoDownloadAllCommand}"
                 Content="{DynamicResource AutoDownloadAll}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding AutoDownloadAll, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding AutoDownloadAll, Mode=TwoWay}" />
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                 <TextBlock
                     VerticalAlignment="Center"
@@ -173,8 +167,7 @@
                 Command="{Binding RepeatFileAutoAddNumberSuffixCommand}"
                 Content="{DynamicResource RepeatFileAutoAddNumberSuffix}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding RepeatFileAutoAddNumberSuffix, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding RepeatFileAutoAddNumberSuffix, Mode=TwoWay}" />
             <StackPanel Margin="10" />
         </StackPanel>
     </ScrollViewer>

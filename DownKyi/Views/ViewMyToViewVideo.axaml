@@ -213,13 +213,7 @@
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
 
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="80" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2" ColumnDefinitions="80,*,100,90">
 
                 <CheckBox
                     Grid.Column="0"
@@ -230,8 +224,7 @@
                     CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItem}"
                     Content="{DynamicResource SelectAll}"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
 
                 <Button
                     Grid.Column="2"

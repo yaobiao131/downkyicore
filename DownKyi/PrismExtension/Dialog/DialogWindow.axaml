@@ -5,6 +5,7 @@
         Title="{Binding Title}"
         WindowStartupLocation="CenterOwner">
     <Window.Styles>
+        <SimpleTheme />
         <Style Selector="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
             <Setter Property="UseLayoutRounding" Value="True" />

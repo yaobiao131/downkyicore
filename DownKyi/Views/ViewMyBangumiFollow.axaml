@@ -139,7 +139,7 @@
 
             <!--  顶部Tab  -->
             <ListBox
-                Name="nameTabHeaders"
+                Name="NameTabHeaders"
                 Grid.Column="1"
                 BorderThickness="0"
                 IsEnabled="{Binding IsEnabled}"
@@ -150,7 +150,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding TabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=nameTabHeaders, Path=SelectedItem}" />
+                                                CommandParameter="{Binding ElementName=NameTabHeaders, Path=SelectedItem}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <ListBox.ItemsPanel>
@@ -293,13 +293,7 @@
             </ListBox>
 
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80" />
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="80" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2" ColumnDefinitions="80,*,100,90">
 
                 <CheckBox
                     Grid.Column="0"
@@ -310,8 +304,7 @@
                     CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItem}"
                     Content="{DynamicResource SelectAll}"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
 
                 <!--<custom:CustomPager
                     Grid.Column="1"

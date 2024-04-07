@@ -252,8 +252,7 @@
                     Command="{Binding AddToDownloadCommand}"
                     Content="{DynamicResource DownloadSelected}"
                     FontSize="12"
-                    Foreground="{DynamicResource BrushText}"
-                    Theme="{StaticResource BtnStyle}" />
+                    Foreground="{DynamicResource BrushText}" />
 
                 <Button
                     Height="40"
@@ -262,8 +261,7 @@
                     Command="{Binding AddAllToDownloadCommand}"
                     Content="{DynamicResource AddAllToDownload}"
                     FontSize="12"
-                    Foreground="{DynamicResource BrushText}"
-                    Theme="{StaticResource BtnStyle}" />
+                    Foreground="{DynamicResource BrushText}" />
             </StackPanel>
 
 

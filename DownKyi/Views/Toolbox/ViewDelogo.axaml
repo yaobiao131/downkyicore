@@ -30,12 +30,12 @@
                         Text="{Binding VideoPath, Mode=TwoWay}" />
 
                     <Button
-                        Width="75"
+                        Width="90"
                         Margin="30,0,0,0"
                         VerticalAlignment="Center"
                         Command="{Binding SelectVideoCommand}"
                         Content="{DynamicResource SelectVideo}"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                 </StackPanel>
 
                 <Grid Margin="0,20,0,0" VerticalAlignment="Center" ColumnDefinitions="400,*">
@@ -75,12 +75,12 @@
                     </StackPanel>
                     <Button
                         Grid.Column="1"
-                        Width="75"
+                        Width="90"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
                         Command="{Binding DelogoCommand}"
                         Content="{DynamicResource Delogo}"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                 </Grid>
 
             </StackPanel>

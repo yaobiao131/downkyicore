@@ -12,6 +12,8 @@
         <ResourceInclude Source="/Themes/Styles/StyleListBox.axaml" />
         <!-- <ResourceInclude Source="Styles/StyleListView.xaml" /> -->
         <ResourceInclude Source="/Themes/Styles/StyleRadio.axaml" />
+        <ResourceInclude Source="/Themes/Styles/NormalIcon.axaml" />
+        <ResourceInclude Source="/Themes/Styles/NavigationIcon.axaml" />
     </ResourceDictionary.MergedDictionaries>
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">

@@ -281,7 +281,7 @@
 
                 <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
 
-                <Grid Grid.Row="2" ColumnDefinitions="80,*,100,80">
+                <Grid Grid.Row="2" ColumnDefinitions="80,*,100,90">
                     <CheckBox
                         Grid.Column="0"
                         Margin="10,0,0,0"
@@ -290,8 +290,7 @@
                         Command="{Binding SelectAllCommand}"
                         Content="{DynamicResource SelectAll}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
 
                     <custom:CustomPager
                         Grid.Column="1"
@@ -308,7 +307,7 @@
                         Content="{DynamicResource DownloadSelectedPublication}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushText}"
-                        Theme="{StaticResource BtnStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
 
                     <Button
                         Grid.Column="3"
@@ -319,7 +318,7 @@
                         Content="{DynamicResource DownloadAllPublication}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushText}"
-                        Theme="{StaticResource BtnStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                 </Grid>
             </Grid>
 

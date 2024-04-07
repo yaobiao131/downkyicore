@@ -42,7 +42,7 @@
 
             <!--  左侧tab header  -->
             <ListBox
-                Name="nameLeftTabHeaders"
+                Name="NameLeftTabHeaders"
                 Grid.Column="0"
                 BorderThickness="0"
                 ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
@@ -52,7 +52,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=nameLeftTabHeaders, Path=SelectedItem}" />
+                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </ListBox>

@@ -38,14 +38,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private string? _inputText;
 
     public string? InputText
@@ -139,10 +131,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
         // 初始化loading
         Loading = true;
         LoadingVisibility = false;
-
-        // 返回按钮
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
@@ -824,8 +812,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
         DownloadManage.Width = 24;

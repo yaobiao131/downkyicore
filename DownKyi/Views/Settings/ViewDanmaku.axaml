@@ -31,22 +31,19 @@
                         Command="{Binding TopFilterCommand}"
                         Content="{DynamicResource TopFilter}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding TopFilter, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding TopFilter, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding BottomFilterCommand}"
                         Content="{DynamicResource BottomFilter}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding BottomFilter, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding BottomFilter, Mode=TwoWay}" />
                     <CheckBox
                         Margin="40,0,0,0"
                         Command="{Binding ScrollFilterCommand}"
                         Content="{DynamicResource ScrollFilter}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding ScrollFilter, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding ScrollFilter, Mode=TwoWay}" />
                 </StackPanel>
             </HeaderedContentControl>
 
@@ -172,8 +169,7 @@
                     Content="{DynamicResource LayoutAlgorithmSync}"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding Sync, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding Sync, Mode=TwoWay}" />
                 <CheckBox
                     Margin="20,0,0,0"
                     HorizontalAlignment="Left"
@@ -183,8 +179,7 @@
                     Content="{DynamicResource LayoutAlgorithmAsync}"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding Async, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding Async, Mode=TwoWay}" />
             </StackPanel>
 
             <StackPanel Margin="10" />

@@ -181,7 +181,7 @@
 
         <Grid Grid.Row="2" RowDefinitions="*,1,50">
             <ListBox
-                x:Name="nameMedias"
+                x:Name="NameMedias"
                 Grid.Row="0"
                 BorderThickness="0"
                 ItemsSource="{Binding Medias}"
@@ -191,7 +191,7 @@
                 <i:Interaction.Behaviors>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding MediasCommand}"
-                                                CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItems}" />
+                                                CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
                     </ia:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
                 <ListBox.ItemsPanel>
@@ -248,18 +248,17 @@
                 Source="/Resources/no-data.png"
                 IsVisible="{Binding NoDataVisibility}" />
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorder}" />
-            <Grid Grid.Row="2" ColumnDefinitions="80,*,100,80">
+            <Grid Grid.Row="2" ColumnDefinitions="80,*,100,90">
                 <CheckBox
                     Grid.Column="0"
                     Margin="10,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Command="{Binding SelectAllCommand}"
-                    CommandParameter="{Binding ElementName=nameMedias, Path=SelectedItem}"
+                    CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItem}"
                     Content="{DynamicResource SelectAll}"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
                 <custom:CustomPager
                     Grid.Column="1"
                     HorizontalAlignment="Center"

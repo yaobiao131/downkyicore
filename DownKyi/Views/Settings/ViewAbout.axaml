@@ -65,15 +65,13 @@
                     Margin="30,0,0,0"
                     Command="{Binding CheckUpdateCommand}"
                     Content="{DynamicResource CheckUpdate}"
-                    FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    FontSize="12" />
                 <Button
                     Width="75"
                     Margin="20,0,0,0"
                     Command="{Binding FeedbackCommand}"
                     Content="{DynamicResource Feedback}"
-                    FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    FontSize="12" />
             </StackPanel>
             <CheckBox
                 Grid.Column="0"
@@ -83,8 +81,7 @@
                 Command="{Binding ReceiveBetaVersionCommand}"
                 Content="{DynamicResource ReceiveBetaVersion}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding IsReceiveBetaVersion, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding IsReceiveBetaVersion, Mode=TwoWay}" />
             <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
@@ -92,8 +89,7 @@
                 Command="{Binding AutoUpdateWhenLaunchCommand}"
                 Content="{DynamicResource AutoUpdateWhenLaunch}"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding AutoUpdateWhenLaunch, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding AutoUpdateWhenLaunch, Mode=TwoWay}" />
             <!--<StackPanel Margin="0,20,0,0" Orientation="Vertical">
                 <TextBlock
                     Margin="0,0,0,10"

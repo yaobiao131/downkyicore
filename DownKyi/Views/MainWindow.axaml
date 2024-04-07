@@ -31,6 +31,7 @@
             Margin="0,0,0,20"
             HorizontalAlignment="Center"
             VerticalAlignment="Bottom"
+            Background="{DynamicResource BrushBackgroundDark}"
             CornerRadius="15"
             IsVisible="{Binding MessageVisibility}">
             <TextBlock

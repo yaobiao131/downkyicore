@@ -24,8 +24,7 @@
                 Content="{DynamicResource UseSSL}"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding UseSSL, Mode=TwoWay}"
-                Theme="{StaticResource CheckBoxStyle}" />
+                IsChecked="{Binding UseSSL, Mode=TwoWay}" />
 
             <TextBlock
                 Margin="0,20,0,0"
@@ -59,8 +58,7 @@
                         Content="{DynamicResource BuiltinDownloader}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding Builtin}"
-                        Theme="{StaticResource RadioStyle}" />
+                        IsChecked="{Binding Builtin}" />
                     <RadioButton
                         Margin="20,0,0,0"
                         Command="{Binding SelectDownloaderCommand}"
@@ -68,8 +66,7 @@
                         Content="{DynamicResource Aria2cDownloader}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding Aria2c}"
-                        Theme="{StaticResource RadioStyle}" />
+                        IsChecked="{Binding Aria2c}" />
                     <RadioButton
                         Margin="20,0,0,0"
                         Command="{Binding SelectDownloaderCommand}"
@@ -77,8 +74,7 @@
                         Content="{DynamicResource CustomAria2cDownloader}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding CustomAria2c}"
-                        Theme="{StaticResource RadioStyle}" />
+                        IsChecked="{Binding CustomAria2c}" />
                 </StackPanel>
             </StackPanel>
             <TextBlock
@@ -140,8 +136,7 @@
                     Content="{DynamicResource IsHttpProxy}"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding IsHttpProxy, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding IsHttpProxy, Mode=TwoWay}" />
             </StackPanel>
 
             <StackPanel x:Name="NameAria" IsVisible="{Binding Aria2c}">
@@ -337,8 +332,7 @@
                     Content="{DynamicResource IsHttpProxy}"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding IsAriaHttpProxy, Mode=TwoWay}"
-                    Theme="{StaticResource CheckBoxStyle}" />
+                    IsChecked="{Binding IsAriaHttpProxy, Mode=TwoWay}" />
 
                 <StackPanel
                     Name="NameAriaHttpProxyPanel"

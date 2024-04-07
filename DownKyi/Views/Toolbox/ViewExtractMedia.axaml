@@ -29,31 +29,30 @@
                         Text="{Binding VideoPathsStr, Mode=TwoWay}" />
 
                     <Button
-                        Width="75"
                         Margin="30,0,0,0"
                         VerticalAlignment="Center"
                         Command="{Binding SelectVideoCommand}"
                         Content="{DynamicResource SelectVideo}"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                 </StackPanel>
                 <Grid Margin="0,20,0,0" ColumnDefinitions="200,200">
 
                     <Button
                         Grid.Column="0"
-                        Width="75"
+                        Width="90"
                         Margin="30,0,0,0"
                         VerticalAlignment="Center"
                         Command="{Binding ExtractAudioCommand}"
                         Content="{DynamicResource ExtractAudio}"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                     <Button
                         Grid.Column="1"
-                        Width="75"
+                        Width="90"
                         Margin="30,0,0,0"
                         VerticalAlignment="Center"
                         Command="{Binding ExtractVideoCommand}"
                         Content="{DynamicResource ExtractVideo}"
-                        Theme="{StaticResource BtnBorderStyle}" />
+                        Theme="{StaticResource BtnStyle}"/>
                 </Grid>
             </StackPanel>
             <Grid

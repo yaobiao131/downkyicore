@@ -176,12 +176,7 @@
 
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorderTranslucent}" />
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="130" />
-                    <ColumnDefinition Width="110" />
-                </Grid.ColumnDefinitions>
+            <Grid Grid.Row="2" ColumnDefinitions="*,130,110">
 
                 <StackPanel
                     Grid.Column="0"
@@ -230,7 +225,7 @@
                     Command="{Binding ClearAllDownloadedCommand}"
                     Content="{DynamicResource ClearAllDownloaded}"
                     FontSize="12"
-                    Theme="{StaticResource BtnBorderStyle}" />
+                    Theme="{StaticResource BtnStyle}"/>
             </Grid>
         </Grid>
         <!--  TODO 没有数据时显示图片或文字  -->

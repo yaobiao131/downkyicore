@@ -22,10 +22,10 @@
                 Theme="{StaticResource ImageBtnStyle}">
                 <ContentControl>
                     <Path
-                        Width="{Binding ArrowBack.Width}"
-                        Height="{Binding ArrowBack.Height}"
-                        Data="{Binding ArrowBack.Data}"
-                        Fill="{Binding ArrowBack.Fill}"
+                        Theme="{StaticResource NavigationIcon.ArrowBack}"
+                        Width="24"
+                        Height="24"
+                        Fill="{DynamicResource ColorTextDark}"
                         Stretch="None" />
                 </ContentControl>
             </Button>
@@ -206,7 +206,7 @@
                         </Grid>
 
                         <StackPanel
-                            Name="nameUp"
+                            Name="NameUp"
                             Grid.Column="1"
                             Cursor="Hand">
                             <i:Interaction.Behaviors>
@@ -434,9 +434,7 @@
                         CommandParameter="{Binding ElementName=NameVideoPages,Path=$self}"
                         Content="{DynamicResource SelectAll}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding IsSelectAll, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}">
-                    </CheckBox>
+                        IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
                     <Label
                         Grid.Column="3"
                         Margin="9,0,0,0"
