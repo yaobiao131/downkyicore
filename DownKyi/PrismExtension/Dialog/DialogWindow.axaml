@@ -5,18 +5,23 @@
         Title="{Binding Title}"
         WindowStartupLocation="CenterOwner">
     <Window.Styles>
-        <SimpleTheme />
         <Style Selector="Window">
             <Setter Property="SizeToContent" Value="WidthAndHeight" />
             <Setter Property="UseLayoutRounding" Value="True" />
             <Setter Property="TransparencyLevelHint" Value="AcrylicBlur" />
             <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CanResize" Value="False" />
+            <Setter Property="ShowInTaskbar" Value="False" />
+            <Setter Property="SystemDecorations" Value="None" />
         </Style>
-        <Style Selector="Window">
-            <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
-        </Style>
-        <Style Selector="TemplatedControl">
-            <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
-        </Style>
+        <!-- <Style Selector="Window"> -->
+        <!--     <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" /> -->
+        <!-- </Style> -->
+        <!-- <Style Selector="TemplatedControl"> -->
+        <!--     <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" /> -->
+        <!-- </Style> -->
+        
+        <!-- <SimpleTheme /> -->
+        <!-- <StyleInclude Source="avares://Avalonia.Themes.Simple/SimpleTheme.xaml" /> -->
     </Window.Styles>
 </Window>

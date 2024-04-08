@@ -225,7 +225,7 @@
                     Command="{Binding ClearAllDownloadedCommand}"
                     Content="{DynamicResource ClearAllDownloaded}"
                     FontSize="12"
-                    Theme="{StaticResource BtnStyle}"/>
+                    Theme="{StaticResource BtnBorderStyle}" />
             </Grid>
         </Grid>
         <!--  TODO 没有数据时显示图片或文字  -->

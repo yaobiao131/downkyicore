@@ -26,11 +26,10 @@
                 <StackPanel Orientation="Horizontal">
                     <ContentControl Width="24" Height="24">
                         <Path
-                            Width="{Binding ArrowBack.Width}"
-                            Height="{Binding ArrowBack.Height}"
-                            Data="{Binding ArrowBack.Data}"
-                            Fill="{Binding ArrowBack.Fill}"
-                            Stretch="None" />
+                            Theme="{StaticResource NavigationIcon.ArrowBack}"
+                            Width="24"
+                            Height="24"
+                            Fill="{DynamicResource ColorTextDark}" />
                     </ContentControl>
                     <TextBlock
                         VerticalAlignment="Center"

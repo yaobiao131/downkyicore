@@ -65,13 +65,15 @@
                     Margin="30,0,0,0"
                     Command="{Binding CheckUpdateCommand}"
                     Content="{DynamicResource CheckUpdate}"
-                    FontSize="12" />
+                    FontSize="12"
+                    Theme="{StaticResource BtnBorderStyle}" />
                 <Button
                     Width="75"
                     Margin="20,0,0,0"
                     Command="{Binding FeedbackCommand}"
                     Content="{DynamicResource Feedback}"
-                    FontSize="12" />
+                    FontSize="12"
+                    Theme="{StaticResource BtnBorderStyle}" />
             </StackPanel>
             <CheckBox
                 Grid.Column="0"

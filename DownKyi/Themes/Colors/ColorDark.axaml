@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Color x:Key="ColorWindowBorder">Black</Color>
-    <Color x:Key="ColorCaptionForeground">Black</Color>
+    <Color x:Key="ColorCaptionForeground">white</Color>
     <Color x:Key="ColorCaptionBackground">#7FD0D0D0</Color>
     <Color x:Key="ColorSystemBtnTint">white</Color>
     <Color x:Key="ColorSystemBtnTintDark">black</Color>
@@ -16,7 +16,7 @@
     <Color x:Key="ColorBackgroundDark">#FF00A1D6</Color>
     <Color x:Key="ColorImageBorder">#7FD0D0D0</Color>
     <Color x:Key="ColorImageBackground">#7FD0D0D0</Color>
-    <Color x:Key="ColorText">white</Color>
+    <Color x:Key="ColorText">Black</Color>
     <Color x:Key="ColorTextDark">white</Color>
     <Color x:Key="ColorTabHeaderGrey">#FF141414</Color>
 

@@ -5,7 +5,6 @@ using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Events;
-using DownKyi.Images;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
@@ -21,14 +20,6 @@ public class ViewLoginViewModel : ViewModelBase
     private CancellationTokenSource _tokenSource;
 
     #region 页面属性申明
-
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
 
     private Bitmap? _loginQrCode;
 
@@ -60,9 +51,6 @@ public class ViewLoginViewModel : ViewModelBase
     {
         #region 属性初始化
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         #endregion
     }
 
@@ -78,7 +66,7 @@ public class ViewLoginViewModel : ViewModelBase
 
         // 结束任务
         _tokenSource.Cancel();
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -131,7 +119,7 @@ public class ViewLoginViewModel : ViewModelBase
     /// <param name="oauthKey"></param>
     private void GetLoginStatus(string oauthKey)
     {
-        CancellationToken cancellationToken = _tokenSource.Token;
+        var cancellationToken = _tokenSource.Token;
         while (true)
         {
             Thread.Sleep(1000);
@@ -196,7 +184,7 @@ public class ViewLoginViewModel : ViewModelBase
                     // 保存登录信息
                     try
                     {
-                        bool isSucceed = LoginHelper.SaveLoginInfoCookies(loginStatus.Data.Url);
+                        var isSucceed = LoginHelper.SaveLoginInfoCookies(loginStatus.Data.Url);
                         if (!isSucceed)
                         {
                             EventAggregator.GetEvent<MessageEvent>()
@@ -236,8 +224,6 @@ public class ViewLoginViewModel : ViewModelBase
     /// </summary>
     private void InitStatus()
     {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         LoginQrCode = null;
         LoginQrCodeOpacity = 1;
         LoginQrCodeStatus = false;

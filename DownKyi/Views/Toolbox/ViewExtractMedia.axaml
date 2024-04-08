@@ -33,7 +33,7 @@
                         VerticalAlignment="Center"
                         Command="{Binding SelectVideoCommand}"
                         Content="{DynamicResource SelectVideo}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnBorderStyle}" />
                 </StackPanel>
                 <Grid Margin="0,20,0,0" ColumnDefinitions="200,200">
 
@@ -44,7 +44,7 @@
                         VerticalAlignment="Center"
                         Command="{Binding ExtractAudioCommand}"
                         Content="{DynamicResource ExtractAudio}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnBorderStyle}" />
                     <Button
                         Grid.Column="1"
                         Width="90"
@@ -52,7 +52,7 @@
                         VerticalAlignment="Center"
                         Command="{Binding ExtractVideoCommand}"
                         Content="{DynamicResource ExtractVideo}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnBorderStyle}" />
                 </Grid>
             </StackPanel>
             <Grid

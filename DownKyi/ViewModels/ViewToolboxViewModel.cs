@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DownKyi.Events;
-using DownKyi.Images;
 using DownKyi.Utils;
 using DownKyi.ViewModels.PageViewModels;
 using DownKyi.ViewModels.Toolbox;
@@ -18,28 +17,20 @@ namespace DownKyi.ViewModels
 
         #region 页面属性申明
 
-        private VectorImage arrowBack;
-
-        public VectorImage ArrowBack
-        {
-            get => arrowBack;
-            set => SetProperty(ref arrowBack, value);
-        }
-
-        private List<TabHeader> tabHeaders;
+        private List<TabHeader> _tabHeaders;
 
         public List<TabHeader> TabHeaders
         {
-            get => tabHeaders;
-            set => SetProperty(ref tabHeaders, value);
+            get => _tabHeaders;
+            set => SetProperty(ref _tabHeaders, value);
         }
 
-        private int selectTabId;
+        private int _selectTabId;
 
         public int SelectTabId
         {
-            get => selectTabId;
-            set => SetProperty(ref selectTabId, value);
+            get => _selectTabId;
+            set => SetProperty(ref _selectTabId, value);
         }
 
         #endregion
@@ -50,9 +41,6 @@ namespace DownKyi.ViewModels
             this.regionManager = regionManager;
 
             #region 属性初始化
-
-            ArrowBack = NavigationIcon.Instance().ArrowBack;
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
             TabHeaders = new List<TabHeader>
             {
@@ -67,17 +55,16 @@ namespace DownKyi.ViewModels
         #region 命令申明
 
         // 返回事件
-        private DelegateCommand backSpaceCommand;
+        private DelegateCommand? _backSpaceCommand;
 
-        public DelegateCommand BackSpaceCommand =>
-            backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
         /// <summary>
         /// 返回事件
         /// </summary>
         private void ExecuteBackSpace()
         {
-            NavigationParam parameter = new NavigationParam
+            var parameter = new NavigationParam
             {
                 ViewName = ParentView,
                 ParentViewName = null,
@@ -87,12 +74,9 @@ namespace DownKyi.ViewModels
         }
 
         // 左侧tab点击事件
-        private DelegateCommand<object> leftTabHeadersCommand;
+        private DelegateCommand<object>? _leftTabHeadersCommand;
 
-        public DelegateCommand<object> LeftTabHeadersCommand => leftTabHeadersCommand ??
-                                                                (leftTabHeadersCommand =
-                                                                    new DelegateCommand<object>(
-                                                                        ExecuteLeftTabHeadersCommand));
+        public DelegateCommand<object> LeftTabHeadersCommand => _leftTabHeadersCommand ??= new DelegateCommand<object>(ExecuteLeftTabHeadersCommand);
 
         /// <summary>
         /// 左侧tab点击事件
@@ -100,12 +84,12 @@ namespace DownKyi.ViewModels
         /// <param name="parameter"></param>
         private void ExecuteLeftTabHeadersCommand(object parameter)
         {
-            if (!(parameter is TabHeader tabHeader))
+            if (parameter is not TabHeader tabHeader)
             {
                 return;
             }
 
-            NavigationParameters param = new NavigationParameters();
+            var param = new NavigationParameters();
 
             switch (tabHeader.Id)
             {
@@ -138,8 +122,6 @@ namespace DownKyi.ViewModels
                 regionManager.RequestNavigate("ToolboxContentRegion", ViewBiliHelperViewModel.Tag,
                     new NavigationParameters());
             });
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
         }
     }
 }

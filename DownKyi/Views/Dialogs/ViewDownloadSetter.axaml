@@ -6,14 +6,14 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
              x:DataType="vmd:ViewDownloadSetterViewModel">
-    <prismExtension:Dialog.Theme>
-        <ControlTheme TargetType="Window">
-            <Setter Property="CanResize" Value="False" />
-            <Setter Property="ShowInTaskbar" Value="False" />
-            <Setter Property="SizeToContent" Value="WidthAndHeight" />
-            <Setter Property="SystemDecorations" Value="None" />
-        </ControlTheme>
-    </prismExtension:Dialog.Theme>
+    <!-- <prismExtension:Dialog.Theme> -->
+    <!--     <ControlTheme TargetType="Window"> -->
+    <!--         <Setter Property="CanResize" Value="False" /> -->
+    <!--         <Setter Property="ShowInTaskbar" Value="False" /> -->
+    <!--         <Setter Property="SizeToContent" Value="WidthAndHeight" /> -->
+    <!--         <Setter Property="SystemDecorations" Value="None" /> -->
+    <!--     </ControlTheme> -->
+    <!-- </prismExtension:Dialog.Theme> -->
     <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,1,0.6">
         <Grid RowDefinitions="40,*">
 
@@ -141,8 +141,7 @@
                         Command="{Binding DownloadAllCommand}"
                         Content="{DynamicResource DownloadAll}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadAll, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadAll, Mode=TwoWay}" />
 
                     <CheckBox
                         Grid.Column="2"
@@ -151,8 +150,7 @@
                         Command="{Binding DownloadAudioCommand}"
                         Content="{DynamicResource DownloadAudio}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadAudio, Mode=TwoWay}" />
                     <CheckBox
                         Grid.Column="3"
                         HorizontalAlignment="Center"
@@ -160,8 +158,7 @@
                         Command="{Binding DownloadVideoCommand}"
                         Content="{DynamicResource DownloadVideo}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadVideo, Mode=TwoWay}" />
                     <CheckBox
                         Grid.Column="4"
                         HorizontalAlignment="Center"
@@ -169,8 +166,7 @@
                         Command="{Binding DownloadDanmakuCommand}"
                         Content="{DynamicResource DownloadDanmaku}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadDanmaku, Mode=TwoWay}" />
                     <CheckBox
                         Grid.Column="5"
                         HorizontalAlignment="Center"
@@ -178,8 +174,7 @@
                         Command="{Binding DownloadSubtitleCommand}"
                         Content="{DynamicResource DownloadSubtitle}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadSubtitle, Mode=TwoWay}" />
                     <CheckBox
                         Grid.Column="6"
                         HorizontalAlignment="Center"
@@ -187,8 +182,7 @@
                         Command="{Binding DownloadCoverCommand}"
                         Content="{DynamicResource DownloadCover}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding DownloadCover, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding DownloadCover, Mode=TwoWay}" />
                 </Grid>
 
                 <Grid Grid.Row="3" Margin="0,30,0,0" ColumnDefinitions="*,*,100,100">
@@ -199,8 +193,7 @@
                         VerticalAlignment="Bottom"
                         Content="{DynamicResource IsDefaultDownloadDirectory}"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding IsDefaultDownloadDirectory, Mode=TwoWay}"
-                        Theme="{StaticResource CheckBoxStyle}" />
+                        IsChecked="{Binding IsDefaultDownloadDirectory, Mode=TwoWay}" />
                     <Button
                         Grid.Column="2"
                         Width="75"

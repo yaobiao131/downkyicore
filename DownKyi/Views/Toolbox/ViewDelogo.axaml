@@ -35,7 +35,7 @@
                         VerticalAlignment="Center"
                         Command="{Binding SelectVideoCommand}"
                         Content="{DynamicResource SelectVideo}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnBorderStyle}" />
                 </StackPanel>
 
                 <Grid Margin="0,20,0,0" VerticalAlignment="Center" ColumnDefinitions="400,*">
@@ -80,7 +80,7 @@
                         VerticalAlignment="Bottom"
                         Command="{Binding DelogoCommand}"
                         Content="{DynamicResource Delogo}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnBorderStyle}" />
                 </Grid>
 
             </StackPanel>

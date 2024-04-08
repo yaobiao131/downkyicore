@@ -70,7 +70,7 @@
                             Command="{Binding GotoWebCommand}"
                             Content="{DynamicResource GotoWeb}"
                             FontSize="12"
-                            Theme="{StaticResource BtnStyle}"/>
+                            Theme="{StaticResource BtnBorderStyle}" />
                     </StackPanel>
 
                     <StackPanel>
@@ -104,7 +104,7 @@
                         Command="{Binding FindDanmakuSenderCommand}"
                         Content="{DynamicResource FindDanmakuSender}"
                         FontSize="12"
-                        Theme="{StaticResource BtnStyle}" />
+                        Theme="{StaticResource BtnBorderStyle}" />
 
                     <StackPanel Width="100" Orientation="Horizontal">
                         <TextBox

@@ -18,28 +18,20 @@ public class ViewDownloadManagerViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
-    }
-
-    private List<TabHeader> tabHeaders;
+    private List<TabHeader> _tabHeaders;
 
     public List<TabHeader> TabHeaders
     {
-        get => tabHeaders;
-        set => SetProperty(ref tabHeaders, value);
+        get => _tabHeaders;
+        set => SetProperty(ref _tabHeaders, value);
     }
 
-    private int selectTabId;
+    private int _selectTabId;
 
     public int SelectTabId
     {
-        get => selectTabId;
-        set => SetProperty(ref selectTabId, value);
+        get => _selectTabId;
+        set => SetProperty(ref _selectTabId, value);
     }
 
     #endregion
@@ -50,9 +42,6 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         this.regionManager = regionManager;
 
         #region 属性初始化
-
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         TabHeaders = new List<TabHeader>
         {
@@ -107,7 +96,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
             return;
         }
 
-        NavigationParameters param = new NavigationParameters();
+        var param = new NavigationParameters();
 
         switch (tabHeader.Id)
         {
@@ -136,7 +125,5 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         SelectTabId = 0;
 
         PropertyChangeAsync(() => { regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
     }
 }
