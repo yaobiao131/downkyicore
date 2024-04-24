@@ -18,11 +18,7 @@
                         <Grid
                             Name="nameMediaPanel"
                             Height="100"
-                            Margin="20,15,10,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="160" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
+                            Margin="20,15,10,5" ColumnDefinitions="160,*">
 
                             <Border
                                 Name="nameCover"

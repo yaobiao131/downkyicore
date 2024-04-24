@@ -262,13 +262,13 @@
                         Content="{DynamicResource SelectAll}"
                         Foreground="{DynamicResource BrushTextDark}"
                         IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
-                    
+
                     <custom:CustomPager
                         Grid.Column="1"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center" 
-                        DataContext="{Binding Pager}"/>
-                    
+                        VerticalAlignment="Center"
+                        DataContext="{Binding Pager}" />
+
                     <Button
                         Grid.Column="2"
                         Margin="0,0,10,0"
@@ -277,7 +277,8 @@
                         Command="{Binding AddToDownloadCommand}"
                         Content="{DynamicResource DownloadSelectedPublication}"
                         FontSize="12"
-                        Foreground="{DynamicResource BrushText}" />
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
                     <Button
                         Grid.Column="3"
                         Margin="0,0,10,0"
@@ -286,7 +287,8 @@
                         Command="{Binding AddAllToDownloadCommand}"
                         Content="{DynamicResource DownloadAllPublication}"
                         FontSize="12"
-                        Foreground="{DynamicResource BrushText}" />
+                        Foreground="{DynamicResource BrushText}"
+                        Theme="{StaticResource BtnStyle}" />
                 </Grid>
 
             </Grid>

@@ -88,13 +88,12 @@ public class ToViewMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteTitleCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag,
-            $"{ParseEntrance.VideoUrl}{Bvid}");
+        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag, $"{ParseEntrance.VideoUrl}{Bvid}");
     }
 
     // UP主头像点击事件
