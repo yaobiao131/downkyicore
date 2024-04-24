@@ -241,7 +241,8 @@ public class AddToDownloadService
     /// <param name="directory">下载路径</param>
     /// <param name="isAll">是否下载所有，包括未选中项</param>
     /// <returns>添加的数量</returns>
-    public async Task<int> AddToDownload(IEventAggregator eventAggregator, IDialogService dialogService, string? directory, bool isAll = false)
+    public async Task<int> AddToDownload(IEventAggregator eventAggregator, IDialogService dialogService,
+        string? directory, bool isAll = false)
     {
         if (string.IsNullOrEmpty(directory))
         {
@@ -302,10 +303,12 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality && item.AudioCodec.Name == page.AudioQualityFormat &&
+                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality &&
+                        item.AudioCodec.Name == page.AudioQualityFormat &&
                         item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
                     {
-                        eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloading")}");
+                        eventAggregator.GetEvent<MessageEvent>()
+                            .Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloading")}");
                         isDownloading = true;
                         break;
                     }
@@ -325,7 +328,8 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality && item.AudioCodec.Name == page.AudioQualityFormat &&
+                    if (item.DownloadBase.Cid == page.Cid && item.Resolution.Id == page.VideoQuality.Quality &&
+                        item.AudioCodec.Name == page.AudioQualityFormat &&
                         item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
                     {
                         // eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded")}");
@@ -447,19 +451,22 @@ public class AddToDownloadService
                     // 如果存在同名文件，自动重命名
                     // todo 如果重新下载呢。还没想好
                     var directoryName = Path.GetDirectoryName(filePath);
-                    var files = Directory.GetFiles(directoryName).Select(Path.GetFileNameWithoutExtension).Distinct().ToList();
-
-                    if (files.Contains(Path.GetFileNameWithoutExtension(filePath)))
+                    if (Directory.Exists(directoryName))
                     {
-                        var count = 1;
-                        var newFilePath = filePath;
-                        while (files.Contains(Path.GetFileNameWithoutExtension(newFilePath)))
-                        {
-                            newFilePath = Path.Combine(directory, $"{fileName.RelativePath()}({count})");
-                            count++;
-                        }
+                        var files = Directory.GetFiles(directoryName).Select(Path.GetFileNameWithoutExtension).Distinct().ToList();
 
-                        filePath = newFilePath;
+                        if (files.Contains(Path.GetFileNameWithoutExtension(filePath)))
+                        {
+                            var count = 1;
+                            var newFilePath = filePath;
+                            while (files.Contains(Path.GetFileNameWithoutExtension(newFilePath)))
+                            {
+                                newFilePath = Path.Combine(directory, $"{fileName.RelativePath()}({count})");
+                                count++;
+                            }
+
+                            filePath = newFilePath;
+                        }
                     }
                 }
 
@@ -518,7 +525,8 @@ public class AddToDownloadService
                         Name = page.Name,
                         Duration = page.Duration,
                         VideoCodecName = page.VideoQuality.SelectedVideoCodec,
-                        Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
+                        Resolution = new Quality
+                            { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
                         AudioCodec = Constant.GetAudioQualities().FirstOrDefault(t => { return t.Name == page.AudioQualityFormat; }),
                         Page = page.Page
                     };
