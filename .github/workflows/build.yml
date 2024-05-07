@@ -51,7 +51,7 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet
+          dotnet tool install -g KuiperZone.PupNet --version 1.7.1
       - name: Get Deps
         run: |
           .\ffmpeg.ps1 ${{ matrix.cpu }}
@@ -120,7 +120,7 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet
+          dotnet tool install -g KuiperZone.PupNet --version 1.7.1
           sudo apt update
           sudo apt install libfuse2
       - name: Get Deps
@@ -198,7 +198,7 @@ jobs:
           chmod +x sign.sh
           ./sign.sh
         working-directory: ./script/macos
-      - name: Create DMG
+      - name: Create DMG  
         run: |
           create-dmg \
           --hdiutil-quiet \
