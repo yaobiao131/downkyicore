@@ -125,8 +125,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     #endregion
 
-    public ViewVideoDetailViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
-        eventAggregator, dialogService)
+    public ViewVideoDetailViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
     {
         // 初始化loading
         Loading = true;
@@ -144,7 +143,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     #region 命令申明
 
-// 返回
+    // 返回
     private DelegateCommand? _backSpaceCommand;
 
     public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
@@ -166,8 +165,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand =>
-        _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
@@ -186,8 +184,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 输入确认事件
     private DelegateCommand? _inputCommand;
 
-    public DelegateCommand InputCommand =>
-        _inputCommand ??= new DelegateCommand(ExecuteInputCommand, CanExecuteInputCommand);
+    public DelegateCommand InputCommand => _inputCommand ??= new DelegateCommand(ExecuteInputCommand, CanExecuteInputCommand);
 
 
     private DelegateCommand? _inputSearchCommand;
@@ -201,9 +198,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
     {
         await Task.Run(() =>
         {
-            if (InputSearchText == null || InputSearchText == string.Empty)
+            if (string.IsNullOrEmpty(InputSearchText))
             {
-                foreach (VideoSection section in VideoSections)
+                foreach (var section in VideoSections)
                 {
                     var cache = CaCheVideoSections.FirstOrDefault(e => e.Id == section.Id);
                     if (cache != null)
@@ -214,7 +211,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
             }
             else
             {
-                foreach (VideoSection section in VideoSections)
+                foreach (var section in VideoSections)
                 {
                     var cache = CaCheVideoSections.FirstOrDefault(e => e.Id == section.Id);
                     if (cache != null)
@@ -237,7 +234,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             await Task.Run(() =>
             {
-                if (InputText == null || InputText == string.Empty)
+                if (string.IsNullOrEmpty(InputText))
                 {
                     return;
                 }
@@ -321,8 +318,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     // 视频章节选择事件
     private DelegateCommand<object>? _videoSectionsCommand;
 
-    public DelegateCommand<object> VideoSectionsCommand =>
-        _videoSectionsCommand ??= new DelegateCommand<object>(ExecuteVideoSectionsCommand);
+    public DelegateCommand<object> VideoSectionsCommand => _videoSectionsCommand ??= new DelegateCommand<object>(ExecuteVideoSectionsCommand);
 
     /// <summary>
     /// 视频章节选择事件
@@ -330,7 +326,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteVideoSectionsCommand(object parameter)
     {
-        if (!(parameter is VideoSection section))
+        if (parameter is not VideoSection section)
         {
             return;
         }
@@ -527,7 +523,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
                         {
                             foreach (var page in section.VideoPages)
                             {
-                                if (selectedVideoPages.Find(v => v.Order == page.Order) != null)
+                                if (selectedVideoPages.Find(v => v.Bvid == page.Bvid) != null)
                                 {
                                     UnityUpdateView(ParseVideo, _input, page);
                                 }
