@@ -96,7 +96,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAppNameCommand()
     {
-        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/releases");
+        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/releases", EventAggregator);
     }
 
     // 检查更新事件
@@ -123,7 +123,7 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private void ExecuteFeedbackCommand()
     {
-        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/issues");
+        PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/issues", EventAggregator);
     }
 
     // 是否接收测试版更新事件

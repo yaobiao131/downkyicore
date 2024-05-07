@@ -126,7 +126,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
     private void ExecuteGotoWebCommand()
     {
         var url = $"https://www.bilibili.com/video/{Bvid}";
-        PlatformHelper.Open(url);
+        PlatformHelper.Open(url, EventAggregator);
     }
 
     // 查询弹幕发送者事件
@@ -171,7 +171,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
         }
 
         var userSpace = $"https://space.bilibili.com/{UserMid}";
-        PlatformHelper.Open(userSpace);
+        PlatformHelper.Open(userSpace, EventAggregator);
     }
 
     #endregion

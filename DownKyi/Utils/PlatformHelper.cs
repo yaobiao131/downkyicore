@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using DownKyi.Events;
+using Prism.Events;
 
 namespace DownKyi.Utils;
 
@@ -31,21 +33,29 @@ public static class PlatformHelper
     /// 打开各种 (文件、url)
     /// </summary>
     /// <param name="filename">文件名</param>
-    public static void Open(string filename)
+    /// <param name="eventAggregator"></param>
+    public static void Open(string filename, IEventAggregator? eventAggregator = null)
     {
-        if (OperatingSystem.IsWindows())
+        try
         {
-            Process.Start(filename);
-        }
+            if (OperatingSystem.IsWindows())
+            {
+                Process.Start(filename);
+            }
 
-        if (OperatingSystem.IsMacOS())
-        {
-            Process.Start("open", $"\"{filename}\"");
+            if (OperatingSystem.IsMacOS())
+            {
+                Process.Start("open", $"\"{filename}\"");
+            }
+
+            if (OperatingSystem.IsLinux())
+            {
+                Process.Start("xdg-open", $"\"{filename}\"");
+            }
         }
-        
-        if (OperatingSystem.IsLinux())
+        catch (Exception e)
         {
-            Process.Start("xdg-open", $"\"{filename}\"");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("没有可以打开网址的默认程序");
         }
     }
 }
