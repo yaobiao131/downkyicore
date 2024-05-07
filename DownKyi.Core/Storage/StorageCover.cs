@@ -27,7 +27,7 @@ public class StorageCover
     /// <returns></returns>
     public Bitmap GetCoverThumbnail(long avid, string bvid, long cid, string url, int width, int height)
     {
-        string header = GetCover(avid, bvid, cid, url);
+        var header = GetCover(avid, bvid, cid, url);
 
         return GetCoverThumbnail(header, width, height);
     }
@@ -48,7 +48,7 @@ public class StorageCover
 
         try
         {
-            Bitmap bitmap = new Bitmap(cover);
+            var bitmap = new Bitmap(cover);
             return bitmap.CreateScaledBitmap(new PixelSize(width, height), BitmapInterpolationMode.Unspecified);
 
             // return StorageUtils.BitmapToBitmapImage(new Bitmap(thumbnail));
@@ -101,17 +101,17 @@ public class StorageCover
     /// <returns></returns>
     public string GetCover(long avid, string bvid, long cid, string url)
     {
-        CoverDb coverDb = new CoverDb();
-        Cover cover = coverDb.QueryByUrl(url);
+        var coverDb = new CoverDb();
+        var cover = coverDb.QueryByUrl(url);
 
         // 如果存在，直接返回
         // 如果不存在，则先下载
         if (cover != null)
         {
-            string coverPath = $"{StorageManager.GetCover()}/{cover.Md5}";
+            var coverPath = $"{StorageManager.GetCover()}/{cover.Md5}";
             if (File.Exists(coverPath))
             {
-                Cover newCover = new Cover
+                var newCover = new Cover
                 {
                     Avid = avid,
                     Bvid = bvid,
@@ -126,7 +126,7 @@ public class StorageCover
             }
             else
             {
-                string md5 = DownloadImage(url);
+                var md5 = DownloadImage(url);
                 if (md5 != null)
                 {
                     Cover newCover = new Cover
@@ -151,7 +151,7 @@ public class StorageCover
         }
         else
         {
-            string md5 = DownloadImage(url);
+            var md5 = DownloadImage(url);
             if (md5 != null)
             {
                 Cover newCover = new Cover
@@ -182,10 +182,10 @@ public class StorageCover
     /// <returns></returns>
     private string DownloadImage(string url)
     {
-        string localFile = Path.GetTempPath() + Guid.NewGuid().ToString("N");
+        var localFile = Path.GetTempPath() + Guid.NewGuid().ToString("N");
 
         // 下载
-        bool isSuccessed = StorageUtils.DownloadImage(url, localFile);
+        var isSuccessed = StorageUtils.DownloadImage(url, localFile);
         if (isSuccessed)
         {
             try
@@ -232,7 +232,7 @@ public class StorageCover
     /// <returns></returns>
     public bool IsLocal(CoverDb coverDb, string url)
     {
-        Cover cover = coverDb.QueryByUrl(url);
+        var cover = coverDb.QueryByUrl(url);
         return cover != null;
     }
 
@@ -244,7 +244,7 @@ public class StorageCover
     /// <returns></returns>
     public string LocalCover(CoverDb coverDb, string url)
     {
-        Cover cover = coverDb.QueryByUrl(url);
+        var cover = coverDb.QueryByUrl(url);
         return cover.Md5;
     }
 }

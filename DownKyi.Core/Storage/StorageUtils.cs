@@ -16,7 +16,7 @@ internal static class StorageUtils
     {
         try
         {
-            WebClient mywebclient = new WebClient();
+            var mywebclient = new WebClient();
             mywebclient.DownloadFile(url, localFile);
         }
         catch (Exception e)

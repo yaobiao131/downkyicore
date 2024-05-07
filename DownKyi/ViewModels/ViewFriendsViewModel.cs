@@ -127,7 +127,7 @@ namespace DownKyi.ViewModels
             // isFirst参数表示是否是从PageFriends的headerTable的item点击进入的
             // true表示加载PageFriends后第一次进入
             // false表示从headerTable的item点击进入
-            NavigationParameters param = new NavigationParameters()
+            var param = new NavigationParameters()
             {
                 { "mid", mid },
                 { "isFirst", isFirst },

@@ -132,8 +132,7 @@ public class ViewIndexViewModel : ViewModelBase
     {
         EnterBili();
     }
-
-
+    
     // 登录事件
     private DelegateCommand? _loginCommand;
     public DelegateCommand LoginCommand => _loginCommand ??= new DelegateCommand(ExecuteLogin);
@@ -192,7 +191,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// <summary>
     /// 进入工具箱页面
     /// </summary>
-    private async void ExecuteToolboxCommand()
+    private void ExecuteToolboxCommand()
     {
         NavigateToView.NavigationView(EventAggregator, ViewToolboxViewModel.Tag, Tag, null);
     }
@@ -205,7 +204,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private void EnterBili()
     {
-        if (InputText == null || InputText == string.Empty)
+        if (string.IsNullOrEmpty(InputText))
         {
             return;
         }

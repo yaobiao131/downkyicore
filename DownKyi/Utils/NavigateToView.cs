@@ -15,6 +15,8 @@ public static class NavigateToView
     /// 如果传入的mid与本地登录的mid一致，
     /// 则进入我的用户空间。
     /// </summary>
+    /// <param name="eventAggregator"></param>
+    /// <param name="parentViewName"></param>
     /// <param name="mid"></param>
     public static void NavigateToViewUserSpace(IEventAggregator eventAggregator, string parentViewName, long mid)
     {
@@ -32,9 +34,11 @@ public static class NavigateToView
     /// <summary>
     /// 导航到其他页面
     /// </summary>
+    /// <param name="eventAggregator"></param>
     /// <param name="viewName"></param>
+    /// <param name="parentViewName"></param>
     /// <param name="param"></param>
-    public static void NavigationView(IEventAggregator eventAggregator, string viewName, string parentViewName, object param)
+    public static void NavigationView(IEventAggregator eventAggregator, string viewName, string parentViewName, object? param)
     {
         // LogManager.Debug(Tag, $"NavigationView: {viewName}, Parameter: {param}");
         var parameter = new NavigationParam

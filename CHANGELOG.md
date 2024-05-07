@@ -1,3 +1,13 @@
+## [1.0.10] - 2024-05-07
+
+### Bug Fixes
+
+- 修复多分类错误应用解析项问题 Fixes: #79
+- 修复没有可以打开网址的程序导致的打开链接崩溃的问题 Fixes: #84
+- 移除TextTrimming="CharacterEllipsis"导致的带有emoji的textblock崩溃 Fixes: #86
+- 修复样式问题 Fixes: #80
+- 修复下载时开启自动添加后缀文件夹不存在时闪退问题 Fixes: #78 #74
+
 ## [1.0.9] - 2024-04-08
 
 ### Bug Fixes
