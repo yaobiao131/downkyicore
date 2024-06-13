@@ -142,7 +142,7 @@ public static class VideoStream
     /// <param name="bvid"></param>
     /// <param name="p"></param>
     /// <returns></returns>
-    public static PlayUrl GetVideoPlayUrlWebPage(long avid, string bvid, int p)
+    public static PlayUrl GetVideoPlayUrlWebPage(long avid, string bvid, long cid, int p)
     {
         var url = "https://www.bilibili.com/video";
         if (bvid == string.Empty)
@@ -154,7 +154,13 @@ public static class VideoStream
             url = $"{url}/av{avid}/?p={p}";
         }
 
-        return GetPlayUrlWebPage(url);
+        var playUrl = GetPlayUrlWebPage(url);
+        if (playUrl == null)
+        {
+            playUrl = GetVideoPlayUrl(avid, bvid, cid);
+        }
+
+        return playUrl;
     }
 
     /// <summary>
@@ -264,7 +270,7 @@ public static class VideoStream
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    private static PlayUrl GetPlayUrlWebPage(string url)
+    private static PlayUrl? GetPlayUrlWebPage(string url)
     {
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
