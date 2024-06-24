@@ -523,7 +523,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
                         {
                             foreach (var page in section.VideoPages)
                             {
-                                if (selectedVideoPages.Find(v => v.Bvid == page.Bvid) != null)
+                                if (selectedVideoPages.Find(v => v.Cid == page.Cid) != null)
                                 {
                                     UnityUpdateView(ParseVideo, _input, page);
                                 }
