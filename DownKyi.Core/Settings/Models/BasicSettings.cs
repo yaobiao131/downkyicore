@@ -11,7 +11,7 @@ public class BasicSettings
     public AllowStatus IsAutoParseVideo { get; set; } = AllowStatus.NONE;
     public ParseScope ParseScope { get; set; } = ParseScope.NOT_SET;
     public AllowStatus IsAutoDownloadAll { get; set; } = AllowStatus.NONE;
-    public DownloadFinishedSort DownloadFinishedSort { get; set; } = DownloadFinishedSort.NOT_SET;
+    public DownloadFinishedSort DownloadFinishedSort { get; set; } = DownloadFinishedSort.NotSet;
     public RepeatDownloadStrategy RepeatDownloadStrategy { get; set; } = RepeatDownloadStrategy.Ask;
     public bool RepeatFileAutoAddNumberSuffix { get; set; } = false;
 }

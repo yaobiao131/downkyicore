@@ -51,11 +51,12 @@ namespace DownKyi.ViewModels.DownloadManager
             };
             SetDialogService();
 
-            DownloadFinishedSort finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
+            var finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
             FinishedSortBy = finishedSort switch
             {
-                DownloadFinishedSort.DOWNLOAD => 0,
-                DownloadFinishedSort.NUMBER => 1,
+                DownloadFinishedSort.DownloadAsc => 0,
+                DownloadFinishedSort.DownloadDesc => 1,
+                DownloadFinishedSort.Number => 2,
                 _ => 0
             };
             App.SortDownloadedList(finishedSort);
@@ -73,24 +74,29 @@ namespace DownKyi.ViewModels.DownloadManager
         /// <param name="parameter"></param>
         private void ExecuteFinishedSortCommand(object parameter)
         {
-            if (!(parameter is int index)) { return; }
+            if (parameter is not int index) { return; }
 
             switch (index)
             {
                 case 0:
-                    App.SortDownloadedList(DownloadFinishedSort.DOWNLOAD);
+                    App.SortDownloadedList(DownloadFinishedSort.DownloadAsc);
                     // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DownloadAsc);
                     break;
                 case 1:
-                    App.SortDownloadedList(DownloadFinishedSort.NUMBER);
+                    App.SortDownloadedList(DownloadFinishedSort.DownloadDesc);
                     // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.NUMBER);
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DownloadDesc);
+                    break;
+                case 2:
+                    App.SortDownloadedList(DownloadFinishedSort.Number);
+                    // 更新设置
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.Number);
                     break;
                 default:
-                    App.SortDownloadedList(DownloadFinishedSort.DOWNLOAD);
+                    App.SortDownloadedList(DownloadFinishedSort.DownloadAsc);
                     // 更新设置
-                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DOWNLOAD);
+                    SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DownloadAsc);
                     break;
             }
         }

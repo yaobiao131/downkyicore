@@ -18,7 +18,7 @@ public partial class SettingsManager
     private readonly AllowStatus _isAutoDownloadAll = AllowStatus.NO;
 
     // 下载完成列表排序
-    private readonly DownloadFinishedSort _finishedSort = DownloadFinishedSort.DOWNLOAD;
+    private readonly DownloadFinishedSort _finishedSort = DownloadFinishedSort.DownloadAsc;
 
     // 重复下载策略
     private readonly RepeatDownloadStrategy _repeatDownloadStrategy = RepeatDownloadStrategy.Ask;
@@ -192,7 +192,7 @@ public partial class SettingsManager
     public DownloadFinishedSort GetDownloadFinishedSort()
     {
         appSettings = GetSettings();
-        if (appSettings.Basic.DownloadFinishedSort == DownloadFinishedSort.NOT_SET)
+        if (appSettings.Basic.DownloadFinishedSort == DownloadFinishedSort.NotSet)
         {
             // 第一次获取，先设置默认值
             SetDownloadFinishedSort(_finishedSort);

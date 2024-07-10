@@ -2,7 +2,8 @@
 
 public enum DownloadFinishedSort
 {
-    NOT_SET = 0,
-    DOWNLOAD,
-    NUMBER
+    NotSet = 0,
+    DownloadAsc,
+    DownloadDesc,
+    Number
 }

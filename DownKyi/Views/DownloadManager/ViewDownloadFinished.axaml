@@ -213,7 +213,8 @@
                                                     CommandParameter="{Binding ElementName=NameFinishedSort, Path=SelectedIndex}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
-                    <ComboBoxItem Content="{DynamicResource DownloadedSortByTime}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByTimeAsc}" />
+                    <ComboBoxItem Content="{DynamicResource DownloadedSortByTimeDesc}" />
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByOrder}" />
                 </ComboBox>
 

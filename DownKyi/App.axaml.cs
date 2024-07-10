@@ -251,11 +251,15 @@ public partial class App : PrismApplication
         var list = DownloadedList?.ToList();
         switch (finishedSort)
         {
-            case DownloadFinishedSort.DOWNLOAD:
+            case DownloadFinishedSort.DownloadAsc:
                 // 按下载先后排序
                 list?.Sort((x, y) => x.Downloaded.FinishedTimestamp.CompareTo(y.Downloaded.FinishedTimestamp));
                 break;
-            case DownloadFinishedSort.NUMBER:
+            case DownloadFinishedSort.DownloadDesc:
+                // 按下载先后排序
+                list?.Sort((x, y) => y.Downloaded.FinishedTimestamp.CompareTo(x.Downloaded.FinishedTimestamp));
+                break;
+            case DownloadFinishedSort.Number:
                 // 按序号排序
                 list?.Sort((x, y) =>
                 {

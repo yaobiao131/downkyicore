@@ -159,7 +159,8 @@
     <system:String x:Key="DeleteAllDownloading">全部删除</system:String>
     <system:String x:Key="TotalDownloaded1">已下载</system:String>
     <system:String x:Key="TotalDownloaded2">个视频！</system:String>
-    <system:String x:Key="DownloadedSortByTime">按下载先后排序</system:String>
+    <system:String x:Key="DownloadedSortByTimeAsc">按下载时间升序</system:String>
+    <system:String x:Key="DownloadedSortByTimeDesc">按下载时间降序</system:String>
     <system:String x:Key="DownloadedSortByOrder">按序号排序</system:String>
     <system:String x:Key="ClearAllDownloaded">清空所有记录</system:String>
     <system:String x:Key="StartDownload">开始</system:String>
