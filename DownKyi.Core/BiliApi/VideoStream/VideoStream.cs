@@ -25,10 +25,10 @@ public static class VideoStream
             { "bvid", bvid },
             { "cid", cid },
         };
-        string query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
-        string url = $"https://api.bilibili.com/x/player/wbi/v2?{query}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
+        var url = $"https://api.bilibili.com/x/player/wbi/v2?{query}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -53,10 +53,10 @@ public static class VideoStream
     /// <returns></returns>
     public static List<SubRipText> GetSubtitle(long avid, string bvid, long cid)
     {
-        List<SubRipText> subRipTexts = new List<SubRipText>();
+        var subRipTexts = new List<SubRipText>();
 
         // 获取播放器信息
-        PlayerV2 player = PlayerV2(avid, bvid, cid);
+        var player = PlayerV2(avid, bvid, cid);
         if (player == null)
         {
             return subRipTexts;
@@ -69,8 +69,8 @@ public static class VideoStream
 
         foreach (var subtitle in player.Subtitle.Subtitles)
         {
-            string referer = "https://www.bilibili.com";
-            string response = WebClient.RequestWeb($"https:{subtitle.SubtitleUrl}", referer);
+            const string referer = "https://www.bilibili.com";
+            var response = WebClient.RequestWeb($"https:{subtitle.SubtitleUrl}", referer);
 
             try
             {
@@ -173,8 +173,7 @@ public static class VideoStream
     /// <returns></returns>
     public static PlayUrl GetBangumiPlayUrl(long avid, string bvid, long cid, int quality = 125)
     {
-        string baseUrl =
-            $"https://api.bilibili.com/pgc/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
+        var baseUrl = $"https://api.bilibili.com/pgc/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
         string url;
         if (bvid != null)
         {
@@ -202,8 +201,7 @@ public static class VideoStream
     /// <returns></returns>
     public static PlayUrl GetCheesePlayUrl(long avid, string bvid, long cid, long episodeId, int quality = 125)
     {
-        string baseUrl =
-            $"https://api.bilibili.com/pugv/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
+        var baseUrl = $"https://api.bilibili.com/pugv/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
         string url;
         if (bvid != null)
         {
@@ -273,7 +271,7 @@ public static class VideoStream
     private static PlayUrl? GetPlayUrlWebPage(string url)
     {
         const string referer = "https://www.bilibili.com";
-        var response = WebClient.RequestWeb(url, referer);
+        var response = WebClient.RequestWeb(url, referer, needRandomBvuid3: true);
 
         try
         {

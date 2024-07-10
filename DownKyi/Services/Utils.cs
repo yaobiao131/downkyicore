@@ -168,8 +168,7 @@ internal static class Utils
     /// <param name="userInfo"></param>
     /// <param name="videoCodecs"></param>
     /// <returns></returns>
-    private static List<VideoQuality> GetVideoQualityList(PlayUrl playUrl, UserInfoSettings userInfo,
-        int defaultQuality, int videoCodecs)
+    private static List<VideoQuality> GetVideoQualityList(PlayUrl playUrl, UserInfoSettings userInfo, int defaultQuality, int videoCodecs)
     {
         var videoQualityList = new List<VideoQuality>();
         var codeIds = Constant.GetCodecIds();

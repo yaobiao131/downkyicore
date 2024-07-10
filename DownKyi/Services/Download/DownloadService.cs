@@ -363,7 +363,8 @@ public abstract class DownloadService
                 downloading.PlayUrl = SettingsManager.GetInstance().GetVideoParseType() switch
                 {
                     0 => VideoStream.GetVideoPlayUrl(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid),
-                    1 => VideoStream.GetVideoPlayUrlWebPage(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Page),
+                    1 => VideoStream.GetVideoPlayUrlWebPage(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid,
+                        downloading.DownloadBase.Page),
                     _ => null
                 };
                 break;

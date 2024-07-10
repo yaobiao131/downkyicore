@@ -238,7 +238,7 @@ public class VideoInfoService : IInfoService
         var playUrl = SettingsManager.GetInstance().GetVideoParseType() switch
         {
             0 => VideoStream.GetVideoPlayUrl(page.Avid, page.Bvid, page.Cid),
-            1 => VideoStream.GetVideoPlayUrlWebPage(page.Avid, page.Bvid, page.Page),
+            1 => VideoStream.GetVideoPlayUrlWebPage(page.Avid, page.Bvid, page.Cid, page.Page),
             _ => null
         };
 
