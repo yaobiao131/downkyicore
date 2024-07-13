@@ -324,15 +324,15 @@ public class ViewNetworkViewModel : ViewModelBase
         var downloader = SettingsManager.GetInstance().GetDownloader();
         switch (downloader)
         {
-            case Downloader.NOT_SET:
+            case Core.Settings.Downloader.NOT_SET:
                 break;
-            case Downloader.BUILT_IN:
+            case Core.Settings.Downloader.BUILT_IN:
                 Builtin = true;
                 break;
-            case Downloader.ARIA:
+            case Core.Settings.Downloader.ARIA:
                 Aria2c = true;
                 break;
-            case Downloader.CUSTOM_ARIA:
+            case Core.Settings.Downloader.CUSTOM_ARIA:
                 CustomAria2c = true;
                 break;
         }
@@ -443,17 +443,17 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private async void ExecuteSelectDownloaderCommand(string parameter)
     {
-        Downloader downloader;
+        Core.Settings.Downloader downloader;
         switch (parameter)
         {
             case "Builtin":
-                downloader = Downloader.BUILT_IN;
+                downloader = Core.Settings.Downloader.BUILT_IN;
                 break;
             case "Aria2c":
-                downloader = Downloader.ARIA;
+                downloader = Core.Settings.Downloader.ARIA;
                 break;
             case "CustomAria2c":
-                downloader = Downloader.CUSTOM_ARIA;
+                downloader = Core.Settings.Downloader.CUSTOM_ARIA;
                 break;
             default:
                 downloader = SettingsManager.GetInstance().GetDownloader();
