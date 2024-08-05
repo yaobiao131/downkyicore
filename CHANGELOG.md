@@ -1,3 +1,18 @@
+## [1.0.11] - 2024-08-05
+
+### Bug Fixes
+
+- 修复视频发布时间错误问题Fixes: #103
+- 使用webpage解析失败回退api方式
+- 修复解析选中项失败的问题
+- 加入使用webpage无法解析会回退到api解析解决webpage覆盖面的问题 Fixes: #115
+
+### Features
+
+- 升级Avalonia到11.1版本
+- 替换内建下载器
+- 加入已下载列表按下载时间倒序 Fixes: #114
+
 ## [1.0.10] - 2024-05-07
 
 ### Bug Fixes
@@ -7,6 +22,10 @@
 - 移除TextTrimming="CharacterEllipsis"导致的带有emoji的textblock崩溃 Fixes: #86
 - 修复样式问题 Fixes: #80
 - 修复下载时开启自动添加后缀文件夹不存在时闪退问题 Fixes: #78 #74
+
+### Miscellaneous Tasks
+
+- Update github workflows
 
 ## [1.0.9] - 2024-04-08
 
