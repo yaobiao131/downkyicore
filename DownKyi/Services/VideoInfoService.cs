@@ -205,7 +205,7 @@ public class VideoInfoService : IInfoService
                 var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
                 // 视频发布时间
                 var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                var dateTime = startTime.AddSeconds(_videoView.Pubdate);
+                var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
                 page.PublishTime = dateTime.ToString(timeFormat);
                 // 这里的发布时间有问题，
                 // 如果是合集，也会执行这里，
