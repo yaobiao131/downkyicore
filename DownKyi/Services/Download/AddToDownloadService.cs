@@ -90,17 +90,10 @@ public class AddToDownloadService
         _videoInfoService = videoInfoService;
     }
 
-    public void GetVideo(VideoInfoView videoInfoView, List<VideoSection> videoSections, List<int> selectedVideo)
+    public void GetVideo(VideoInfoView videoInfoView, List<VideoSection> videoSections)
     {
         _videoInfoView = videoInfoView;
         _videoSections = videoSections;
-        foreach (var section in videoSections.Where(videoSection => videoSection.IsSelected))
-        {
-            foreach (var item in section.VideoPages)
-            {
-                item.IsSelected = selectedVideo.Contains(item.Order);
-            }
-        }
     }
 
     public void GetVideo()

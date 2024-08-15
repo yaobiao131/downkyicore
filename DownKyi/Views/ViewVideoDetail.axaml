@@ -36,7 +36,7 @@
                     VerticalContentAlignment="Center"
                     BorderThickness="0"
                     FontSize="12"
-                    Text="{Binding InputText,Mode=TwoWay}">
+                    Text="{Binding InputText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
                     <i:Interaction.Behaviors>
                         <iac:KeyUpBehavior Key="Enter">
                             <ia:InvokeCommandAction Command="{Binding InputCommand}" />
@@ -290,7 +290,7 @@
                     CanUserSortColumns="False"
                     CanUserResizeColumns="True"
                     IsReadOnly="True"
-                    ItemsSource="{ReflectionBinding ElementName=NameVideoSections,Path=SelectedItem.VideoPages,Mode=TwoWay}"
+                    ItemsSource="{ReflectionBinding ElementName=NameVideoSections, Path=SelectedItem.VideoPages, Mode=TwoWay}"
                     SelectionMode="Extended">
                     <DataGrid.ColumnHeaderTheme>
                         <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
@@ -358,9 +358,15 @@
                     <i:Interaction.Behaviors>
                         <ia:EventTriggerBehavior EventName="SelectionChanged">
                             <ia:InvokeCommandAction Command="{Binding VideoPagesCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoPages,Path=SelectedItems}" />
+                                                    CommandParameter="{Binding ElementName=NameVideoPages, Path=SelectedItems}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
+                    <DataGrid.RowTheme>
+                        <ControlTheme BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow"
+                                      x:DataType="vmp:VideoPage">
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                        </ControlTheme>
+                    </DataGrid.RowTheme>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="50"
@@ -449,7 +455,7 @@
                         VerticalAlignment="Top"
                         VerticalContentAlignment="Center"
                         Watermark="{DynamicResource SearchVideoByName}"
-                        Text="{Binding Path=InputSearchText, Mode=TwoWay}"
+                        Text="{Binding Path=InputSearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         TextWrapping="Wrap">
                         <i:Interaction.Behaviors>
                             <iac:KeyUpBehavior Key="Enter">

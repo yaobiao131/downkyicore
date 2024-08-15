@@ -97,8 +97,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     public ObservableCollection<VideoSection> CaCheVideoSections { get; set; }
 
-    public List<VideoPage> selectedVideoPages { get; set; } = new();
-
     private bool _isSelectAll;
 
     public bool IsSelectAll
@@ -336,7 +334,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         IsSelectAll = section.VideoPages.Count != 0 && isSelectAll;
     }
 
-// 视频page选择事件
+    // 视频page选择事件
     private DelegateCommand<IList>? _videoPagesCommand;
 
     public DelegateCommand<IList> VideoPagesCommand => _videoPagesCommand ??= new DelegateCommand<IList>(ExecuteVideoPagesCommand);
@@ -358,35 +356,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             return;
         }
-
-        selectedVideoPages.Clear();
-        foreach (var page in videoPages)
-        {
-            selectedVideoPages.Add((VideoPage)page);
-        }
-
         IsSelectAll = section.VideoPages.Count == videoPages.Count && section.VideoPages.Count != 0;
-    }
-
-    // Ctrl+A 全选事件
-    private DelegateCommand<object>? _keySelectAllCommand;
-
-    public DelegateCommand<object> KeySelectAllCommand => _keySelectAllCommand ??= new DelegateCommand<object>(ExecuteKeySelectAllCommand);
-
-    /// <summary>
-    /// Ctrl+A 全选事件
-    /// </summary>
-    private void ExecuteKeySelectAllCommand(object parameter)
-    {
-        if (parameter is not VideoSection section)
-        {
-            return;
-        }
-
-        foreach (var page in section.VideoPages)
-        {
-            page.IsSelected = true;
-        }
     }
 
     // 全选事件
@@ -411,7 +381,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
         else
         {
             dataGrid.SelectedIndex = -1;
-            selectedVideoPages.Clear();
         }
     }
 
@@ -523,15 +492,11 @@ public class ViewVideoDetailViewModel : ViewModelBase
                         {
                             foreach (var page in section.VideoPages)
                             {
-                                if (selectedVideoPages.Find(v => v.Cid == page.Cid) != null)
-                                {
-                                    UnityUpdateView(ParseVideo, _input, page);
-                                }
-                                /*if (page.IsSelected)
+                                if (page.IsSelected)
                                 {
                                     // 执行解析任务
-                                    UnityUpdateView(ParseVideo, input, page);
-                                }*/
+                                    UnityUpdateView(ParseVideo, _input, page);
+                                }
                             }
                         }
 
@@ -781,7 +746,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         await Task.Run(async () =>
         {
             // 传递video对象
-            addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList(), selectedVideoPages.Select(video => video.Order).ToList());
+            addToDownloadService.GetVideo(VideoInfoView, VideoSections.ToList());
             // 下载
             i = await addToDownloadService.AddToDownload(EventAggregator, DialogService, directory, isAll);
         });
