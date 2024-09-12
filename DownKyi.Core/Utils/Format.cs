@@ -134,6 +134,6 @@ public static class Format
              .Reverse()
              .ToArray();
 
-        return new string(cleanedName.Length == 0 ? "[empty title]" : cleanedName);
+       return new string(cleanedName);
     }
 }
