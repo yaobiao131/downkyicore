@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
@@ -47,13 +49,9 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         set => SetProperty(ref _isDefaultDownloadDirectory, value);
     }
 
-    private List<string> _directoryList;
 
-    public List<string> DirectoryList
-    {
-        get => _directoryList;
-        set => SetProperty(ref _directoryList, value);
-    }
+    public ObservableCollection<string> DirectoryList { get; set; }
+    
 
     private string _directory;
 
@@ -169,7 +167,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         }
 
         // 历史下载目录
-        DirectoryList = SettingsManager.GetInstance().GetHistoryVideoRootPaths();
+        DirectoryList = new ObservableCollection<string>(SettingsManager.GetInstance().GetHistoryVideoRootPaths());
         var directory = SettingsManager.GetInstance().GetSaveVideoRootPath();
         if (!DirectoryList.Contains(directory))
         {
@@ -385,7 +383,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
         // 将更新后的DirectoryList写入历史中
         SettingsManager.GetInstance().SetSaveVideoRootPath(Directory);
-        SettingsManager.GetInstance().SetHistoryVideoRootPaths(DirectoryList);
+        SettingsManager.GetInstance().SetHistoryVideoRootPaths(DirectoryList.ToList());
 
         // 返回数据
         IDialogParameters parameters = new DialogParameters

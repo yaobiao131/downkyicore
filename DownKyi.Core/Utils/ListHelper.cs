@@ -39,9 +39,9 @@ public static class ListHelper
     /// <param name="list"></param>
     /// <param name="item"></param>
     /// <param name="index"></param>
-    public static void InsertUnique<T>(List<T> list, T item, int index)
+    public static void InsertUnique<T>(Collection<T> list, T item, int index)
     {
-        if (!list.Exists(t => t.Equals(item)))
+        if (!list.Contains(item))
         {
             list.Insert(index, item);
         }
