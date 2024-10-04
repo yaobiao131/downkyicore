@@ -379,7 +379,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         // 将Directory移动到第一项
         // 如果直接在ComboBox中选择的就需要
         // 否则选中项不会在下次出现在第一项
-        ListHelper.InsertUnique(DirectoryList, Directory, 0);
+        ListHelper.InsertUnique(DirectoryList, Directory, 0,ref _directory);
 
         // 将更新后的DirectoryList写入历史中
         SettingsManager.GetInstance().SetSaveVideoRootPath(Directory);
