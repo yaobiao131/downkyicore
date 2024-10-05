@@ -40,7 +40,7 @@ public static class PlatformHelper
         {
             if (OperatingSystem.IsWindows())
             {
-                Process.Start(filename);
+                Process.Start("explorer.exe", filename);
             }
 
             if (OperatingSystem.IsMacOS())
