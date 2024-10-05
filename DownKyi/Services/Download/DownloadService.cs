@@ -271,7 +271,7 @@ public abstract class DownloadService
 
         foreach (var subRip in subRipTexts)
         {
-            var srtFile = $"{downloading.DownloadBase.FilePath}_{subRip.LanDoc}.srt";
+            var srtFile = $"{downloading.DownloadBase.FilePath}.srt";
             try
             {
                 File.WriteAllText(srtFile, subRip.SrtString);
