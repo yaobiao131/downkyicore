@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            Width="400"
+			 Height="360"
+			    xmlns:prism="http://prismlibrary.com/"
+			   xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
+			    prism:ViewModelLocator.AutoWireViewModel="True"
+			  xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+			  x:DataType="vmd:NewVersionAvailableDialogViewModel"
+             x:Class="DownKyi.Views.Dialogs.NewVersionAvailableDialog">
+	<Border BorderBrush="{DynamicResource BrushWindowBorder}"
+			CornerRadius="10"
+			BorderThickness="1,1,0.6,0.6">
+	
+		<Grid Margin="10"  RowDefinitions="2*,6*,3*">
+			<Grid ColumnDefinitions="2*,2*,*" VerticalAlignment="Top" Grid.Row="0">
+				<Button 
+				 Grid.Column="2"
+				  Command="{Binding CloseCommand}"
+				  ToolTip.Tip="{DynamicResource Close}"
+				  Theme="{StaticResource CloseBtnStyle}">
+					<Path
+						Width="{Binding CloseIcon.Width}"
+						Height="{Binding CloseIcon.Height}"
+						Data="{Binding CloseIcon.Data}"
+						Fill="{DynamicResource ColorSystemBtnTintDark}"
+						Stretch="UniformToFill" />
+				</Button>
+			</Grid>
+			<TextBlock 
+					    Text="{DynamicResource NewVersionTitle}"
+					   FontSize="15"
+					   TextAlignment="Center" 
+					   Grid.Row="0"/>
+					<ScrollViewer
+					 Grid.Row="1"
+					  VerticalScrollBarVisibility="Auto">
+						<ItemsControl ItemsSource="{Binding Messages}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate>
+									<TextBlock>
+										<TextBlock.Inlines>
+											<Run Text="{Binding Text}" FontWeight="{Binding FontWeight}" FontSize="{Binding FontSize}" />
+										</TextBlock.Inlines>
+									</TextBlock>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
+					</ScrollViewer>
+			<Grid Grid.Row="2" ColumnDefinitions="2*,2*,2*" RowDefinitions="2.5*,*,2*">
+				<Button Grid.Column="1" CornerRadius="10"
+						Foreground="White"
+						Grid.Row="2"
+						Command="{Binding AllowCommand}"
+						 BorderBrush="Transparent" BorderThickness="0"
+						 Content="{DynamicResource ActionUpdate}" Background="#FF6699"/>
+
+				
+			</Grid>
+		</Grid>
+		</Border>
+</UserControl>
