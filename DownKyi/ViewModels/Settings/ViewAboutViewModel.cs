@@ -138,6 +138,10 @@ public class ViewAboutViewModel : ViewModelBase
                 }
             })!;
         }
+        else
+        {
+            EventAggregator.GetEvent<MessageEvent>().Publish("已是最新版~");
+        }
         IsCheckVersion = false;
     }
 
