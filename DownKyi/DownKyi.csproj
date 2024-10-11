@@ -33,4 +33,11 @@
     <ItemGroup>
       <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj" />
     </ItemGroup>
+
+
+    <ItemGroup>
+      <Compile Update="Views\Dialogs\NewVersionAvailableDialog.axaml.cs">
+        <DependentUpon>NewVersionAvailableDialog.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>

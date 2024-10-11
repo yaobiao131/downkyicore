@@ -1,11 +1,17 @@
 ﻿using DownKyi.Core.Settings;
 using DownKyi.Events;
+using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
+using DownKyi.Services;
 using DownKyi.Utils;
+using DownKyi.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
+using Prism.Services.Dialogs;
+using System;
+
 
 namespace DownKyi.ViewModels.Settings;
 
@@ -51,7 +57,7 @@ public class ViewAboutViewModel : ViewModelBase
 
     #endregion
 
-    public ViewAboutViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator,
+    public ViewAboutViewModel(IEventAggregator eventAggregator, PrismExtension.Dialog.IDialogService dialogService) : base(eventAggregator,
         dialogService)
     {
         #region 属性初始化
@@ -104,13 +110,42 @@ public class ViewAboutViewModel : ViewModelBase
 
     public DelegateCommand CheckUpdateCommand => _checkUpdateCommand ??= new DelegateCommand(ExecuteCheckUpdateCommand);
 
+    private bool _isCheckVersion = false;
     /// <summary>
     /// 检查更新事件
     /// </summary>
-    private void ExecuteCheckUpdateCommand()
+    private async void ExecuteCheckUpdateCommand()
     {
-        //eventAggregator.GetEvent<MessageEvent>().Publish("开始查找更新，请稍后~");
-        EventAggregator.GetEvent<MessageEvent>().Publish("请前往主页下载最新版~");
+        if (_isCheckVersion) return;
+        _isCheckVersion = true;
+        (Version? version, string? body) = await new VersionCheckerService().GetLatestVersion();
+        if(version is null)
+        {
+            EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
+            _isCheckVersion = false;
+            return;
+        }
+        #if DEBUG
+        var versionString = AppVersion.Replace("-debug", string.Empty);
+        #else
+          var versionString = AppVersion;
+        #endif
+        var currVersion = Version.Parse(versionString);
+        if(currVersion < version)
+        {
+            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new Prism.Services.Dialogs.DialogParameters { { "body", body } }, result =>
+            {
+                if(result.Result == ButtonResult.OK)
+                {
+                    PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/releases/latest", EventAggregator);
+                }
+            })!;
+        }
+        else
+        {
+            EventAggregator.GetEvent<MessageEvent>().Publish("已是最新版~");
+        }
+        _isCheckVersion = false;
     }
 
     // 意见反馈事件
@@ -279,7 +314,7 @@ public class ViewAboutViewModel : ViewModelBase
         PlatformHelper.Open("FFmpeg_LICENSE.txt");
     }
 
-    #endregion
+#endregion
 
     /// <summary>
     /// 发送需要显示的tip

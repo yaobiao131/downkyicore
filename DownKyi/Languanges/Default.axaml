@@ -312,6 +312,8 @@
     <system:String x:Key="Warning">警告</system:String>
     <system:String x:Key="Error">错误</system:String>
     <system:String x:Key="Allow">确定</system:String>
+    <system:String x:Key="ActionUpdate">前往下载</system:String>
+    <system:String x:Key="NewVersionTitle">更新提示</system:String>
     <system:String x:Key="Cancel">取消</system:String>
     <system:String x:Key="ConfirmReboot">此项需重启生效，您确定要重新启动吗？</system:String>
     <system:String x:Key="ConfirmDelete">您确定要删除吗？</system:String>
