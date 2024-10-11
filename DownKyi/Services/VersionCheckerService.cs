@@ -10,34 +10,27 @@ namespace DownKyi.Services
 {
     public class VersionCheckerService
     {
-        private const string gh_releases = "https://api.github.com/repos/yaobiao131/downkyicore/releases/latest";
-        public async Task<(Version, string)> GetLatestVersion()
+        private const string GhReleases = "https://api.github.com/repos/yaobiao131/downkyicore/releases/latest";
+        public async Task<(Version?, string?)> GetLatestVersion()
         {
-            string json;
+            Version? version = default;
+            string? updateNotes = default;
             try
             {
-                var hc = new HttpClient();
+                using var hc = new HttpClient();
                 hc.DefaultRequestHeaders.Add("User-Agent", "downkyicore");
-
-                json =await hc.GetStringAsync(new Uri(gh_releases));
-                    
-            }
-            catch (Exception e) when (e is HttpRequestException or TimeoutException)
-            {
-                return (null, null);
-            }
-            try
-            {
-                using JsonDocument doc = JsonDocument.Parse(json);
-                var versionString = doc.RootElement.GetProperty("tag_name").GetString();
-                var updateNotes = doc.RootElement.GetProperty("body").GetString();
-                var version = Version.Parse(versionString.TrimStart('v'));
+                var json =await hc.GetStringAsync(new Uri(GhReleases));
+                using var doc = JsonDocument.Parse(json);
+                var versionString = doc.RootElement.GetProperty("tag_name").GetString()!;
+                updateNotes = doc.RootElement.GetProperty("body").GetString()!;
+                version = Version.Parse(versionString.TrimStart('v'));
                 return (version, updateNotes);
             }
             catch (Exception e)
             {
                 return (null, null);
             }
+          
         }
     }
 }

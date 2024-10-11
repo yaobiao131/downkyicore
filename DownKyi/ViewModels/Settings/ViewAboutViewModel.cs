@@ -110,25 +110,28 @@ public class ViewAboutViewModel : ViewModelBase
 
     public DelegateCommand CheckUpdateCommand => _checkUpdateCommand ??= new DelegateCommand(ExecuteCheckUpdateCommand);
 
-    private bool IsCheckVersion = false;
+    private bool _isCheckVersion = false;
     /// <summary>
     /// 检查更新事件
     /// </summary>
     private async void ExecuteCheckUpdateCommand()
     {
-        if (IsCheckVersion) return;
-        IsCheckVersion = true;
-        (Version version, string body) =await new VersionCheckerService().GetLatestVersion();
-        if(version == null)
+        if (_isCheckVersion) return;
+        _isCheckVersion = true;
+        (Version? version, string? body) = await new VersionCheckerService().GetLatestVersion();
+        if(version is null)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
+            _isCheckVersion = false;
             return;
         }
         #if DEBUG
         var versionString = AppVersion.Replace("-debug", string.Empty);
+        #else
+          var versionString = AppVersion;
         #endif
-        var curr_version = Version.Parse(versionString);
-        if(curr_version < version)
+        var currVersion = Version.Parse(versionString);
+        if(currVersion < version)
         {
             await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new Prism.Services.Dialogs.DialogParameters { { "body", body } }, result =>
             {
@@ -142,7 +145,7 @@ public class ViewAboutViewModel : ViewModelBase
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("已是最新版~");
         }
-        IsCheckVersion = false;
+        _isCheckVersion = false;
     }
 
     // 意见反馈事件
