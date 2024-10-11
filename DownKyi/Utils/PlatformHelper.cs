@@ -40,17 +40,17 @@ public static class PlatformHelper
         {
             if (OperatingSystem.IsWindows())
             {
-                Process.Start(new ProcessStartInfo(filename) { UseShellExecute = true });
+                Process.Start("explorer.exe", filename);
             }
 
             if (OperatingSystem.IsMacOS())
             {
-                Process.Start(new ProcessStartInfo("open", $"\"{filename}\""));
+                Process.Start("open", $"\"{filename}\"");
             }
 
             if (OperatingSystem.IsLinux())
             {
-                Process.Start(new ProcessStartInfo("xdg-open", $"\"{filename}\""));
+                Process.Start("xdg-open", $"\"{filename}\"");
             }
         }
         catch (Exception e)
