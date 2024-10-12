@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DownKyi.Images;
 using DownKyi.Models;
@@ -91,6 +92,15 @@ namespace DownKyi.ViewModels.DownloadManager
 
         public DelegateCommand OpenFolderCommand => _openFolderCommand ??= new DelegateCommand(ExecuteOpenFolderCommand);
 
+
+        private static IReadOnlyDictionary<string, string[]> FileSuffixMap = new Dictionary<string, string[]>
+        {
+            { "downloadVideo", new[] { ".mp4", ".flv" } },
+            { "downloadAudio", new[] { ".aac", ".mp3" } },
+            { "downloadCover", new[] { ".jpg" } },
+            { "downloadDanmaku", new[] { ".ass" } },
+            { "downloadSubtitle", new[] { ".srt" } }
+        };
         /// <summary>
         /// 打开文件夹事件
         /// </summary>
@@ -100,35 +110,25 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 return;
             }
-
-            //TODO:这里不光有mp4视频文件，也可能存在音频文件、字幕，或者其他文件类型
-            //fix bug:Issues #709
-            //这里根据需要下载的类型判断，具体对应的文件后缀名
             var downLoadContents = DownloadBase.NeedDownloadContent.Where(e => e.Value == true).Select(e => e.Key);
-            var fileSuffix = string.Empty;
-            if (downLoadContents.Contains("downloadVideo"))
+            var fileSuffixes = downLoadContents
+            .Where(content => FileSuffixMap.ContainsKey(content))
+            .SelectMany(content => FileSuffixMap[content])
+            .ToArray();
+            if (fileSuffixes.Length > 0)
             {
-                fileSuffix = ".mp4";
+                foreach (var suffix in fileSuffixes)
+                {
+                    var videoPath = $"{DownloadBase.FilePath}{suffix}";
+                    var fileInfo = new FileInfo(videoPath);
+                    if (File.Exists(fileInfo.FullName) && fileInfo.DirectoryName != null)
+                    {
+                        PlatformHelper.OpenFolder(fileInfo.DirectoryName);
+                        return;
+                    }
+                }
             }
-            else if (downLoadContents.Contains("downloadAudio"))
-            {
-                fileSuffix = ".aac";
-            }
-            else if (downLoadContents.Contains("downloadCover"))
-            {
-                fileSuffix = ".jpg";
-            }
-
-            var videoPath = $"{DownloadBase.FilePath}{fileSuffix}";
-            var fileInfo = new FileInfo(videoPath);
-            if (File.Exists(fileInfo.FullName) && fileInfo.DirectoryName != null)
-            {
-                PlatformHelper.OpenFolder(fileInfo.DirectoryName);
-            }
-            else
-            {
-                //eventAggregator.GetEvent<MessageEvent>().Publish("没有找到视频文件，可能被删除或移动！");
-            }
+            // eventAggregator.GetEvent<MessageEvent>().Publish("没有找到视频文件，可能被删除或移动！");
         }
 
         // 打开视频事件
