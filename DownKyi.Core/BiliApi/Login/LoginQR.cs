@@ -80,7 +80,7 @@ public static class LoginQR
     public static Bitmap GetLoginQRCode(string url)
     {
         // 设置的参数影响app能否成功扫码
-        Bitmap qrCode = QRCode.EncodeQRCode(url, 10, 10, null, 0, 0, false);
+        Bitmap qrCode = QRCode.EncodeQRCode(url, 11, 10, null, 0, 0, false);
 
         return qrCode;
     }
