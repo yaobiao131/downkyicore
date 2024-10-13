@@ -684,6 +684,7 @@ public class ViewMySpaceViewModel : ViewModelBase
         {
             // 导航栏信息
             var navData = UserInfo.GetUserInfoForNavigation();
+            if (navData is { IsLogin: false }) return;
             if (navData != null)
             {
                 ContentVisibility = true;
