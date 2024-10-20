@@ -480,6 +480,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     private async Task ExecuteParse(ParseScope parseScope)
     {
+        var isParallelProcessingEnabled = SettingsManager.GetInstance().GetVideoParseType() == 1;
         try
         {
             LoadingVisibility = true;
@@ -492,43 +493,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
                     case ParseScope.NONE:
                         break;
                     case ParseScope.SELECTED_ITEM:
-                        foreach (var section in VideoSections)
+                        ProcessVideoSections(VideoSections.Select(x => new VideoSection
                         {
-                            foreach (var page in section.VideoPages)
-                            {
-                                if (page.IsSelected)
-                                {
-                                    // 执行解析任务
-                                    UnityUpdateView(ParseVideo, _input, page);
-                                }
-                            }
-                        }
-
+                            VideoPages = x.VideoPages.Where(page => page.IsSelected).ToList()
+                        }),isParallelProcessingEnabled);
                         break;
                     case ParseScope.CURRENT_SECTION:
-                        foreach (var section in VideoSections)
-                        {
-                            if (section.IsSelected)
-                            {
-                                foreach (var page in section.VideoPages)
-                                {
-                                    // 执行解析任务
-                                    UnityUpdateView(ParseVideo, _input, page);
-                                }
-                            }
-                        }
-
+                        ProcessVideoSections(VideoSections.Where(x => x.IsSelected),isParallelProcessingEnabled);
                         break;
                     case ParseScope.ALL:
-                        foreach (var section in VideoSections)
-                        {
-                            foreach (var page in section.VideoPages)
-                            {
-                                // 执行解析任务
-                                UnityUpdateView(ParseVideo, _input, page);
-                            }
-                        }
-
+                        ProcessVideoSections(VideoSections,isParallelProcessingEnabled);
                         break;
                     default:
                         break;
@@ -553,6 +527,31 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         LogManager.Debug(Tag, $"ParseScope: {parseScope:G}");
+    }
+
+
+     private void ProcessVideoSections(IEnumerable<VideoSection> videoSections, bool useParallel)
+    {
+        if (useParallel)
+        {
+            foreach (var section in videoSections)
+            {
+                Parallel.ForEach(section.VideoPages, page =>
+                {
+                    UnityUpdateView(ParseVideo, _input, page);
+                });
+            }
+        }
+        else
+        {
+            foreach (var section in videoSections)
+            {
+                foreach (var page in section.VideoPages)
+                {
+                    UnityUpdateView(ParseVideo, _input, page);
+                }
+            }
+        }
     }
 
     // 添加到下载列表事件
