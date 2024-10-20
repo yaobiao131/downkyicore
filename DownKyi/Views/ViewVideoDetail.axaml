@@ -361,12 +361,6 @@
                                                     CommandParameter="{Binding ElementName=NameVideoPages, Path=SelectedItems}" />
                         </ia:EventTriggerBehavior>
                     </i:Interaction.Behaviors>
-                    <DataGrid.RowTheme>
-                        <ControlTheme BasedOn="{StaticResource {x:Type DataGridRow}}" TargetType="DataGridRow"
-                                      x:DataType="vmp:VideoPage">
-                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-                        </ControlTheme>
-                    </DataGrid.RowTheme>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="50"

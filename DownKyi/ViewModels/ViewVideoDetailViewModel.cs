@@ -356,6 +356,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             return;
         }
+        var avids = new HashSet<long>(parameter.Cast<VideoPage>().Select(x => x.Avid));
+        section.VideoPages.ToList().ForEach(videoPage =>
+               videoPage.IsSelected = avids.Contains(videoPage.Avid)
+        );
         IsSelectAll = section.VideoPages.Count == videoPages.Count && section.VideoPages.Count != 0;
     }
 
