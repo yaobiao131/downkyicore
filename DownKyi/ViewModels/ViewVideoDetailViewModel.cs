@@ -250,7 +250,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
         var selectedQuality = AvailableAudioQualities[newVal];
         var videoPages = section.VideoPages
-             .Where(x => isSelectAnyItem ? x.IsSelected : true);
+             .Where(x => isSelectAnyItem ? x.IsSelected : true)
+             .Where(x => x.AudioQualityFormatList?.Count > 0);
         foreach (var sec in videoPages)
         {
             if (sec.AudioQualityFormatList.Contains(selectedQuality))
@@ -268,7 +269,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var curr = AvailableVideoQualities[newVal];
         var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
         var videoPages = section.VideoPages
-             .Where(x => isSelectAnyItem ? x.IsSelected : true);
+             .Where(x => isSelectAnyItem ? x.IsSelected : true)
+             .Where(x => x.VideoQualityList?.Count > 0);
         foreach (var sec in videoPages)
         {
             int index = sec.VideoQualityList.FindIndex(x => x.Quality == curr.Quality);
@@ -493,8 +495,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var avids = new HashSet<long>(parameter.Cast<VideoPage>().Select(x => x.Avid));
         section.VideoPages.ToList().ForEach(videoPage =>
                videoPage.IsSelected = avids.Contains(videoPage.Avid)
-        );
-        BatchUpdateButtonIsVisible = videoPages.Count > 0 
+        );  
+        BatchUpdateButtonIsVisible = section.VideoPages.Count > 0 
             && section.VideoPages.Any(x => x.VideoQualityList?.Count > 0 
             && x.VideoQualityList?.Count > 0);
         IsSelectAll = section.VideoPages.Count == videoPages.Count && section.VideoPages.Count != 0;
