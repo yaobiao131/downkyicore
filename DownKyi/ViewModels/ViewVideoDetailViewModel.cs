@@ -255,7 +255,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     private void OnAvailableVideoIndexChanged(int oldVal, int newVal)
     {
-        AudioQualityPopupIsOpen = false;
+        VideoQualityPopupIsOpen = false;
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
         if (section == null) return;
         var curr = AvailableVideoQualities[newVal];
