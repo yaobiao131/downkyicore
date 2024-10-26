@@ -382,15 +382,18 @@
 									<Button Width="15" Height="15" 
 									  IsVisible="{Binding BatchUpdateButtonIsVisible}"
 						              Command="{Binding BatchUpdateSelectedAudioQualityCommand}"
-						              Background="Transparent"
+						                Background="Transparent"
 						              BorderThickness="0">
-										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="White" />
+										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="{DynamicResource ColorTextDark}" />
 									</Button>
 									<Popup 
 										   IsOpen="{Binding AudioQualityPopupIsOpen}">
-										<Border Background="#1C1C1C"  BorderBrush="Black" BorderThickness="2">
+										<Border Background="Transparent"  BorderBrush="Black" 
+												BorderThickness="1">
 											<StackPanel>
-												<ComboBox 											
+												<ComboBox 	
+													Foreground="{DynamicResource BrushTextDark}"
+													Background="{DynamicResource BrushPrimary}"
 													ItemsSource="{Binding  AvailableAudioQualities}"  
 														  SelectedIndex="{Binding AvailableAudioIndex,Mode=TwoWay}"
 														  Width="120">
@@ -424,13 +427,16 @@
 										Command="{Binding BatchUpdateSelectedVideoQualityCommand}"
 						              Background="Transparent"
 						              BorderThickness="0">
-										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="White" />
+										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="{DynamicResource ColorTextDark}" />
 									</Button>
 									<Popup
 										   IsOpen="{Binding VideoQualityPopupIsOpen}">
-										<Border Background="#1C1C1C"  BorderBrush="Black" BorderThickness="2">
+										<Border Background="Transparent"  BorderBrush="Black" 
+												BorderThickness="1">
 											<StackPanel>
 												<ComboBox
+													Foreground="{DynamicResource BrushTextDark}"
+													Background="{DynamicResource BrushPrimary}"
 													ItemsSource="{Binding  AvailableVideoQualities}"
 													DisplayMemberBinding="{Binding QualityFormat}"
 														  SelectedIndex="{Binding AvailableVideoIndex,Mode=TwoWay}"
