@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using ImTools;
 using Prism.Mvvm;
 
 namespace DownKyi.ViewModels.PageViewModels;
 
-public class VideoQuality : BindableBase
+public class VideoQuality : BindableBase, IEquatable<VideoQuality>
 {
     private int quality;
 
@@ -42,4 +45,14 @@ public class VideoQuality : BindableBase
             }
         }
     }
+
+    public bool Equals(VideoQuality? other)
+    {
+        if (other is null) return false;
+        return this.Quality == other.Quality;
+    }
+
+    public override bool Equals(object? obj) => Equals(obj as VideoQuality);
+
+    public override int GetHashCode() => quality.GetHashCode();
 }

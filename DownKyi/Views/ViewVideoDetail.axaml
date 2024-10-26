@@ -375,8 +375,35 @@
                             Binding="{ReflectionBinding Duration}"
                             Header="{DynamicResource Duration}" />
                         <DataGridTemplateColumn
-                            Width="120"
-                            Header="{DynamicResource AudioQuality}">
+                            Width="120">
+							<DataGridTemplateColumn.Header>
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="{DynamicResource AudioQuality}" />
+									<Button Width="15" Height="15" 
+									  IsVisible="{Binding BatchUpdateButtonIsVisible}"
+						              Command="{Binding BatchUpdateSelectedAudioQualityCommand}"
+						              Background="Transparent"
+						              BorderThickness="0">
+										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="White" />
+									</Button>
+									<Popup 
+										   IsOpen="{Binding AudioQualityPopupIsOpen}">
+										<Border Background="#1C1C1C"  BorderBrush="Black" BorderThickness="2">
+											<StackPanel>
+												<ComboBox 											
+													ItemsSource="{Binding  AvailableAudioQualities}"  
+														  SelectedIndex="{Binding AvailableAudioIndex,Mode=TwoWay}"
+														  Width="120">
+													
+												</ComboBox>
+											</StackPanel>
+										</Border>
+									</Popup>
+								
+								</StackPanel>
+							
+							</DataGridTemplateColumn.Header>
+							
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate DataType="vmp:VideoPage">
                                     <Grid>
@@ -388,8 +415,33 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         <DataGridTemplateColumn
-                            Width="120"
-                            Header="{DynamicResource VideoQuality}">
+                            Width="120" >
+							<DataGridTemplateColumn.Header>
+								<StackPanel Orientation="Horizontal">
+									<TextBlock Text="{DynamicResource VideoQuality}" />
+									<Button Width="15" Height="15"
+						               IsVisible="{Binding BatchUpdateButtonIsVisible}"
+										Command="{Binding BatchUpdateSelectedVideoQualityCommand}"
+						              Background="Transparent"
+						              BorderThickness="0">
+										<Path Data="M 0,0 L 10,0 L 5,5 Z" Fill="White" />
+									</Button>
+									<Popup
+										   IsOpen="{Binding VideoQualityPopupIsOpen}">
+										<Border Background="#1C1C1C"  BorderBrush="Black" BorderThickness="2">
+											<StackPanel>
+												<ComboBox
+													ItemsSource="{Binding  AvailableVideoQualities}"
+													DisplayMemberBinding="{Binding QualityFormat}"
+														  SelectedIndex="{Binding AvailableVideoIndex,Mode=TwoWay}"
+														  Width="120">
+												
+												</ComboBox>
+											</StackPanel>
+										</Border>
+									</Popup>
+								</StackPanel>
+							</DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate DataType="vmp:VideoPage">
                                     <Grid>
@@ -490,4 +542,6 @@
             IsVisible="{Binding NoDataVisibility}" />
 
     </Grid>
+	
+	
 </UserControl>
