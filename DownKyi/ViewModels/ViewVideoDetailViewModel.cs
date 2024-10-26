@@ -223,7 +223,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
         if (!BatchUpdateButtonIsVisible) return;
         AudioQualityPopupIsOpen = !AudioQualityPopupIsOpen;
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
-        var s = section?.VideoPages.Select(x => x.AudioQualityFormatList).FirstOrDefault();
+        var s = section?.VideoPages.Where(x => x.AudioQualityFormatList is not null && x.AudioQualityFormatList.Count > 0)
+            .Select(x => x.AudioQualityFormatList).FirstOrDefault();
         if (s is null) return;
         var difference = s.Except(AvailableAudioQualities);
         AvailableAudioQualities.AddRange(difference.ToList());
@@ -234,7 +235,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         if (!BatchUpdateButtonIsVisible) return;
         VideoQualityPopupIsOpen = !VideoQualityPopupIsOpen;
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
-        var s = section?.VideoPages.Select(x => x.VideoQualityList).FirstOrDefault();
+        var s = section?.VideoPages.Where(x => x.VideoQualityList is not null && x.VideoQualityList.Count > 0)
+            .Select(x => x.VideoQualityList).FirstOrDefault();
+        if (s is null) return;
         var difference = s.Except(AvailableVideoQualities);
         AvailableVideoQualities.AddRange(difference.ToList());
     }
@@ -256,7 +259,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
         if (section == null) return;
         var curr = AvailableVideoQualities[newVal];
-        VideoQualityPopupIsOpen = false;
         foreach (var sec in section.VideoPages.Where(x => x.IsSelected))
         {
             int index = sec.VideoQualityList.FindIndex(x => x.Quality == curr.Quality);
