@@ -247,9 +247,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
         if (section == null) return;
 
-        foreach (var sec in section.VideoPages.Where(x => x.IsSelected))
+        var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
+        var selectedQuality = AvailableAudioQualities[newVal];
+        var videoPages = section.VideoPages
+             .Where(x => isSelectAnyItem ? x.IsSelected : true);
+        foreach (var sec in videoPages)
         {
-            sec.AudioQualityFormat = AvailableAudioQualities[newVal];
+            if (sec.AudioQualityFormatList.Contains(selectedQuality))
+            {
+                sec.AudioQualityFormat = selectedQuality;
+            }
         }
     }
 
@@ -259,7 +266,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
         if (section == null) return;
         var curr = AvailableVideoQualities[newVal];
-        foreach (var sec in section.VideoPages.Where(x => x.IsSelected))
+        var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
+        var videoPages = section.VideoPages
+             .Where(x => isSelectAnyItem ? x.IsSelected : true);
+        foreach (var sec in videoPages)
         {
             int index = sec.VideoQualityList.FindIndex(x => x.Quality == curr.Quality);
             if(index != -1)
