@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.Logging;
@@ -17,6 +21,7 @@ using DownKyi.Services.Download;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
 using DownKyi.ViewModels.PageViewModels;
+using DownKyi.Views;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Events;
@@ -121,6 +126,64 @@ public class ViewVideoDetailViewModel : ViewModelBase
         set => SetProperty(ref _noDataVisibility, value);
     }
 
+    public ObservableCollection<string> AvailableAudioQualities { get; set; } = new();
+    public ObservableCollection<VideoQuality> AvailableVideoQualities { get; set; } = new();
+
+    private bool _audioQualityPopupIsOpen;
+
+    private bool _videoQualityPopupIsOpen;
+
+    public bool VideoQualityPopupIsOpen
+    {
+        get => _videoQualityPopupIsOpen;
+        set => SetProperty(ref _videoQualityPopupIsOpen, value);
+    }
+
+    public bool AudioQualityPopupIsOpen
+    {
+        get => _audioQualityPopupIsOpen;
+        set => SetProperty(ref _audioQualityPopupIsOpen, value);
+    }
+
+    private bool _batchUpdateButtonIsVisible = false;
+
+    public bool BatchUpdateButtonIsVisible
+    {
+        get => _batchUpdateButtonIsVisible;
+        set => SetProperty(ref _batchUpdateButtonIsVisible, value);
+    }
+
+    private int _availableAudioIndex;
+
+    private int _availableVideoIndex;
+
+
+    public int AvailableVideoIndex
+    {
+        get { return _availableVideoIndex; }
+        set
+        {
+            if (_availableVideoIndex != value)
+            {
+                OnAvailableVideoIndexChanged(_availableVideoIndex, value);
+                SetProperty(ref _availableVideoIndex, value);
+            }
+        }
+
+    }
+
+    public int AvailableAudioIndex
+    {
+        get => _availableAudioIndex;
+        set
+        {
+            if(_availableAudioIndex != value)
+            {
+                OnAvailableAudioIndexChanged(_availableAudioIndex,value);
+                SetProperty(ref _availableAudioIndex, value);
+            }
+        }
+    }
     #endregion
 
     public ViewVideoDetailViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
@@ -128,7 +191,13 @@ public class ViewVideoDetailViewModel : ViewModelBase
         // 初始化loading
         Loading = true;
         LoadingVisibility = false;
-
+        var mainWindow = Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        var window = mainWindow.MainWindow;
+        window.Deactivated += (s, e) =>
+        {
+            AudioQualityPopupIsOpen = false;
+            VideoQualityPopupIsOpen = false;
+        };
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
@@ -145,6 +214,73 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private DelegateCommand? _backSpaceCommand;
 
     public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
+
+    public DelegateCommand BatchUpdateSelectedAudioQualityCommand => new DelegateCommand(BatchUpdateSelectedAudioQuality);
+
+    public DelegateCommand BatchUpdateSelectedVideoQualityCommand => new DelegateCommand(BatchUpdateSelectedVideoQuality);
+    private void BatchUpdateSelectedAudioQuality()
+    {
+        if (!BatchUpdateButtonIsVisible) return;
+        AudioQualityPopupIsOpen = !AudioQualityPopupIsOpen;
+        var section = VideoSections.FirstOrDefault(item => item.IsSelected);
+        var s = section?.VideoPages.Where(x => x.AudioQualityFormatList is not null && x.AudioQualityFormatList.Count > 0)
+            .Select(x => x.AudioQualityFormatList).FirstOrDefault();
+        if (s is null) return;
+        var difference = s.Except(AvailableAudioQualities);
+        AvailableAudioQualities.AddRange(difference.ToList());
+    }
+
+    private void BatchUpdateSelectedVideoQuality()
+    {
+        if (!BatchUpdateButtonIsVisible) return;
+        VideoQualityPopupIsOpen = !VideoQualityPopupIsOpen;
+        var section = VideoSections.FirstOrDefault(item => item.IsSelected);
+        var s = section?.VideoPages.Where(x => x.VideoQualityList is not null && x.VideoQualityList.Count > 0)
+            .Select(x => x.VideoQualityList).FirstOrDefault();
+        if (s is null) return;
+        var difference = s.Except(AvailableVideoQualities);
+        AvailableVideoQualities.AddRange(difference.ToList());
+    }
+    private void OnAvailableAudioIndexChanged(int oldVal,int newVal)
+    {
+        AudioQualityPopupIsOpen = false;
+        var section = VideoSections.FirstOrDefault(item => item.IsSelected);
+        if (section == null) return;
+
+        var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
+        var selectedQuality = AvailableAudioQualities[newVal];
+        var videoPages = section.VideoPages
+             .Where(x => isSelectAnyItem ? x.IsSelected : true)
+             .Where(x => x.AudioQualityFormatList?.Count > 0);
+        foreach (var sec in videoPages)
+        {
+            if (sec.AudioQualityFormatList.Contains(selectedQuality))
+            {
+                sec.AudioQualityFormat = selectedQuality;
+            }
+        }
+    }
+
+    private void OnAvailableVideoIndexChanged(int oldVal, int newVal)
+    {
+        VideoQualityPopupIsOpen = false;
+        var section = VideoSections.FirstOrDefault(item => item.IsSelected);
+        if (section == null) return;
+        var curr = AvailableVideoQualities[newVal];
+        var isSelectAnyItem = section.VideoPages.Any(x => x.IsSelected);
+        var videoPages = section.VideoPages
+             .Where(x => isSelectAnyItem ? x.IsSelected : true)
+             .Where(x => x.VideoQualityList?.Count > 0);
+        foreach (var sec in videoPages)
+        {
+            int index = sec.VideoQualityList.FindIndex(x => x.Quality == curr.Quality);
+            if(index != -1)
+            {
+                sec.VideoQuality = sec.VideoQualityList[index];
+            }
+        }
+    }
+
 
     /// <summary>
     /// 返回
@@ -359,7 +495,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
         var avids = new HashSet<long>(parameter.Cast<VideoPage>().Select(x => x.Avid));
         section.VideoPages.ToList().ForEach(videoPage =>
                videoPage.IsSelected = avids.Contains(videoPage.Avid)
-        );
+        );  
+        BatchUpdateButtonIsVisible = section.VideoPages.Count > 0 
+            && section.VideoPages.Any(x => x.VideoQualityList?.Count > 0 
+            && x.VideoQualityList?.Count > 0);
         IsSelectAll = section.VideoPages.Count == videoPages.Count && section.VideoPages.Count != 0;
     }
 
@@ -551,7 +690,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             AddToDownload(true);
         }
-
+        BatchUpdateButtonIsVisible = true;
         LogManager.Debug(Tag, $"ParseScope: {parseScope:G}");
     }
 
@@ -587,7 +726,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         LoadingVisibility = true;
         ContentVisibility = false;
         NoDataVisibility = false;
-
+        VideoQualityPopupIsOpen = false;
+        AudioQualityPopupIsOpen = false;
+        BatchUpdateButtonIsVisible = false;
         VideoSections.Clear();
         CaCheVideoSections.Clear();
     }
