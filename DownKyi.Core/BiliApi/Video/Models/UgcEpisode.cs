@@ -14,5 +14,7 @@ public class UgcEpisode : BaseModel
     [JsonProperty("attribute")] public int Attribute { get; set; }
     [JsonProperty("arc")] public UgcArc Arc { get; set; }
     [JsonProperty("page")] public VideoPage Page { get; set; }
+
+    [JsonProperty("pages")] public List<VideoPage> Pages { get; set; }
     [JsonProperty("bvid")] public string Bvid { get; set; }
 }

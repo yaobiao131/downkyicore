@@ -137,7 +137,7 @@ public class VideoInfoService : IInfoService
     /// <returns></returns>
     public List<VideoSection>? GetVideoSections(bool noUgc = false)
     {
-        if (_videoView == null)
+        if (_videoView == null || _videoView.UgcSeason?.Sections == null || _videoView.UgcSeason.Sections.Count == 0)
         {
             return null;
         }
@@ -147,75 +147,12 @@ public class VideoInfoService : IInfoService
         // 不需要ugc内容
         if (noUgc)
         {
-            videoSections.Add(new VideoSection
-            {
-                Id = 0,
-                Title = "default",
-                IsSelected = true,
-                VideoPages = GetVideoPages()
-            });
-
+            videoSections.Add(CreateDefaultVideoSection());
             return videoSections;
         }
 
-        if (_videoView.UgcSeason == null)
-        {
-            return null;
-        }
-
-        if (_videoView.UgcSeason.Sections == null)
-        {
-            return null;
-        }
-
-        if (_videoView.UgcSeason.Sections.Count == 0)
-        {
-            return null;
-        }
-
-        if (_videoView.UgcSeason.Sections.Any(x => x.Type == 1))
-        {
-            if (_videoView.Pages.Count != 1)
-            {
-                var eps = _videoView.UgcSeason.Sections.First().Episodes;
-                var order = 0;
-
-                foreach (var ep in eps)
-                {
-                    int cp = 1;
-                    var result = VideoInfo.VideoPagelist(aid: ep.Aid);
-                    var pages = new List<VideoPage>();
-                    foreach (var p in result)
-                    {
-                        order++;
-                        pages.Add(new()
-                        {
-                            Cid = p.Cid,
-                            EpisodeId = -1,
-                            Order = order,
-                            Name = p.Part,
-                            Duration = "N/A",
-                            Owner = _videoView.Owner,
-                            FirstFrame = p.FirstFrame,
-                            Avid = ep.Aid,
-                            Bvid = ep.Bvid,
-                            Page = cp++,
-                        });
-                    }
-
-                    videoSections.Add(new()
-                    {
-                        Id = ep.Id,
-                        Title = ep.Title,
-                        VideoPages = pages,
-                    });
-                }
-                videoSections[0].IsSelected = true;
-                return videoSections;
-            }
-           
-        }
-
+        var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
+        var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
 
         foreach (var section in _videoView.UgcSeason.Sections)
         {
@@ -223,58 +160,96 @@ public class VideoInfoService : IInfoService
             var order = 0;
             foreach (var episode in section.Episodes)
             {
-                order++;
-                var page = new VideoPage
+                if (episode.Pages?.Count > 1)
                 {
-                    Avid = episode.Aid,
-                    Bvid = episode.Bvid,
-                    Cid = episode.Cid,
-                    EpisodeId = -1,
-                    FirstFrame = episode.Arc.Pic,
-                    Order = order,
-                    Name = episode.Title,
-                    Duration = "N/A",
-                    // UP主信息
-                    Owner = _videoView.Owner,
-                    Page = episode.Page.Page
-                };
-
-                if (page.Owner == null)
-                {
-                    page.Owner = new VideoOwner
-                    {
-                        Name = "",
-                        Face = "",
-                        Mid = -1,
-                    };
+                    var videoSection = CreateVideoSectionFromEpisode(section, episode, startTime, timeFormat);
+                    videoSections.Add(videoSection);
                 }
-
-                // 文件命名中的时间格式
-                var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
-                // 视频发布时间
-                var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
-                page.PublishTime = dateTime.ToString(timeFormat);
-                // 这里的发布时间有问题，
-                // 如果是合集，也会执行这里，
-                // 但是发布时间是入口视频的，不是所有视频的
-                // TODO 修复
-
-                pages.Add(page);
+                else
+                {
+                    pages.Add(GenerateVideoPage(episode, ++order, startTime, timeFormat));
+                }
             }
-
-            var videoSection = new VideoSection
+            if (pages.Count > 0)
             {
-                Id = section.Id,
-                Title = section.Title,
-                VideoPages = pages
-            };
-            videoSections.Add(videoSection);
+                var videoSection = new VideoSection
+                {
+                    Id = section.Id,
+                    Title = section.Title,
+                    VideoPages = pages
+                };
+                videoSections.Add(videoSection);
+            }
         }
 
-        videoSections[0].IsSelected = true;
+        if (videoSections.Count > 0)
+        {
+            videoSections[0].IsSelected = true;
+        }
 
         return videoSections;
+    }
+
+    private VideoSection CreateDefaultVideoSection()
+    {
+        return new VideoSection
+        {
+            Id = 0,
+            Title = "default",
+            IsSelected = true,
+            VideoPages = GetVideoPages()
+        };
+    }
+
+    private VideoSection CreateVideoSectionFromEpisode(UgcSection section, UgcEpisode episode, DateTime startTime, string timeFormat)
+    {
+        var videoSection = new VideoSection
+        {
+            Id = section.Id,
+            Title = episode.Title,
+            VideoPages = new List<VideoPage>()
+        };
+        var order = 1;
+        foreach (var p in episode.Pages)
+        {
+            var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
+            videoSection.VideoPages.Add(new VideoPage
+            {
+                Avid = episode.Aid,
+                Bvid = episode.Bvid,
+                Cid = p.Cid,
+                EpisodeId = -1,
+                FirstFrame = episode.Arc.Pic,
+                Order = order ++, 
+                Name = p.Part,
+                Duration = "N/A",
+                Owner = _videoView.Owner,
+                Page = p.Page,
+                PublishTime = dateTime.ToString(timeFormat)
+            });
+        }
+
+        return videoSection;
+    }
+
+    private VideoPage GenerateVideoPage(UgcEpisode episode, int order, DateTime startTime, string timeFormat)
+    {
+        var page = new VideoPage
+        {
+            Avid = episode.Aid,
+            Bvid = episode.Bvid,
+            Cid = episode.Cid,
+            EpisodeId = -1,
+            FirstFrame = episode.Arc.Pic,
+            Order = order,
+            Name = episode.Title,
+            Duration = "N/A",
+            Owner = _videoView.Owner ?? new VideoOwner { Name = "", Face = "", Mid = -1 },
+            Page = episode.Page.Page
+        };
+        var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
+        page.PublishTime = dateTime.ToString(timeFormat);
+        return page;
     }
 
     /// <summary>
