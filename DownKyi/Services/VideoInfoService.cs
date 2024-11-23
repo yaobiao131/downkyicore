@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
@@ -13,6 +15,8 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.ViewModels.PageViewModels;
+using static System.Collections.Specialized.BitVector32;
+using static QRCoder.QRCodeGenerator;
 using VideoPage = DownKyi.ViewModels.PageViewModels.VideoPage;
 
 namespace DownKyi.Services;
@@ -168,6 +172,50 @@ public class VideoInfoService : IInfoService
         {
             return null;
         }
+
+        if (_videoView.UgcSeason.Sections.Any(x => x.Type == 1))
+        {
+            if (_videoView.Pages.Count != 1)
+            {
+                var eps = _videoView.UgcSeason.Sections.First().Episodes;
+                var order = 0;
+
+                foreach (var ep in eps)
+                {
+                    int cp = 1;
+                    var result = VideoInfo.VideoPagelist(aid: ep.Aid);
+                    var pages = new List<VideoPage>();
+                    foreach (var p in result)
+                    {
+                        order++;
+                        pages.Add(new()
+                        {
+                            Cid = p.Cid,
+                            EpisodeId = -1,
+                            Order = order,
+                            Name = p.Part,
+                            Duration = "N/A",
+                            Owner = _videoView.Owner,
+                            FirstFrame = p.FirstFrame,
+                            Avid = ep.Aid,
+                            Bvid = ep.Bvid,
+                            Page = cp++,
+                        });
+                    }
+
+                    videoSections.Add(new()
+                    {
+                        Id = ep.Id,
+                        Title = ep.Title,
+                        VideoPages = pages,
+                    });
+                }
+                videoSections[0].IsSelected = true;
+                return videoSections;
+            }
+           
+        }
+
 
         foreach (var section in _videoView.UgcSeason.Sections)
         {
