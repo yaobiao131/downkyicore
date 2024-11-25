@@ -60,7 +60,7 @@ namespace DownKyi.PrismExtension.Common;
         /// <typeparam name="T">The implementer type to get.</typeparam>
         /// <param name="view">The view to get <typeparamref name="T"/> from.</param>
         /// <returns>view or viewmodel as <typeparamref name="T"/>.</returns>
-        public static T GetImplementerFromViewOrViewModel<T>(object view) where T : class
+        public static T? GetImplementerFromViewOrViewModel<T>(object view) where T : class
         {
             if (view is T viewAsT)
             {

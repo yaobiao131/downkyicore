@@ -53,7 +53,7 @@ public static class PlatformHelper
                 Process.Start("xdg-open", $"\"{filename}\"");
             }
         }
-        catch (Exception e)
+        catch (Exception)
         {
             eventAggregator?.GetEvent<MessageEvent>().Publish("没有可以打开网址的默认程序");
         }

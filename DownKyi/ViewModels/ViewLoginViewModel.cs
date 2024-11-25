@@ -17,7 +17,7 @@ public class ViewLoginViewModel : ViewModelBase
 {
     public const string Tag = "PageLogin";
 
-    private CancellationTokenSource _tokenSource;
+    private CancellationTokenSource? _tokenSource;
 
     #region 页面属性申明
 
@@ -49,9 +49,6 @@ public class ViewLoginViewModel : ViewModelBase
 
     public ViewLoginViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
     {
-        #region 属性初始化
-
-        #endregion
     }
 
     private DelegateCommand? _backSpaceCommand;
@@ -65,7 +62,7 @@ public class ViewLoginViewModel : ViewModelBase
         InitStatus();
 
         // 结束任务
-        _tokenSource.Cancel();
+        _tokenSource?.Cancel();
         var parameter = new NavigationParam
         {
             ViewName = ParentView,
@@ -94,7 +91,7 @@ public class ViewLoginViewModel : ViewModelBase
                 return;
             }
 
-            if (loginUrl.Data == null || loginUrl.Data.Url == null)
+            if (loginUrl.Data?.Url == null || loginUrl.Data?.QrcodeKey == null)
             {
                 EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("GetLoginUrlFailed"));
                 return;
@@ -119,7 +116,7 @@ public class ViewLoginViewModel : ViewModelBase
     /// <param name="oauthKey"></param>
     private void GetLoginStatus(string oauthKey)
     {
-        var cancellationToken = _tokenSource.Token;
+        var cancellationToken = _tokenSource?.Token;
         while (true)
         {
             Thread.Sleep(1000);
@@ -155,13 +152,10 @@ public class ViewLoginViewModel : ViewModelBase
                     LogManager.Info(Tag, DictionaryResource.GetString("LoginTimeOut"));
 
                     // 取消任务
-                    _tokenSource.Cancel();
+                    _tokenSource?.Cancel();
 
                     // 创建新任务
-                    PropertyChangeAsync(() =>
-                    {
-                        Task.Run(Login, (_tokenSource = new CancellationTokenSource()).Token);
-                    });
+                    PropertyChangeAsync(() => { Task.Run(Login, (_tokenSource = new CancellationTokenSource()).Token); });
                     break;
                 case 86101:
                     // 未扫码
@@ -209,12 +203,10 @@ public class ViewLoginViewModel : ViewModelBase
             }
 
             // 判断是否该结束线程，若为true，跳出while循环
-            if (cancellationToken.IsCancellationRequested)
-            {
-                Console.PrintLine("停止Login线程，跳出while循环");
-                LogManager.Debug(Tag, "登录操作结束");
-                break;
-            }
+            if (cancellationToken?.IsCancellationRequested != true) continue;
+            Console.PrintLine("停止Login线程，跳出while循环");
+            LogManager.Debug(Tag, "登录操作结束");
+            break;
         }
     }
 

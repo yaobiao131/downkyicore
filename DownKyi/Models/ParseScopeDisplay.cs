@@ -4,6 +4,6 @@ namespace DownKyi.Models;
 
 public class ParseScopeDisplay
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public ParseScope ParseScope { get; set; }
 }

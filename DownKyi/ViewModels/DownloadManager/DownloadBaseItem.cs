@@ -10,14 +10,14 @@ namespace DownKyi.ViewModels.DownloadManager
 {
     public class DownloadBaseItem : BindableBase
     {
-        public IDialogService DialogService;
+        public IDialogService? DialogService;
 
         public DownloadBaseItem()
         {
             DialogService = null;
         }
 
-        public DownloadBaseItem(IDialogService dialogService)
+        public DownloadBaseItem(IDialogService? dialogService)
         {
             DialogService = dialogService;
         }

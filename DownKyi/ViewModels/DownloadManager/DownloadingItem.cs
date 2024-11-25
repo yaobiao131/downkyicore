@@ -15,7 +15,7 @@ namespace DownKyi.ViewModels.DownloadManager
         {
         }
 
-        public DownloadingItem(IDialogService dialogService) : base(dialogService)
+        public DownloadingItem(IDialogService? dialogService) : base(dialogService)
         {
             // 暂停继续按钮
             StartOrPause = ButtonIcon.Instance().Pause;
@@ -225,7 +225,7 @@ namespace DownKyi.ViewModels.DownloadManager
                 return;
             }
             
-            App.DownloadingList.Remove(this);
+            App.DownloadingList?.Remove(this);
         }
 
         #endregion

@@ -10,7 +10,7 @@ public class Downloaded // : DownloadBase
     }
 
     //  下载速度
-    public string MaxSpeedDisplay { get; set; }
+    public string? MaxSpeedDisplay { get; set; }
 
     // 完成时间戳
     public long FinishedTimestamp { get; set; }

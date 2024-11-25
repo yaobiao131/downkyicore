@@ -36,13 +36,13 @@ namespace DownKyi.ViewModels.DownloadManager
         public Downloaded Downloaded { get; set; }
 
         //  下载速度
-        public string MaxSpeedDisplay
+        public string? MaxSpeedDisplay
         {
             get => Downloaded.MaxSpeedDisplay;
             set
             {
                 Downloaded.MaxSpeedDisplay = value;
-                RaisePropertyChanged("MaxSpeedDisplay");
+                RaisePropertyChanged();
             }
         }
 

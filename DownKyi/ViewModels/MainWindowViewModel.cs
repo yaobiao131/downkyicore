@@ -46,7 +46,6 @@ public class MainWindowViewModel : BindableBase
     }
 
     public DelegateCommand? LoadedCommand { get; }
-    public DelegateCommand<PointerPressedEventArgs> DragMoveCommand { get; private set; }
 
     private DelegateCommand? _closingCommand;
 
@@ -107,42 +106,6 @@ public class MainWindowViewModel : BindableBase
                 { "Parameter", "start" }
             };
             regionManager.RequestNavigate("ContentRegion", ViewIndexViewModel.Tag, param);
-        });
-
-        var times = 0;
-
-        DragMoveCommand = new DelegateCommand<PointerPressedEventArgs>(e =>
-        {
-            Window mainWindow = App.Current.MainWindow;
-            // caption 双击事件
-            times += 1;
-            var timer = new DispatcherTimer
-            {
-                Interval = new TimeSpan(0, 0, 0, 0, 300)
-            };
-            timer.Tick += (_, _) =>
-            {
-                timer.IsEnabled = false;
-                times = 0;
-            };
-            timer.IsEnabled = true;
-
-            if (times % 2 == 0)
-            {
-                timer.IsEnabled = false;
-                times = 0;
-                WinState = WinState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
-            }
-
-            // caption 拖动事件
-            try
-            {
-                mainWindow.BeginMoveDrag(e);
-            }
-            catch
-            {
-                // ignored
-            }
         });
     }
 
