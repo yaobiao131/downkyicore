@@ -180,7 +180,8 @@ namespace DownKyi.ViewModels
 
             // 结束任务
             _tokenSource?.Cancel();
-
+            _tokenSource?.Dispose();
+            _tokenSource = null;
             var parameter = new NavigationParam
             {
                 ViewName = ParentView,
@@ -384,7 +385,7 @@ namespace DownKyi.ViewModels
             LoadingVisibility = true;
             NoDataVisibility = false;
 
-            UpdatePublication(current);
+            _ = UpdatePublication(current);
 
             return true;
         }
@@ -402,18 +403,19 @@ namespace DownKyi.ViewModels
             return sb.ToString();
         }
 
-        private async void UpdatePublication(int current)
+        private async Task UpdatePublication(int current)
         {
+            _tokenSource?.Cancel();
             // 是否正在获取数据
             // 在所有的退出分支中都需要设为true
             IsEnabled = false;
-
+            _tokenSource = new CancellationTokenSource();
+            var cancellationToken = _tokenSource.Token;
+            var defaultPic = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
             var tab = TabHeaders[SelectTabId];
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                var cancellationToken = _tokenSource.Token;
-
                 var publications = Core.BiliApi.Users.UserSpace.GetPublication(_mid, current, _videoNumberInPage, tab.Id);
                 if (publications == null)
                 {
@@ -436,22 +438,7 @@ namespace DownKyi.ViewModels
                 {
                     // 查询、保存封面
                     var coverUrl = video.Pic;
-                    Bitmap cover;
-                    if (coverUrl == null || coverUrl == "")
-                    {
-                        cover = null; // new BitmapImage(new Uri($"pack://application:,,,/Resources/video-placeholder.png"));
-                    }
-                    else
-                    {
-                        if (!coverUrl.ToLower().StartsWith("http"))
-                        {
-                            coverUrl = $"https:{video.Pic}";
-                        }
-
-                        var storageCover = new StorageCover();
-                        cover = storageCover.GetCoverThumbnail(video.Aid, video.Bvid, -1, coverUrl, 200, 125);
-                    }
-
+                   
                     // 播放数
                     var play = string.Empty;
                     if (video.Play > 0)
@@ -473,11 +460,12 @@ namespace DownKyi.ViewModels
                         {
                             Avid = video.Aid,
                             Bvid = video.Bvid,
-                            Cover = cover ?? ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png")),
+                            Cover = defaultPic,
                             Duration = video.Length,
                             Title = video.Title,
                             PlayNumber = play,
-                            CreateTime = ctime
+                            CreateTime = ctime,
+                            CoverUrl = coverUrl
                         };
                         _medias.Add(media);
 
@@ -485,14 +473,28 @@ namespace DownKyi.ViewModels
                         NoDataVisibility = false;
                     });
 
-                    // 判断是否该结束线程，若为true，跳出循环
                     if (cancellationToken.IsCancellationRequested)
                     {
-                        break;
+                        return;
                     }
                 }
-            }, (_tokenSource = new CancellationTokenSource()).Token);
-            IsEnabled = true;
+                IsEnabled = true;
+                await UpdateMediaCovers(cancellationToken);
+            }, cancellationToken).ContinueWith(t => { });
+        }
+        
+        private async Task UpdateMediaCovers(CancellationToken cancellationToken)
+        {
+            var storageCover = new StorageCover();
+            var currentMedias = _medias.ToList();
+            foreach (var media in currentMedias)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+                media.Cover = await storageCover.GetCoverThumbnailAsync(media.Avid, media.Bvid, -1, media.CoverUrl, 200, 125);
+            }
         }
 
         /// <summary>

@@ -32,6 +32,15 @@ public class StorageCover
         return GetCoverThumbnail(header, width, height);
     }
 
+    public Task<Bitmap> GetCoverThumbnailAsync(long avid, string bvid, long cid, string url, int width, int height)
+    {
+        return Task.Run(() =>
+        {
+            var header = GetCover(avid, bvid, cid, url);
+            return GetCoverThumbnail(header, width, height);
+        });
+    }
+
     /// <summary>
     /// 获取封面缩略图
     /// </summary>
