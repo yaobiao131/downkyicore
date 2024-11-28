@@ -3,6 +3,7 @@ using Avalonia.Media.Imaging;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Storage.Database;
 using DownKyi.Core.Utils.Encryptor;
+using System.Threading;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.Storage;
@@ -30,15 +31,6 @@ public class StorageCover
         var header = GetCover(avid, bvid, cid, url);
 
         return GetCoverThumbnail(header, width, height);
-    }
-
-    public Task<Bitmap> GetCoverThumbnailAsync(long avid, string bvid, long cid, string url, int width, int height)
-    {
-        return Task.Run(() =>
-        {
-            var header = GetCover(avid, bvid, cid, url);
-            return GetCoverThumbnail(header, width, height);
-        });
     }
 
     /// <summary>
@@ -181,6 +173,37 @@ public class StorageCover
                 //coverDb.Close();
                 return null;
             }
+        }
+    }
+
+    public async Task<Bitmap?> GetCoverAsync(string url,TimeSpan? timeOut = null)
+    {
+        timeOut = timeOut ?? TimeSpan.FromSeconds(1.5);
+        using var stream = await GetImageBytesAsync(url, timeOut);
+        return stream == null ? null : new Bitmap(stream);
+    }
+
+
+    public async Task<Stream?> GetImageBytesAsync(string imageUrl,TimeSpan? timeOut = null)
+    {
+        try
+        {
+            using (var httpClient = new HttpClient())
+            {
+                if (timeOut is not null)
+                {
+                    httpClient.Timeout = timeOut.Value;
+                }
+                var response = await httpClient.GetAsync(imageUrl);
+                response.EnsureSuccessStatusCode();
+
+                var stream = await response.Content.ReadAsStreamAsync();
+                return stream;
+            }
+        }
+        catch (Exception e)
+        {
+            return null;
         }
     }
 

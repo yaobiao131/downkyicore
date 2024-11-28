@@ -20,6 +20,7 @@ using DownKyi.Services.Download;
 using DownKyi.Utils;
 using DownKyi.ViewModels.PageViewModels;
 using DownKyi.ViewModels.UserSpace;
+using DryIoc;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -389,7 +390,7 @@ namespace DownKyi.ViewModels
 
             return true;
         }
-        
+
         private static string StringToUnicode(string s)
         {
             var charbuffers = s.ToCharArray();
@@ -402,7 +403,7 @@ namespace DownKyi.ViewModels
             }
             return sb.ToString();
         }
-
+        private readonly Bitmap defaultPic = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
         private async Task UpdatePublication(int current)
         {
             _tokenSource?.Cancel();
@@ -411,9 +412,9 @@ namespace DownKyi.ViewModels
             IsEnabled = false;
             _tokenSource = new CancellationTokenSource();
             var cancellationToken = _tokenSource.Token;
-            var defaultPic = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
-            var tab = TabHeaders[SelectTabId];
 
+            var tab = TabHeaders[SelectTabId];
+            var storageCover = new StorageCover();
             await Task.Run(async () =>
             {
                 var publications = Core.BiliApi.Users.UserSpace.GetPublication(_mid, current, _videoNumberInPage, tab.Id);
@@ -438,7 +439,7 @@ namespace DownKyi.ViewModels
                 {
                     // 查询、保存封面
                     var coverUrl = video.Pic;
-                   
+
                     // 播放数
                     var play = string.Empty;
                     if (video.Play > 0)
@@ -453,7 +454,6 @@ namespace DownKyi.ViewModels
                     var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
                     var dateCTime = startTime.AddSeconds(video.Created);
                     var ctime = dateCTime.ToString("yyyy-MM-dd");
-
                     App.PropertyChangeAsync(() =>
                     {
                         var media = new PublicationMedia(EventAggregator)
@@ -482,19 +482,21 @@ namespace DownKyi.ViewModels
                 await UpdateMediaCovers(cancellationToken);
             }, cancellationToken).ContinueWith(t => { });
         }
-        
+        private readonly StorageCover storageCover = new StorageCover();
         private async Task UpdateMediaCovers(CancellationToken cancellationToken)
         {
-            var storageCover = new StorageCover();
             var currentMedias = _medias.ToList();
-            foreach (var media in currentMedias)
+            var tasks = currentMedias.Select(async media =>
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
                     return;
                 }
-                media.Cover = await storageCover.GetCoverThumbnailAsync(media.Avid, media.Bvid, -1, media.CoverUrl, 200, 125);
-            }
+                var coverUrl = $"{media.CoverUrl}@{200}w_{125}h_1c_!web-space-index-myvideo.webp";
+                var bitmap = await storageCover.GetCoverAsync(coverUrl) ?? defaultPic;
+                media.Cover = bitmap;
+            });
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -529,7 +531,6 @@ namespace DownKyi.ViewModels
             {
                 return;
             }
-
             InitView();
 
             _mid = (long)parameter["mid"];
