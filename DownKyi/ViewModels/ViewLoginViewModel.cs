@@ -172,7 +172,7 @@ public class ViewLoginViewModel : ViewModelBase
                     // 确认登录
 
                     // 发送通知
-                    EventAggregator.GetEvent<MessageEvent>().Publish("登陆成功");
+                    EventAggregator.GetEvent<MessageEvent>().Publish("登录成功");
                     // LogManager.Info(Tag, DictionaryResource.GetString("LoginSuccessful"));
 
                     // 保存登录信息
