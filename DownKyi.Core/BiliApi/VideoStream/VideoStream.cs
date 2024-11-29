@@ -232,7 +232,7 @@ public static class VideoStream
     /// <returns></returns>
     private static PlayUrl GetPlayUrl(string url)
     {
-        const string referer = "https://m.bilibili.com";
+        const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
 
         try
@@ -271,7 +271,7 @@ public static class VideoStream
     private static PlayUrl? GetPlayUrlWebPage(string url)
     {
         const string referer = "https://www.bilibili.com";
-        var response = WebClient.RequestWeb(url, referer, needRandomBvuid3: true);
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {

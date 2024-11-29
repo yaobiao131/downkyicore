@@ -49,7 +49,7 @@ public static class UserInfo
         var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
         var url = $"https://api.bilibili.com/x/space/wbi/acc/info?{query}";
         const string referer = "https://www.bilibili.com";
-        var response = WebClient.RequestWeb(url, referer, needRandomBvuid3: true);
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
