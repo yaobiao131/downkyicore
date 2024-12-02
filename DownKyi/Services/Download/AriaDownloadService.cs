@@ -343,8 +343,6 @@ public class AriaDownloadService : DownloadService, IDownloadService
             MaxOverallDownloadLimit =
                 SettingsManager.GetInstance().GetAriaMaxOverallDownloadLimit() * 1024L, // 输入的单位是KB/s，所以需要乘以1024
             MaxDownloadLimit = SettingsManager.GetInstance().GetAriaMaxDownloadLimit() * 1024L, // 输入的单位是KB/s，所以需要乘以1024
-            MaxOverallUploadLimit = 0,
-            MaxUploadLimit = 0,
             ContinueDownload = true,
             FileAllocation = SettingsManager.GetInstance().GetAriaFileAllocation(),
             Headers = header

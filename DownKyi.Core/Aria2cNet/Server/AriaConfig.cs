@@ -17,8 +17,6 @@ public class AriaConfig
     public int MinSplitSize { get; set; } // 最小文件分片大小, 下载线程数上限取决于能分出多少片, 对于小文件重要，单位MB
     public long MaxOverallDownloadLimit { get; set; } // 下载速度限制，取值：1-*
     public long MaxDownloadLimit { get; set; } // 下载单文件速度限制，取值：1-*
-    public long MaxOverallUploadLimit { get; set; } // 上传速度限制，取值：1-*
-    public long MaxUploadLimit { get; set; } // 上传单文件速度限制，取值：1-*
     public bool ContinueDownload { get; set; } // 断点续传
     public AriaConfigFileAllocation FileAllocation { get; set; } // 文件预分配, none prealloc
 

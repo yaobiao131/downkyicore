@@ -107,8 +107,6 @@ namespace DownKyi.Core.Aria2cNet.Server
                     $"--min-split-size={config.MinSplitSize}M " + // 最小文件分片大小, 下载线程数上限取决于能分出多少片, 对于小文件重要
                     $"--max-overall-download-limit={config.MaxOverallDownloadLimit} " + // 下载速度限制
                     $"--max-download-limit={config.MaxDownloadLimit} " + // 下载单文件速度限制
-                    $"--max-overall-upload-limit={config.MaxOverallUploadLimit} " + // 上传速度限制
-                    $"--max-upload-limit={config.MaxUploadLimit} " + // 上传单文件速度限制
                     $"--continue={config.ContinueDownload.ToString().ToLower()} " + // 断点续传
                     $"--allow-overwrite=true " + // 允许复写文件
                     $"--auto-file-renaming=false " +
