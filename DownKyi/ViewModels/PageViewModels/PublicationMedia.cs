@@ -15,6 +15,7 @@ public class PublicationMedia : BindableBase
     {
         this.eventAggregator = eventAggregator;
     }
+    public string CoverUrl { get; set; }
 
     public long Avid { get; set; }
     public string Bvid { get; set; }
