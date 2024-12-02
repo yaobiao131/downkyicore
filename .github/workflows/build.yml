@@ -181,7 +181,9 @@ jobs:
           path: version.txt
       - name: Get Deps
         run: |
+          chmod +x aria2.sh
           chmod +x ffmpeg.sh
+          ./aria2.sh osx-${{ matrix.cpu }}
           ./ffmpeg.sh mac ${{ matrix.cpu }}
         working-directory: ./script
       - name: Build ${{ matrix.cpu }}
