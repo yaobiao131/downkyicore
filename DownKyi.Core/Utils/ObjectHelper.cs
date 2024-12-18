@@ -2,13 +2,16 @@
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using DownKyi.Core.Logging;
+using DownKyi.Core.Utils.Encryptor;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.Utils;
 
 public static class ObjectHelper
 {
+    private const string EncryptionKey = "FgjsEEqc";
     /// <summary>
     /// 解析二维码登录返回的url，用于设置cookie
     /// </summary>
@@ -105,37 +108,11 @@ public static class ObjectHelper
     /// <returns></returns>
     public static bool WriteCookiesToDisk(string file, CookieContainer cookieJar)
     {
-        return WriteObjectToDisk(file, cookieJar);
-    }
-
-    /// <summary>
-    /// 从磁盘读取cookie
-    /// </summary>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    public static CookieContainer ReadCookiesFromDisk(string file)
-    {
-        return (CookieContainer)ReadObjectFromDisk(file);
-    }
-
-    /// <summary>
-    /// 写入序列化对象到磁盘
-    /// </summary>
-    /// <param name="file"></param>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    public static bool WriteObjectToDisk(string file, object obj)
-    {
         try
         {
-            using Stream stream = File.Create(file);
-            Console.PrintLine("Writing object to disk... ");
-
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, obj);
-
-            Console.PrintLine("Done.");
-            return true;
+            var jsonString = CookieContainerSerializer.SerializeCookieContainer(cookieJar);
+            var encryptedString = Encryptor.Encryptor.EncryptString(jsonString, EncryptionKey);
+            File.WriteAllText(file, encryptedString);
         }
         catch (IOException e)
         {
@@ -149,22 +126,22 @@ public static class ObjectHelper
             LogManager.Error(e);
             return false;
         }
+        return true;
     }
-
+  
     /// <summary>
-    /// 从磁盘读取序列化对象
+    /// 从磁盘读取cookie
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public static object ReadObjectFromDisk(string file)
+    public static CookieContainer ReadCookiesFromDisk(string file)
     {
         try
         {
-            using Stream stream = File.Open(file, FileMode.Open);
-            Console.PrintLine("Reading object from disk... ");
-            var formatter = new BinaryFormatter();
-            Console.PrintLine("Done.");
-            return formatter.Deserialize(stream);
+            string jsonString = File.ReadAllText(file);
+            var decryptedString = Encryptor.Encryptor.DecryptString(jsonString, EncryptionKey);
+            CookieContainer obj = CookieContainerSerializer.DeserializeCookieContainer(decryptedString);
+            return obj;
         }
         catch (IOException e)
         {
@@ -177,6 +154,33 @@ public static class ObjectHelper
             Console.PrintLine("ReadObjectFromDisk()发生异常: {0}", e);
             LogManager.Error(e);
             return null;
+        }
+    }
+
+ 
+    /// <summary>
+    /// 从磁盘读取序列化对象
+    /// </summary>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    public static T ReadObjectFromDisk<T>(string file)
+    {
+        try
+        {
+            string jsonString = File.ReadAllText(file);
+            return JsonSerializer.Deserialize<T>(jsonString);
+        }
+        catch (IOException e)
+        {
+            Console.PrintLine("ReadObjectFromDisk()发生IO异常: {0}", e);
+            LogManager.Error(e);
+            return default(T);
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("ReadObjectFromDisk()发生异常: {0}", e);
+            LogManager.Error(e);
+            return default(T);
         }
     }
 }
