@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 using DownKyi.Core.Logging;
 using Microsoft.Data.Sqlite;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -32,29 +33,14 @@ public class DownloadDb
     {
         try
         {
-            // 定义一个流
-            Stream stream = new MemoryStream();
-            // 定义一个格式化器
-            BinaryFormatter formatter = new BinaryFormatter();
-            // 序列化
-            formatter.Serialize(stream, obj);
-
-            byte[] array = null;
-            array = new byte[stream.Length];
-
-            //将二进制流写入数组
-            stream.Position = 0;
-            stream.Read(array, 0, (int)stream.Length);
-
-            //关闭流
-            stream.Close();
+            string jsonString = JsonSerializer.Serialize(obj);
 
             string sql = $"insert into {tableName}(id, data) values (@id, @data)";
-            dbHelper.ExecuteNonQuery(sql, new Action<SqliteParameterCollection>((para) =>
+            dbHelper.ExecuteNonQuery(sql, (para) =>
             {
-                para.Add("@id", SqliteType.Text).Value = uuid;
-                para.Add("@data", SqliteType.Blob).Value = array;
-            }));
+                para.AddWithValue("@id", uuid);
+                para.AddWithValue("@data", jsonString);
+            });
         }
         catch (Exception e)
         {
@@ -85,33 +71,19 @@ public class DownloadDb
     {
         try
         {
-            // 定义一个流
-            Stream stream = new MemoryStream();
-            // 定义一个格式化器
-            BinaryFormatter formatter = new BinaryFormatter();
-            // 序列化
-            formatter.Serialize(stream, obj);
+            // 将对象序列化为JSON字符串
+            string jsonString = JsonSerializer.Serialize(obj);
 
-            byte[] array = null;
-            array = new byte[stream.Length];
-
-            //将二进制流写入数组
-            stream.Position = 0;
-            stream.Read(array, 0, (int)stream.Length);
-
-            //关闭流
-            stream.Close();
-
-            string sql = $"update {tableName} set data=@data where id glob @id";
-            dbHelper.ExecuteNonQuery(sql, new Action<SqliteParameterCollection>((para) =>
+            string sql = $"update {tableName} set data=@data where id=@id";
+            dbHelper.ExecuteNonQuery(sql, (para) =>
             {
-                para.Add("@id",  SqliteType.Text).Value = uuid;
-                para.Add("@data", SqliteType.Blob).Value = array;
-            }));
+                para.AddWithValue("@id", uuid);
+                para.AddWithValue("@data", jsonString);
+            });
         }
         catch (Exception e)
         {
-            Console.PrintLine("Insert()发生异常: {0}", e);
+            Console.PrintLine("Update()发生异常: {0}", e);
             LogManager.Error($"{tableName}", e);
         }
     }
@@ -163,14 +135,9 @@ public class DownloadDb
             {
                 try
                 {
-                    // 读取字节数组
                     byte[] array = (byte[])reader["data"];
-                    // 定义一个流
-                    MemoryStream stream = new MemoryStream(array);
-                    //定义一个格式化器
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    // 反序列化
-                    object obj = formatter.Deserialize(stream);
+                    string jsonString = System.Text.Encoding.UTF8.GetString(array);
+                    object obj = JsonSerializer.Deserialize<object>(jsonString);
 
                     objects.Add((string)reader["id"], obj);
                 }
