@@ -16,25 +16,8 @@ public class DbHelper
     /// 创建一个数据库
     /// </summary>
     /// <param name="dbPath"></param>
-    public DbHelper(string dbPath)
+    public DbHelper(string dbPath) : this(dbPath, null)
     {
-        connStr = new SqliteConnectionStringBuilder
-        {
-            Mode = SqliteOpenMode.ReadWriteCreate,
-            DataSource = dbPath
-        }.ToString();
-        if (database.ContainsKey(connStr))
-        {
-            conn = database[connStr];
-
-            if (conn != null)
-            {
-                return;
-            }
-        }
-
-        conn = new SqliteConnection(connStr);
-        database.Add(connStr, conn);
     }
 
     /// <summary>
@@ -42,7 +25,7 @@ public class DbHelper
     /// </summary>
     /// <param name="dbPath"></param>
     /// <param name="secretKey"></param>
-    public DbHelper(string dbPath, string secretKey)
+    public DbHelper(string dbPath, string? secretKey)
     {
         connStr = new SqliteConnectionStringBuilder
         {
@@ -59,10 +42,11 @@ public class DbHelper
                 return;
             }
         }
-
+        var dataProcessor = new DataProcessor(connStr);
+        dataProcessor.InitializeDatabase();
         conn = new SqliteConnection(connStr);
-        // conn.SetPassword(secretKey);
         database.Add(connStr, conn);
+
     }
 
     /// <summary>

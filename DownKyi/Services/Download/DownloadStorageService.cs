@@ -33,7 +33,7 @@ public class DownloadStorageService
         AddDownloadBase(downloadingItem.DownloadBase);
 
         DownloadingDb downloadingDb = new DownloadingDb();
-        object obj = downloadingDb.QueryById(downloadingItem.DownloadBase.Uuid);
+        var obj = downloadingDb.QueryById<DownloadingItem>(downloadingItem.DownloadBase.Uuid);
         if (obj == null)
         {
             downloadingDb.Insert(downloadingItem.DownloadBase.Uuid, downloadingItem.Downloading);
@@ -67,12 +67,12 @@ public class DownloadStorageService
     {
         // 从数据库获取数据
         DownloadingDb downloadingDb = new DownloadingDb();
-        Dictionary<string, object> dic = downloadingDb.QueryAll();
+        Dictionary<string, Downloading> dic = downloadingDb.QueryAll<Downloading>();
         //downloadingDb.Close();
 
         // 遍历
         List<DownloadingItem> list = new List<DownloadingItem>();
-        foreach (KeyValuePair<string, object> item in dic)
+        foreach (KeyValuePair<string, Downloading> item in dic)
         {
             if (item.Value is Downloading downloading)
             {
@@ -87,7 +87,7 @@ public class DownloadStorageService
                     continue;
                 }
 
-                list.Add(downloadingItem);
+              
             }
         }
 
@@ -130,7 +130,7 @@ public class DownloadStorageService
         AddDownloadBase(downloadedItem.DownloadBase);
 
         DownloadedDb downloadedDb = new DownloadedDb();
-        object obj = downloadedDb.QueryById(downloadedItem.DownloadBase.Uuid);
+        var obj = downloadedDb.QueryById<Downloaded>(downloadedItem.DownloadBase.Uuid);
         if (obj == null)
         {
             downloadedDb.Insert(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
@@ -164,12 +164,12 @@ public class DownloadStorageService
     {
         // 从数据库获取数据
         DownloadedDb downloadedDb = new DownloadedDb();
-        Dictionary<string, object> dic = downloadedDb.QueryAll();
+        var dic = downloadedDb.QueryAll<Downloaded>();
         //downloadedDb.Close();
 
         // 遍历
         List<DownloadedItem> list = new List<DownloadedItem>();
-        foreach (KeyValuePair<string, object> item in dic)
+        foreach (var item in dic)
         {
             if (item.Value is Downloaded downloaded)
             {
@@ -225,7 +225,7 @@ public class DownloadStorageService
         }
 
         DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-        object obj = downloadBaseDb.QueryById(downloadBase.Uuid);
+        var obj = downloadBaseDb.QueryById<DownloadBase>(downloadBase.Uuid);
         if (obj == null)
         {
             downloadBaseDb.Insert(downloadBase.Uuid, downloadBase);
@@ -251,10 +251,8 @@ public class DownloadStorageService
     private DownloadBase GetDownloadBase(string uuid)
     {
         DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-        object obj = downloadBaseDb.QueryById(uuid);
-        //downloadBaseDb.Close();
-
-        return obj is DownloadBase downloadBase ? downloadBase : null;
+        var obj = downloadBaseDb.QueryById<DownloadBase>(uuid);
+        return obj;
     }
 
     /// <summary>

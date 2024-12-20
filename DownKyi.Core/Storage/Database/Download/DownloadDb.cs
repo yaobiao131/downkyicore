@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.Json;
 using DownKyi.Core.Logging;
 using Microsoft.Data.Sqlite;
@@ -14,6 +15,7 @@ public class DownloadDb
 #if DEBUG
     private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload().Replace(".db", "_debug.db"));
 #else
+
     private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload(), key);
 #endif
 
@@ -29,11 +31,11 @@ public class DownloadDb
     /// 插入新的数据
     /// </summary>
     /// <param name="obj"></param>
-    public void Insert(string uuid, object obj)
+    public void Insert<T>(string uuid, T val)
     {
         try
         {
-            string jsonString = JsonSerializer.Serialize(obj);
+            string jsonString = JsonSerializer.Serialize<T>(val);
 
             string sql = $"insert into {tableName}(id, data) values (@id, @data)";
             dbHelper.ExecuteNonQuery(sql, (para) =>
@@ -67,7 +69,7 @@ public class DownloadDb
         }
     }
 
-    public void Update(string uuid, object obj)
+    public void Update<T>(string uuid, T obj)
     {
         try
         {
@@ -93,10 +95,10 @@ public class DownloadDb
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
-    public Dictionary<string, object> QueryAll()
+    public Dictionary<string, T> QueryAll<T>()
     {
         string sql = $"select * from {tableName}";
-        return Query(sql);
+        return Query<T>(sql);
     }
 
     /// <summary>
@@ -104,19 +106,19 @@ public class DownloadDb
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns></returns>
-    public object QueryById(string uuid)
+    public T QueryById<T>(string uuid)
     {
         string sql = $"select * from {tableName} where id glob '{uuid}'";
-        Dictionary<string, object> query = Query(sql);
+        Dictionary<string, T> query = Query<T>(sql);
 
         if (query.ContainsKey(uuid))
         {
-            query.TryGetValue(uuid, out object obj);
+            query.TryGetValue(uuid, out T obj);
             return obj;
         }
         else
         {
-            return null;
+            return default(T);
         }
     }
 
@@ -125,9 +127,9 @@ public class DownloadDb
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
-    private Dictionary<string, object> Query(string sql)
+    private Dictionary<string, T> Query<T>(string sql)
     {
-        Dictionary<string, object> objects = new Dictionary<string, object>();
+        Dictionary<string, T> objects = new();
 
         dbHelper.ExecuteQuery(sql, reader =>
         {
@@ -135,10 +137,9 @@ public class DownloadDb
             {
                 try
                 {
-                    byte[] array = (byte[])reader["data"];
-                    string jsonString = System.Text.Encoding.UTF8.GetString(array);
-                    object obj = JsonSerializer.Deserialize<object>(jsonString);
-
+                   var data = reader["data"] as string;
+                  
+                    var obj = JsonSerializer.Deserialize<T>(data);
                     objects.Add((string)reader["id"], obj);
                 }
                 catch (Exception e)

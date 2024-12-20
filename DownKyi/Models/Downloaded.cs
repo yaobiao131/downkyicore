@@ -2,7 +2,6 @@
 
 namespace DownKyi.Models;
 
-[Serializable]
 public class Downloaded // : DownloadBase
 {
     public Downloaded() : base()

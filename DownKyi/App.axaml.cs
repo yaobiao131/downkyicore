@@ -10,6 +10,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
+using DownKyi.Core.Storage;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services.Download;
 using DownKyi.Utils;
@@ -62,7 +63,6 @@ public partial class App : PrismApplication
             desktop.Exit += OnExit!;
             AppLife = desktop;
         }
-
         base.Initialize();
     }
 
