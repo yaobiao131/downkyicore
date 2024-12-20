@@ -4,7 +4,6 @@ using DownKyi.Core.BiliApi.VideoStream;
 
 namespace DownKyi.Models;
 
-[Serializable]
 public class Downloading // : DownloadBase
 {
     public Downloading() : base()

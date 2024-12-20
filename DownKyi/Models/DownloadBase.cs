@@ -4,7 +4,6 @@ using DownKyi.Core.BiliApi.BiliUtils;
 
 namespace DownKyi.Models;
 
-[Serializable]
 public class DownloadBase
 {
     public DownloadBase()
@@ -24,7 +23,7 @@ public class DownloadBase
     }
 
     // 此条下载项的id
-    public string Uuid { get; }
+    public string Uuid { get; set; }
 
     // 需要下载的内容
     public Dictionary<string, bool> NeedDownloadContent { get; set; }

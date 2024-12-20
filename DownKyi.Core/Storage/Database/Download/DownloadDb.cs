@@ -1,4 +1,6 @@
 ﻿using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Text.Json;
 using DownKyi.Core.Logging;
 using Microsoft.Data.Sqlite;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -13,6 +15,7 @@ public class DownloadDb
 #if DEBUG
     private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload().Replace(".db", "_debug.db"));
 #else
+
     private readonly DbHelper dbHelper = new DbHelper(StorageManager.GetDownload(), key);
 #endif
 
@@ -28,33 +31,18 @@ public class DownloadDb
     /// 插入新的数据
     /// </summary>
     /// <param name="obj"></param>
-    public void Insert(string uuid, object obj)
+    public void Insert<T>(string uuid, T val)
     {
         try
         {
-            // 定义一个流
-            Stream stream = new MemoryStream();
-            // 定义一个格式化器
-            BinaryFormatter formatter = new BinaryFormatter();
-            // 序列化
-            formatter.Serialize(stream, obj);
-
-            byte[] array = null;
-            array = new byte[stream.Length];
-
-            //将二进制流写入数组
-            stream.Position = 0;
-            stream.Read(array, 0, (int)stream.Length);
-
-            //关闭流
-            stream.Close();
+            string jsonString = JsonSerializer.Serialize<T>(val);
 
             string sql = $"insert into {tableName}(id, data) values (@id, @data)";
-            dbHelper.ExecuteNonQuery(sql, new Action<SqliteParameterCollection>((para) =>
+            dbHelper.ExecuteNonQuery(sql, (para) =>
             {
-                para.Add("@id", SqliteType.Text).Value = uuid;
-                para.Add("@data", SqliteType.Blob).Value = array;
-            }));
+                para.AddWithValue("@id", uuid);
+                para.AddWithValue("@data", jsonString);
+            });
         }
         catch (Exception e)
         {
@@ -81,37 +69,23 @@ public class DownloadDb
         }
     }
 
-    public void Update(string uuid, object obj)
+    public void Update<T>(string uuid, T obj)
     {
         try
         {
-            // 定义一个流
-            Stream stream = new MemoryStream();
-            // 定义一个格式化器
-            BinaryFormatter formatter = new BinaryFormatter();
-            // 序列化
-            formatter.Serialize(stream, obj);
+            // 将对象序列化为JSON字符串
+            string jsonString = JsonSerializer.Serialize(obj);
 
-            byte[] array = null;
-            array = new byte[stream.Length];
-
-            //将二进制流写入数组
-            stream.Position = 0;
-            stream.Read(array, 0, (int)stream.Length);
-
-            //关闭流
-            stream.Close();
-
-            string sql = $"update {tableName} set data=@data where id glob @id";
-            dbHelper.ExecuteNonQuery(sql, new Action<SqliteParameterCollection>((para) =>
+            string sql = $"update {tableName} set data=@data where id=@id";
+            dbHelper.ExecuteNonQuery(sql, (para) =>
             {
-                para.Add("@id",  SqliteType.Text).Value = uuid;
-                para.Add("@data", SqliteType.Blob).Value = array;
-            }));
+                para.AddWithValue("@id", uuid);
+                para.AddWithValue("@data", jsonString);
+            });
         }
         catch (Exception e)
         {
-            Console.PrintLine("Insert()发生异常: {0}", e);
+            Console.PrintLine("Update()发生异常: {0}", e);
             LogManager.Error($"{tableName}", e);
         }
     }
@@ -121,10 +95,10 @@ public class DownloadDb
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
-    public Dictionary<string, object> QueryAll()
+    public Dictionary<string, T> QueryAll<T>()
     {
         string sql = $"select * from {tableName}";
-        return Query(sql);
+        return Query<T>(sql);
     }
 
     /// <summary>
@@ -132,19 +106,19 @@ public class DownloadDb
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns></returns>
-    public object QueryById(string uuid)
+    public T QueryById<T>(string uuid)
     {
         string sql = $"select * from {tableName} where id glob '{uuid}'";
-        Dictionary<string, object> query = Query(sql);
+        Dictionary<string, T> query = Query<T>(sql);
 
         if (query.ContainsKey(uuid))
         {
-            query.TryGetValue(uuid, out object obj);
+            query.TryGetValue(uuid, out T obj);
             return obj;
         }
         else
         {
-            return null;
+            return default(T);
         }
     }
 
@@ -153,9 +127,9 @@ public class DownloadDb
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
-    private Dictionary<string, object> Query(string sql)
+    private Dictionary<string, T> Query<T>(string sql)
     {
-        Dictionary<string, object> objects = new Dictionary<string, object>();
+        Dictionary<string, T> objects = new();
 
         dbHelper.ExecuteQuery(sql, reader =>
         {
@@ -163,15 +137,9 @@ public class DownloadDb
             {
                 try
                 {
-                    // 读取字节数组
-                    byte[] array = (byte[])reader["data"];
-                    // 定义一个流
-                    MemoryStream stream = new MemoryStream(array);
-                    //定义一个格式化器
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    // 反序列化
-                    object obj = formatter.Deserialize(stream);
-
+                   var data = reader["data"] as string;
+                  
+                    var obj = JsonSerializer.Deserialize<T>(data);
                     objects.Add((string)reader["id"], obj);
                 }
                 catch (Exception e)
