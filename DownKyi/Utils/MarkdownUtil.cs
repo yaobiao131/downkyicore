@@ -1,10 +1,8 @@
-﻿using Avalonia.Controls.Documents;
-using Avalonia.Media;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Avalonia.Controls.Documents;
+using Avalonia.Media;
 
 namespace DownKyi.Utils
 {
@@ -20,34 +18,26 @@ namespace DownKyi.Utils
                 {
                     continue;
                 }
+
                 if (line.StartsWith("# "))
                 {
-                    runs.Add(new Run(line.Substring(2)) { FontSize = 18, FontWeight = FontWeight.Bold }); 
+                    runs.Add(new Run(line[2..]) { FontSize = 18, FontWeight = FontWeight.Bold });
                 }
                 else if (line.StartsWith("## "))
                 {
-                    runs.Add(new Run(line.Substring(3)) { FontSize = 19, FontWeight = FontWeight.Bold }); // 二级标题
+                    runs.Add(new Run(line[3..]) { FontSize = 19, FontWeight = FontWeight.Bold }); // 二级标题
                 }
                 else if (line.StartsWith("### "))
                 {
-                    runs.Add(new Run(line.Substring(4)) { FontSize = 15, FontWeight = FontWeight.Bold }); // 三级标题
+                    runs.Add(new Run(line[4..]) { FontSize = 15, FontWeight = FontWeight.Bold }); // 三级标题
                 }
                 else
                 {
                     var parts = line.Split(new[] { "**" }, StringSplitOptions.None);
-                    for (int i = 0; i < parts.Length; i++)
-                    {
-                        if (i % 2 == 1)
-                        {
-                            runs.Add(new Run(parts[i]) { FontWeight = FontWeight.Bold });
-                        }
-                        else
-                        {
-                            runs.Add(new Run(parts[i]) { FontSize = 13});
-                        }
-                    }
+                    runs.AddRange(parts.Select((t, i) => i % 2 == 1 ? new Run(t) { FontWeight = FontWeight.Bold } : new Run(t) { FontSize = 13 }));
                 }
             }
+
             return runs;
         }
     }

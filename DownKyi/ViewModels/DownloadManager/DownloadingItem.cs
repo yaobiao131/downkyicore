@@ -37,24 +37,24 @@ namespace DownKyi.ViewModels.DownloadManager
 
                 switch (value.DownloadStatus)
                 {
-                    case DownloadStatus.NOT_STARTED:
-                    case DownloadStatus.WAIT_FOR_DOWNLOAD:
+                    case DownloadStatus.NotStarted:
+                    case DownloadStatus.WaitForDownload:
                         StartOrPause = ButtonIcon.Instance().Pause;
                         break;
-                    case DownloadStatus.PAUSE_STARTED:
+                    case DownloadStatus.PauseStarted:
                         StartOrPause = ButtonIcon.Instance().Start;
                         break;
-                    case DownloadStatus.PAUSE:
+                    case DownloadStatus.Pause:
                         StartOrPause = ButtonIcon.Instance().Start;
                         break;
-                    case DownloadStatus.DOWNLOADING:
+                    case DownloadStatus.Downloading:
                         StartOrPause = ButtonIcon.Instance().Pause;
                         break;
-                    case DownloadStatus.DOWNLOAD_SUCCEED:
+                    case DownloadStatus.DownloadSucceed:
                         // 下载成功后会从下载列表中删除
                         // 不会出现此分支
                         break;
-                    case DownloadStatus.DOWNLOAD_FAILED:
+                    case DownloadStatus.DownloadFailed:
                         StartOrPause = ButtonIcon.Instance().Retry;
                         break;
                     default:
@@ -168,38 +168,38 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             switch (Downloading.DownloadStatus)
             {
-                case DownloadStatus.NOT_STARTED:
-                case DownloadStatus.WAIT_FOR_DOWNLOAD:
-                    Downloading.DownloadStatus = DownloadStatus.PAUSE_STARTED;
+                case DownloadStatus.NotStarted:
+                case DownloadStatus.WaitForDownload:
+                    Downloading.DownloadStatus = DownloadStatus.PauseStarted;
                     DownloadStatusTitle = DictionaryResource.GetString("Pausing");
                     StartOrPause = ButtonIcon.Instance().Start;
                     StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                     break;
-                case DownloadStatus.PAUSE_STARTED:
-                    Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                case DownloadStatus.PauseStarted:
+                    Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                     DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                     StartOrPause = ButtonIcon.Instance().Pause;
                     StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                     break;
-                case DownloadStatus.PAUSE:
-                    Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                case DownloadStatus.Pause:
+                    Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                     DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                     StartOrPause = ButtonIcon.Instance().Pause;
                     StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                     break;
                 //case DownloadStatus.PAUSE_TO_WAIT:
-                case DownloadStatus.DOWNLOADING:
-                    Downloading.DownloadStatus = DownloadStatus.PAUSE;
+                case DownloadStatus.Downloading:
+                    Downloading.DownloadStatus = DownloadStatus.Pause;
                     DownloadStatusTitle = DictionaryResource.GetString("Pausing");
                     StartOrPause = ButtonIcon.Instance().Start;
                     StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                     break;
-                case DownloadStatus.DOWNLOAD_SUCCEED:
+                case DownloadStatus.DownloadSucceed:
                     // 下载成功后会从下载列表中删除
                     // 不会出现此分支
                     break;
-                case DownloadStatus.DOWNLOAD_FAILED:
-                    Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                case DownloadStatus.DownloadFailed:
+                    Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                     DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                     StartOrPause = ButtonIcon.Instance().Pause;
                     StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");

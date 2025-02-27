@@ -1,16 +1,8 @@
-﻿using Avalonia.Controls.Documents;
-using DownKyi.Models;
+﻿using System.Collections.ObjectModel;
+using Avalonia.Controls.Documents;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace DownKyi.ViewModels.Dialogs
 {
@@ -26,7 +18,7 @@ namespace DownKyi.ViewModels.Dialogs
         /// </summary>
         private void ExecuteAllowCommand()
         {
-            ButtonResult result = ButtonResult.OK;
+            const ButtonResult result = ButtonResult.OK;
             RaiseRequestClose(new DialogResult(result));
         }
 

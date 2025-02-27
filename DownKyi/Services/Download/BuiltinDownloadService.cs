@@ -263,7 +263,7 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         cancellationToken.ThrowIfCancellationRequested();
 
         downloading.DownloadStatusTitle = DictionaryResource.GetString("Pausing");
-        if (downloading.Downloading.DownloadStatus == DownloadStatus.PAUSE)
+        if (downloading.Downloading.DownloadStatus == DownloadStatus.Pause)
         {
             throw new OperationCanceledException("Stop thread by pause");
         }
@@ -353,13 +353,13 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
                 cancellationToken.ThrowIfCancellationRequested();
                 switch (downloading.Downloading.DownloadStatus)
                 {
-                    case DownloadStatus.PAUSE:
+                    case DownloadStatus.Pause:
                         // 暂停下载
                         downloader.Pause();
                         // 通知UI，并阻塞当前线程
                         Pause(downloading);
                         break;
-                    case DownloadStatus.DOWNLOADING:
+                    case DownloadStatus.Downloading:
                         break;
                 }
 
@@ -367,114 +367,6 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
             }
 
             return isComplete;
-            // // 创建下载器
-            // var mtd = new MultiThreadDownloader(url,
-            //     Path.GetTempPath(),
-            //     Path.Combine(path, localFileName),
-            //     SettingsManager.GetInstance().GetSplit());
-            // // 配置网络请求
-            // mtd.Configure(req =>
-            // {
-            //     req.CookieContainer = LoginHelper.GetLoginInfoCookies();
-            //     req.UserAgent = SettingsManager.GetInstance().GetUserAgent();
-            //     req.Referer = "https://www.bilibili.com";
-            //     req.Headers.Add("Origin", "https://www.bilibili.com");
-            //
-            //     if (SettingsManager.GetInstance().IsHttpProxy() == AllowStatus.YES)
-            //     {
-            //         req.Proxy = new WebProxy(SettingsManager.GetInstance().GetHttpProxy(),
-            //             SettingsManager.GetInstance().GetHttpProxyListenPort());
-            //     }
-            // });
-            //
-            // // 下载进度回调
-            // mtd.TotalProgressChanged += (sender, e) =>
-            // {
-            //     try
-            //     {
-            //         // 状态更新
-            //         var downloader = sender as MultiThreadDownloader;
-            //
-            //         // 下载进度百分比
-            //         float percent = downloader.TotalProgress;
-            //
-            //         // 根据进度判断本次是否需要更新UI
-            //         if (Math.Abs(percent - downloading.Progress) < 0.01)
-            //         {
-            //             return;
-            //         }
-            //
-            //         if (Math.Abs(percent - downloading.Progress) > 5)
-            //         {
-            //             return;
-            //         }
-            //
-            //         // 下载进度
-            //         downloading.Progress = percent;
-            //
-            //         // 下载大小
-            //         downloading.DownloadingFileSize = Format.FormatFileSize(downloader.TotalBytesReceived) + "/" +
-            //                                           Format.FormatFileSize(downloader.Size);
-            //
-            //         // 下载速度
-            //         long speed = (long)downloader.TotalSpeedInBytes;
-            //
-            //         // 下载速度显示
-            //         downloading.SpeedDisplay = Format.FormatSpeed(speed);
-            //
-            //         // 最大下载速度
-            //         if (downloading.Downloading.MaxSpeed < speed)
-            //         {
-            //             downloading.Downloading.MaxSpeed = speed;
-            //         }
-            //     }
-            //     catch (InvalidOperationException ex)
-            //     {
-            //         Console.PrintLine(
-            //             $"{Tag}.DownloadByBuiltin()发生InvalidOperationException异常: {0}", ex);
-            //         LogManager.Error($"{Tag}.DownloadByBuiltin()", ex);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         Console.PrintLine($"{Tag}.DownloadByBuiltin()发生异常: {0}", ex);
-            //         LogManager.Error($"{Tag}.DownloadByBuiltin()", ex);
-            //     }
-            // };
-            //
-            // // 文件合并完成回调
-            // bool isComplete = false;
-            // mtd.FileMergedComplete += (sender, e) =>
-            // {
-            //     // 跳出循环
-            //     if (File.Exists(Path.Combine(path, localFileName)))
-            //     {
-            //         isComplete = true;
-            //     }
-            // };
-            //
-            // // 开始下载
-            // mtd.Start();
-            //
-            // // 阻塞当前任务，监听暂停事件
-            // while (!isComplete)
-            // {
-            //     cancellationToken.ThrowIfCancellationRequested();
-            //     switch (downloading.Downloading.DownloadStatus)
-            //     {
-            //         case DownloadStatus.PAUSE:
-            //             // 暂停下载
-            //             mtd.Pause();
-            //             // 通知UI，并阻塞当前线程
-            //             Pause(downloading);
-            //             break;
-            //         case DownloadStatus.DOWNLOADING:
-            //             break;
-            //     }
-            //
-            //     Thread.Sleep(100);
-            // }
-            //
-            // return isComplete;
         }
 
         return false;

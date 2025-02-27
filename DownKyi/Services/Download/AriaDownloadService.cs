@@ -276,7 +276,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
         cancellationToken.ThrowIfCancellationRequested();
 
         downloading.DownloadStatusTitle = DictionaryResource.GetString("Pausing");
-        if (downloading.Downloading.DownloadStatus == DownloadStatus.PAUSE)
+        if (downloading.Downloading.DownloadStatus == DownloadStatus.Pause)
         {
             throw new OperationCanceledException("Stop thread by pause");
         }
@@ -471,12 +471,12 @@ public class AriaDownloadService : DownloadService, IDownloadService
             cancellationToken.ThrowIfCancellationRequested();
             switch (downloading.Downloading.DownloadStatus)
             {
-                case DownloadStatus.PAUSE:
+                case DownloadStatus.Pause:
                     var ariaPause = AriaClient.PauseAsync(downloading.Downloading.Gid);
                     // 通知UI，并阻塞当前线程
                     Pause(downloading);
                     break;
-                case DownloadStatus.DOWNLOADING:
+                case DownloadStatus.Downloading:
                     break;
             }
         }));

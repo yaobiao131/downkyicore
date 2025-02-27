@@ -648,9 +648,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                     {
                         Avid = video.Aid,
                         Bvid = video.Bvid,
-                        Cover = cover ??
-                                ImageHelper.LoadFromResource(
-                                    new Uri("avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = cover ?? ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png")),
                         Duration = Format.FormatDuration3(video.Duration),
                         Title = video.Title,
                         PlayNumber = play,

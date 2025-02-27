@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.Users;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.Settings;
-using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
 using DownKyi.CustomControl;
 using DownKyi.ViewModels.PageViewModels;

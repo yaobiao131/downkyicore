@@ -1,8 +1,7 @@
-﻿using DownKyi.Core.Settings;
+﻿using System;
+using DownKyi.Core.Settings;
 using DownKyi.Events;
-using DownKyi.Images;
 using DownKyi.Models;
-using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
@@ -10,8 +9,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
 using Prism.Services.Dialogs;
-using System;
-
+using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels.Settings;
 
@@ -57,7 +55,7 @@ public class ViewAboutViewModel : ViewModelBase
 
     #endregion
 
-    public ViewAboutViewModel(IEventAggregator eventAggregator, PrismExtension.Dialog.IDialogService dialogService) : base(eventAggregator,
+    public ViewAboutViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator,
         dialogService)
     {
         #region 属性初始化
@@ -133,7 +131,7 @@ public class ViewAboutViewModel : ViewModelBase
         var currVersion = Version.Parse(versionString);
         if(currVersion < version)
         {
-            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new Prism.Services.Dialogs.DialogParameters { { "body", body } }, result =>
+            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new DialogParameters { { "body", body } }, result =>
             {
                 if(result.Result == ButtonResult.OK)
                 {

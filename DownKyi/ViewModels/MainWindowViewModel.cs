@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.Events;

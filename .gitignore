@@ -7,8 +7,6 @@
 */**/bin
 
 DownKyi.Core/Binary/*
-!DownKyi.Core/Binary/osx-x64/aria2/
-!DownKyi.Core/Binary/osx-arm64/aria2/
 
 script/downloads
 script/pupnet/output

@@ -5,7 +5,7 @@
              x:DataType="vms:ViewNetworkViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:iac="clr-namespace:DownKyi.CustomAction">
+             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom">
     <ScrollViewer>
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -38,10 +38,11 @@
                 HorizontalAlignment="Stretch"
                 Text="{Binding UserAgent}">
                 <i:Interaction.Behaviors>
-                    <iac:KeyUpBehavior Key="Enter">
-                        <ia:InvokeCommandAction Command="{Binding UserAgentCommand}"
-                                                CommandParameter="{Binding ElementName=NameUserAgent,Path=Text}" />
-                    </iac:KeyUpBehavior>
+                    <iac:ExecuteCommandOnKeyDownBehavior
+                        Key="Enter"
+                        Command="{Binding UserAgentCommand}"
+                        CommandParameter="{Binding ElementName=NameUserAgent, Path=Text}">
+                    </iac:ExecuteCommandOnKeyDownBehavior>
                 </i:Interaction.Behaviors>
             </TextBox>
 
@@ -194,10 +195,11 @@
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaListenPort}">
                         <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding AriaListenPortCommand}"
-                                                        CommandParameter="{Binding ElementName=NameAriaListenPort, Path=Text}" />
-                            </iac:KeyUpBehavior>
+                            <iac:ExecuteCommandOnKeyDownBehavior
+                                Key="Enter"
+                                Command="{Binding AriaListenPortCommand}"
+                                CommandParameter="{Binding ElementName=NameAriaListenPort, Path=Text}">
+                            </iac:ExecuteCommandOnKeyDownBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
                 </StackPanel>
@@ -292,10 +294,11 @@
                                 Text="{Binding AriaMaxOverallDownloadLimit}"
                                 ToolTip.Tip="{DynamicResource PressEnterToApplySettingTip}">
                                 <i:Interaction.Behaviors>
-                                    <iac:KeyUpBehavior Key="Enter">
-                                        <ia:InvokeCommandAction Command="{Binding AriaMaxOverallDownloadLimitCommand}"
-                                                                CommandParameter="{Binding ElementName=NameAriaMaxOverallDownloadLimit, Path=Text}" />
-                                    </iac:KeyUpBehavior>
+                                    <iac:ExecuteCommandOnKeyDownBehavior
+                                        Key="Enter"
+                                        Command="{Binding AriaMaxOverallDownloadLimitCommand}"
+                                        CommandParameter="{Binding ElementName=NameAriaMaxOverallDownloadLimit, Path=Text}">
+                                    </iac:ExecuteCommandOnKeyDownBehavior>
                                 </i:Interaction.Behaviors>
                             </TextBox>
                         </StackPanel>
@@ -313,10 +316,11 @@
                                 Text="{Binding AriaMaxDownloadLimit}"
                                 ToolTip.Tip="{DynamicResource PressEnterToApplySettingTip}">
                                 <i:Interaction.Behaviors>
-                                    <iac:KeyUpBehavior Key="Enter">
-                                        <ia:InvokeCommandAction Command="{Binding AriaMaxDownloadLimitCommand}"
-                                                                CommandParameter="{Binding ElementName=NameAriaMaxDownloadLimit, Path=Text}" />
-                                    </iac:KeyUpBehavior>
+                                    <iac:ExecuteCommandOnKeyDownBehavior
+                                        Key="Enter"
+                                        Command="{Binding AriaMaxDownloadLimitCommand}"
+                                        CommandParameter="{Binding ElementName=NameAriaMaxDownloadLimit, Path=Text}">
+                                    </iac:ExecuteCommandOnKeyDownBehavior>
                                 </i:Interaction.Behaviors>
                             </TextBox>
                         </StackPanel>
@@ -367,10 +371,11 @@
                             VerticalContentAlignment="Center"
                             Text="{Binding AriaHttpProxy}">
                             <i:Interaction.Behaviors>
-                                <iac:KeyUpBehavior Key="Enter">
-                                    <ia:InvokeCommandAction Command="{Binding AriaHttpProxyCommand}"
-                                                            CommandParameter="{Binding ElementName=NameAriaHttpProxy, Path=Text}" />
-                                </iac:KeyUpBehavior>
+                                <iac:ExecuteCommandOnKeyDownBehavior
+                                    Key="Enter"
+                                    Command="{Binding AriaHttpProxyCommand}"
+                                    CommandParameter="{Binding ElementName=NameAriaHttpProxy, Path=Text}">
+                                </iac:ExecuteCommandOnKeyDownBehavior>
                             </i:Interaction.Behaviors>
                         </TextBox>
                     </StackPanel>
@@ -386,10 +391,11 @@
                             VerticalContentAlignment="Center"
                             Text="{Binding AriaHttpProxyPort}">
                             <i:Interaction.Behaviors>
-                                <iac:KeyUpBehavior Key="Enter">
-                                    <ia:InvokeCommandAction Command="{Binding AriaHttpProxyPortCommand}"
-                                                            CommandParameter="{Binding ElementName=NameAriaHttpProxyPort, Path=Text}" />
-                                </iac:KeyUpBehavior>
+                                <iac:ExecuteCommandOnKeyDownBehavior
+                                    Key="Enter"
+                                    Command="{Binding AriaHttpProxyPortCommand}"
+                                    CommandParameter="{Binding ElementName=NameAriaHttpProxyPort, Path=Text}">
+                                </iac:ExecuteCommandOnKeyDownBehavior>
                             </i:Interaction.Behaviors>
                         </TextBox>
                     </StackPanel>
@@ -435,10 +441,11 @@
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaHost}">
                         <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding AriaHostCommand}"
-                                                        CommandParameter="{Binding ElementName=NameAriaHost, Path=Text}" />
-                            </iac:KeyUpBehavior>
+                            <iac:ExecuteCommandOnKeyDownBehavior
+                                Key="Enter"
+                                Command="{Binding AriaHostCommand}"
+                                CommandParameter="{Binding ElementName=NameAriaHost, Path=Text}">
+                            </iac:ExecuteCommandOnKeyDownBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
                 </StackPanel>
@@ -458,10 +465,11 @@
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaListenPort}">
                         <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding AriaListenPortCommand}"
-                                                        CommandParameter="{Binding ElementName=NameAriaPort, Path=Text}" />
-                            </iac:KeyUpBehavior>
+                            <iac:ExecuteCommandOnKeyDownBehavior
+                                Key="Enter"
+                                Command="{Binding AriaListenPortCommand}"
+                                CommandParameter="{Binding ElementName=NameAriaPort, Path=Text}">
+                            </iac:ExecuteCommandOnKeyDownBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
                 </StackPanel>
@@ -481,10 +489,11 @@
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaToken}">
                         <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding AriaTokenCommand}"
-                                                        CommandParameter="{Binding ElementName=NameAriaToken, Path=Text}" />
-                            </iac:KeyUpBehavior>
+                            <iac:ExecuteCommandOnKeyDownBehavior
+                                Key="Enter"
+                                Command="{Binding AriaTokenCommand}"
+                                CommandParameter="{Binding ElementName=NameAriaToken, Path=Text}">
+                            </iac:ExecuteCommandOnKeyDownBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
                 </StackPanel>

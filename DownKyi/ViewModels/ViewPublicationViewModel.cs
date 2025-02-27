@@ -20,7 +20,6 @@ using DownKyi.Services.Download;
 using DownKyi.Utils;
 using DownKyi.ViewModels.PageViewModels;
 using DownKyi.ViewModels.UserSpace;
-using DryIoc;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;

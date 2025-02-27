@@ -4,6 +4,7 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              x:DataType="vm:ViewSeasonsSeriesViewModel">
@@ -76,10 +77,10 @@
                                 TextWrapping="Wrap"
                                 ToolTip.Tip="{Binding Title}">
                                 <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="PointerReleased">
-                                        <ia:InvokeCommandAction Command="{Binding TitleCommand}"
-                                                                CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                                    </ia:EventTriggerBehavior>
+                                    <iac:ExecuteCommandOnPointerReleasedBehavior
+                                        Command="{Binding TitleCommand}"
+                                        CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
+                                    </iac:ExecuteCommandOnPointerReleasedBehavior>
                                 </i:Interaction.Behaviors>
                             </TextBlock>
                             <Grid Margin="0,3,0,0" ColumnDefinitions="*,*">

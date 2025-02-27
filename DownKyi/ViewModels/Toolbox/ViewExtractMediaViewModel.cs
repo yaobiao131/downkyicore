@@ -96,9 +96,9 @@ public class ViewExtractMediaViewModel : ViewModelBase
             return;
         }
 
-        if (VideoPaths?.Length <= 0)
+        if (VideoPaths.Length <= 0)
         {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSelectedVideo"));
             return;
         }
 

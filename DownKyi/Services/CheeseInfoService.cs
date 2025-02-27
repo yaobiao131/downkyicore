@@ -6,7 +6,6 @@ using DownKyi.Core.BiliApi.Cheese;
 using DownKyi.Core.BiliApi.Cheese.Models;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.VideoStream;
-using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;

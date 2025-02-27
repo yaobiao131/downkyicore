@@ -6,7 +6,7 @@
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
-             xmlns:iac="clr-namespace:DownKyi.CustomAction"
+             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              x:DataType="vm:ViewVideoDetailViewModel">
     <Grid RowDefinitions="50,10,*">
 
@@ -38,9 +38,10 @@
                     FontSize="12"
                     Text="{Binding InputText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction Command="{Binding InputCommand}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior
+                            Key="Enter"
+                            Command="{Binding InputCommand}">
+                        </iac:ExecuteCommandOnKeyDownBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>
             </Border>
@@ -452,9 +453,10 @@
                         Text="{Binding Path=InputSearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         TextWrapping="Wrap">
                         <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding InputSearchCommand}" />
-                            </iac:KeyUpBehavior>
+                            <iac:ExecuteCommandOnKeyDownBehavior
+                                Key="Enter"
+                                Command="{Binding InputSearchCommand}">
+                            </iac:ExecuteCommandOnKeyDownBehavior>
                         </i:Interaction.Behaviors>
                     </TextBox>
                     <Button

@@ -524,7 +524,7 @@ public class AddToDownloadService
                     var downloading = new Downloading
                     {
                         PlayStreamType = playStreamType,
-                        DownloadStatus = DownloadStatus.NOT_STARTED,
+                        DownloadStatus = DownloadStatus.NotStarted,
                     };
 
                     // 需要下载的内容

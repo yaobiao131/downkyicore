@@ -1,5 +1,4 @@
 using DownKyi.Core.Settings;
-using DownKyi.Core.Settings.Models;
 using DownKyi.Events;
 using DownKyi.ViewModels;
 using Prism.Events;

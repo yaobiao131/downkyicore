@@ -3,7 +3,6 @@ using Avalonia.Media.Imaging;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Storage.Database;
 using DownKyi.Core.Utils.Encryptor;
-using System.Threading;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.Storage;

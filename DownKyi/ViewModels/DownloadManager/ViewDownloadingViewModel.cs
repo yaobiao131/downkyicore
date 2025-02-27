@@ -64,29 +64,29 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
-                    case DownloadStatus.NOT_STARTED:
-                    case DownloadStatus.WAIT_FOR_DOWNLOAD:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.PAUSE;
+                    case DownloadStatus.NotStarted:
+                    case DownloadStatus.WaitForDownload:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.Pause;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Pausing");
                         downloading.StartOrPause = ButtonIcon.Instance().Start;
                         downloading.StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                         break;
-                    case DownloadStatus.PAUSE_STARTED:
+                    case DownloadStatus.PauseStarted:
                         break;
-                    case DownloadStatus.PAUSE:
+                    case DownloadStatus.Pause:
                         break;
                     //case DownloadStatus.PAUSE_TO_WAIT:
-                    case DownloadStatus.DOWNLOADING:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.PAUSE;
+                    case DownloadStatus.Downloading:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.Pause;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Pausing");
                         downloading.StartOrPause = ButtonIcon.Instance().Start;
                         downloading.StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
                         break;
-                    case DownloadStatus.DOWNLOAD_SUCCEED:
+                    case DownloadStatus.DownloadSucceed:
                         // 下载成功后会从下载列表中删除
                         // 不会出现此分支
                         break;
-                    case DownloadStatus.DOWNLOAD_FAILED:
+                    case DownloadStatus.DownloadFailed:
                         break;
                     default:
                         break;
@@ -108,29 +108,29 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
-                    case DownloadStatus.NOT_STARTED:
-                    case DownloadStatus.WAIT_FOR_DOWNLOAD:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                    case DownloadStatus.NotStarted:
+                    case DownloadStatus.WaitForDownload:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                         break;
-                    case DownloadStatus.PAUSE_STARTED:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                    case DownloadStatus.PauseStarted:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                         break;
-                    case DownloadStatus.PAUSE:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                    case DownloadStatus.Pause:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                         break;
                     //case DownloadStatus.PAUSE_TO_WAIT:
                     //    break;
-                    case DownloadStatus.DOWNLOADING:
+                    case DownloadStatus.Downloading:
                         break;
-                    case DownloadStatus.DOWNLOAD_SUCCEED:
+                    case DownloadStatus.DownloadSucceed:
                         // 下载成功后会从下载列表中删除
                         // 不会出现此分支
                         break;
-                    case DownloadStatus.DOWNLOAD_FAILED:
-                        downloading.Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                    case DownloadStatus.DownloadFailed:
+                        downloading.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                         break;
                     default:

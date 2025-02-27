@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
@@ -15,8 +12,6 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.ViewModels.PageViewModels;
-using static System.Collections.Specialized.BitVector32;
-using static QRCoder.QRCodeGenerator;
 using VideoPage = DownKyi.ViewModels.PageViewModels.VideoPage;
 
 namespace DownKyi.Services;

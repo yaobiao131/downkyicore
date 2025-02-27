@@ -7,7 +7,7 @@
              x:DataType="vms:ViewDanmakuViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:iac="clr-namespace:DownKyi.CustomAction">
+             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -62,11 +62,11 @@
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenWidth, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction
-                                Command="{Binding ScreenWidthCommand}"
-                                CommandParameter="{Binding ElementName=NameScreenWidth, Path=Text}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior
+                            Key="Enter"
+                            Command="{Binding ScreenWidthCommand}"
+                            CommandParameter="{Binding ElementName=NameScreenWidth, Path=Text}">
+                        </iac:ExecuteCommandOnKeyDownBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>
                 <TextBlock
@@ -81,11 +81,11 @@
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenHeight, Mode=TwoWay}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction
-                                Command="{Binding ScreenHeightCommand}"
-                                CommandParameter="{Binding ElementName=NameScreenHeight, Path=Text}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior
+                            Key="Enter"
+                            Command="{Binding ScreenHeightCommand}"
+                            CommandParameter="{Binding ElementName=NameScreenHeight, Path=Text}">
+                        </iac:ExecuteCommandOnKeyDownBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
@@ -125,11 +125,11 @@
                     VerticalContentAlignment="Center"
                     Text="{Binding FontSize}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction
-                                Command="{Binding FontSizeCommand}"
-                                CommandParameter="{Binding ElementName=NameFontSize, Path=Text}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior
+                            Key="Enter"
+                            Command="{Binding FontSizeCommand}"
+                            CommandParameter="{Binding ElementName=NameFontSize, Path=Text}">
+                        </iac:ExecuteCommandOnKeyDownBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
@@ -147,11 +147,11 @@
                     VerticalContentAlignment="Center"
                     Text="{Binding LineCount}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction
-                                Command="{Binding LineCountCommand}"
-                                CommandParameter="{Binding ElementName=NameLineCount, Path=Text}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior
+                            Key="Enter"
+                            Command="{Binding LineCountCommand}"
+                            CommandParameter="{Binding ElementName=NameLineCount, Path=Text}">
+                        </iac:ExecuteCommandOnKeyDownBehavior>
                     </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>

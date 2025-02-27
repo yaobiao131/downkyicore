@@ -4,7 +4,7 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:iac="clr-namespace:DownKyi.CustomAction"
+             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vm:ViewIndexViewModel"
              x:Class="DownKyi.Views.ViewIndex">
@@ -83,9 +83,7 @@
                     Watermark="{DynamicResource IndexHintText}"
                     Text="{Binding InputText,Mode=TwoWay}">
                     <i:Interaction.Behaviors>
-                        <iac:KeyUpBehavior Key="Enter">
-                            <ia:InvokeCommandAction Command="{Binding InputCommand}" />
-                        </iac:KeyUpBehavior>
+                        <iac:ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
                     </i:Interaction.Behaviors>
                 </TextBox>
             </Border>

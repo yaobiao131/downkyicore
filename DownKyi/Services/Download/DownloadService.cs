@@ -314,7 +314,9 @@ public abstract class DownloadService
         {
             finalFile = SettingsManager.GetInstance().IsTranscodingAacToMp3() == AllowStatus.YES
                 ? $"{downloading.DownloadBase.FilePath}.mp3"
-                : $"{downloading.DownloadBase.FilePath}.aac";
+                : downloading.AudioCodec.Id == 30251
+                    ? $"{downloading.DownloadBase.FilePath}.flac"
+                    : $"{downloading.DownloadBase.FilePath}.aac";
         }
 
         // 合并音视频
@@ -345,16 +347,16 @@ public abstract class DownloadService
         // 下载速度
         downloading.SpeedDisplay = string.Empty;
 
-        if (downloading.PlayUrl != null && downloading.Downloading.DownloadStatus == DownloadStatus.NOT_STARTED)
+        if (downloading.PlayUrl != null && downloading.Downloading.DownloadStatus == DownloadStatus.NotStarted)
         {
             // 设置下载状态
-            downloading.Downloading.DownloadStatus = DownloadStatus.DOWNLOADING;
+            downloading.Downloading.DownloadStatus = DownloadStatus.Downloading;
 
             return;
         }
 
         // 设置下载状态
-        downloading.Downloading.DownloadStatus = DownloadStatus.DOWNLOADING;
+        downloading.Downloading.DownloadStatus = DownloadStatus.Downloading;
 
         // 解析
         switch (downloading.Downloading.PlayStreamType)
@@ -400,7 +402,7 @@ public abstract class DownloadService
                 downloadingTasks.RemoveAll((m) => m.IsCompleted);
                 foreach (var downloading in downloadingList)
                 {
-                    if (downloading.Downloading.DownloadStatus == DownloadStatus.DOWNLOADING)
+                    if (downloading.Downloading.DownloadStatus == DownloadStatus.Downloading)
                     {
                         downloadingCount++;
                     }
@@ -414,11 +416,11 @@ public abstract class DownloadService
                     }
 
                     // 开始下载
-                    if (downloading.Downloading.DownloadStatus == DownloadStatus.NOT_STARTED ||
-                        downloading.Downloading.DownloadStatus == DownloadStatus.WAIT_FOR_DOWNLOAD)
+                    if (downloading.Downloading.DownloadStatus == DownloadStatus.NotStarted ||
+                        downloading.Downloading.DownloadStatus == DownloadStatus.WaitForDownload)
                     {
                         //这里需要立刻设置状态，否则如果SingleDownload没有及时执行，会重复创建任务
-                        downloading.Downloading.DownloadStatus = DownloadStatus.DOWNLOADING;
+                        downloading.Downloading.DownloadStatus = DownloadStatus.Downloading;
                         downloadingTasks.Add(SingleDownload(downloading));
                         downloadingCount++;
                     }
@@ -732,7 +734,7 @@ public abstract class DownloadService
         downloading.SpeedDisplay = string.Empty;
         downloading.Progress = 0;
 
-        downloading.Downloading.DownloadStatus = DownloadStatus.DOWNLOAD_FAILED;
+        downloading.Downloading.DownloadStatus = DownloadStatus.DownloadFailed;
         downloading.StartOrPause = ButtonIcon.Instance().Retry;
         downloading.StartOrPause.Fill = DictionaryResource.GetColor("ColorPrimary");
     }
@@ -804,21 +806,21 @@ public abstract class DownloadService
         {
             switch (item.Downloading.DownloadStatus)
             {
-                case DownloadStatus.NOT_STARTED:
+                case DownloadStatus.NotStarted:
                     break;
-                case DownloadStatus.WAIT_FOR_DOWNLOAD:
+                case DownloadStatus.WaitForDownload:
                     break;
-                case DownloadStatus.PAUSE_STARTED:
+                case DownloadStatus.PauseStarted:
                     break;
-                case DownloadStatus.PAUSE:
+                case DownloadStatus.Pause:
                     break;
-                case DownloadStatus.DOWNLOADING:
+                case DownloadStatus.Downloading:
                     // TODO 添加设置让用户选择重启后是否自动开始下载
-                    item.Downloading.DownloadStatus = DownloadStatus.WAIT_FOR_DOWNLOAD;
+                    item.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                     //item.Downloading.DownloadStatus = DownloadStatus.PAUSE;
                     break;
-                case DownloadStatus.DOWNLOAD_SUCCEED:
-                case DownloadStatus.DOWNLOAD_FAILED:
+                case DownloadStatus.DownloadSucceed:
+                case DownloadStatus.DownloadFailed:
                     break;
                 default:
                     break;
