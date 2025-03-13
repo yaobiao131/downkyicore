@@ -23,7 +23,7 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
 {
     public BuiltinDownloadService(ObservableCollection<DownloadingItem> downloadingList,
         ObservableCollection<DownloadedItem> downloadedList,
-        IDialogService dialogService
+        IDialogService? dialogService
     ) : base(downloadingList, downloadedList, dialogService)
     {
         Tag = "BuiltinDownloadService";
@@ -61,7 +61,7 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
     /// <param name="downloading"></param>
     /// <param name="downloadVideo"></param>
     /// <returns></returns>
-    private string DownloadVideo(DownloadingItem downloading, PlayUrlDashVideo downloadVideo)
+    private string DownloadVideo(DownloadingItem downloading, PlayUrlDashVideo? downloadVideo)
     {
         // 如果为空，说明没有匹配到可下载的音频视频
         if (downloadVideo == null)
@@ -127,8 +127,8 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         }
 
         // 启用https
-        var useSsl = SettingsManager.GetInstance().UseSSL();
-        if (useSsl == AllowStatus.YES)
+        var useSsl = SettingsManager.GetInstance().GetUseSsl();
+        if (useSsl == AllowStatus.Yes)
         {
             for (var i = 0; i < urls.Count; i++)
             {
@@ -307,7 +307,7 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
             Referer = "https://www.bilibili.com",
         };
 
-        if (SettingsManager.GetInstance().IsHttpProxy() == AllowStatus.YES)
+        if (SettingsManager.GetInstance().GetIsHttpProxy() == AllowStatus.Yes)
         {
             requestConfiguration.Proxy = new WebProxy(SettingsManager.GetInstance().GetHttpProxy(),
                 SettingsManager.GetInstance().GetHttpProxyListenPort());
@@ -316,7 +316,8 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         var downloadOpt = new DownloadConfiguration
         {
             ChunkCount = SettingsManager.GetInstance().GetSplit(),
-            RequestConfiguration = requestConfiguration
+            RequestConfiguration = requestConfiguration,
+            ParallelDownload = true
         };
         foreach (var url in urls)
         {

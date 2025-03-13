@@ -127,7 +127,7 @@ namespace DownKyi.ViewModels.DownloadManager
                 {
                     App.PropertyChangeAsync(() =>
                     {
-                        App.DownloadedList.Remove(item);
+                        App.DownloadedList?.Remove(item);
                     });
                 }
             });

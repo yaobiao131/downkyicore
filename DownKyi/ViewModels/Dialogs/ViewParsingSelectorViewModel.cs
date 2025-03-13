@@ -29,7 +29,7 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
 
         // 解析范围
         var parseScope = SettingsManager.GetInstance().GetParseScope();
-        IsParseDefault = parseScope != ParseScope.NONE;
+        IsParseDefault = parseScope != ParseScope.None;
 
         #endregion
     }
@@ -46,11 +46,11 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     /// </summary>
     private void ExecuteParseSelectedItemCommand()
     {
-        SetParseScopeSetting(ParseScope.SELECTED_ITEM);
+        SetParseScopeSetting(ParseScope.SelectedItem);
 
         IDialogParameters parameters = new DialogParameters
         {
-            { "parseScope", ParseScope.SELECTED_ITEM }
+            { "parseScope", ParseScope.SelectedItem }
         };
 
         RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
@@ -66,11 +66,11 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     /// </summary>
     private void ExecuteParseCurrentSectionCommand()
     {
-        SetParseScopeSetting(ParseScope.CURRENT_SECTION);
+        SetParseScopeSetting(ParseScope.CurrentSection);
 
         IDialogParameters parameters = new DialogParameters
         {
-            { "parseScope", ParseScope.CURRENT_SECTION }
+            { "parseScope", ParseScope.CurrentSection }
         };
 
         RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
@@ -86,11 +86,11 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     /// </summary>
     private void ExecuteParseAllCommand()
     {
-        SetParseScopeSetting(ParseScope.ALL);
+        SetParseScopeSetting(ParseScope.All);
 
         IDialogParameters parameters = new DialogParameters
         {
-            { "parseScope", ParseScope.ALL }
+            { "parseScope", ParseScope.All }
         };
 
         RaiseRequestClose(new DialogResult(ButtonResult.OK, parameters));
@@ -104,6 +104,6 @@ public class ViewParsingSelectorViewModel : BaseDialogViewModel
     /// <param name="parseScope"></param>
     private void SetParseScopeSetting(ParseScope parseScope)
     {
-        SettingsManager.GetInstance().SetParseScope(IsParseDefault ? parseScope : ParseScope.NONE);
+        SettingsManager.GetInstance().SetParseScope(IsParseDefault ? parseScope : ParseScope.None);
     }
 }

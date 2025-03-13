@@ -2,7 +2,7 @@
 
 public enum VideoCodecs
 {
-    NONE = 0,
-    AVC,
-    HEVC
+    None = 0,
+    Avc,
+    Hevc
 }

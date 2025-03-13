@@ -18,24 +18,24 @@ public class ViewArchiveViewModel : ViewModelBase
 {
     public const string Tag = "PageUserSpaceArchive";
 
-    private long mid = -1;
+    private long _mid = -1;
 
     #region 页面属性申明
 
-    private ObservableCollection<PublicationZone> publicationZones;
+    private ObservableCollection<PublicationZone> _publicationZones;
 
     public ObservableCollection<PublicationZone> PublicationZones
     {
-        get => publicationZones;
-        set => SetProperty(ref publicationZones, value);
+        get => _publicationZones;
+        set => SetProperty(ref _publicationZones, value);
     }
 
-    private int selectedItem;
+    private int _selectedItem;
 
     public int SelectedItem
     {
-        get => selectedItem;
-        set => SetProperty(ref selectedItem, value);
+        get => _selectedItem;
+        set => SetProperty(ref _selectedItem, value);
     }
 
     #endregion
@@ -52,12 +52,9 @@ public class ViewArchiveViewModel : ViewModelBase
     #region 命令申明
 
     // 视频选择事件
-    private DelegateCommand<object> publicationZonesCommand;
+    private DelegateCommand<object>? _publicationZonesCommand;
 
-    public DelegateCommand<object> PublicationZonesCommand => publicationZonesCommand ??
-                                                              (publicationZonesCommand =
-                                                                  new DelegateCommand<object>(
-                                                                      ExecutePublicationZonesCommand));
+    public DelegateCommand<object> PublicationZonesCommand => _publicationZonesCommand ??= new DelegateCommand<object>(ExecutePublicationZonesCommand);
 
     /// <summary>
     /// 视频选择事件
@@ -65,21 +62,20 @@ public class ViewArchiveViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecutePublicationZonesCommand(object parameter)
     {
-        if (!(parameter is PublicationZone zone))
+        if (parameter is not PublicationZone zone)
         {
             return;
         }
 
-        Dictionary<string, object> data = new Dictionary<string, object>
+        var data = new Dictionary<string, object>
         {
-            { "mid", mid },
+            { "mid", _mid },
             { "tid", zone.Tid },
             { "list", PublicationZones.ToList() }
         };
 
         // 进入视频页面
-        NavigateToView.NavigationView(EventAggregator, ViewPublicationViewModel.Tag, ViewUserSpaceViewModel.Tag,
-            data);
+        NavigateToView.NavigationView(EventAggregator, ViewPublicationViewModel.Tag, ViewUserSpaceViewModel.Tag, data);
 
         SelectedItem = -1;
     }
@@ -113,15 +109,15 @@ public class ViewArchiveViewModel : ViewModelBase
         }
 
         // 传入mid
-        mid = navigationContext.Parameters.GetValue<long>("mid");
+        _mid = navigationContext.Parameters.GetValue<long>("mid");
 
-        int VideoCount = 0;
+        var videoCount = 0;
         foreach (var zone in parameter)
         {
-            VideoCount += zone.Count;
-            string iconKey = VideoZoneIcon.Instance().GetZoneImageKey(zone.Tid);
+            videoCount += zone.Count;
+            var iconKey = VideoZoneIcon.Instance().GetZoneImageKey(zone.Tid);
 
-            publicationZones.Add(new PublicationZone
+            _publicationZones.Add(new PublicationZone
             {
                 Tid = zone.Tid,
                 Icon = DictionaryResource.Get<DrawingImage>(iconKey),
@@ -131,12 +127,12 @@ public class ViewArchiveViewModel : ViewModelBase
         }
 
         // 全部
-        publicationZones.Insert(0, new PublicationZone
+        _publicationZones.Insert(0, new PublicationZone
         {
             Tid = 0,
             Icon = DictionaryResource.Get<DrawingImage>("videoUpDrawingImage"),
             Name = DictionaryResource.GetString("AllPublicationZones"),
-            Count = VideoCount
+            Count = videoCount
         });
     }
 }

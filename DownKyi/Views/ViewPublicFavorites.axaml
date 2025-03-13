@@ -8,6 +8,7 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewPublicFavoritesViewModel">
     <Grid RowDefinitions="50,1,*">
         <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
@@ -64,7 +65,7 @@
                 Grid.Column="0"
                 Margin="10,10,10,10"
                 Orientation="Vertical">
-                <Image Source="{Binding Favorites.Cover}">
+                <Image asyncImageLoader:ImageLoader.Source="{Binding Favorites.CoverUrl}">
                     <Image.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding CopyCoverCommand}" Header="{DynamicResource CopyCover}" />
@@ -222,7 +223,7 @@
                     <Image
                         Width="48"
                         Height="48"
-                        Source="{Binding Favorites.UpHeader}">
+                        asyncImageLoader:ImageLoader.Source="{Binding Favorites.UpHeader}">
                         <Image.Clip>
                             <EllipseGeometry
                                 Center="24,24"

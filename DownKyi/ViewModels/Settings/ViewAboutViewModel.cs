@@ -60,7 +60,7 @@ public class ViewAboutViewModel : ViewModelBase
     {
         #region 属性初始化
 
-        AppInfo app = new AppInfo();
+        var app = new AppInfo();
         AppName = app.Name;
         AppVersion = app.VersionName;
 
@@ -78,12 +78,12 @@ public class ViewAboutViewModel : ViewModelBase
         _isOnNavigatedTo = true;
 
         // 是否接收测试版更新
-        var isReceiveBetaVersion = SettingsManager.GetInstance().IsReceiveBetaVersion();
-        IsReceiveBetaVersion = isReceiveBetaVersion == AllowStatus.YES;
+        var isReceiveBetaVersion = SettingsManager.GetInstance().GetIsReceiveBetaVersion();
+        IsReceiveBetaVersion = isReceiveBetaVersion == AllowStatus.Yes;
 
         // 是否在启动时自动检查更新
         var isAutoUpdateWhenLaunch = SettingsManager.GetInstance().GetAutoUpdateWhenLaunch();
-        AutoUpdateWhenLaunch = isAutoUpdateWhenLaunch == AllowStatus.YES;
+        AutoUpdateWhenLaunch = isAutoUpdateWhenLaunch == AllowStatus.Yes;
 
         _isOnNavigatedTo = false;
     }
@@ -116,7 +116,7 @@ public class ViewAboutViewModel : ViewModelBase
     {
         if (_isCheckVersion) return;
         _isCheckVersion = true;
-        (Version? version, string? body) = await new VersionCheckerService().GetLatestVersion();
+        var (version, body) = await new VersionCheckerService().GetLatestVersion();
         if(version is null)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
@@ -162,43 +162,39 @@ public class ViewAboutViewModel : ViewModelBase
     // 是否接收测试版更新事件
     private DelegateCommand? _receiveBetaVersionCommand;
 
-    public DelegateCommand ReceiveBetaVersionCommand =>
-        _receiveBetaVersionCommand ??= new DelegateCommand(ExecuteReceiveBetaVersionCommand);
+    public DelegateCommand ReceiveBetaVersionCommand => _receiveBetaVersionCommand ??= new DelegateCommand(ExecuteReceiveBetaVersionCommand);
 
     /// <summary>
     /// 是否接收测试版更新事件
     /// </summary>
     private void ExecuteReceiveBetaVersionCommand()
     {
-        AllowStatus isReceiveBetaVersion = IsReceiveBetaVersion ? AllowStatus.YES : AllowStatus.NO;
+        var isReceiveBetaVersion = IsReceiveBetaVersion ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().IsReceiveBetaVersion(isReceiveBetaVersion);
+        var isSucceed = SettingsManager.GetInstance().SetIsReceiveBetaVersion(isReceiveBetaVersion);
         PublishTip(isSucceed);
     }
 
     // 是否在启动时自动检查更新事件
     private DelegateCommand? _autoUpdateWhenLaunchCommand;
 
-    public DelegateCommand AutoUpdateWhenLaunchCommand =>
-        _autoUpdateWhenLaunchCommand ??= new DelegateCommand(ExecuteAutoUpdateWhenLaunchCommand);
+    public DelegateCommand AutoUpdateWhenLaunchCommand => _autoUpdateWhenLaunchCommand ??= new DelegateCommand(ExecuteAutoUpdateWhenLaunchCommand);
 
     /// <summary>
     /// 是否在启动时自动检查更新事件
     /// </summary>
     private void ExecuteAutoUpdateWhenLaunchCommand()
     {
-        AllowStatus isAutoUpdateWhenLaunch = AutoUpdateWhenLaunch ? AllowStatus.YES : AllowStatus.NO;
+        var isAutoUpdateWhenLaunch = AutoUpdateWhenLaunch ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().SetAutoUpdateWhenLaunch(isAutoUpdateWhenLaunch);
+        var isSucceed = SettingsManager.GetInstance().SetAutoUpdateWhenLaunch(isAutoUpdateWhenLaunch);
         PublishTip(isSucceed);
     }
 
     // Brotli.NET许可证查看事件
-    private DelegateCommand brotliLicenseCommand;
+    private DelegateCommand _brotliLicenseCommand;
 
-    public DelegateCommand BrotliLicenseCommand => brotliLicenseCommand ??
-                                                   (brotliLicenseCommand =
-                                                       new DelegateCommand(ExecuteBrotliLicenseCommand));
+    public DelegateCommand BrotliLicenseCommand => _brotliLicenseCommand ??= new DelegateCommand(ExecuteBrotliLicenseCommand);
 
     /// <summary>
     /// Brotli.NET许可证查看事件
@@ -209,11 +205,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // Google.Protobuf许可证查看事件
-    private DelegateCommand protobufLicenseCommand;
+    private DelegateCommand _protobufLicenseCommand;
 
-    public DelegateCommand ProtobufLicenseCommand => protobufLicenseCommand ??
-                                                     (protobufLicenseCommand =
-                                                         new DelegateCommand(ExecuteProtobufLicenseCommand));
+    public DelegateCommand ProtobufLicenseCommand => _protobufLicenseCommand ??= new DelegateCommand(ExecuteProtobufLicenseCommand);
 
     /// <summary>
     /// Google.Protobuf许可证查看事件
@@ -224,11 +218,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // Newtonsoft.Json许可证查看事件
-    private DelegateCommand newtonsoftLicenseCommand;
+    private DelegateCommand _newtonsoftLicenseCommand;
 
-    public DelegateCommand NewtonsoftLicenseCommand => newtonsoftLicenseCommand ??
-                                                       (newtonsoftLicenseCommand =
-                                                           new DelegateCommand(ExecuteNewtonsoftLicenseCommand));
+    public DelegateCommand NewtonsoftLicenseCommand => _newtonsoftLicenseCommand ??= new DelegateCommand(ExecuteNewtonsoftLicenseCommand);
 
     /// <summary>
     /// Newtonsoft.Json许可证查看事件
@@ -239,11 +231,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // Prism.DryIoc许可证查看事件
-    private DelegateCommand prismLicenseCommand;
+    private DelegateCommand _prismLicenseCommand;
 
-    public DelegateCommand PrismLicenseCommand => prismLicenseCommand ??
-                                                  (prismLicenseCommand =
-                                                      new DelegateCommand(ExecutePrismLicenseCommand));
+    public DelegateCommand PrismLicenseCommand => _prismLicenseCommand ??= new DelegateCommand(ExecutePrismLicenseCommand);
 
     /// <summary>
     /// Prism.DryIoc许可证查看事件
@@ -254,11 +244,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // QRCoder许可证查看事件
-    private DelegateCommand qRCoderLicenseCommand;
+    private DelegateCommand _qRCoderLicenseCommand;
 
-    public DelegateCommand QRCoderLicenseCommand => qRCoderLicenseCommand ??
-                                                    (qRCoderLicenseCommand =
-                                                        new DelegateCommand(ExecuteQRCoderLicenseCommand));
+    public DelegateCommand QRCoderLicenseCommand => _qRCoderLicenseCommand ??= new DelegateCommand(ExecuteQRCoderLicenseCommand);
 
     /// <summary>
     /// QRCoder许可证查看事件
@@ -269,11 +257,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // System.Data.SQLite.Core许可证查看事件
-    private DelegateCommand sQLiteLicenseCommand;
+    private DelegateCommand _sQLiteLicenseCommand;
 
-    public DelegateCommand SQLiteLicenseCommand => sQLiteLicenseCommand ??
-                                                   (sQLiteLicenseCommand =
-                                                       new DelegateCommand(ExecuteSQLiteLicenseCommand));
+    public DelegateCommand SQLiteLicenseCommand => _sQLiteLicenseCommand ??= new DelegateCommand(ExecuteSQLiteLicenseCommand);
 
     /// <summary>
     /// System.Data.SQLite.Core许可证查看事件
@@ -284,10 +270,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // Aria2c许可证查看事件
-    private DelegateCommand ariaLicenseCommand;
+    private DelegateCommand _ariaLicenseCommand;
 
-    public DelegateCommand AriaLicenseCommand =>
-        ariaLicenseCommand ?? (ariaLicenseCommand = new DelegateCommand(ExecuteAriaLicenseCommand));
+    public DelegateCommand AriaLicenseCommand => _ariaLicenseCommand ??= new DelegateCommand(ExecuteAriaLicenseCommand);
 
     /// <summary>
     /// Aria2c许可证查看事件
@@ -298,11 +283,9 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // FFmpeg许可证查看事件
-    private DelegateCommand fFmpegLicenseCommand;
+    private DelegateCommand _fFmpegLicenseCommand;
 
-    public DelegateCommand FFmpegLicenseCommand => fFmpegLicenseCommand ??
-                                                   (fFmpegLicenseCommand =
-                                                       new DelegateCommand(ExecuteFFmpegLicenseCommand));
+    public DelegateCommand FFmpegLicenseCommand => _fFmpegLicenseCommand ??= new DelegateCommand(ExecuteFFmpegLicenseCommand);
 
     /// <summary>
     /// FFmpeg许可证查看事件

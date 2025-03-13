@@ -17,7 +17,7 @@ public class Collision
     private List<int> Leaves()
     {
         var ret = new List<int>(lineCount);
-        for (int i = 0; i < lineCount; i++) ret.Add(0);
+        for (var i = 0; i < lineCount; i++) ret.Add(0);
         return ret;
     }
 
@@ -29,10 +29,10 @@ public class Collision
     /// <returns></returns>
     public Tuple<int, float> Detect(Display display)
     {
-        List<float> beyonds = new List<float>();
-        for (int i = 0; i < leaves.Count; i++)
+        var beyonds = new List<float>();
+        for (var i = 0; i < leaves.Count; i++)
         {
-            float beyond = display.Danmaku.Start - leaves[i];
+            var beyond = display.Danmaku.Start - leaves[i];
             // 某一行有足够空间，直接返回行号和 0 偏移
             if (beyond >= 0)
             {
@@ -43,9 +43,9 @@ public class Collision
         }
 
         // 所有行都没有空间了，那么找出哪一行能在最短时间内让出空间
-        float soon = beyonds.Max();
-        int lineIndex = beyonds.IndexOf(soon);
-        float offset = -soon;
+        var soon = beyonds.Max();
+        var lineIndex = beyonds.IndexOf(soon);
+        var offset = -soon;
         return Tuple.Create(lineIndex, offset);
     }
 

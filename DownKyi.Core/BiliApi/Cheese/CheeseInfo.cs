@@ -13,10 +13,10 @@ public static class CheeseInfo
     /// <param name="seasonId"></param>
     /// <param name="episodeId"></param>
     /// <returns></returns>
-    public static CheeseView CheeseViewInfo(long seasonId = -1, long episodeId = -1)
+    public static CheeseView? CheeseViewInfo(long seasonId = -1, long episodeId = -1)
     {
-        string baseUrl = "https://api.bilibili.com/pugv/view/web/season";
-        string referer = "https://www.bilibili.com";
+        const string baseUrl = "https://api.bilibili.com/pugv/view/web/season";
+        const string referer = "https://www.bilibili.com";
         string url;
         if (seasonId > -1)
         {
@@ -31,19 +31,12 @@ public static class CheeseInfo
             return null;
         }
 
-        string response = WebClient.RequestWeb(url, referer);
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            CheeseViewOrigin cheese = JsonConvert.DeserializeObject<CheeseViewOrigin>(response);
-            if (cheese != null)
-            {
-                return cheese.Data;
-            }
-            else
-            {
-                return null;
-            }
+            var cheese = JsonConvert.DeserializeObject<CheeseViewOrigin>(response);
+            return cheese?.Data;
         }
         catch (Exception e)
         {
@@ -60,23 +53,16 @@ public static class CheeseInfo
     /// <param name="ps"></param>
     /// <param name="pn"></param>
     /// <returns></returns>
-    public static CheeseEpisodeList CheeseEpisodeList(long seasonId, int ps = 50, int pn = 1)
+    public static CheeseEpisodeList? CheeseEpisodeList(long seasonId, int ps = 50, int pn = 1)
     {
-        string url = $"https://api.bilibili.com/pugv/view/web/ep/list?season_id={seasonId}&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/pugv/view/web/ep/list?season_id={seasonId}&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            CheeseEpisodeListOrigin cheese = JsonConvert.DeserializeObject<CheeseEpisodeListOrigin>(response);
-            if (cheese != null)
-            {
-                return cheese.Data;
-            }
-            else
-            {
-                return null;
-            }
+            var cheese = JsonConvert.DeserializeObject<CheeseEpisodeListOrigin>(response);
+            return cheese?.Data;
         }
         catch (Exception e)
         {

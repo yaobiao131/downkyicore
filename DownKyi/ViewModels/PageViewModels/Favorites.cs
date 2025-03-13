@@ -7,16 +7,16 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class Favorites : BindableBase
 {
-    public string CoverUrl { get; set; }
+    private string coverUrl;
+
+    public string CoverUrl
+    {
+        get => coverUrl;
+        set => SetProperty(ref coverUrl, value);
+    }
+
     public long UpperMid { get; set; }
 
-    private Bitmap cover;
-
-    public Bitmap Cover
-    {
-        get => cover;
-        set => SetProperty(ref cover, value);
-    }
 
     private string title;
 
@@ -122,9 +122,9 @@ public class Favorites : BindableBase
         set => SetProperty(ref upName, value);
     }
 
-    private Bitmap upHeader;
+    private string upHeader;
 
-    public Bitmap UpHeader
+    public string UpHeader
     {
         get => upHeader;
         set => SetProperty(ref upHeader, value);
@@ -136,13 +136,13 @@ public class Favorites : BindableBase
 
         Play = NormalIcon.Instance().Play;
         Play.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        
+
         Like = NormalIcon.Instance().Like;
         Like.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        
+
         Favorite = NormalIcon.Instance().Favorite;
         Favorite.Fill = DictionaryResource.GetColor("ColorTextGrey2");
-        
+
         Share = NormalIcon.Instance().Share;
         Share.Fill = DictionaryResource.GetColor("ColorTextGrey2");
 

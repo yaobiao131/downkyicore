@@ -6,7 +6,7 @@
 public static class HyphenSeparated
 {
     // 文件名的分隔符
-    public static Dictionary<int, string> Hyphen = new Dictionary<int, string>()
+    public static readonly Dictionary<int, string> Hyphen = new()
     {
         { 100, "/" },
         { 101, "_" },

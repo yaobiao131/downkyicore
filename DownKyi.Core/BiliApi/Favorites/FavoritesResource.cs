@@ -13,12 +13,11 @@ public static class FavoritesResource
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static List<FavoritesMedia> GetFavoritesMedia(long mediaId, int pn, int ps)
+    public static List<FavoritesMedia>? GetFavoritesMedia(long mediaId, int pn, int ps)
     {
-        string url =
-            $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={mediaId}&pn={pn}&ps={ps}&platform=web";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/v3/fav/resource/list?media_id={mediaId}&pn={pn}&ps={ps}&platform=web";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -45,13 +44,13 @@ public static class FavoritesResource
     /// <returns></returns>
     public static List<FavoritesMedia> GetAllFavoritesMedia(long mediaId)
     {
-        List<FavoritesMedia> result = new List<FavoritesMedia>();
+        var result = new List<FavoritesMedia>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 20;
+            const int ps = 20;
 
             var data = GetFavoritesMedia(mediaId, i, ps);
             if (data == null || data.Count == 0)
@@ -72,9 +71,9 @@ public static class FavoritesResource
     /// <returns></returns>
     public static List<FavoritesMediaId> GetFavoritesMediaId(long mediaId)
     {
-        string url = $"https://api.bilibili.com/x/v3/fav/resource/ids?media_id={mediaId}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/v3/fav/resource/ids?media_id={mediaId}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {

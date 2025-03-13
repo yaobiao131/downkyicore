@@ -9,11 +9,11 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class ToViewMedia : BindableBase
 {
-    protected readonly IEventAggregator eventAggregator;
+    protected readonly IEventAggregator EventAggregator;
 
     public ToViewMedia(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        EventAggregator = eventAggregator;
     }
 
     // aid
@@ -28,48 +28,48 @@ public class ToViewMedia : BindableBase
     #region 页面属性申明
 
     // 是否选中
-    private bool isSelected;
+    private bool _isSelected;
 
     public bool IsSelected
     {
-        get => isSelected;
-        set => SetProperty(ref isSelected, value);
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
     }
 
     // 封面
-    private Bitmap cover;
+    private string _cover;
 
-    public Bitmap Cover
+    public string Cover
     {
-        get => cover;
-        set => SetProperty(ref cover, value);
+        get => _cover;
+        set => SetProperty(ref _cover, value);
     }
 
     // 视频标题
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
     // UP主的昵称
-    private string upName;
+    private string _upName;
 
     public string UpName
     {
-        get => upName;
-        set => SetProperty(ref upName, value);
+        get => _upName;
+        set => SetProperty(ref _upName, value);
     }
 
     // UP主的头像
-    private Bitmap upHeader;
+    private string _upHeader;
 
-    public Bitmap UpHeader
+    public string UpHeader
     {
-        get => upHeader;
-        set => SetProperty(ref upHeader, value);
+        get => _upHeader;
+        set => SetProperty(ref _upHeader, value);
     }
 
     #endregion
@@ -77,10 +77,9 @@ public class ToViewMedia : BindableBase
     #region 命令申明
 
     // 视频标题点击事件
-    private DelegateCommand<object> titleCommand;
+    private DelegateCommand<object> _titleCommand;
 
-    public DelegateCommand<object> TitleCommand =>
-        titleCommand ?? (titleCommand = new DelegateCommand<object>(ExecuteTitleCommand));
+    public DelegateCommand<object> TitleCommand => _titleCommand ??= new DelegateCommand<object>(ExecuteTitleCommand);
 
     /// <summary>
     /// 视频标题点击事件
@@ -93,14 +92,13 @@ public class ToViewMedia : BindableBase
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag, $"{ParseEntrance.VideoUrl}{Bvid}");
+        NavigateToView.NavigationView(EventAggregator, ViewVideoDetailViewModel.Tag, tag, $"{ParseEntrance.VideoUrl}{Bvid}");
     }
 
     // UP主头像点击事件
-    private DelegateCommand<object> upCommand;
+    private DelegateCommand<object> _upCommand;
 
-    public DelegateCommand<object> UpCommand =>
-        upCommand ?? (upCommand = new DelegateCommand<object>(ExecuteUpCommand));
+    public DelegateCommand<object> UpCommand => _upCommand ??= new DelegateCommand<object>(ExecuteUpCommand);
 
     /// <summary>
     /// UP主头像点击事件
@@ -108,12 +106,12 @@ public class ToViewMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteUpCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        // NavigateToView.NavigateToViewUserSpace(eventAggregator, tag, UpMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, tag, UpMid);
     }
 
     #endregion

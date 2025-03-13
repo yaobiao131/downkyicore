@@ -74,8 +74,8 @@ public class Loading : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        double maxSideLength = Math.Min(this.Width, this.Height);
-        double ellipseDiameter = 0.1 * maxSideLength;
+        var maxSideLength = Math.Min(Width, Height);
+        var ellipseDiameter = 0.1 * maxSideLength;
         if (maxSideLength <= 40)
         {
             ellipseDiameter += 1;

@@ -2,7 +2,7 @@
 
 public enum AllowStatus
 {
-    NONE = 0,
-    NO,
-    YES
+    None = 0,
+    No,
+    Yes
 }

@@ -22,7 +22,7 @@ public class UserInfoForNavigation : BaseModel
     //public int allowance_count { get; set; }
     //public int answer_status { get; set; }
     //public int email_verified { get; set; }
-    [JsonProperty("face")] public string Face { get; set; }
+    [JsonProperty("face")] public string? Face { get; set; }
 
     //public bool has_shop { get; set; }
     [JsonProperty("isLogin")] public bool IsLogin { get; set; }

@@ -42,7 +42,7 @@ public static class UserInfo
     /// <returns></returns>
     public static UserInfoForSpace? GetUserInfoForSpace(long mid)
     {
-        var parameters = new Dictionary<string, object>
+        var parameters = new Dictionary<string, object?>
         {
             { "mid", mid }
         };

@@ -52,7 +52,7 @@ public class Display
     /// <returns></returns>
     public static Display Factory(Config config, Danmaku danmaku)
     {
-        Dictionary<string, Display> dict = new Dictionary<string, Display>
+        var dict = new Dictionary<string, Display>
         {
             { "scroll", new ScrollDisplay(config, danmaku) },
             { "top", new TopDisplay(config, danmaku) },
@@ -92,18 +92,9 @@ public class Display
     /// <returns></returns>
     protected int SetMaxLength()
     {
-        string[] lines = Danmaku.Content.Split('\n');
-        int maxLength = 0;
-        foreach (string line in lines)
-        {
-            int length = Utils.DisplayLength(line);
-            if (maxLength < length)
-            {
-                maxLength = length;
-            }
-        }
+        var lines = Danmaku.Content.Split('\n');
 
-        return maxLength;
+        return lines.Select(Utils.DisplayLength).Prepend(0).Max();
     }
 
     /// <summary>
@@ -122,7 +113,7 @@ public class Display
     /// <returns></returns>
     protected int SetHeight()
     {
-        int lineCount = Danmaku.Content.Split('\n').Length;
+        var lineCount = Danmaku.Content.Split('\n').Length;
         return lineCount * FontSize;
     }
 
@@ -133,7 +124,7 @@ public class Display
     /// <returns></returns>
     protected virtual Tuple<int, int> SetHorizontal()
     {
-        int x = (int)Math.Floor(Config.ScreenWidth / 2.0);
+        var x = (int)Math.Floor(Config.ScreenWidth / 2.0);
         return Tuple.Create(x, x);
     }
 
@@ -144,7 +135,7 @@ public class Display
     /// <returns></returns>
     protected virtual Tuple<int, int> SetVertical()
     {
-        int y = (int)Math.Floor(Config.ScreenHeight / 2.0);
+        var y = (int)Math.Floor(Config.ScreenHeight / 2.0);
         return Tuple.Create(y, y);
     }
 
@@ -154,7 +145,7 @@ public class Display
     /// <returns></returns>
     protected virtual int SetDuration()
     {
-        int baseDuration = 3 + Config.TuneDuration;
+        var baseDuration = 3 + Config.TuneDuration;
         if (baseDuration <= 0)
         {
             baseDuration = 0;
@@ -217,7 +208,7 @@ public class TopDisplay : Display
     protected override Tuple<int, int> SetVertical()
     {
         // 这里 y 坐标为 0 就是最顶行了
-        int y = LineIndex * Config.BaseFontSize;
+        var y = LineIndex * Config.BaseFontSize;
         return Tuple.Create(y, y);
     }
 }
@@ -239,7 +230,7 @@ public class BottomDisplay : Display
     protected override Tuple<int, int> SetVertical()
     {
         // 要让字幕不超出底部，减去高度
-        int y = Config.ScreenHeight - (LineIndex * Config.BaseFontSize) - Height;
+        var y = Config.ScreenHeight - (LineIndex * Config.BaseFontSize) - Height;
         // 再减去自定义的底部边距
         y -= Config.BottomMargin;
         return Tuple.Create(y, y);
@@ -284,17 +275,17 @@ public class ScrollDisplay : Display
     /// <returns></returns>
     protected override Tuple<int, int> SetHorizontal()
     {
-        int x1 = Config.ScreenWidth + (int)Math.Floor(Width / 2.0);
-        int x2 = 0 - (int)Math.Floor(Width / 2.0);
+        var x1 = Config.ScreenWidth + (int)Math.Floor(Width / 2.0);
+        var x2 = 0 - (int)Math.Floor(Width / 2.0);
         return Tuple.Create(x1, x2);
     }
 
     protected override Tuple<int, int> SetVertical()
     {
-        int baseFontSize = Config.BaseFontSize;
+        var baseFontSize = Config.BaseFontSize;
 
         // 垂直位置，按基准字体大小算每一行的高度
-        int y = (LineIndex + 1) * baseFontSize;
+        var y = (LineIndex + 1) * baseFontSize;
 
         // 个别弹幕可能字体比基准要大，所以最上的一行还要避免挤出顶部屏幕
         // 坐标不能小于字体大小
@@ -312,7 +303,7 @@ public class ScrollDisplay : Display
     /// <returns></returns>
     protected int SetDistance()
     {
-        Tuple<int, int> x = Horizontal;
+        var x = Horizontal;
         return x.Item1 - x.Item2;
     }
 
@@ -324,7 +315,7 @@ public class ScrollDisplay : Display
     {
         // 基准时间，就是每个字的移动时间
         // 12 秒加上用户自定义的微调
-        int baseDuration = 12 + Config.TuneDuration;
+        var baseDuration = 12 + Config.TuneDuration;
         if (baseDuration <= 0)
         {
             baseDuration = 1;
@@ -350,7 +341,7 @@ public class ScrollDisplay : Display
     /// <returns></returns>
     public int AsyncDuration()
     {
-        int baseDuration = 6 + Config.TuneDuration;
+        var baseDuration = 6 + Config.TuneDuration;
         if (baseDuration <= 0)
         {
             baseDuration = 0;
@@ -385,9 +376,9 @@ public class ScrollDisplay : Display
     /// <returns></returns>
     protected override int SetDuration()
     {
-        string methodName = Config.LayoutAlgorithm.Substring(0, 1).ToUpper() + Config.LayoutAlgorithm.Substring(1);
+        var methodName = Config.LayoutAlgorithm.Substring(0, 1).ToUpper() + Config.LayoutAlgorithm.Substring(1);
         methodName += "Duration";
-        MethodInfo method = typeof(ScrollDisplay).GetMethod(methodName);
+        var method = typeof(ScrollDisplay).GetMethod(methodName);
         if (method != null)
         {
             return (int)method.Invoke(this, null);
@@ -405,7 +396,7 @@ public class ScrollDisplay : Display
         // 对于滚动样式弹幕来说，就是最后一个字符离开最右边缘的时间
         // 坐标是字幕中点，在屏幕外和内各有半个字幕宽度
         // 也就是跑过一个字幕宽度的路程
-        float duration = Width / Speed;
+        var duration = Width / Speed;
         return (int)(Danmaku.Start + duration);
     }
 }

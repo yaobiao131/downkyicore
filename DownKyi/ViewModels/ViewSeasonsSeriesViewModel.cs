@@ -34,96 +34,96 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     private int type = 0;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
-    private readonly int VideoNumberInPage = 30;
+    private const int VideoNumberInPage = 30;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
-    private bool isEnabled = true;
+    private bool _isEnabled = true;
 
     public bool IsEnabled
     {
-        get => isEnabled;
-        set => SetProperty(ref isEnabled, value);
+        get => _isEnabled;
+        set => SetProperty(ref _isEnabled, value);
     }
 
-    private CustomPagerViewModel pager;
+    private CustomPagerViewModel _pager;
 
     public CustomPagerViewModel Pager
     {
-        get => pager;
-        set => SetProperty(ref pager, value);
+        get => _pager;
+        set => SetProperty(ref _pager, value);
     }
 
-    private ObservableCollection<ChannelMedia> medias;
+    private ObservableCollection<ChannelMedia> _medias;
 
     public ObservableCollection<ChannelMedia> Medias
     {
-        get => medias;
-        set => SetProperty(ref medias, value);
+        get => _medias;
+        set => SetProperty(ref _medias, value);
     }
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
     #endregion
@@ -131,7 +131,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     public ViewSeasonsSeriesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -157,10 +157,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -182,11 +181,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
@@ -203,11 +200,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     // 全选按钮点击事件
-    private DelegateCommand<object> selectAllCommand;
+    private DelegateCommand<object> _selectAllCommand;
 
-    public DelegateCommand<object> SelectAllCommand => selectAllCommand ??
-                                                       (selectAllCommand =
-                                                           new DelegateCommand<object>(ExecuteSelectAllCommand));
+    public DelegateCommand<object> SelectAllCommand => _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
 
     /// <summary>
     /// 全选按钮点击事件
@@ -232,10 +227,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> mediasCommand;
+    private DelegateCommand<object> _mediasCommand;
 
-    public DelegateCommand<object> MediasCommand =>
-        mediasCommand ?? (mediasCommand = new DelegateCommand<object>(ExecuteMediasCommand));
+    public DelegateCommand<object> MediasCommand => _mediasCommand ??= new DelegateCommand<object>(ExecuteMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -243,27 +237,18 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteMediasCommand(object parameter)
     {
-        if (!(parameter is IList selectedMedia))
+        if (parameter is not IList selectedMedia)
         {
             return;
         }
 
-        if (selectedMedia.Count == Medias.Count)
-        {
-            IsSelectAll = true;
-        }
-        else
-        {
-            IsSelectAll = false;
-        }
+        IsSelectAll = selectedMedia.Count == Medias.Count;
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -274,11 +259,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand => _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -297,13 +280,13 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 频道里只有视频
-        AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
         // 选择文件夹
         var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
+        var i = 0;
         await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
@@ -338,16 +321,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish(
-                    $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     private void OnCountChanged_Pager(int count)
@@ -486,7 +462,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = tokenSource.Token;
 
             var seasons = Core.BiliApi.Users.UserSpace.GetSeasonsDetail(mid, id, current, VideoNumberInPage);
             if (seasons == null || seasons.Meta.Total == 0)
@@ -505,25 +481,14 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 //}
 
                 // 查询、保存封面
-                string coverUrl = video.Pic;
-                Bitmap cover;
-                if (coverUrl == null || coverUrl == "")
+                var coverUrl = video.Pic;
+                if (!coverUrl.ToLower().StartsWith("http"))
                 {
-                    cover = null; // new BitmapImage(new Uri($"pack://application:,,,/Resources/video-placeholder.png"));
-                }
-                else
-                {
-                    if (!coverUrl.ToLower().StartsWith("http"))
-                    {
-                        coverUrl = $"https:{video.Pic}";
-                    }
-
-                    StorageCover storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(video.Aid, video.Bvid, -1, coverUrl, 200, 125);
+                    coverUrl = $"https:{video.Pic}";
                 }
 
                 // 播放数
-                string play = string.Empty;
+                var play = string.Empty;
                 if (video.Stat != null)
                 {
                     if (video.Stat.View > 0)
@@ -540,19 +505,17 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                     play = "--";
                 }
 
-                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                DateTime dateCTime = startTime.AddSeconds(video.Ctime);
-                string ctime = dateCTime.ToString("yyyy-MM-dd");
+                var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
+                var dateCTime = startTime.AddSeconds(video.Ctime);
+                var ctime = dateCTime.ToString("yyyy-MM-dd");
 
                 App.PropertyChangeAsync(new Action(() =>
                 {
-                    ChannelMedia media = new ChannelMedia(EventAggregator)
+                    var media = new ChannelMedia(EventAggregator)
                     {
                         Avid = video.Aid,
                         Bvid = video.Bvid,
-                        Cover = cover ??
-                                ImageHelper.LoadFromResource(
-                                    new Uri($"avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
                         Duration = Format.FormatDuration3(video.Duration),
                         Title = video.Title,
                         PlayNumber = play,
@@ -583,11 +546,11 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = tokenSource.Token;
 
             var meta = Core.BiliApi.Users.UserSpace.GetSeriesMeta(id);
             var series = Core.BiliApi.Users.UserSpace.GetSeriesDetail(mid, id, current, VideoNumberInPage);
-            if (series == null || meta.Meta.Total == 0)
+            if (series == null || meta?.Meta.Total == 0)
             {
                 // 没有数据，UI提示
                 LoadingVisibility = false;
@@ -603,25 +566,14 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 //}
 
                 // 查询、保存封面
-                string coverUrl = video.Pic;
-                Bitmap cover;
-                if (coverUrl == null || coverUrl == "")
+                var coverUrl = video.Pic;
+                if (!coverUrl.ToLower().StartsWith("http"))
                 {
-                    cover = null; // new BitmapImage(new Uri($"pack://application:,,,/Resources/video-placeholder.png"));
-                }
-                else
-                {
-                    if (!coverUrl.ToLower().StartsWith("http"))
-                    {
-                        coverUrl = $"https:{video.Pic}";
-                    }
-
-                    StorageCover storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(video.Aid, video.Bvid, -1, coverUrl, 200, 125);
+                    coverUrl = $"https:{video.Pic}";
                 }
 
                 // 播放数
-                string play = string.Empty;
+                var play = string.Empty;
                 if (video.Stat != null)
                 {
                     if (video.Stat.View > 0)
@@ -638,17 +590,17 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                     play = "--";
                 }
 
-                DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
-                DateTime dateCTime = startTime.AddSeconds(video.Ctime);
-                string ctime = dateCTime.ToString("yyyy-MM-dd");
+                var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
+                var dateCTime = startTime.AddSeconds(video.Ctime);
+                var ctime = dateCTime.ToString("yyyy-MM-dd");
 
-                App.PropertyChangeAsync(new Action(() =>
+                App.PropertyChangeAsync(() =>
                 {
-                    ChannelMedia media = new ChannelMedia(EventAggregator)
+                    var media = new ChannelMedia(EventAggregator)
                     {
                         Avid = video.Aid,
                         Bvid = video.Bvid,
-                        Cover = cover ?? ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
                         Duration = Format.FormatDuration3(video.Duration),
                         Title = video.Title,
                         PlayNumber = play,
@@ -658,7 +610,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
                     LoadingVisibility = false;
                     NoDataVisibility = false;
-                }));
+                });
 
                 // 判断是否该结束线程，若为true，跳出循环
                 if (cancellationToken.IsCancellationRequested)
@@ -700,7 +652,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         id = (long)parameter["id"];
         type = (int)parameter["type"];
         Title = (string)parameter["name"];
-        int count = (int)parameter["count"];
+        var count = (int)parameter["count"];
 
         // 页面选择
         Pager = new CustomPagerViewModel(1, (int)Math.Ceiling((double)count / VideoNumberInPage));

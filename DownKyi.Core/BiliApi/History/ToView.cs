@@ -1,8 +1,7 @@
 ﻿using DownKyi.Core.BiliApi.History.Models;
 using DownKyi.Core.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.History
 {
@@ -15,11 +14,11 @@ namespace DownKyi.Core.BiliApi.History
         /// 获取稍后再看视频列表
         /// </summary>
         /// <returns></returns>
-        public static List<ToViewList> GetToView()
+        public static List<ToViewList>? GetToView()
         {
-            string url = "https://api.bilibili.com/x/v2/history/toview";
-            string referer = "https://www.bilibili.com";
-            string response = WebClient.RequestWeb(url, referer);
+            const string url = "https://api.bilibili.com/x/v2/history/toview";
+            const string referer = "https://www.bilibili.com";
+            var response = WebClient.RequestWeb(url, referer);
 
             try
             {
@@ -29,7 +28,7 @@ namespace DownKyi.Core.BiliApi.History
             }
             catch (Exception e)
             {
-                Utils.Debugging.Console.PrintLine("GetToView()发生异常: {0}", e);
+                Console.PrintLine("GetToView()发生异常: {0}", e);
                 LogManager.Error("ToView", e);
                 return null;
             }

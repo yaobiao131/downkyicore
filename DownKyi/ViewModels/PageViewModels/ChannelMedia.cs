@@ -21,52 +21,52 @@ public class ChannelMedia : BindableBase
 
     #region 页面属性申明
 
-    private bool isSelected;
+    private bool _isSelected;
 
     public bool IsSelected
     {
-        get => isSelected;
-        set => SetProperty(ref isSelected, value);
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
     }
 
-    private Bitmap cover;
+    private string _cover;
 
-    public Bitmap Cover
+    public string Cover
     {
-        get => cover;
-        set => SetProperty(ref cover, value);
+        get => _cover;
+        set => SetProperty(ref _cover, value);
     }
 
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
-    private string duration;
+    private string _duration;
 
     public string Duration
     {
-        get => duration;
-        set => SetProperty(ref duration, value);
+        get => _duration;
+        set => SetProperty(ref _duration, value);
     }
 
-    private string playNumber;
+    private string _playNumber;
 
     public string PlayNumber
     {
-        get => playNumber;
-        set => SetProperty(ref playNumber, value);
+        get => _playNumber;
+        set => SetProperty(ref _playNumber, value);
     }
 
-    private string createTime;
+    private string _createTime;
 
     public string CreateTime
     {
-        get => createTime;
-        set => SetProperty(ref createTime, value);
+        get => _createTime;
+        set => SetProperty(ref _createTime, value);
     }
 
     #endregion
@@ -74,10 +74,9 @@ public class ChannelMedia : BindableBase
     #region 命令申明
 
     // 视频标题点击事件
-    private DelegateCommand<object> titleCommand;
+    private DelegateCommand<object> _titleCommand;
 
-    public DelegateCommand<object> TitleCommand =>
-        titleCommand ?? (titleCommand = new DelegateCommand<object>(ExecuteTitleCommand));
+    public DelegateCommand<object> TitleCommand => _titleCommand ?? (_titleCommand = new DelegateCommand<object>(ExecuteTitleCommand));
 
     /// <summary>
     /// 视频标题点击事件
@@ -85,7 +84,7 @@ public class ChannelMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteTitleCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }

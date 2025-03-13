@@ -19,9 +19,9 @@ public class ViewDelogoViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private string _videoPath;
+    private string? _videoPath;
 
-    public string VideoPath
+    public string? VideoPath
     {
         get => _videoPath;
         set => SetProperty(ref _videoPath, value);
@@ -120,7 +120,7 @@ public class ViewDelogoViewModel : ViewModelBase
             return;
         }
 
-        if (VideoPath == "")
+        if (VideoPath is null or "")
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipNoSeletedVideo"));
             return;
@@ -158,10 +158,7 @@ public class ViewDelogoViewModel : ViewModelBase
         {
             // 执行去水印程序
             _isDelogo = true;
-            FFMpeg.Instance.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output =>
-            {
-                Status += output + "\n";
-            });
+            FFMpeg.Instance.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output => { Status += output + "\n"; });
             _isDelogo = false;
         });
     }

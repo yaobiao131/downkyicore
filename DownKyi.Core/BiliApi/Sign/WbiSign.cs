@@ -28,7 +28,7 @@ public static class WbiSign
             temp.Append(origin[i]);
         }
 
-        return temp.ToString().Substring(0, 32);
+        return temp.ToString()[..32];
     }
 
     /// <summary>
@@ -39,12 +39,7 @@ public static class WbiSign
     public static string ParametersToQuery(Dictionary<string, string> parameters)
     {
         var keys = parameters.Keys.ToList();
-        var queryList = new List<string>();
-        foreach (var item in keys)
-        {
-            var value = parameters[item];
-            queryList.Add($"{item}={value}");
-        }
+        var queryList = (from item in keys let value = parameters[item] select $"{item}={value}").ToList();
 
         return string.Join("&", queryList);
     }
@@ -54,7 +49,7 @@ public static class WbiSign
     /// </summary>
     /// <param name="parameters"></param>
     /// <returns></returns>
-    public static Dictionary<string, string> EncodeWbi(Dictionary<string, object> parameters)
+    public static Dictionary<string, string> EncodeWbi(Dictionary<string, object?> parameters)
     {
         return EncWbi(parameters, GetKey().Item1, GetKey().Item2);
     }
@@ -66,15 +61,16 @@ public static class WbiSign
     /// <param name="imgKey"></param>
     /// <param name="subKey"></param>
     /// <returns></returns>
-    private static Dictionary<string, string> EncWbi(Dictionary<string, object> parameters, string imgKey,
-        string subKey)
+    private static Dictionary<string, string> EncWbi(Dictionary<string, object?> parameters, string imgKey, string subKey)
     {
         var paraStr = new Dictionary<string, string>();
-        foreach (var para in parameters)
+        foreach (var (key, value) in parameters)
         {
-            var key = para.Key;
-            var value = para.Value.ToString();
-            paraStr.Add(key, value);
+            var val = value?.ToString();
+            if (val != null)
+            {
+                paraStr.Add(key, val);
+            }
         }
 
         var mixinKey = GetMixinKey(imgKey + subKey);
@@ -84,15 +80,11 @@ public static class WbiSign
         // 按照 key 重排参数
         paraStr = paraStr.OrderBy(p => p.Key).ToDictionary(p => p.Key, p => p.Value);
         //过滤 value 中的 "!'()*" 字符
-        paraStr = paraStr.ToDictionary(
-            kvp => kvp.Key,
-            kvp => new string(kvp.Value.Where(chr => !"!'()*".Contains(chr)).ToArray())
-        );
+        paraStr = paraStr.ToDictionary(kvp => kvp.Key, kvp => new string(kvp.Value.Where(chr => !"!'()*".Contains(chr)).ToArray()));
         // 序列化参数
         var query = new FormUrlEncodedContent(paraStr).ReadAsStringAsync().Result;
         //计算 w_rid
         using var md5 = MD5.Create();
-        //using MD5 md5 = MD5.Create();
         var hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(query + mixinKey));
         var wbiSign = BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         paraStr["w_rid"] = wbiSign;
@@ -100,7 +92,7 @@ public static class WbiSign
         return paraStr;
     }
 
-    public static Tuple<string, string> GetKey()
+    private static Tuple<string, string> GetKey()
     {
         var user = SettingsManager.GetInstance().GetUserInfo();
 

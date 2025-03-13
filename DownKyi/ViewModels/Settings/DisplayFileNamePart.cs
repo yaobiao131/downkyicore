@@ -7,11 +7,11 @@ public class DisplayFileNamePart : BindableBase
 {
     public FileNamePart Id { get; set; }
 
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 }

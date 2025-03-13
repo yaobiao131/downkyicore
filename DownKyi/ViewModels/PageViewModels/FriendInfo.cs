@@ -8,39 +8,39 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class FriendInfo : BindableBase
 {
-    protected readonly IEventAggregator eventAggregator;
+    protected readonly IEventAggregator EventAggregator;
 
     public FriendInfo(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        this.EventAggregator = eventAggregator;
     }
 
     public long Mid { get; set; }
 
     #region 页面属性申明
 
-    private Bitmap header;
+    private string _header;
 
-    public Bitmap Header
+    public string Header
     {
-        get => header;
-        set => SetProperty(ref header, value);
+        get => _header;
+        set => SetProperty(ref _header, value);
     }
 
-    private string name;
+    private string _name;
 
     public string Name
     {
-        get => name;
-        set => SetProperty(ref name, value);
+        get => _name;
+        set => SetProperty(ref _name, value);
     }
 
-    private string sign;
+    private string _sign;
 
     public string Sign
     {
-        get => sign;
-        set => SetProperty(ref sign, value);
+        get => _sign;
+        set => SetProperty(ref _sign, value);
     }
 
     #endregion
@@ -48,10 +48,9 @@ public class FriendInfo : BindableBase
     #region 命令申明
 
     // 视频标题点击事件
-    private DelegateCommand<object> userCommand;
+    private DelegateCommand<object> _userCommand;
 
-    public DelegateCommand<object> UserCommand =>
-        userCommand ?? (userCommand = new DelegateCommand<object>(ExecuteUserCommand));
+    public DelegateCommand<object> UserCommand => _userCommand ??= new DelegateCommand<object>(ExecuteUserCommand);
 
     /// <summary>
     /// 视频标题点击事件
@@ -59,12 +58,12 @@ public class FriendInfo : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteUserCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewUserSpaceViewModel.Tag, tag, Mid);
+        NavigateToView.NavigationView(EventAggregator, ViewUserSpaceViewModel.Tag, tag, Mid);
     }
 
     #endregion

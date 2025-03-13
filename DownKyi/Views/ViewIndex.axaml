@@ -5,6 +5,7 @@
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vm:ViewIndexViewModel"
              x:Class="DownKyi.Views.ViewIndex">
@@ -25,7 +26,7 @@
                     Grid.Column="0"
                     Width="36"
                     Height="36"
-                    Source="{Binding Header}">
+                    asyncImageLoader:ImageLoader.Source="{Binding Header}">
                     <Image.Clip>
                         <!--  设置图像如何显示  -->
                         <EllipseGeometry

@@ -6,6 +6,7 @@
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewMyFavoritesViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FavoritesMedia">
@@ -40,7 +41,7 @@
                                 </i:Interaction.Behaviors>
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
                                 </Border.Background>
                                 <Border
                                     Name="NameInfoPanel"

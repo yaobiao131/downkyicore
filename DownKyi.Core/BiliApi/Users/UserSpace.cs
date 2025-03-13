@@ -43,7 +43,7 @@ public static class UserSpace
     /// </summary>
     /// <param name="mid">用户id</param>
     /// <returns></returns>
-    public static List<SpacePublicationListTypeVideoZone?> GetPublicationType(long mid)
+    public static List<SpacePublicationListTypeVideoZone>? GetPublicationType(long mid)
     {
         const int pn = 1;
         const int ps = 1;
@@ -54,22 +54,24 @@ public static class UserSpace
     /// <summary>
     /// 获取用户投稿视频的所有分区
     /// </summary>
-    /// <param name="mid">用户id</param>
+    /// <param name="publication"></param>
     /// <returns></returns>
-    public static List<SpacePublicationListTypeVideoZone?> GetPublicationType(SpacePublicationList? publication)
+    public static List<SpacePublicationListTypeVideoZone>? GetPublicationType(SpacePublicationList? publication)
     {
         if (publication?.Tlist == null)
         {
             return null;
         }
 
-        var result = new List<SpacePublicationListTypeVideoZone?>();
+        var result = new List<SpacePublicationListTypeVideoZone>();
         var typeList = JObject.Parse(publication.Tlist.ToString("N"));
         foreach (KeyValuePair<string, JToken> item in typeList)
         {
             var value = JsonConvert.DeserializeObject<SpacePublicationListTypeVideoZone>(item.Value.ToString());
-            result.Add(value);
+            if (value != null)
+                result.Add(value);
         }
+
         return result;
     }
 
@@ -93,7 +95,9 @@ public static class UserSpace
 
             var data = GetPublication(mid, i, ps, tid, order, keyword);
             if (data?.Vlist == null || data.Vlist.Count == 0)
-            { break; }
+            {
+                break;
+            }
 
             result.AddRange(data.Vlist);
         }
@@ -113,7 +117,7 @@ public static class UserSpace
     /// <returns></returns>
     public static SpacePublicationList? GetPublication(long mid, int pn, int ps, long tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "")
     {
-        var parameters = new Dictionary<string, object>
+        var parameters = new Dictionary<string, object?>
         {
             { "mid", mid },
             { "pn", pn },
@@ -134,8 +138,7 @@ public static class UserSpace
             {
                 Error = (sender, args) =>
                 {
-                    if (Equals(args.ErrorContext.Member, "play") &&
-                        args.ErrorContext.OriginalObject.GetType() == typeof(SpacePublicationListVideo))
+                    if (Equals(args.ErrorContext.Member, "play") && args.ErrorContext.OriginalObject?.GetType() == typeof(SpacePublicationListVideo))
                     {
                         args.ErrorContext.Handled = true;
                     }
@@ -199,10 +202,13 @@ public static class UserSpace
 
             var data = GetChannelVideoList(mid, cid, i, ps);
             if (data?.Count == 0)
-            { break; }
+            {
+                break;
+            }
 
             result.AddRange(data);
         }
+
         return result;
     }
 
@@ -348,6 +354,7 @@ public static class UserSpace
     #endregion
 
     #region 课程
+
     /// <summary>
     /// 查询用户发布的课程列表
     /// </summary>
@@ -387,14 +394,17 @@ public static class UserSpace
         while (true)
         {
             i++;
-            var ps = 50;
+            const int ps = 50;
 
             var data = GetCheese(mid, i, ps);
             if (data == null || data.Count == 0)
-            { break; }
+            {
+                break;
+            }
 
             result.AddRange(data);
         }
+
         return result;
     }
 
@@ -447,13 +457,15 @@ public static class UserSpace
 
             var data = GetBangumiFollow(mid, type, i, ps);
             if (data?.List == null || data.List.Count == 0)
-            { break; }
+            {
+                break;
+            }
 
             result.AddRange(data.List);
         }
+
         return result;
     }
 
     #endregion
-
 }

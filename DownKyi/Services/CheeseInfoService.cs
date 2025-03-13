@@ -103,7 +103,7 @@ public class CheeseInfoService : IInfoService
             // 文件命名中的时间格式
             var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
             // 视频发布时间
-            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
             var dateTime = startTime.AddSeconds(episode.ReleaseDate);
             page.PublishTime = dateTime.ToString(timeFormat);
 
@@ -146,23 +146,17 @@ public class CheeseInfoService : IInfoService
         // 查询、保存封面
         // 将SeasonId保存到avid字段中
         // 每集封面的cid保存到cid字段，EpisodeId保存到bvid字段中
-        var storageCover = new StorageCover();
         var coverUrl = _cheeseView.Cover;
-        var cover = storageCover.GetCover(_cheeseView.SeasonId, "cheese", -1, coverUrl);
 
         // 获取用户头像
         string upName;
-        string header;
         if (_cheeseView.UpInfo != null)
         {
             upName = _cheeseView.UpInfo.Name;
-            var storageHeader = new StorageHeader();
-            header = storageHeader.GetHeader(_cheeseView.UpInfo.Mid, _cheeseView.UpInfo.Name, _cheeseView.UpInfo.Avatar);
         }
         else
         {
             upName = "";
-            header = null;
         }
 
         // 为videoInfoView赋值
@@ -171,7 +165,6 @@ public class CheeseInfoService : IInfoService
         {
             videoInfoView.CoverUrl = coverUrl;
 
-            videoInfoView.Cover = cover == null ? null : ImageHelper.LoadFromResource(new Uri(cover));
             videoInfoView.Title = _cheeseView.Title;
 
             // 分区id
@@ -191,17 +184,8 @@ public class CheeseInfoService : IInfoService
             videoInfoView.Description = _cheeseView.Subtitle;
 
             videoInfoView.UpName = upName;
-            if (header != null)
-            {
-                var storageHeader = new StorageHeader();
-                videoInfoView.UpHeader = storageHeader.GetHeaderThumbnail(header, 48, 48);
-
-                videoInfoView.UpperMid = _cheeseView.UpInfo.Mid;
-            }
-            else
-            {
-                videoInfoView.UpHeader = null;
-            }
+            videoInfoView.UpHeader = _cheeseView.UpInfo.Avatar;
+            videoInfoView.UpperMid = _cheeseView.UpInfo.Mid;
         });
 
         return videoInfoView;

@@ -88,8 +88,6 @@ namespace DownKyi.ViewModels.DownloadManager
                         break;
                     case DownloadStatus.DownloadFailed:
                         break;
-                    default:
-                        break;
                 }
             }
         }
@@ -133,8 +131,6 @@ namespace DownKyi.ViewModels.DownloadManager
                         downloading.Downloading.DownloadStatus = DownloadStatus.WaitForDownload;
                         downloading.DownloadStatusTitle = DictionaryResource.GetString("Waiting");
                         break;
-                    default:
-                        break;
                 }
 
                 downloading.StartOrPause = ButtonIcon.Instance().Pause;
@@ -167,7 +163,7 @@ namespace DownKyi.ViewModels.DownloadManager
                 var list = DownloadingList.ToList();
                 foreach (var item in list)
                 {
-                    App.PropertyChangeAsync(() => { App.DownloadingList.Remove(item); });
+                    App.PropertyChangeAsync(() => { App.DownloadingList?.Remove(item); });
                 }
             });
         }

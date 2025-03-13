@@ -8,7 +8,8 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vm:ViewMyBangumiFollowViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:BangumiFollowMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -34,7 +35,7 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
                                 </Border.Background>
                             </Border>
 

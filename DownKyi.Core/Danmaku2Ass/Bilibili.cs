@@ -114,7 +114,7 @@ public class Bilibili
         }
 
         // 弹幕预处理
-        Producer producer = new Producer(config, danmakus);
+        var producer = new Producer(config, danmakus);
         producer.StartHandle();
 
         // 字幕生成

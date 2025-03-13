@@ -26,7 +26,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
     public AriaDownloadService(
         ObservableCollection<DownloadingItem> downloadingList,
         ObservableCollection<DownloadedItem> downloadedList,
-        IDialogService dialogService) :
+        IDialogService? dialogService) :
         base(downloadingList, downloadedList, dialogService)
     {
         Tag = "AriaDownloadService";
@@ -64,7 +64,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
     /// <param name="downloading"></param>
     /// <param name="downloadVideo"></param>
     /// <returns></returns>
-    private string DownloadVideo(DownloadingItem downloading, PlayUrlDashVideo downloadVideo)
+    private string DownloadVideo(DownloadingItem downloading, PlayUrlDashVideo? downloadVideo)
     {
         // 如果为空，说明没有匹配到可下载的音频视频
         if (downloadVideo == null)
@@ -130,8 +130,8 @@ public class AriaDownloadService : DownloadService, IDownloadService
         }
 
         // 启用https
-        var useSSL = SettingsManager.GetInstance().UseSSL();
-        if (useSSL == AllowStatus.YES)
+        var useSSL = SettingsManager.GetInstance().GetUseSsl();
+        if (useSSL == AllowStatus.Yes)
         {
             for (var i = 0; i < urls.Count; i++)
             {
@@ -359,7 +359,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
         // 显示错误信息
         if (errorMessage != null && errorMessage.Contains("ERROR"))
         {
-            var alertService = new AlertService(dialogService);
+            var alertService = new AlertService(DialogService);
             var result = await alertService.ShowMessage(SystemIcon.Instance().Error,
                 $"Aria2 {DictionaryResource.GetString("Error")}",
                 errorMessage,
@@ -440,7 +440,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
             };
 
             // 如果设置了代理，则增加HttpProxy
-            if (SettingsManager.GetInstance().IsAriaHttpProxy() == AllowStatus.YES)
+            if (SettingsManager.GetInstance().GetIsAriaHttpProxy() == AllowStatus.Yes)
             {
                 option.HttpProxy =
                     $"http://{SettingsManager.GetInstance().GetAriaHttpProxy()}:{SettingsManager.GetInstance().GetAriaHttpProxyListenPort()}";
@@ -485,7 +485,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
     private void AriaTellStatus(long totalLength, long completedLength, long speed, string gid)
     {
         // 当前的下载视频
-        DownloadingItem video = null;
+        DownloadingItem? video = null;
         try
         {
             video = downloadingList.FirstOrDefault(it => it.Downloading.Gid == gid);

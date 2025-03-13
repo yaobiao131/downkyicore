@@ -2,9 +2,9 @@
 
 public enum ParseScope
 {
-    NOT_SET = 0,
-    NONE = 1,
-    SELECTED_ITEM,
-    CURRENT_SECTION,
-    ALL
+    NotSet = 0,
+    None = 1,
+    SelectedItem,
+    CurrentSection,
+    All
 }

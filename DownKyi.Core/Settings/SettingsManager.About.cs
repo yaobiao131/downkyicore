@@ -3,26 +3,26 @@
 public partial class SettingsManager
 {
     // 是否接收测试版更新
-    private readonly AllowStatus isReceiveBetaVersion = AllowStatus.NO;
+    private const AllowStatus IsReceiveBetaVersion = AllowStatus.No;
 
     // 是否在启动时自动检查更新
-    private readonly AllowStatus autoUpdateWhenLaunch = AllowStatus.YES;
+    private const AllowStatus AutoUpdateWhenLaunch = AllowStatus.Yes;
 
     /// <summary>
     /// 获取是否接收测试版更新
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsReceiveBetaVersion()
+    public AllowStatus GetIsReceiveBetaVersion()
     {
-        appSettings = GetSettings();
-        if (appSettings.About.IsReceiveBetaVersion == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.About.IsReceiveBetaVersion == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsReceiveBetaVersion(isReceiveBetaVersion);
-            return isReceiveBetaVersion;
+            SetIsReceiveBetaVersion(IsReceiveBetaVersion);
+            return IsReceiveBetaVersion;
         }
 
-        return appSettings.About.IsReceiveBetaVersion;
+        return _appSettings.About.IsReceiveBetaVersion;
     }
 
     /// <summary>
@@ -30,9 +30,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isReceiveBetaVersion"></param>
     /// <returns></returns>
-    public bool IsReceiveBetaVersion(AllowStatus isReceiveBetaVersion)
+    public bool SetIsReceiveBetaVersion(AllowStatus isReceiveBetaVersion)
     {
-        appSettings.About.IsReceiveBetaVersion = isReceiveBetaVersion;
+        _appSettings.About.IsReceiveBetaVersion = isReceiveBetaVersion;
         return SetSettings();
     }
 
@@ -42,15 +42,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public AllowStatus GetAutoUpdateWhenLaunch()
     {
-        appSettings = GetSettings();
-        if (appSettings.About.AutoUpdateWhenLaunch == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.About.AutoUpdateWhenLaunch == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            SetAutoUpdateWhenLaunch(autoUpdateWhenLaunch);
-            return autoUpdateWhenLaunch;
+            SetAutoUpdateWhenLaunch(AutoUpdateWhenLaunch);
+            return AutoUpdateWhenLaunch;
         }
 
-        return appSettings.About.AutoUpdateWhenLaunch;
+        return _appSettings.About.AutoUpdateWhenLaunch;
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAutoUpdateWhenLaunch(AllowStatus autoUpdateWhenLaunch)
     {
-        appSettings.About.AutoUpdateWhenLaunch = autoUpdateWhenLaunch;
+        _appSettings.About.AutoUpdateWhenLaunch = autoUpdateWhenLaunch;
         return SetSettings();
     }
 }

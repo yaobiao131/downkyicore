@@ -53,8 +53,7 @@ public class ViewLoginViewModel : ViewModelBase
 
     private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     private void ExecuteBackSpace()
     {
@@ -79,7 +78,7 @@ public class ViewLoginViewModel : ViewModelBase
     {
         try
         {
-            var loginUrl = LoginQR.GetLoginUrl();
+            var loginUrl = LoginQr.GetLoginUrl();
             if (loginUrl == null)
             {
                 return;
@@ -97,7 +96,7 @@ public class ViewLoginViewModel : ViewModelBase
                 return;
             }
 
-            PropertyChangeAsync(() => { LoginQrCode = LoginQR.GetLoginQRCode(loginUrl.Data.Url); });
+            PropertyChangeAsync(() => { LoginQrCode = LoginQr.GetLoginQrCode(loginUrl.Data.Url); });
             Console.PrintLine(loginUrl.Data.Url + "\n");
             LogManager.Debug(Tag, loginUrl.Data.Url);
 
@@ -120,33 +119,16 @@ public class ViewLoginViewModel : ViewModelBase
         while (true)
         {
             Thread.Sleep(1000);
-            var loginStatus = LoginQR.GetLoginStatus(oauthKey);
+            var loginStatus = LoginQr.GetLoginStatus(oauthKey);
             if (loginStatus == null)
             {
                 continue;
             }
 
-            Console.PrintLine(loginStatus.Data.Code + "\n" + loginStatus.Data.Message + "\n" +
-                              loginStatus.Data.Url + "\n");
-
             switch (loginStatus.Data.Code)
             {
-                // case -1:
-                //     // 没有这个oauthKey
-                //
-                //     // 发送通知
-                //     eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginKeyError"));
-                //     LogManager.Info(Tag, DictionaryResource.GetString("LoginKeyError"));
-                //
-                //     // 取消任务
-                //     tokenSource.Cancel();
-                //
-                //     // 创建新任务
-                //     PropertyChangeAsync(new Action(() => { Task.Run(Login, (tokenSource = new CancellationTokenSource()).Token); }));
-                //     break;
                 case 86038:
-                    // 不匹配的oauthKey，超时或已确认的oauthKey
-
+                    // 二维码已失效
                     // 发送通知
                     EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginTimeOut"));
                     LogManager.Info(Tag, DictionaryResource.GetString("LoginTimeOut"));
@@ -172,8 +154,8 @@ public class ViewLoginViewModel : ViewModelBase
                     // 确认登录
 
                     // 发送通知
-                    EventAggregator.GetEvent<MessageEvent>().Publish("登录成功");
-                    // LogManager.Info(Tag, DictionaryResource.GetString("LoginSuccessful"));
+                    EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginSuccessful"));
+                    LogManager.Info(Tag, DictionaryResource.GetString("LoginSuccessful"));
 
                     // 保存登录信息
                     try
@@ -181,8 +163,7 @@ public class ViewLoginViewModel : ViewModelBase
                         var isSucceed = LoginHelper.SaveLoginInfoCookies(loginStatus.Data.Url);
                         if (!isSucceed)
                         {
-                            EventAggregator.GetEvent<MessageEvent>()
-                                .Publish(DictionaryResource.GetString("LoginFailed"));
+                            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginFailed"));
                             LogManager.Error(Tag, DictionaryResource.GetString("LoginFailed"));
                         }
                     }
@@ -192,10 +173,7 @@ public class ViewLoginViewModel : ViewModelBase
                         LogManager.Error(e);
                         EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoginFailed"));
                     }
-
-                    // TODO 其他操作
-
-
+                    
                     // 取消任务
                     Thread.Sleep(3000);
                     PropertyChange(ExecuteBackSpace);

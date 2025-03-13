@@ -22,266 +22,267 @@ public class ViewMySpaceViewModel : ViewModelBase
 {
     public const string Tag = "PageMySpace";
 
-    private CancellationTokenSource tokenSource;
+    private CancellationTokenSource _tokenSource;
 
     // mid
-    private long mid = -1;
+    private long _mid = -1;
 
     #region 页面属性申明
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage logout;
+    private VectorImage _logout;
 
     public VectorImage Logout
     {
-        get => logout;
-        set => SetProperty(ref logout, value);
+        get => _logout;
+        set => SetProperty(ref _logout, value);
     }
 
-    private bool loading;
+    private bool _loading;
+
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool viewVisibility;
+    private bool _viewVisibility;
 
     public bool ViewVisibility
     {
-        get => viewVisibility;
-        set => SetProperty(ref viewVisibility, value);
+        get => _viewVisibility;
+        set => SetProperty(ref _viewVisibility, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private string topNavigationBg;
+    private string _topNavigationBg;
 
     public string TopNavigationBg
     {
-        get => topNavigationBg;
-        set => SetProperty(ref topNavigationBg, value);
+        get => _topNavigationBg;
+        set => SetProperty(ref _topNavigationBg, value);
     }
 
-    private Bitmap background;
+    private string _background;
 
-    public Bitmap Background
+    public string Background
     {
-        get => background;
-        set => SetProperty(ref background, value);
+        get => _background;
+        set => SetProperty(ref _background, value);
     }
 
-    private Bitmap header;
+    private string _header;
 
-    public Bitmap Header
+    public string Header
     {
-        get => header;
-        set => SetProperty(ref header, value);
+        get => _header;
+        set => SetProperty(ref _header, value);
     }
 
-    private string userName;
+    private string _userName;
 
     public string UserName
     {
-        get => userName;
-        set => SetProperty(ref userName, value);
+        get => _userName;
+        set => SetProperty(ref _userName, value);
     }
 
-    private Bitmap sex;
+    private Bitmap _sex;
 
     public Bitmap Sex
     {
-        get => sex;
-        set => SetProperty(ref sex, value);
+        get => _sex;
+        set => SetProperty(ref _sex, value);
     }
 
-    private Bitmap level;
+    private Bitmap _level;
 
     public Bitmap Level
     {
-        get => level;
-        set => SetProperty(ref level, value);
+        get => _level;
+        set => SetProperty(ref _level, value);
     }
 
-    private bool vipTypeVisibility;
+    private bool _vipTypeVisibility;
 
     public bool VipTypeVisibility
     {
-        get => vipTypeVisibility;
-        set => SetProperty(ref vipTypeVisibility, value);
+        get => _vipTypeVisibility;
+        set => SetProperty(ref _vipTypeVisibility, value);
     }
 
-    private string vipType;
+    private string _vipType;
 
     public string VipType
     {
-        get => vipType;
-        set => SetProperty(ref vipType, value);
+        get => _vipType;
+        set => SetProperty(ref _vipType, value);
     }
 
-    private string sign;
+    private string _sign;
 
     public string Sign
     {
-        get => sign;
-        set => SetProperty(ref sign, value);
+        get => _sign;
+        set => SetProperty(ref _sign, value);
     }
 
-    private VectorImage coinIcon;
+    private VectorImage _coinIcon;
 
     public VectorImage CoinIcon
     {
-        get => coinIcon;
-        set => SetProperty(ref coinIcon, value);
+        get => _coinIcon;
+        set => SetProperty(ref _coinIcon, value);
     }
 
-    private string coin;
+    private string _coin;
 
     public string Coin
     {
-        get => coin;
-        set => SetProperty(ref coin, value);
+        get => _coin;
+        set => SetProperty(ref _coin, value);
     }
 
-    private VectorImage moneyIcon;
+    private VectorImage _moneyIcon;
 
     public VectorImage MoneyIcon
     {
-        get => moneyIcon;
-        set => SetProperty(ref moneyIcon, value);
+        get => _moneyIcon;
+        set => SetProperty(ref _moneyIcon, value);
     }
 
-    private string money;
+    private string _money;
 
     public string Money
     {
-        get => money;
-        set => SetProperty(ref money, value);
+        get => _money;
+        set => SetProperty(ref _money, value);
     }
 
-    private VectorImage bindingEmail;
+    private VectorImage _bindingEmail;
 
     public VectorImage BindingEmail
     {
-        get => bindingEmail;
-        set => SetProperty(ref bindingEmail, value);
+        get => _bindingEmail;
+        set => SetProperty(ref _bindingEmail, value);
     }
 
-    private bool bindingEmailVisibility;
+    private bool _bindingEmailVisibility;
 
     public bool BindingEmailVisibility
     {
-        get => bindingEmailVisibility;
-        set => SetProperty(ref bindingEmailVisibility, value);
+        get => _bindingEmailVisibility;
+        set => SetProperty(ref _bindingEmailVisibility, value);
     }
 
-    private VectorImage bindingPhone;
+    private VectorImage _bindingPhone;
 
     public VectorImage BindingPhone
     {
-        get => bindingPhone;
-        set => SetProperty(ref bindingPhone, value);
+        get => _bindingPhone;
+        set => SetProperty(ref _bindingPhone, value);
     }
 
-    private bool bindingPhoneVisibility;
+    private bool _bindingPhoneVisibility;
 
     public bool BindingPhoneVisibility
     {
-        get => bindingPhoneVisibility;
-        set => SetProperty(ref bindingPhoneVisibility, value);
+        get => _bindingPhoneVisibility;
+        set => SetProperty(ref _bindingPhoneVisibility, value);
     }
 
-    private string levelText;
+    private string _levelText;
 
     public string LevelText
     {
-        get => levelText;
-        set => SetProperty(ref levelText, value);
+        get => _levelText;
+        set => SetProperty(ref _levelText, value);
     }
 
-    private string currentExp;
+    private string _currentExp;
 
     public string CurrentExp
     {
-        get => currentExp;
-        set => SetProperty(ref currentExp, value);
+        get => _currentExp;
+        set => SetProperty(ref _currentExp, value);
     }
 
-    private int expProgress;
+    private int _expProgress;
 
     public int ExpProgress
     {
-        get => expProgress;
-        set => SetProperty(ref expProgress, value);
+        get => _expProgress;
+        set => SetProperty(ref _expProgress, value);
     }
 
-    private int maxExp;
+    private int _maxExp;
 
     public int MaxExp
     {
-        get => maxExp;
-        set => SetProperty(ref maxExp, value);
+        get => _maxExp;
+        set => SetProperty(ref _maxExp, value);
     }
 
-    private ObservableCollection<SpaceItem> statusList;
+    private ObservableCollection<SpaceItem> _statusList;
 
     public ObservableCollection<SpaceItem> StatusList
     {
-        get => statusList;
-        set => SetProperty(ref statusList, value);
+        get => _statusList;
+        set => SetProperty(ref _statusList, value);
     }
 
-    private ObservableCollection<SpaceItem> packageList;
+    private ObservableCollection<SpaceItem> _packageList;
 
     public ObservableCollection<SpaceItem> PackageList
     {
-        get => packageList;
-        set => SetProperty(ref packageList, value);
+        get => _packageList;
+        set => SetProperty(ref _packageList, value);
     }
 
-    private int selectedStatus = -1;
+    private int _selectedStatus = -1;
 
     public int SelectedStatus
     {
-        get => selectedStatus;
-        set => SetProperty(ref selectedStatus, value);
+        get => _selectedStatus;
+        set => SetProperty(ref _selectedStatus, value);
     }
 
-    private int selectedPackage = -1;
+    private int _selectedPackage = -1;
 
     public int SelectedPackage
     {
-        get => selectedPackage;
-        set => SetProperty(ref selectedPackage, value);
+        get => _selectedPackage;
+        set => SetProperty(ref _selectedPackage, value);
     }
 
     #endregion
@@ -322,10 +323,9 @@ public class ViewMySpaceViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -333,9 +333,9 @@ public class ViewMySpaceViewModel : ViewModelBase
     private void ExecuteBackSpace()
     {
         // 结束任务
-        tokenSource?.Cancel();
+        _tokenSource?.Cancel();
 
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -345,10 +345,9 @@ public class ViewMySpaceViewModel : ViewModelBase
     }
 
     // 退出登录事件
-    private DelegateCommand logoutCommand;
+    private DelegateCommand? _logoutCommand;
 
-    public DelegateCommand LogoutCommand =>
-        logoutCommand ?? (logoutCommand = new DelegateCommand(ExecuteLogoutCommand));
+    public DelegateCommand LogoutCommand => _logoutCommand ??= new DelegateCommand(ExecuteLogoutCommand);
 
     /// <summary>
     /// 退出登录事件
@@ -359,7 +358,7 @@ public class ViewMySpaceViewModel : ViewModelBase
         LoginHelper.Logout();
 
         // 返回上一页
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -369,10 +368,9 @@ public class ViewMySpaceViewModel : ViewModelBase
     }
 
     // 页面选择事件
-    private DelegateCommand statusListCommand;
+    private DelegateCommand? _statusListCommand;
 
-    public DelegateCommand StatusListCommand =>
-        statusListCommand ?? (statusListCommand = new DelegateCommand(ExecuteStatusListCommand));
+    public DelegateCommand StatusListCommand => _statusListCommand ??= new DelegateCommand(ExecuteStatusListCommand);
 
     /// <summary>
     /// 页面选择事件
@@ -384,9 +382,9 @@ public class ViewMySpaceViewModel : ViewModelBase
             return;
         }
 
-        Dictionary<string, object> data = new Dictionary<string, object>
+        var data = new Dictionary<string, object>
         {
-            { "mid", mid },
+            { "mid", _mid },
             { "friendId", 0 }
         };
 
@@ -412,16 +410,13 @@ public class ViewMySpaceViewModel : ViewModelBase
     }
 
     // 页面选择事件
-    private DelegateCommand packageListCommand;
+    private DelegateCommand _packageListCommand;
 
-    public DelegateCommand PackageListCommand => packageListCommand ??
-                                                 (packageListCommand =
-                                                     new DelegateCommand(ExecutePackageListCommand));
+    public DelegateCommand PackageListCommand => _packageListCommand ??= new DelegateCommand(ExecutePackageListCommand);
 
     /// <summary>
     /// 页面选择事件
     /// </summary>
-    /// <param name="parameter"></param>
     private void ExecutePackageListCommand()
     {
         if (SelectedPackage == -1)
@@ -432,16 +427,16 @@ public class ViewMySpaceViewModel : ViewModelBase
         switch (SelectedPackage)
         {
             case 0:
-                NavigateToView.NavigationView(EventAggregator, ViewMyFavoritesViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyFavoritesViewModel.Tag, Tag, _mid);
                 break;
             case 1:
-                NavigateToView.NavigationView(EventAggregator, ViewMyBangumiFollowViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyBangumiFollowViewModel.Tag, Tag, _mid);
                 break;
             case 2:
-                NavigateToView.NavigationView(EventAggregator, ViewMyToViewVideoViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyToViewVideoViewModel.Tag, Tag, _mid);
                 break;
             case 3:
-                NavigateToView.NavigationView(EventAggregator, ViewMyHistoryViewModel.Tag, Tag, mid);
+                NavigateToView.NavigationView(EventAggregator, ViewMyHistoryViewModel.Tag, Tag, _mid);
                 break;
             default:
                 break;
@@ -477,18 +472,12 @@ public class ViewMySpaceViewModel : ViewModelBase
         CurrentExp = "--/--";
 
         StatusList.Clear();
-        StatusList.Add(new SpaceItem
-            { IsEnabled = true, Title = DictionaryResource.GetString("Following"), Subtitle = "--" });
-        StatusList.Add(new SpaceItem
-            { IsEnabled = true, Title = DictionaryResource.GetString("Whisper"), Subtitle = "--" });
-        StatusList.Add(new SpaceItem
-            { IsEnabled = true, Title = DictionaryResource.GetString("Follower"), Subtitle = "--" });
-        StatusList.Add(new SpaceItem
-            { IsEnabled = false, Title = DictionaryResource.GetString("Black"), Subtitle = "--" });
-        StatusList.Add(new SpaceItem
-            { IsEnabled = false, Title = DictionaryResource.GetString("Moral"), Subtitle = "--" });
-        StatusList.Add(new SpaceItem
-            { IsEnabled = false, Title = DictionaryResource.GetString("Silence"), Subtitle = "N/A" });
+        StatusList.Add(new SpaceItem { IsEnabled = true, Title = DictionaryResource.GetString("Following"), Subtitle = "--" });
+        StatusList.Add(new SpaceItem { IsEnabled = true, Title = DictionaryResource.GetString("Whisper"), Subtitle = "--" });
+        StatusList.Add(new SpaceItem { IsEnabled = true, Title = DictionaryResource.GetString("Follower"), Subtitle = "--" });
+        StatusList.Add(new SpaceItem { IsEnabled = false, Title = DictionaryResource.GetString("Black"), Subtitle = "--" });
+        StatusList.Add(new SpaceItem { IsEnabled = false, Title = DictionaryResource.GetString("Moral"), Subtitle = "--" });
+        StatusList.Add(new SpaceItem { IsEnabled = false, Title = DictionaryResource.GetString("Silence"), Subtitle = "N/A" });
 
         PackageList.Clear();
         PackageList.Add(new SpaceItem
@@ -528,29 +517,20 @@ public class ViewMySpaceViewModel : ViewModelBase
     /// </summary>
     private async void UpdateSpaceInfo()
     {
-        bool isCancel = false;
-        bool isNoData = true;
-        Uri toutuUri = null;
+        var isCancel = false;
+        var isNoData = true;
+        string? toutuUri = null;
         string headerUri = null;
-        Uri sexUri = null;
+        Uri? sexUri = null;
         Uri levelUri = null;
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            var cancellationToken = _tokenSource.Token;
 
             // 背景图片
-            SpaceSettings spaceSettings = Core.BiliApi.Users.UserSpace.GetSpaceSettings(mid);
-            if (spaceSettings != null)
-            {
-                StorageCover storageCover = new StorageCover();
-                string toutu = storageCover.GetCover($"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}");
-                toutuUri = new Uri(toutu);
-            }
-            else
-            {
-                toutuUri = new Uri("avares://DownKyi/Resources/backgound/9-绿荫秘境.png");
-            }
+            var spaceSettings = Core.BiliApi.Users.UserSpace.GetSpaceSettings(_mid);
+            toutuUri = spaceSettings != null ? $"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}" : "avares://DownKyi/Resources/backgound/9-绿荫秘境.png";
 
             // 我的用户信息
             var myInfo = UserInfo.GetMyInfo();
@@ -559,18 +539,17 @@ public class ViewMySpaceViewModel : ViewModelBase
                 isNoData = false;
 
                 // 头像
-                var storageHeader = new StorageHeader();
-                headerUri = storageHeader.GetHeader(mid, myInfo.Name, myInfo.Face);
+                headerUri = myInfo.Face;
                 // 用户名
                 UserName = myInfo.Name;
                 // 性别
                 if (myInfo.Sex == "男")
                 {
-                    sexUri = new Uri($"avares://DownKyi/Resources/sex/male.png");
+                    sexUri = new Uri("avares://DownKyi/Resources/sex/male.png");
                 }
                 else if (myInfo.Sex == "女")
                 {
-                    sexUri = new Uri($"avares://DownKyi/Resources/sex/female.png");
+                    sexUri = new Uri("avares://DownKyi/Resources/sex/female.png");
                 }
 
                 // 显示vip信息
@@ -600,18 +579,8 @@ public class ViewMySpaceViewModel : ViewModelBase
                 }
 
                 // 等级
-                PropertyChangeAsync(() =>
-                {
-                    LevelText = $"{DictionaryResource.GetString("Level")}{myInfo.LevelExp.CurrentLevel}";
-                });
-                if (myInfo.LevelExp.NextExp == -1)
-                {
-                    CurrentExp = $"{myInfo.LevelExp.CurrentExp}/--";
-                }
-                else
-                {
-                    CurrentExp = $"{myInfo.LevelExp.CurrentExp}/{myInfo.LevelExp.NextExp}";
-                }
+                PropertyChangeAsync(() => { LevelText = $"{DictionaryResource.GetString("Level")}{myInfo.LevelExp.CurrentLevel}"; });
+                CurrentExp = myInfo.LevelExp.NextExp == -1 ? $"{myInfo.LevelExp.CurrentExp}/--" : $"{myInfo.LevelExp.CurrentExp}/{myInfo.LevelExp.NextExp}";
 
                 // 经验
                 MaxExp = myInfo.LevelExp.NextExp;
@@ -639,7 +608,7 @@ public class ViewMySpaceViewModel : ViewModelBase
             {
                 isCancel = true;
             }
-        }, (tokenSource = new CancellationTokenSource()).Token);
+        }, (_tokenSource = new CancellationTokenSource()).Token);
 
         // 是否该结束线程
         if (isCancel)
@@ -663,8 +632,7 @@ public class ViewMySpaceViewModel : ViewModelBase
         else
         {
             // 头像
-            var storageHeader = new StorageHeader();
-            Header = storageHeader.GetHeaderThumbnail(headerUri, 64, 64);
+            Header = headerUri;
             // 性别
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
             // 等级
@@ -673,7 +641,7 @@ public class ViewMySpaceViewModel : ViewModelBase
             ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
             Logout.Fill = DictionaryResource.GetColor("ColorText");
             TopNavigationBg = DictionaryResource.GetColor("ColorMask100");
-            Background = ImageHelper.LoadFromResource(toutuUri);
+            Background = toutuUri ?? "";
 
             ViewVisibility = true;
             LoadingVisibility = false;
@@ -696,18 +664,16 @@ public class ViewMySpaceViewModel : ViewModelBase
             }
 
             //用户的关系状态数
-            var relationStat = UserStatus.GetUserRelationStat(mid);
-            if (relationStat != null)
-            {
-                // 关注数
-                StatusList[0].Subtitle = relationStat.Following.ToString();
-                // 悄悄关注数
-                StatusList[1].Subtitle = relationStat.Whisper.ToString();
-                // 粉丝数
-                StatusList[2].Subtitle = relationStat.Follower.ToString();
-                // 黑名单数
-                StatusList[3].Subtitle = relationStat.Black.ToString();
-            }
+            var relationStat = UserStatus.GetUserRelationStat(_mid);
+            if (relationStat == null) return;
+            // 关注数
+            StatusList[0].Subtitle = relationStat.Following.ToString();
+            // 悄悄关注数
+            StatusList[1].Subtitle = relationStat.Whisper.ToString();
+            // 粉丝数
+            StatusList[2].Subtitle = relationStat.Follower.ToString();
+            // 黑名单数
+            StatusList[3].Subtitle = relationStat.Black.ToString();
         });
     }
 
@@ -720,13 +686,13 @@ public class ViewMySpaceViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 根据传入参数不同执行不同任务
-        long parameter = navigationContext.Parameters.GetValue<long>("Parameter");
+        var parameter = navigationContext.Parameters.GetValue<long>("Parameter");
         if (parameter == 0)
         {
             return;
         }
 
-        mid = parameter;
+        _mid = parameter;
 
         InitView();
         UpdateSpaceInfo();

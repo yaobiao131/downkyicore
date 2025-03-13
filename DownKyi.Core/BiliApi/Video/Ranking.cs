@@ -14,11 +14,11 @@ public static class Ranking
     /// <param name="day">3日榜或周榜（3/7）</param>
     /// <param name="original"></param>
     /// <returns></returns>
-    public static List<RankingVideoView> RegionRankingList(int rid, int day = 3, int original = 0)
+    public static List<RankingVideoView>? RegionRankingList(int rid, int day = 3, int original = 0)
     {
-        string url = $"https://api.bilibili.com/x/web-interface/ranking/region?rid={rid}&day={day}&ps={original}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/web-interface/ranking/region?rid={rid}&day={day}&ps={original}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -27,10 +27,8 @@ public static class Ranking
             {
                 return ranking.Data;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         catch (Exception e)
         {

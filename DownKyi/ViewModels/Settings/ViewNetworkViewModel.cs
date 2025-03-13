@@ -19,232 +19,232 @@ public class ViewNetworkViewModel : ViewModelBase
 {
     public const string Tag = "PageSettingsNetwork";
 
-    private bool isOnNavigatedTo;
+    private bool _isOnNavigatedTo;
 
     #region 页面属性申明
 
-    private bool useSSL;
+    private bool _useSsl;
 
-    public bool UseSSL
+    public bool UseSsl
     {
-        get => useSSL;
-        set => SetProperty(ref useSSL, value);
+        get => _useSsl;
+        set => SetProperty(ref _useSsl, value);
     }
 
-    private string userAgent;
+    private string _userAgent;
 
     public string UserAgent
     {
-        get => userAgent;
-        set => SetProperty(ref userAgent, value);
+        get => _userAgent;
+        set => SetProperty(ref _userAgent, value);
     }
 
-    private bool builtin;
+    private bool _builtin;
 
     public bool Builtin
     {
-        get => builtin;
-        set => SetProperty(ref builtin, value);
+        get => _builtin;
+        set => SetProperty(ref _builtin, value);
     }
 
-    private bool aria2c;
+    private bool _aria2C;
 
-    public bool Aria2c
+    public bool Aria2C
     {
-        get => aria2c;
-        set => SetProperty(ref aria2c, value);
+        get => _aria2C;
+        set => SetProperty(ref _aria2C, value);
     }
 
-    private bool customAria2c;
+    private bool _customAria2C;
 
-    public bool CustomAria2c
+    public bool CustomAria2C
     {
-        get => customAria2c;
-        set => SetProperty(ref customAria2c, value);
+        get => _customAria2C;
+        set => SetProperty(ref _customAria2C, value);
     }
 
-    private List<int> maxCurrentDownloads;
+    private List<int> _maxCurrentDownloads;
 
     public List<int> MaxCurrentDownloads
     {
-        get => maxCurrentDownloads;
-        set => SetProperty(ref maxCurrentDownloads, value);
+        get => _maxCurrentDownloads;
+        set => SetProperty(ref _maxCurrentDownloads, value);
     }
 
-    private int selectedMaxCurrentDownload;
+    private int _selectedMaxCurrentDownload;
 
     public int SelectedMaxCurrentDownload
     {
-        get => selectedMaxCurrentDownload;
-        set => SetProperty(ref selectedMaxCurrentDownload, value);
+        get => _selectedMaxCurrentDownload;
+        set => SetProperty(ref _selectedMaxCurrentDownload, value);
     }
 
-    private List<int> splits;
+    private List<int> _splits;
 
     public List<int> Splits
     {
-        get => splits;
-        set => SetProperty(ref splits, value);
+        get => _splits;
+        set => SetProperty(ref _splits, value);
     }
 
-    private int selectedSplit;
+    private int _selectedSplit;
 
     public int SelectedSplit
     {
-        get => selectedSplit;
-        set => SetProperty(ref selectedSplit, value);
+        get => _selectedSplit;
+        set => SetProperty(ref _selectedSplit, value);
     }
 
-    private bool isHttpProxy;
+    private bool _isHttpProxy;
 
     public bool IsHttpProxy
     {
-        get => isHttpProxy;
-        set => SetProperty(ref isHttpProxy, value);
+        get => _isHttpProxy;
+        set => SetProperty(ref _isHttpProxy, value);
     }
 
-    private string httpProxy;
+    private string _httpProxy;
 
     public string HttpProxy
     {
-        get => httpProxy;
-        set => SetProperty(ref httpProxy, value);
+        get => _httpProxy;
+        set => SetProperty(ref _httpProxy, value);
     }
 
-    private int httpProxyPort;
+    private int _httpProxyPort;
 
     public int HttpProxyPort
     {
-        get => httpProxyPort;
-        set => SetProperty(ref httpProxyPort, value);
+        get => _httpProxyPort;
+        set => SetProperty(ref _httpProxyPort, value);
     }
 
-    private string ariaHost;
+    private string _ariaHost;
 
     public string AriaHost
     {
-        get => ariaHost;
-        set => SetProperty(ref ariaHost, value);
+        get => _ariaHost;
+        set => SetProperty(ref _ariaHost, value);
     }
 
-    private int ariaListenPort;
+    private int _ariaListenPort;
 
     public int AriaListenPort
     {
-        get => ariaListenPort;
-        set => SetProperty(ref ariaListenPort, value);
+        get => _ariaListenPort;
+        set => SetProperty(ref _ariaListenPort, value);
     }
 
-    private string ariaToken;
+    private string _ariaToken;
 
     public string AriaToken
     {
-        get => ariaToken;
-        set => SetProperty(ref ariaToken, value);
+        get => _ariaToken;
+        set => SetProperty(ref _ariaToken, value);
     }
 
-    private List<string> ariaLogLevels;
+    private List<string> _ariaLogLevels;
 
     public List<string> AriaLogLevels
     {
-        get => ariaLogLevels;
-        set => SetProperty(ref ariaLogLevels, value);
+        get => _ariaLogLevels;
+        set => SetProperty(ref _ariaLogLevels, value);
     }
 
-    private string selectedAriaLogLevel;
+    private string _selectedAriaLogLevel;
 
     public string SelectedAriaLogLevel
     {
-        get => selectedAriaLogLevel;
-        set => SetProperty(ref selectedAriaLogLevel, value);
+        get => _selectedAriaLogLevel;
+        set => SetProperty(ref _selectedAriaLogLevel, value);
     }
 
-    private List<int> ariaMaxConcurrentDownloads;
+    private List<int> _ariaMaxConcurrentDownloads;
 
     public List<int> AriaMaxConcurrentDownloads
     {
-        get => ariaMaxConcurrentDownloads;
-        set => SetProperty(ref ariaMaxConcurrentDownloads, value);
+        get => _ariaMaxConcurrentDownloads;
+        set => SetProperty(ref _ariaMaxConcurrentDownloads, value);
     }
 
-    private int selectedAriaMaxConcurrentDownload;
+    private int _selectedAriaMaxConcurrentDownload;
 
     public int SelectedAriaMaxConcurrentDownload
     {
-        get => selectedAriaMaxConcurrentDownload;
-        set => SetProperty(ref selectedAriaMaxConcurrentDownload, value);
+        get => _selectedAriaMaxConcurrentDownload;
+        set => SetProperty(ref _selectedAriaMaxConcurrentDownload, value);
     }
 
-    private List<int> ariaSplits;
+    private List<int> _ariaSplits;
 
     public List<int> AriaSplits
     {
-        get => ariaSplits;
-        set => SetProperty(ref ariaSplits, value);
+        get => _ariaSplits;
+        set => SetProperty(ref _ariaSplits, value);
     }
 
-    private int selectedAriaSplit;
+    private int _selectedAriaSplit;
 
     public int SelectedAriaSplit
     {
-        get => selectedAriaSplit;
-        set => SetProperty(ref selectedAriaSplit, value);
+        get => _selectedAriaSplit;
+        set => SetProperty(ref _selectedAriaSplit, value);
     }
 
-    private int ariaMaxOverallDownloadLimit;
+    private int _ariaMaxOverallDownloadLimit;
 
     public int AriaMaxOverallDownloadLimit
     {
-        get => ariaMaxOverallDownloadLimit;
-        set => SetProperty(ref ariaMaxOverallDownloadLimit, value);
+        get => _ariaMaxOverallDownloadLimit;
+        set => SetProperty(ref _ariaMaxOverallDownloadLimit, value);
     }
 
-    private int ariaMaxDownloadLimit;
+    private int _ariaMaxDownloadLimit;
 
     public int AriaMaxDownloadLimit
     {
-        get => ariaMaxDownloadLimit;
-        set => SetProperty(ref ariaMaxDownloadLimit, value);
+        get => _ariaMaxDownloadLimit;
+        set => SetProperty(ref _ariaMaxDownloadLimit, value);
     }
 
-    private bool isAriaHttpProxy;
+    private bool _isAriaHttpProxy;
 
     public bool IsAriaHttpProxy
     {
-        get => isAriaHttpProxy;
-        set => SetProperty(ref isAriaHttpProxy, value);
+        get => _isAriaHttpProxy;
+        set => SetProperty(ref _isAriaHttpProxy, value);
     }
 
-    private string ariaHttpProxy;
+    private string _ariaHttpProxy;
 
     public string AriaHttpProxy
     {
-        get => ariaHttpProxy;
-        set => SetProperty(ref ariaHttpProxy, value);
+        get => _ariaHttpProxy;
+        set => SetProperty(ref _ariaHttpProxy, value);
     }
 
-    private int ariaHttpProxyPort;
+    private int _ariaHttpProxyPort;
 
     public int AriaHttpProxyPort
     {
-        get => ariaHttpProxyPort;
-        set => SetProperty(ref ariaHttpProxyPort, value);
+        get => _ariaHttpProxyPort;
+        set => SetProperty(ref _ariaHttpProxyPort, value);
     }
 
-    private List<string> ariaFileAllocations;
+    private List<string> _ariaFileAllocations;
 
     public List<string> AriaFileAllocations
     {
-        get => ariaFileAllocations;
-        set => SetProperty(ref ariaFileAllocations, value);
+        get => _ariaFileAllocations;
+        set => SetProperty(ref _ariaFileAllocations, value);
     }
 
-    private string selectedAriaFileAllocation;
+    private string _selectedAriaFileAllocation;
 
     public string SelectedAriaFileAllocation
     {
-        get => selectedAriaFileAllocation;
-        set => SetProperty(ref selectedAriaFileAllocation, value);
+        get => _selectedAriaFileAllocation;
+        set => SetProperty(ref _selectedAriaFileAllocation, value);
     }
 
     #endregion
@@ -256,14 +256,14 @@ public class ViewNetworkViewModel : ViewModelBase
 
         // builtin同时下载数
         MaxCurrentDownloads = new List<int>();
-        for (int i = 1; i <= 10; i++)
+        for (var i = 1; i <= 10; i++)
         {
             MaxCurrentDownloads.Add(i);
         }
 
         // builtin最大线程数
         Splits = new List<int>();
-        for (int i = 1; i <= 10; i++)
+        for (var i = 1; i <= 10; i++)
         {
             Splits.Add(i);
         }
@@ -280,14 +280,14 @@ public class ViewNetworkViewModel : ViewModelBase
 
         // Aria同时下载数
         AriaMaxConcurrentDownloads = new List<int>();
-        for (int i = 1; i <= 10; i++)
+        for (var i = 1; i <= 10; i++)
         {
             AriaMaxConcurrentDownloads.Add(i);
         }
 
         // Aria最大线程数
         AriaSplits = new List<int>();
-        for (int i = 1; i <= 10; i++)
+        for (var i = 1; i <= 10; i++)
         {
             AriaSplits.Add(i);
         }
@@ -311,11 +311,11 @@ public class ViewNetworkViewModel : ViewModelBase
     {
         base.OnNavigatedTo(navigationContext);
 
-        isOnNavigatedTo = true;
+        _isOnNavigatedTo = true;
 
         // 启用https
-        var useSsl = SettingsManager.GetInstance().UseSSL();
-        UseSSL = useSsl == AllowStatus.YES;
+        var useSsl = SettingsManager.GetInstance().GetUseSsl();
+        UseSsl = useSsl == AllowStatus.Yes;
 
         // UserAgent
         UserAgent = SettingsManager.GetInstance().GetUserAgent();
@@ -324,16 +324,16 @@ public class ViewNetworkViewModel : ViewModelBase
         var downloader = SettingsManager.GetInstance().GetDownloader();
         switch (downloader)
         {
-            case Core.Settings.Downloader.NOT_SET:
+            case Core.Settings.Downloader.NotSet:
                 break;
-            case Core.Settings.Downloader.BUILT_IN:
+            case Core.Settings.Downloader.BuiltIn:
                 Builtin = true;
                 break;
-            case Core.Settings.Downloader.ARIA:
-                Aria2c = true;
+            case Core.Settings.Downloader.Aria:
+                Aria2C = true;
                 break;
-            case Core.Settings.Downloader.CUSTOM_ARIA:
-                CustomAria2c = true;
+            case Core.Settings.Downloader.CustomAria:
+                CustomAria2C = true;
                 break;
         }
 
@@ -344,8 +344,8 @@ public class ViewNetworkViewModel : ViewModelBase
         SelectedSplit = SettingsManager.GetInstance().GetSplit();
 
         // 是否开启builtin http代理
-        var isHttpProxy = SettingsManager.GetInstance().IsHttpProxy();
-        IsHttpProxy = isHttpProxy == AllowStatus.YES;
+        var isHttpProxy = SettingsManager.GetInstance().GetIsHttpProxy();
+        IsHttpProxy = isHttpProxy == AllowStatus.Yes;
 
         // builtin的http代理的地址
         HttpProxy = SettingsManager.GetInstance().GetHttpProxy();
@@ -379,8 +379,8 @@ public class ViewNetworkViewModel : ViewModelBase
         AriaMaxDownloadLimit = SettingsManager.GetInstance().GetAriaMaxDownloadLimit();
 
         // 是否开启Aria http代理
-        var isAriaHttpProxy = SettingsManager.GetInstance().IsAriaHttpProxy();
-        IsAriaHttpProxy = isAriaHttpProxy == AllowStatus.YES;
+        var isAriaHttpProxy = SettingsManager.GetInstance().GetIsAriaHttpProxy();
+        IsAriaHttpProxy = isAriaHttpProxy == AllowStatus.Yes;
 
         // Aria的http代理的地址
         AriaHttpProxy = SettingsManager.GetInstance().GetAriaHttpProxy();
@@ -392,33 +392,31 @@ public class ViewNetworkViewModel : ViewModelBase
         var ariaFileAllocation = SettingsManager.GetInstance().GetAriaFileAllocation();
         SelectedAriaFileAllocation = ariaFileAllocation.ToString("G");
 
-        isOnNavigatedTo = false;
+        _isOnNavigatedTo = false;
     }
 
     #region 命令申明
 
     // 是否启用https事件
-    private DelegateCommand useSSLCommand;
+    private DelegateCommand? _useSslCommand;
 
-    public DelegateCommand UseSSLCommand =>
-        useSSLCommand ?? (useSSLCommand = new DelegateCommand(ExecuteUseSSLCommand));
+    public DelegateCommand UseSslCommand => _useSslCommand ??= new DelegateCommand(ExecuteUseSslCommand);
 
     /// <summary>
     /// 是否启用https事件
     /// </summary>
-    private void ExecuteUseSSLCommand()
+    private void ExecuteUseSslCommand()
     {
-        var useSSL = UseSSL ? AllowStatus.YES : AllowStatus.NO;
+        var useSsl = UseSsl ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().UseSSL(useSSL);
+        var isSucceed = SettingsManager.GetInstance().SetUseSsl(useSsl);
         PublishTip(isSucceed);
     }
 
     // 设置UserAgent事件
-    private DelegateCommand userAgentCommand;
+    private DelegateCommand? _userAgentCommand;
 
-    public DelegateCommand UserAgentCommand =>
-        userAgentCommand ?? (userAgentCommand = new DelegateCommand(ExecuteUserAgentCommand));
+    public DelegateCommand UserAgentCommand => _userAgentCommand ??= new DelegateCommand(ExecuteUserAgentCommand);
 
     /// <summary>
     /// 设置UserAgent事件
@@ -430,12 +428,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // 下载器选择事件
-    private DelegateCommand<string> selectDownloaderCommand;
+    private DelegateCommand<string>? _selectDownloaderCommand;
 
-    public DelegateCommand<string> SelectDownloaderCommand => selectDownloaderCommand ??
-                                                              (selectDownloaderCommand =
-                                                                  new DelegateCommand<string>(
-                                                                      ExecuteSelectDownloaderCommand));
+    public DelegateCommand<string> SelectDownloaderCommand => _selectDownloaderCommand ??= new DelegateCommand<string>(ExecuteSelectDownloaderCommand);
 
     /// <summary>
     /// 下载器选择事件
@@ -447,13 +442,13 @@ public class ViewNetworkViewModel : ViewModelBase
         switch (parameter)
         {
             case "Builtin":
-                downloader = Core.Settings.Downloader.BUILT_IN;
+                downloader = Core.Settings.Downloader.BuiltIn;
                 break;
             case "Aria2c":
-                downloader = Core.Settings.Downloader.ARIA;
+                downloader = Core.Settings.Downloader.Aria;
                 break;
             case "CustomAria2c":
-                downloader = Core.Settings.Downloader.CUSTOM_ARIA;
+                downloader = Core.Settings.Downloader.CustomAria;
                 break;
             default:
                 downloader = SettingsManager.GetInstance().GetDownloader();
@@ -478,12 +473,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // builtin同时下载数事件
-    private DelegateCommand<object> maxCurrentDownloadsCommand;
+    private DelegateCommand<object>? _maxCurrentDownloadsCommand;
 
-    public DelegateCommand<object> MaxCurrentDownloadsCommand => maxCurrentDownloadsCommand ??
-                                                                 (maxCurrentDownloadsCommand =
-                                                                     new DelegateCommand<object>(
-                                                                         ExecuteMaxCurrentDownloadsCommand));
+    public DelegateCommand<object> MaxCurrentDownloadsCommand => _maxCurrentDownloadsCommand ??= new DelegateCommand<object>(ExecuteMaxCurrentDownloadsCommand);
 
     /// <summary>
     /// builtin同时下载数事件
@@ -498,10 +490,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // builtin最大线程数事件
-    private DelegateCommand<object> splitsCommand;
+    private DelegateCommand<object>? _splitsCommand;
 
-    public DelegateCommand<object> SplitsCommand =>
-        splitsCommand ?? (splitsCommand = new DelegateCommand<object>(ExecuteSplitsCommand));
+    public DelegateCommand<object> SplitsCommand => _splitsCommand ??= new DelegateCommand<object>(ExecuteSplitsCommand);
 
     /// <summary>
     /// builtin最大线程数事件
@@ -516,27 +507,25 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // 是否开启builtin http代理事件
-    private DelegateCommand isHttpProxyCommand;
+    private DelegateCommand? _isHttpProxyCommand;
 
-    public DelegateCommand IsHttpProxyCommand =>
-        isHttpProxyCommand ?? (isHttpProxyCommand = new DelegateCommand(ExecuteIsHttpProxyCommand));
+    public DelegateCommand IsHttpProxyCommand => _isHttpProxyCommand ??= new DelegateCommand(ExecuteIsHttpProxyCommand);
 
     /// <summary>
     /// 是否开启builtin http代理事件
     /// </summary>
     private void ExecuteIsHttpProxyCommand()
     {
-        var isHttpProxy = IsHttpProxy ? AllowStatus.YES : AllowStatus.NO;
+        var isHttpProxy = IsHttpProxy ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsHttpProxy(isHttpProxy);
+        var isSucceed = SettingsManager.GetInstance().SetIsHttpProxy(isHttpProxy);
         PublishTip(isSucceed);
     }
 
     // builtin的http代理的地址事件
-    private DelegateCommand<string> httpProxyCommand;
+    private DelegateCommand<string>? _httpProxyCommand;
 
-    public DelegateCommand<string> HttpProxyCommand =>
-        httpProxyCommand ?? (httpProxyCommand = new DelegateCommand<string>(ExecuteHttpProxyCommand));
+    public DelegateCommand<string> HttpProxyCommand => _httpProxyCommand ??= new DelegateCommand<string>(ExecuteHttpProxyCommand);
 
     /// <summary>
     /// builtin的http代理的地址事件
@@ -549,12 +538,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // builtin的http代理的端口事件
-    private DelegateCommand<string> httpProxyPortCommand;
+    private DelegateCommand<string>? _httpProxyPortCommand;
 
-    public DelegateCommand<string> HttpProxyPortCommand => httpProxyPortCommand ??
-                                                           (httpProxyPortCommand =
-                                                               new DelegateCommand<string>(
-                                                                   ExecuteHttpProxyPortCommand));
+    public DelegateCommand<string> HttpProxyPortCommand => _httpProxyPortCommand ??= new DelegateCommand<string>(ExecuteHttpProxyPortCommand);
 
     /// <summary>
     /// builtin的http代理的端口事件
@@ -570,10 +556,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria服务器host事件
-    private DelegateCommand<string> ariaHostCommand;
+    private DelegateCommand<string>? _ariaHostCommand;
 
-    public DelegateCommand<string> AriaHostCommand =>
-        ariaHostCommand ?? (ariaHostCommand = new DelegateCommand<string>(ExecuteAriaHostCommand));
+    public DelegateCommand<string> AriaHostCommand => _ariaHostCommand ??= new DelegateCommand<string>(ExecuteAriaHostCommand);
 
     /// <summary>
     /// Aria服务器host事件
@@ -587,12 +572,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria服务器端口事件
-    private DelegateCommand<string> ariaListenPortCommand;
+    private DelegateCommand<string>? _ariaListenPortCommand;
 
-    public DelegateCommand<string> AriaListenPortCommand => ariaListenPortCommand ??
-                                                            (ariaListenPortCommand =
-                                                                new DelegateCommand<string>(
-                                                                    ExecuteAriaListenPortCommand));
+    public DelegateCommand<string> AriaListenPortCommand => _ariaListenPortCommand ??= new DelegateCommand<string>(ExecuteAriaListenPortCommand);
 
     /// <summary>
     /// Aria服务器端口事件
@@ -608,10 +590,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria服务器token事件
-    private DelegateCommand<string> ariaTokenCommand;
+    private DelegateCommand<string>? _ariaTokenCommand;
 
-    public DelegateCommand<string> AriaTokenCommand =>
-        ariaTokenCommand ?? (ariaTokenCommand = new DelegateCommand<string>(ExecuteAriaTokenCommand));
+    public DelegateCommand<string> AriaTokenCommand => _ariaTokenCommand ??= new DelegateCommand<string>(ExecuteAriaTokenCommand);
 
     /// <summary>
     /// Aria服务器token事件
@@ -625,12 +606,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria的日志等级事件
-    private DelegateCommand<string> ariaLogLevelsCommand;
+    private DelegateCommand<string>? _ariaLogLevelsCommand;
 
-    public DelegateCommand<string> AriaLogLevelsCommand => ariaLogLevelsCommand ??
-                                                           (ariaLogLevelsCommand =
-                                                               new DelegateCommand<string>(
-                                                                   ExecuteAriaLogLevelsCommand));
+    public DelegateCommand<string> AriaLogLevelsCommand => _ariaLogLevelsCommand ??= new DelegateCommand<string>(ExecuteAriaLogLevelsCommand);
 
     /// <summary>
     /// Aria的日志等级事件
@@ -653,51 +631,47 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria同时下载数事件
-    private DelegateCommand<object> ariaMaxConcurrentDownloadsCommand;
+    private DelegateCommand<object?>? _ariaMaxConcurrentDownloadsCommand;
 
-    public DelegateCommand<object> AriaMaxConcurrentDownloadsCommand => ariaMaxConcurrentDownloadsCommand ??
-                                                                        (ariaMaxConcurrentDownloadsCommand =
-                                                                            new DelegateCommand<object>(
-                                                                                ExecuteAriaMaxConcurrentDownloadsCommand));
+    public DelegateCommand<object?> AriaMaxConcurrentDownloadsCommand =>
+        _ariaMaxConcurrentDownloadsCommand ??= new DelegateCommand<object?>(ExecuteAriaMaxConcurrentDownloadsCommand);
 
     /// <summary>
     /// Aria同时下载数事件
     /// </summary>
     /// <param name="parameter"></param>
-    private void ExecuteAriaMaxConcurrentDownloadsCommand(object parameter)
+    private void ExecuteAriaMaxConcurrentDownloadsCommand(object? parameter)
     {
-        // SelectedAriaMaxConcurrentDownload = (int)parameter;
+        if (parameter == null) return;
+        SelectedAriaMaxConcurrentDownload = (int)parameter;
 
         var isSucceed = SettingsManager.GetInstance().SetMaxCurrentDownloads(SelectedAriaMaxConcurrentDownload);
         PublishTip(isSucceed);
     }
 
     // Aria最大线程数事件
-    private DelegateCommand<object> ariaSplitsCommand;
+    private DelegateCommand<object?>? _ariaSplitsCommand;
 
-    public DelegateCommand<object> AriaSplitsCommand => ariaSplitsCommand ??
-                                                        (ariaSplitsCommand =
-                                                            new DelegateCommand<object>(ExecuteAriaSplitsCommand));
+    public DelegateCommand<object?> AriaSplitsCommand => _ariaSplitsCommand ??= new DelegateCommand<object?>(ExecuteAriaSplitsCommand);
 
     /// <summary>
     /// Aria最大线程数事件
     /// </summary>
     /// <param name="parameter"></param>
-    private void ExecuteAriaSplitsCommand(object parameter)
+    private void ExecuteAriaSplitsCommand(object? parameter)
     {
-        // SelectedAriaSplit = (int)parameter;
+        if (parameter == null) return;
+        SelectedAriaSplit = (int)parameter;
 
         var isSucceed = SettingsManager.GetInstance().SetAriaSplit(SelectedAriaSplit);
         PublishTip(isSucceed);
     }
 
     // Aria下载速度限制事件
-    private DelegateCommand<string> ariaMaxOverallDownloadLimitCommand;
+    private DelegateCommand<string>? _ariaMaxOverallDownloadLimitCommand;
 
-    public DelegateCommand<string> AriaMaxOverallDownloadLimitCommand => ariaMaxOverallDownloadLimitCommand ??
-                                                                         (ariaMaxOverallDownloadLimitCommand =
-                                                                             new DelegateCommand<string>(
-                                                                                 ExecuteAriaMaxOverallDownloadLimitCommand));
+    public DelegateCommand<string> AriaMaxOverallDownloadLimitCommand => _ariaMaxOverallDownloadLimitCommand ??= new DelegateCommand<string>(
+        ExecuteAriaMaxOverallDownloadLimitCommand);
 
     /// <summary>
     /// Aria下载速度限制事件
@@ -713,12 +687,9 @@ public class ViewNetworkViewModel : ViewModelBase
     }
 
     // Aria下载单文件速度限制事件
-    private DelegateCommand<string> ariaMaxDownloadLimitCommand;
+    private DelegateCommand<string>? _ariaMaxDownloadLimitCommand;
 
-    public DelegateCommand<string> AriaMaxDownloadLimitCommand => ariaMaxDownloadLimitCommand ??
-                                                                  (ariaMaxDownloadLimitCommand =
-                                                                      new DelegateCommand<string>(
-                                                                          ExecuteAriaMaxDownloadLimitCommand));
+    public DelegateCommand<string> AriaMaxDownloadLimitCommand => _ariaMaxDownloadLimitCommand ??= new DelegateCommand<string>(ExecuteAriaMaxDownloadLimitCommand);
 
     /// <summary>
     /// Aria下载单文件速度限制事件
@@ -726,38 +697,33 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteAriaMaxDownloadLimitCommand(string parameter)
     {
-        int downloadLimit = (int)Number.GetInt(parameter);
+        var downloadLimit = (int)Number.GetInt(parameter);
         AriaMaxDownloadLimit = downloadLimit;
 
-        bool isSucceed = SettingsManager.GetInstance().SetAriaMaxDownloadLimit(AriaMaxDownloadLimit);
+        var isSucceed = SettingsManager.GetInstance().SetAriaMaxDownloadLimit(AriaMaxDownloadLimit);
         PublishTip(isSucceed);
     }
 
     // 是否开启Aria http代理事件
-    private DelegateCommand isAriaHttpProxyCommand;
+    private DelegateCommand? _isAriaHttpProxyCommand;
 
-    public DelegateCommand IsAriaHttpProxyCommand => isAriaHttpProxyCommand ??
-                                                     (isAriaHttpProxyCommand =
-                                                         new DelegateCommand(ExecuteIsAriaHttpProxyCommand));
+    public DelegateCommand IsAriaHttpProxyCommand => _isAriaHttpProxyCommand ??= new DelegateCommand(ExecuteIsAriaHttpProxyCommand);
 
     /// <summary>
     /// 是否开启Aria http代理事件
     /// </summary>
     private void ExecuteIsAriaHttpProxyCommand()
     {
-        AllowStatus isAriaHttpProxy = IsAriaHttpProxy ? AllowStatus.YES : AllowStatus.NO;
+        var isAriaHttpProxy = IsAriaHttpProxy ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().IsAriaHttpProxy(isAriaHttpProxy);
+        var isSucceed = SettingsManager.GetInstance().SetIsAriaHttpProxy(isAriaHttpProxy);
         PublishTip(isSucceed);
     }
 
     // Aria的http代理的地址事件
-    private DelegateCommand<string> ariaHttpProxyCommand;
+    private DelegateCommand<string>? _ariaHttpProxyCommand;
 
-    public DelegateCommand<string> AriaHttpProxyCommand => ariaHttpProxyCommand ??
-                                                           (ariaHttpProxyCommand =
-                                                               new DelegateCommand<string>(
-                                                                   ExecuteAriaHttpProxyCommand));
+    public DelegateCommand<string> AriaHttpProxyCommand => _ariaHttpProxyCommand ??= new DelegateCommand<string>(ExecuteAriaHttpProxyCommand);
 
     /// <summary>
     /// Aria的http代理的地址事件
@@ -765,17 +731,14 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteAriaHttpProxyCommand(string parameter)
     {
-        bool isSucceed = SettingsManager.GetInstance().SetAriaHttpProxy(parameter);
+        var isSucceed = SettingsManager.GetInstance().SetAriaHttpProxy(parameter);
         PublishTip(isSucceed);
     }
 
     // Aria的http代理的端口事件
-    private DelegateCommand<string> ariaHttpProxyPortCommand;
+    private DelegateCommand<string>? _ariaHttpProxyPortCommand;
 
-    public DelegateCommand<string> AriaHttpProxyPortCommand => ariaHttpProxyPortCommand ??
-                                                               (ariaHttpProxyPortCommand =
-                                                                   new DelegateCommand<string>(
-                                                                       ExecuteAriaHttpProxyPortCommand));
+    public DelegateCommand<string> AriaHttpProxyPortCommand => _ariaHttpProxyPortCommand ??= new DelegateCommand<string>(ExecuteAriaHttpProxyPortCommand);
 
     /// <summary>
     /// Aria的http代理的端口事件
@@ -783,20 +746,17 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteAriaHttpProxyPortCommand(string parameter)
     {
-        int httpProxyPort = (int)Number.GetInt(parameter);
+        var httpProxyPort = (int)Number.GetInt(parameter);
         AriaHttpProxyPort = httpProxyPort;
 
-        bool isSucceed = SettingsManager.GetInstance().SetAriaHttpProxyListenPort(AriaHttpProxyPort);
+        var isSucceed = SettingsManager.GetInstance().SetAriaHttpProxyListenPort(AriaHttpProxyPort);
         PublishTip(isSucceed);
     }
 
     // Aria文件预分配事件
-    private DelegateCommand<string> ariaFileAllocationsCommand;
+    private DelegateCommand<string>? _ariaFileAllocationsCommand;
 
-    public DelegateCommand<string> AriaFileAllocationsCommand => ariaFileAllocationsCommand ??
-                                                                 (ariaFileAllocationsCommand =
-                                                                     new DelegateCommand<string>(
-                                                                         ExecuteAriaFileAllocationsCommand));
+    public DelegateCommand<string> AriaFileAllocationsCommand => _ariaFileAllocationsCommand ??= new DelegateCommand<string>(ExecuteAriaFileAllocationsCommand);
 
     /// <summary>
     /// Aria文件预分配事件
@@ -804,7 +764,7 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteAriaFileAllocationsCommand(string parameter)
     {
-        AriaConfigFileAllocation ariaFileAllocation = parameter switch
+        var ariaFileAllocation = parameter switch
         {
             "NONE" => AriaConfigFileAllocation.NONE,
             "PREALLOC" => AriaConfigFileAllocation.PREALLOC,
@@ -824,18 +784,11 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <param name="isSucceed"></param>
     private void PublishTip(bool isSucceed)
     {
-        if (isOnNavigatedTo)
+        if (_isOnNavigatedTo)
         {
             return;
         }
 
-        if (isSucceed)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(isSucceed ? DictionaryResource.GetString("TipSettingUpdated") : DictionaryResource.GetString("TipSettingFailed"));
     }
 }

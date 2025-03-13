@@ -8,6 +8,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmu="clr-namespace:DownKyi.ViewModels.UserSpace"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewUserSpaceViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="TabLeftBannerStyle" TargetType="ListBoxItem" x:DataType="vmu:TabLeftBanner">
@@ -124,7 +125,7 @@
                 Grid.Row="0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                Source="{Binding Background}"
+                asyncImageLoader:ImageLoader.Source="{Binding Background}"
                 Stretch="UniformToFill" />
 
             <Grid Grid.Row="0" VerticalAlignment="Bottom" RowDefinitions="*,20" ColumnDefinitions="100,*">
@@ -133,7 +134,7 @@
                     Grid.Column="0"
                     Width="64"
                     Height="64"
-                    Source="{Binding Header}">
+                    asyncImageLoader:ImageLoader.Source="{Binding Header}">
                     <Image.Clip>
                         <!--  设置图像如何显示  -->
                         <EllipseGeometry

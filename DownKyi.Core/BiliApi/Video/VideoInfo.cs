@@ -18,7 +18,7 @@ public static class VideoInfo
     {
         // https://api.bilibili.com/x/web-interface/view/detail?bvid=BV1Sg411F7cb&aid=969147110&need_operation_card=1&web_rm_repeat=1&need_elec=1&out_referer=https%3A%2F%2Fspace.bilibili.com%2F42018135%2Ffavlist%3Ffid%3D94341835
 
-        var parameters = new Dictionary<string, object>();
+        var parameters = new Dictionary<string, object?>();
         if (bvid != null)
         {
             parameters.Add("bvid", bvid);

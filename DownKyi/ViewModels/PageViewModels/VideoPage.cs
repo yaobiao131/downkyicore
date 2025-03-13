@@ -95,11 +95,9 @@ public class VideoPage : BindableBase
     #region
 
     // 视频画质选择事件
-    private DelegateCommand videoQualitySelectedCommand;
+    private DelegateCommand _videoQualitySelectedCommand;
 
-    public DelegateCommand VideoQualitySelectedCommand => videoQualitySelectedCommand ??
-                                                          (videoQualitySelectedCommand =
-                                                              new DelegateCommand(ExecuteVideoQualitySelectedCommand));
+    public DelegateCommand VideoQualitySelectedCommand => _videoQualitySelectedCommand ??= new DelegateCommand(ExecuteVideoQualitySelectedCommand);
 
     /// <summary>
     /// 视频画质选择事件

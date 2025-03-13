@@ -7,27 +7,27 @@ namespace DownKyi.Core.Settings.Models;
 /// </summary>
 public class NetworkSettings
 {
-    public AllowStatus IsLiftingOfRegion { get; set; } = AllowStatus.NONE;
+    public AllowStatus IsLiftingOfRegion { get; set; } = AllowStatus.None;
 
-    public AllowStatus UseSSL { get; set; } = AllowStatus.NONE;
+    public AllowStatus UseSsl { get; set; } = AllowStatus.None;
     public string UserAgent { get; set; } = string.Empty;
 
-    public Downloader Downloader { get; set; } = Downloader.NOT_SET;
+    public Downloader Downloader { get; set; } = Downloader.NotSet;
     public int MaxCurrentDownloads { get; set; } = -1;
 
     #region built-in
 
     public int Split { get; set; } = -1;
-    public AllowStatus IsHttpProxy { get; set; } = AllowStatus.NONE;
-    public string HttpProxy { get; set; } = null;
+    public AllowStatus IsHttpProxy { get; set; } = AllowStatus.None;
+    public string? HttpProxy { get; set; }
     public int HttpProxyListenPort { get; set; } = -1;
 
     #endregion
 
     #region Aria
 
-    public string AriaToken { get; set; } = null;
-    public string AriaHost { get; set; } = null;
+    public string? AriaToken { get; set; }
+    public string? AriaHost { get; set; }
 
     public int AriaListenPort { get; set; } = -1;
 
@@ -37,8 +37,8 @@ public class NetworkSettings
     public int AriaMaxDownloadLimit { get; set; } = -1;
     public AriaConfigFileAllocation AriaFileAllocation { get; set; } = AriaConfigFileAllocation.NOT_SET;
 
-    public AllowStatus IsAriaHttpProxy { get; set; } = AllowStatus.NONE;
-    public string AriaHttpProxy { get; set; } = null;
+    public AllowStatus IsAriaHttpProxy { get; set; } = AllowStatus.None;
+    public string? AriaHttpProxy { get; set; }
     public int AriaHttpProxyListenPort { get; set; } = -1;
 
     #endregion

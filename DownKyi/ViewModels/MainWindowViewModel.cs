@@ -137,8 +137,8 @@ public class MainWindowViewModel : BindableBase
 
         #endregion
 
-        var isListenClipboard = SettingsManager.GetInstance().IsListenClipboard();
-        if (isListenClipboard != AllowStatus.YES)
+        var isListenClipboard = SettingsManager.GetInstance().GetIsListenClipboard();
+        if (isListenClipboard != AllowStatus.Yes)
         {
             return;
         }

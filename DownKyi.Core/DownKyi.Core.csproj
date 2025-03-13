@@ -7,13 +7,13 @@
         <RuntimeIdentifier>$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</RuntimeIdentifier>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.2.4" />
-        <PackageReference Include="FFMpegCore" Version="5.1.0"/>
+        <PackageReference Include="Avalonia" Version="11.2.5" />
+        <PackageReference Include="FFMpegCore" Version="5.2.0" />
         <PackageReference Include="Google.Protobuf" Version="3.25.1"/>
-        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.7" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.3" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
         <PackageReference Include="QRCoder" Version="1.6.0" />
-        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.8" />
+        <PackageReference Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.11" />
     </ItemGroup>
 
     <ItemGroup>

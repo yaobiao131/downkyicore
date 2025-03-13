@@ -4,7 +4,6 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
-using DownKyi.Core.Utils.Encryptor;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.Login
@@ -12,7 +11,7 @@ namespace DownKyi.Core.BiliApi.Login
     public static class LoginHelper
     {
         // 本地位置
-        private static readonly string LOCAL_LOGIN_INFO = StorageManager.GetLogin();
+        private static readonly string LocalLoginInfo = StorageManager.GetLogin();
 
         // 16位密码，ps:密码位数没有限制，可任意设置
         private static readonly string SecretKey = "EsOat*^y1QR!&0J6";
@@ -24,10 +23,10 @@ namespace DownKyi.Core.BiliApi.Login
         /// <returns></returns>
         public static bool SaveLoginInfoCookies(string url)
         {
-            string tempFile = LOCAL_LOGIN_INFO + "-" + Guid.NewGuid().ToString("N");
-            CookieContainer cookieContainer = ObjectHelper.ParseCookie(url);
+            var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
+            var cookieContainer = ObjectHelper.ParseCookie(url);
 
-            bool isSucceed = ObjectHelper.WriteCookiesToDisk(tempFile, cookieContainer);
+            var isSucceed = ObjectHelper.WriteCookiesToDisk(tempFile, cookieContainer);
             if (isSucceed)
             {
                 // 加密密钥，增加机器码
@@ -35,7 +34,7 @@ namespace DownKyi.Core.BiliApi.Login
 
                 try
                 {
-                    File.Copy(tempFile, LOCAL_LOGIN_INFO, true);
+                    File.Copy(tempFile, LocalLoginInfo, true);
                     // Encryptor.EncryptFile(tempFile, LOCAL_LOGIN_INFO, password);
                 }
                 catch (Exception e)
@@ -61,13 +60,13 @@ namespace DownKyi.Core.BiliApi.Login
         /// <returns></returns>
         public static CookieContainer? GetLoginInfoCookies()
         {
-            var tempFile = LOCAL_LOGIN_INFO + "-" + Guid.NewGuid().ToString("N");
+            var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
 
-            if (File.Exists(LOCAL_LOGIN_INFO))
+            if (File.Exists(LocalLoginInfo))
             {
                 try
                 {
-                    File.Copy(LOCAL_LOGIN_INFO, tempFile, true);
+                    File.Copy(LocalLoginInfo, tempFile, true);
                     // 加密密钥，增加机器码
                     var password = SecretKey;
                     // Encryptor.DecryptFile(LOCAL_LOGIN_INFO, tempFile, password);
@@ -89,7 +88,7 @@ namespace DownKyi.Core.BiliApi.Login
                 return null;
             }
 
-            CookieContainer cookies = ObjectHelper.ReadCookiesFromDisk(tempFile);
+            var cookies = ObjectHelper.ReadCookiesFromDisk(tempFile);
 
             if (File.Exists(tempFile))
             {
@@ -113,11 +112,7 @@ namespace DownKyi.Core.BiliApi.Login
 
             var cookies = ObjectHelper.GetAllCookies(cookieContainer);
 
-            string cookie = string.Empty;
-            foreach (var item in cookies)
-            {
-                cookie += item.ToString() + ";";
-            }
+            var cookie = cookies.Aggregate(string.Empty, (current, item) => current + (item + ";"));
 
             return cookie.TrimEnd(';');
         }
@@ -128,30 +123,26 @@ namespace DownKyi.Core.BiliApi.Login
         /// <returns></returns>
         public static bool Logout()
         {
-            if (File.Exists(LOCAL_LOGIN_INFO))
+            if (!File.Exists(LocalLoginInfo)) return false;
+            try
             {
-                try
-                {
-                    File.Delete(LOCAL_LOGIN_INFO);
+                File.Delete(LocalLoginInfo);
 
-                    SettingsManager.GetInstance().SetUserInfo(new UserInfoSettings
-                    {
-                        Mid = -1,
-                        Name = "",
-                        IsLogin = false,
-                        IsVip = false
-                    });
-                    return true;
-                }
-                catch (IOException e)
+                SettingsManager.GetInstance().SetUserInfo(new UserInfoSettings
                 {
-                    Console.PrintLine("Logout()发生异常: {0}", e);
-                    LogManager.Error(e);
-                    return false;
-                }
+                    Mid = -1,
+                    Name = "",
+                    IsLogin = false,
+                    IsVip = false
+                });
+                return true;
             }
-
-            return false;
+            catch (IOException e)
+            {
+                Console.PrintLine("Logout()发生异常: {0}", e);
+                LogManager.Error(e);
+                return false;
+            }
         }
     }
 }

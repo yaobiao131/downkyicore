@@ -17,7 +17,7 @@ internal static class Utils
     /// </summary>
     /// <param name="playUrl"></param>
     /// <param name="page"></param>
-    internal static void VideoPageInfo(PlayUrl playUrl, VideoPage page)
+    internal static void VideoPageInfo(PlayUrl? playUrl, VideoPage page)
     {
         if (playUrl == null)
         {

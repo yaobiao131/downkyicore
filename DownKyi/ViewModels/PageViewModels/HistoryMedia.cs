@@ -9,11 +9,11 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class HistoryMedia : BindableBase
 {
-    protected readonly IEventAggregator eventAggregator;
+    protected readonly IEventAggregator EventAggregator;
 
     public HistoryMedia(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        EventAggregator = eventAggregator;
     }
 
     // bvid
@@ -31,120 +31,120 @@ public class HistoryMedia : BindableBase
     #region 页面属性申明
 
     // 是否选中
-    private bool isSelected;
+    private bool _isSelected;
 
     public bool IsSelected
     {
-        get => isSelected;
-        set => SetProperty(ref isSelected, value);
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
     }
 
     // 封面
-    private Bitmap cover;
+    private string _cover;
 
-    public Bitmap Cover
+    public string Cover
     {
-        get => cover;
-        set => SetProperty(ref cover, value);
+        get => _cover;
+        set => SetProperty(ref _cover, value);
     }
 
     // 视频标题
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
     // 分P的标题
-    private string subTitle;
+    private string _subTitle;
 
     public string SubTitle
     {
-        get => subTitle;
-        set => SetProperty(ref subTitle, value);
+        get => _subTitle;
+        set => SetProperty(ref _subTitle, value);
     }
 
     // 时长
-    private long duration;
+    private long _duration;
 
     public long Duration
     {
-        get => duration;
-        set => SetProperty(ref duration, value);
+        get => _duration;
+        set => SetProperty(ref _duration, value);
     }
 
     // tag标签
-    private string tagName;
+    private string _tagName;
 
     public string TagName
     {
-        get => tagName;
-        set => SetProperty(ref tagName, value);
+        get => _tagName;
+        set => SetProperty(ref _tagName, value);
     }
 
     // new_desc 剧集或分P描述
-    private string partdesc;
+    private string _partdesc;
 
     public string Partdesc
     {
-        get => partdesc;
-        set => SetProperty(ref partdesc, value);
+        get => _partdesc;
+        set => SetProperty(ref _partdesc, value);
     }
 
     // 观看进度
-    private string progress;
+    private string _progress;
 
     public string Progress
     {
-        get => progress;
-        set => SetProperty(ref progress, value);
+        get => _progress;
+        set => SetProperty(ref _progress, value);
     }
 
     // 观看平台
-    private VectorImage platform;
+    private VectorImage _platform;
 
     public VectorImage Platform
     {
-        get => platform;
-        set => SetProperty(ref platform, value);
+        get => _platform;
+        set => SetProperty(ref _platform, value);
     }
 
     // UP主的昵称
-    private string upName;
+    private string _upName;
 
     public string UpName
     {
-        get => upName;
-        set => SetProperty(ref upName, value);
+        get => _upName;
+        set => SetProperty(ref _upName, value);
     }
 
     // UP主的头像
-    private Bitmap upHeader;
+    private string _upHeader;
 
-    public Bitmap UpHeader
+    public string UpHeader
     {
-        get => upHeader;
-        set => SetProperty(ref upHeader, value);
+        get => _upHeader;
+        set => SetProperty(ref _upHeader, value);
     }
 
     // 是否显示Partdesc
-    private bool partdescVisibility;
+    private bool _partdescVisibility;
 
     public bool PartdescVisibility
     {
-        get => partdescVisibility;
-        set => SetProperty(ref partdescVisibility, value);
+        get => _partdescVisibility;
+        set => SetProperty(ref _partdescVisibility, value);
     }
 
     // 是否显示UP主信息和分区信息
-    private bool upAndTagVisibility;
+    private bool _upAndTagVisibility;
 
     public bool UpAndTagVisibility
     {
-        get => upAndTagVisibility;
-        set => SetProperty(ref upAndTagVisibility, value);
+        get => _upAndTagVisibility;
+        set => SetProperty(ref _upAndTagVisibility, value);
     }
 
     #endregion
@@ -152,10 +152,9 @@ public class HistoryMedia : BindableBase
     #region 命令申明
 
     // 视频标题点击事件
-    private DelegateCommand<object> titleCommand;
+    private DelegateCommand<object> _titleCommand;
 
-    public DelegateCommand<object> TitleCommand =>
-        titleCommand ?? (titleCommand = new DelegateCommand<object>(ExecuteTitleCommand));
+    public DelegateCommand<object> TitleCommand => _titleCommand ??= new DelegateCommand<object>(ExecuteTitleCommand);
 
     /// <summary>
     /// 视频标题点击事件
@@ -163,19 +162,18 @@ public class HistoryMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteTitleCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag, Url);
+        NavigateToView.NavigationView(EventAggregator, ViewVideoDetailViewModel.Tag, tag, Url);
     }
 
     // UP主头像点击事件
-    private DelegateCommand<object> upCommand;
+    private DelegateCommand<object> _upCommand;
 
-    public DelegateCommand<object> UpCommand =>
-        upCommand ?? (upCommand = new DelegateCommand<object>(ExecuteUpCommand));
+    public DelegateCommand<object> UpCommand => _upCommand ??= new DelegateCommand<object>(ExecuteUpCommand);
 
     /// <summary>
     /// UP主头像点击事件
@@ -183,12 +181,12 @@ public class HistoryMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteUpCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigateToViewUserSpace(eventAggregator, tag, UpMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, tag, UpMid);
     }
 
     #endregion

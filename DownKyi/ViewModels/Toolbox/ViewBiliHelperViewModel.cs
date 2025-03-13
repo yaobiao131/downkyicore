@@ -39,9 +39,9 @@ public class ViewBiliHelperViewModel : ViewModelBase
         set => SetProperty(ref _danmakuUserId, value);
     }
 
-    private string _userMid;
+    private string? _userMid;
 
-    public string UserMid
+    public string? UserMid
     {
         get => _userMid;
         set => SetProperty(ref _userMid, value);
@@ -68,7 +68,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
     /// </summary>
     private async void ExecuteAvidCommand(string parameter)
     {
-        if (parameter == null)
+        if (string.IsNullOrEmpty(parameter))
         {
             return;
         }
@@ -98,7 +98,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private async void ExecuteBvidCommand(string parameter)
     {
-        if (parameter == null)
+        if (string.IsNullOrEmpty(parameter))
         {
             return;
         }

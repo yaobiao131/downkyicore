@@ -15,34 +15,34 @@ namespace DownKyi.ViewModels
     {
         public const string Tag = "PageFriends";
 
-        private readonly IRegionManager regionManager;
+        private readonly IRegionManager _regionManager;
 
         private long mid = -1;
 
         #region 页面属性申明
 
-        private VectorImage arrowBack;
+        private VectorImage _arrowBack;
 
         public VectorImage ArrowBack
         {
-            get => arrowBack;
-            set => SetProperty(ref arrowBack, value);
+            get => _arrowBack;
+            set => SetProperty(ref _arrowBack, value);
         }
 
-        private ObservableCollection<TabHeader> tabHeaders;
+        private ObservableCollection<TabHeader> _tabHeaders;
 
         public ObservableCollection<TabHeader> TabHeaders
         {
-            get => tabHeaders;
-            set => SetProperty(ref tabHeaders, value);
+            get => _tabHeaders;
+            set => SetProperty(ref _tabHeaders, value);
         }
 
-        private int selectTabId = -1;
+        private int _selectTabId = -1;
 
         public int SelectTabId
         {
-            get => selectTabId;
-            set => SetProperty(ref selectTabId, value);
+            get => _selectTabId;
+            set => SetProperty(ref _selectTabId, value);
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace DownKyi.ViewModels
         public ViewFriendsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(
             eventAggregator)
         {
-            this.regionManager = regionManager;
+            _regionManager = regionManager;
 
             #region 属性初始化
 
@@ -69,10 +69,9 @@ namespace DownKyi.ViewModels
         #region 命令申明
 
         // 返回事件
-        private DelegateCommand backSpaceCommand;
+        private DelegateCommand _backSpaceCommand;
 
-        public DelegateCommand BackSpaceCommand =>
-            backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
         /// <summary>
         /// 返回事件
@@ -83,7 +82,7 @@ namespace DownKyi.ViewModels
 
             ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
-            NavigationParam parameter = new NavigationParam
+            var parameter = new NavigationParam
             {
                 ViewName = ParentView,
                 ParentViewName = null,
@@ -93,11 +92,9 @@ namespace DownKyi.ViewModels
         }
 
         // 顶部tab点击事件
-        private DelegateCommand<object> tabHeadersCommand;
+        private DelegateCommand<object> _tabHeadersCommand;
 
-        public DelegateCommand<object> TabHeadersCommand => tabHeadersCommand ??
-                                                            (tabHeadersCommand =
-                                                                new DelegateCommand<object>(ExecuteTabHeadersCommand));
+        public DelegateCommand<object> TabHeadersCommand => _tabHeadersCommand ??= new DelegateCommand<object>(ExecuteTabHeadersCommand);
 
         /// <summary>
         /// 顶部tab点击事件
@@ -105,7 +102,7 @@ namespace DownKyi.ViewModels
         /// <param name="parameter"></param>
         private void ExecuteTabHeadersCommand(object parameter)
         {
-            if (!(parameter is TabHeader tabHeader))
+            if (parameter is not TabHeader tabHeader)
             {
                 return;
             }
@@ -136,10 +133,10 @@ namespace DownKyi.ViewModels
             switch (id)
             {
                 case 0:
-                    regionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
+                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
                     break;
                 case 1:
-                    regionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
+                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
                     break;
             }
         }

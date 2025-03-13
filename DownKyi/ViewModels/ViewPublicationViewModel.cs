@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.VideoStream;
-using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.CustomControl;
 using DownKyi.Events;
@@ -35,7 +34,7 @@ namespace DownKyi.ViewModels
         private long _mid = -1;
 
         // 每页视频数量，暂时在此写死，以后在设置中增加选项
-        private readonly int _videoNumberInPage = 30;
+        private const int VideoNumberInPage = 30;
 
         #region 页面属性申明
 
@@ -228,8 +227,7 @@ namespace DownKyi.ViewModels
             }
 
             // 页面选择
-            Pager = new CustomPagerViewModel(1,
-                (int)Math.Ceiling(double.Parse(tabHeader.SubTitle) / _videoNumberInPage));
+            Pager = new CustomPagerViewModel(1, (int)Math.Ceiling(double.Parse(tabHeader.SubTitle) / VideoNumberInPage));
             Pager.CurrentChanged += OnCurrentChanged_Pager;
             Pager.CountChanged += OnCountChanged_Pager;
             Pager.Current = 1;
@@ -326,7 +324,7 @@ namespace DownKyi.ViewModels
         private async void AddToDownload(bool isOnlySelected)
         {
             // 收藏夹里只有视频
-            var addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+            var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
             // 选择文件夹
             var directory = await addToDownloadService.SetDirectory(DialogService);
@@ -356,16 +354,9 @@ namespace DownKyi.ViewModels
             }
 
             // 通知用户添加到下载列表的结果
-            if (i <= 0)
-            {
-                EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-            }
-            else
-            {
-                EventAggregator.GetEvent<MessageEvent>()
-                    .Publish(
-                        $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-            }
+            EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+                ? DictionaryResource.GetString("TipAddDownloadingZero")
+                : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
         }
 
         private void OnCountChanged_Pager(int count)
@@ -395,14 +386,17 @@ namespace DownKyi.ViewModels
             var charbuffers = s.ToCharArray();
             byte[] buffer;
             var sb = new StringBuilder();
-            for (var i = 0; i < charbuffers.Length; i++)
+            foreach (var t in charbuffers)
             {
-                buffer = Encoding.Unicode.GetBytes(charbuffers[i].ToString());
+                buffer = Encoding.Unicode.GetBytes(t.ToString());
                 sb.Append($"\\u{buffer[1]:X2}{buffer[0]:X2}");
             }
+
             return sb.ToString();
         }
-        private readonly Bitmap defaultPic = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
+
+        private readonly Bitmap _defaultPic = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
+
         private async Task UpdatePublication(int current)
         {
             _tokenSource?.Cancel();
@@ -413,10 +407,9 @@ namespace DownKyi.ViewModels
             var cancellationToken = _tokenSource.Token;
 
             var tab = TabHeaders[SelectTabId];
-            var storageCover = new StorageCover();
-            await Task.Run(async () =>
+            await Task.Run(() =>
             {
-                var publications = Core.BiliApi.Users.UserSpace.GetPublication(_mid, current, _videoNumberInPage, tab.Id);
+                var publications = Core.BiliApi.Users.UserSpace.GetPublication(_mid, current, VideoNumberInPage, tab.Id);
                 if (publications == null)
                 {
                     // 没有数据，UI提示
@@ -450,7 +443,7 @@ namespace DownKyi.ViewModels
                         play = "--";
                     }
 
-                    var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+                    var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
                     var dateCTime = startTime.AddSeconds(video.Created);
                     var ctime = dateCTime.ToString("yyyy-MM-dd");
                     App.PropertyChangeAsync(() =>
@@ -459,7 +452,7 @@ namespace DownKyi.ViewModels
                         {
                             Avid = video.Aid,
                             Bvid = video.Bvid,
-                            Cover = defaultPic,
+                            Cover = _defaultPic,
                             Duration = video.Length,
                             Title = video.Title,
                             PlayNumber = play,
@@ -477,25 +470,9 @@ namespace DownKyi.ViewModels
                         return;
                     }
                 }
+
                 IsEnabled = true;
-                await UpdateMediaCovers(cancellationToken);
             }, cancellationToken).ContinueWith(t => { });
-        }
-        private readonly StorageCover storageCover = new StorageCover();
-        private async Task UpdateMediaCovers(CancellationToken cancellationToken)
-        {
-            var currentMedias = _medias.ToList();
-            var tasks = currentMedias.Select(async media =>
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                var coverUrl = $"{media.CoverUrl}@{200}w_{125}h_1c_!web-space-index-myvideo.webp";
-                var bitmap = await storageCover.GetCoverAsync(coverUrl) ?? defaultPic;
-                media.Cover = bitmap;
-            });
-            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -530,6 +507,7 @@ namespace DownKyi.ViewModels
             {
                 return;
             }
+
             InitView();
 
             _mid = (long)parameter["mid"];
@@ -552,7 +530,7 @@ namespace DownKyi.ViewModels
 
             // 页面选择
             Pager = new CustomPagerViewModel(1,
-                (int)Math.Ceiling(double.Parse(selectTab.SubTitle) / _videoNumberInPage));
+                (int)Math.Ceiling(double.Parse(selectTab.SubTitle) / VideoNumberInPage));
             Pager.CurrentChanged += OnCurrentChanged_Pager;
             Pager.CountChanged += OnCountChanged_Pager;
             Pager.Current = 1;

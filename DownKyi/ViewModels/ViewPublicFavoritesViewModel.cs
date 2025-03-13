@@ -22,105 +22,105 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
 {
     public const string Tag = "PagePublicFavorites";
 
-    private CancellationTokenSource tokenSource;
+    private CancellationTokenSource _tokenSource;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private Favorites favorites;
+    private Favorites _favorites;
 
     public Favorites Favorites
     {
-        get => favorites;
-        set => SetProperty(ref favorites, value);
+        get => _favorites;
+        set => SetProperty(ref _favorites, value);
     }
 
-    private ObservableCollection<FavoritesMedia> favoritesMedias;
+    private ObservableCollection<FavoritesMedia> _favoritesMedias;
 
     public ObservableCollection<FavoritesMedia> FavoritesMedias
     {
-        get => favoritesMedias;
-        set => SetProperty(ref favoritesMedias, value);
+        get => _favoritesMedias;
+        set => SetProperty(ref _favoritesMedias, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private bool mediaLoading;
+    private bool _mediaLoading;
 
     public bool MediaLoading
     {
-        get => mediaLoading;
-        set => SetProperty(ref mediaLoading, value);
+        get => _mediaLoading;
+        set => SetProperty(ref _mediaLoading, value);
     }
 
-    private bool mediaLoadingVisibility;
+    private bool _mediaLoadingVisibility;
 
     public bool MediaLoadingVisibility
     {
-        get => mediaLoadingVisibility;
-        set => SetProperty(ref mediaLoadingVisibility, value);
+        get => _mediaLoadingVisibility;
+        set => SetProperty(ref _mediaLoadingVisibility, value);
     }
 
-    private bool mediaNoDataVisibility;
+    private bool _mediaNoDataVisibility;
 
     public bool MediaNoDataVisibility
     {
-        get => mediaNoDataVisibility;
-        set => SetProperty(ref mediaNoDataVisibility, value);
+        get => _mediaNoDataVisibility;
+        set => SetProperty(ref _mediaNoDataVisibility, value);
     }
 
     #endregion
@@ -128,7 +128,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     public ViewPublicFavoritesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -168,7 +168,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     private void ExecuteBackSpace()
     {
         // 结束任务
-        tokenSource?.Cancel();
+        _tokenSource?.Cancel();
 
         NavigationParam parameter = new NavigationParam
         {
@@ -221,10 +221,10 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     /// <summary>
     /// 复制封面URL事件
     /// </summary>
-    private void ExecuteCopyCoverUrlCommand()
+    private async void ExecuteCopyCoverUrlCommand()
     {
         // 复制封面url到剪贴板
-        // Clipboard.SetText(Favorites.CoverUrl);
+        await ClipboardManager.SetText(Favorites.CoverUrl);
         LogManager.Info(Tag, "复制封面url到剪贴板");
     }
 
@@ -284,13 +284,13 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 收藏夹里只有视频
-        AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
+        var i = 0;
         await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
@@ -309,7 +309,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
                 /// 有分P的就下载全部
 
                 // 开启服务
-                VideoInfoService videoInfoService = new VideoInfoService(media.Bvid);
+                var videoInfoService = new VideoInfoService(media.Bvid);
 
                 addToDownloadService.SetVideoInfoService(videoInfoService);
                 addToDownloadService.GetVideo();
@@ -325,16 +325,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish(
-                    $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     /// <summary>
@@ -420,9 +413,9 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         InitView();
         await Task.Run(() =>
         {
-            var cancellationToken = tokenSource.Token;
+            var cancellationToken = _tokenSource.Token;
 
             UpdateView(new FavoritesService(), parameter, cancellationToken);
-        }, (tokenSource = new CancellationTokenSource()).Token);
+        }, (_tokenSource = new CancellationTokenSource()).Token);
     }
 }

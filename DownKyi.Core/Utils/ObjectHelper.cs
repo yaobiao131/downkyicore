@@ -36,7 +36,7 @@ public static class ObjectHelper
         }
 
         // 获取expires
-        var expires = strList2.FirstOrDefault(it => it.Contains("Expires")).Split('=')[1];
+        var expires = strList2.FirstOrDefault(it => it.Contains("Expires"))?.Split('=')[1];
         var dateTime = DateTime.Now;
         dateTime = dateTime.AddSeconds(int.Parse(expires));
 
@@ -52,14 +52,13 @@ public static class ObjectHelper
             var value = strList3[1];
 
             // 不需要
-            if (name == "Expires" || name == "gourl")
+            if (name is "Expires" or "gourl")
             {
                 continue;
             }
 
             // 添加cookie
-            cookieContainer.Add(
-                new Cookie(name, value.Replace(",", "%2c"), "/", ".bilibili.com") { Expires = dateTime });
+            cookieContainer.Add(new Cookie(name, value.Replace(",", "%2c"), "/", ".bilibili.com") { Expires = dateTime });
             Console.PrintLine(name + ": " + value + "\t" + cookieContainer.Count);
         }
 
@@ -75,17 +74,16 @@ public static class ObjectHelper
     {
         var lstCookies = new List<Cookie>();
 
-        var table = (Hashtable)cc.GetType().InvokeMember("m_domainTable",
+        var table = (Hashtable?)cc.GetType().InvokeMember("m_domainTable",
             BindingFlags.NonPublic | BindingFlags.GetField |
             BindingFlags.Instance, null, cc, new object[] { });
 
-        foreach (var pathList in table.Values)
+        foreach (var pathList in table?.Values ?? Array.Empty<Hashtable>())
         {
-            var lstCookieCol = (SortedList)pathList.GetType().InvokeMember("m_list",
-                BindingFlags.NonPublic | BindingFlags.GetField
-                                       | BindingFlags.Instance, null, pathList,
-                new object[] { });
-            foreach (CookieCollection colCookies in lstCookieCol.Values)
+            var lstCookieCol = (SortedList?)pathList.GetType().InvokeMember("m_list",
+                BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance, null, pathList,
+                Array.Empty<object>());
+            foreach (CookieCollection colCookies in lstCookieCol?.Values ?? Array.Empty<CookieCollection>())
             {
                 foreach (Cookie c in colCookies)
                 {
@@ -113,9 +111,9 @@ public static class ObjectHelper
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public static CookieContainer ReadCookiesFromDisk(string file)
+    public static CookieContainer? ReadCookiesFromDisk(string file)
     {
-        return (CookieContainer)ReadObjectFromDisk(file);
+        return (CookieContainer?)ReadObjectFromDisk(file);
     }
 
     /// <summary>
@@ -156,7 +154,7 @@ public static class ObjectHelper
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public static object ReadObjectFromDisk(string file)
+    public static object? ReadObjectFromDisk(string file)
     {
         try
         {

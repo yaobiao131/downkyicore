@@ -9,7 +9,7 @@ namespace DownKyi.Services;
 
 public interface IFavoritesService
 {
-    Favorites GetFavorites(long mediaId);
+    Favorites? GetFavorites(long mediaId);
 
     //void GetFavoritesMediaList(long mediaId, ObservableCollection<FavoritesMedia> result, IEventAggregator eventAggregator, CancellationToken cancellationToken);
     //void GetFavoritesMediaList(long mediaId, int pn, int ps, ObservableCollection<FavoritesMedia> result, IEventAggregator eventAggregator, CancellationToken cancellationToken);

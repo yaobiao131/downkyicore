@@ -18,18 +18,7 @@ public class TopFilter : Filter
 {
     public override List<Danmaku> DoFilter(List<Danmaku> danmakus)
     {
-        List<Danmaku> keep = new List<Danmaku>();
-        foreach (var danmaku in danmakus)
-        {
-            if (danmaku.Style == "top")
-            {
-                continue;
-            }
-
-            keep.Add(danmaku);
-        }
-
-        return keep;
+        return danmakus.Where(danmaku => danmaku.Style != "top").ToList();
     }
 }
 
@@ -40,18 +29,7 @@ public class BottomFilter : Filter
 {
     public override List<Danmaku> DoFilter(List<Danmaku> danmakus)
     {
-        List<Danmaku> keep = new List<Danmaku>();
-        foreach (var danmaku in danmakus)
-        {
-            if (danmaku.Style == "bottom")
-            {
-                continue;
-            }
-
-            keep.Add(danmaku);
-        }
-
-        return keep;
+        return danmakus.Where(danmaku => danmaku.Style != "bottom").ToList();
     }
 }
 
@@ -62,18 +40,7 @@ public class ScrollFilter : Filter
 {
     public override List<Danmaku> DoFilter(List<Danmaku> danmakus)
     {
-        List<Danmaku> keep = new List<Danmaku>();
-        foreach (var danmaku in danmakus)
-        {
-            if (danmaku.Style == "scroll")
-            {
-                continue;
-            }
-
-            keep.Add(danmaku);
-        }
-
-        return keep;
+        return danmakus.Where(danmaku => danmaku.Style != "scroll").ToList();
     }
 }
 

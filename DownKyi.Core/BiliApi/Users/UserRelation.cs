@@ -17,15 +17,15 @@ public static class UserRelation
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static RelationFollow GetFollowers(long mid, int pn, int ps)
+    public static RelationFollow? GetFollowers(long mid, int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/x/relation/followers?vmid={mid}&pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/followers?vmid={mid}&pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            RelationFollowOrigin relationFollower = JsonConvert.DeserializeObject<RelationFollowOrigin>(response);
+            var relationFollower = JsonConvert.DeserializeObject<RelationFollowOrigin>(response);
             if (relationFollower == null || relationFollower.Data == null)
             {
                 return null;
@@ -48,15 +48,15 @@ public static class UserRelation
     /// <returns></returns>
     public static List<RelationFollowInfo> GetAllFollowers(long mid)
     {
-        List<RelationFollowInfo> result = new List<RelationFollowInfo>();
+        var result = new List<RelationFollowInfo>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 50;
+            const int ps = 50;
 
-            RelationFollow data = GetFollowers(mid, i, ps);
+            var data = GetFollowers(mid, i, ps);
             if (data == null || data.List == null || data.List.Count == 0)
             {
                 break;
@@ -76,23 +76,21 @@ public static class UserRelation
     /// <param name="ps">每页项数</param>
     /// <param name="order">排序方式</param>
     /// <returns></returns>
-    public static RelationFollow GetFollowings(long mid, int pn, int ps,
-        FollowingOrder order = FollowingOrder.DEFAULT)
+    public static RelationFollow? GetFollowings(long mid, int pn, int ps, FollowingOrder order = FollowingOrder.DEFAULT)
     {
-        string orderType = "";
+        var orderType = "";
         if (order == FollowingOrder.ATTENTION)
         {
             orderType = "attention";
         }
 
-        string url =
-            $"https://api.bilibili.com/x/relation/followings?vmid={mid}&pn={pn}&ps={ps}&order_type={orderType}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/followings?vmid={mid}&pn={pn}&ps={ps}&order_type={orderType}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            RelationFollowOrigin relationFollower = JsonConvert.DeserializeObject<RelationFollowOrigin>(response);
+            var relationFollower = JsonConvert.DeserializeObject<RelationFollowOrigin>(response);
             if (relationFollower == null || relationFollower.Data == null)
             {
                 return null;
@@ -116,15 +114,15 @@ public static class UserRelation
     /// <returns></returns>
     public static List<RelationFollowInfo> GetAllFollowings(long mid, FollowingOrder order = FollowingOrder.DEFAULT)
     {
-        List<RelationFollowInfo> result = new List<RelationFollowInfo>();
+        var result = new List<RelationFollowInfo>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 50;
+            const int ps = 50;
 
-            RelationFollow data = GetFollowings(mid, i, ps, order);
+            var data = GetFollowings(mid, i, ps, order);
             if (data == null || data.List == null || data.List.Count == 0)
             {
                 break;
@@ -142,15 +140,15 @@ public static class UserRelation
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static List<RelationFollowInfo> GetWhispers(int pn, int ps)
+    public static List<RelationFollowInfo>? GetWhispers(int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/x/relation/whispers?pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/whispers?pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            RelationWhisper relationWhisper = JsonConvert.DeserializeObject<RelationWhisper>(response);
+            var relationWhisper = JsonConvert.DeserializeObject<RelationWhisper>(response);
             if (relationWhisper == null || relationWhisper.Data == null || relationWhisper.Data.List == null)
             {
                 return null;
@@ -172,15 +170,15 @@ public static class UserRelation
     /// <param name="pn">页码</param>
     /// <param name="ps">每页项数</param>
     /// <returns></returns>
-    public static List<RelationFollowInfo> GetBlacks(int pn, int ps)
+    public static List<RelationFollowInfo>? GetBlacks(int pn, int ps)
     {
-        string url = $"https://api.bilibili.com/x/relation/blacks?pn={pn}&ps={ps}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/blacks?pn={pn}&ps={ps}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            RelationBlack relationBlack = JsonConvert.DeserializeObject<RelationBlack>(response);
+            var relationBlack = JsonConvert.DeserializeObject<RelationBlack>(response);
             if (relationBlack == null || relationBlack.Data == null)
             {
                 return null;
@@ -202,11 +200,11 @@ public static class UserRelation
     /// 查询关注分组列表
     /// </summary>
     /// <returns></returns>
-    public static List<FollowingGroup> GetFollowingGroup()
+    public static List<FollowingGroup>? GetFollowingGroup()
     {
-        string url = $"https://api.bilibili.com/x/relation/tags";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        const string url = $"https://api.bilibili.com/x/relation/tags";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -234,23 +232,23 @@ public static class UserRelation
     /// <param name="ps">每页项数</param>
     /// <param name="order">排序方式</param>
     /// <returns></returns>
-    public static List<RelationFollowInfo> GetFollowingGroupContent(long tagId, int pn, int ps,
+    public static List<RelationFollowInfo>? GetFollowingGroupContent(long tagId, int pn, int ps,
         FollowingOrder order = FollowingOrder.DEFAULT)
     {
-        string orderType = "";
+        var orderType = "";
         if (order == FollowingOrder.ATTENTION)
         {
             orderType = "attention";
         }
 
-        string url =
+        var url =
             $"https://api.bilibili.com/x/relation/tag?tagid={tagId}&pn={pn}&ps={ps}&order_type={orderType}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            FollowingGroupContent content = JsonConvert.DeserializeObject<FollowingGroupContent>(response);
+            var content = JsonConvert.DeserializeObject<FollowingGroupContent>(response);
             if (content == null || content.Data == null)
             {
                 return null;
@@ -275,13 +273,13 @@ public static class UserRelation
     public static List<RelationFollowInfo> GetAllFollowingGroupContent(int tagId,
         FollowingOrder order = FollowingOrder.DEFAULT)
     {
-        List<RelationFollowInfo> result = new List<RelationFollowInfo>();
+        var result = new List<RelationFollowInfo>();
 
-        int i = 0;
+        var i = 0;
         while (true)
         {
             i++;
-            int ps = 50;
+            const int ps = 50;
 
             var data = GetFollowingGroupContent(tagId, i, ps, order);
             if (data == null || data.Count == 0)

@@ -15,16 +15,15 @@ public static class UserStatus
     /// </summary>
     /// <param name="mid"></param>
     /// <returns></returns>
-    public static UserRelationStat GetUserRelationStat(long mid)
+    public static UserRelationStat? GetUserRelationStat(long mid)
     {
-        string url = $"https://api.bilibili.com/x/relation/stat?vmid={mid}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/stat?vmid={mid}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            UserRelationStatOrigin userRelationStat =
-                JsonConvert.DeserializeObject<UserRelationStatOrigin>(response);
+            var userRelationStat = JsonConvert.DeserializeObject<UserRelationStatOrigin>(response);
             if (userRelationStat == null || userRelationStat.Data == null)
             {
                 return null;
@@ -47,15 +46,15 @@ public static class UserStatus
     /// </summary>
     /// <param name="mid"></param>
     /// <returns></returns>
-    public static UpStat GetUpStat(long mid)
+    public static UpStat? GetUpStat(long mid)
     {
-        string url = $"https://api.bilibili.com/x/space/upstat?mid={mid}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/space/upstat?mid={mid}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            UpStatOrigin upStat = JsonConvert.DeserializeObject<UpStatOrigin>(response);
+            var upStat = JsonConvert.DeserializeObject<UpStatOrigin>(response);
             if (upStat == null || upStat.Data == null)
             {
                 return null;

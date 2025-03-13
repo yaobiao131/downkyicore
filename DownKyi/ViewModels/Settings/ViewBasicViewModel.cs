@@ -139,10 +139,10 @@ public class ViewBasicViewModel : ViewModelBase
         // 解析范围
         ParseScopes = new List<ParseScopeDisplay>
         {
-            new() { Name = DictionaryResource.GetString("ParseNone"), ParseScope = ParseScope.NONE },
-            new() { Name = DictionaryResource.GetString("ParseSelectedItem"), ParseScope = ParseScope.SELECTED_ITEM },
-            new() { Name = DictionaryResource.GetString("ParseCurrentSection"), ParseScope = ParseScope.CURRENT_SECTION },
-            new() { Name = DictionaryResource.GetString("ParseAll"), ParseScope = ParseScope.ALL }
+            new() { Name = DictionaryResource.GetString("ParseNone"), ParseScope = ParseScope.None },
+            new() { Name = DictionaryResource.GetString("ParseSelectedItem"), ParseScope = ParseScope.SelectedItem },
+            new() { Name = DictionaryResource.GetString("ParseCurrentSection"), ParseScope = ParseScope.CurrentSection },
+            new() { Name = DictionaryResource.GetString("ParseAll"), ParseScope = ParseScope.All }
         };
 
         RepeatDownloadStrategy = new List<RepeatDownloadStrategyDisplay>
@@ -185,20 +185,20 @@ public class ViewBasicViewModel : ViewModelBase
         SetAfterDownloadOperation(afterDownload);
 
         // 是否监听剪贴板
-        var isListenClipboard = SettingsManager.GetInstance().IsListenClipboard();
-        ListenClipboard = isListenClipboard == AllowStatus.YES;
+        var isListenClipboard = SettingsManager.GetInstance().GetIsListenClipboard();
+        ListenClipboard = isListenClipboard == AllowStatus.Yes;
 
         // 是否自动解析视频
-        var isAutoParseVideo = SettingsManager.GetInstance().IsAutoParseVideo();
-        AutoParseVideo = isAutoParseVideo == AllowStatus.YES;
+        var isAutoParseVideo = SettingsManager.GetInstance().GetIsAutoParseVideo();
+        AutoParseVideo = isAutoParseVideo == AllowStatus.Yes;
 
         // 解析范围
         var parseScope = SettingsManager.GetInstance().GetParseScope();
         SelectedParseScope = ParseScopes.FirstOrDefault(t => { return t.ParseScope == parseScope; });
 
         // 解析后是否自动下载解析视频
-        var isAutoDownloadAll = SettingsManager.GetInstance().IsAutoDownloadAll();
-        AutoDownloadAll = isAutoDownloadAll == AllowStatus.YES;
+        var isAutoDownloadAll = SettingsManager.GetInstance().GetIsAutoDownloadAll();
+        AutoDownloadAll = isAutoDownloadAll == AllowStatus.Yes;
 
         // 重复下载策略
         var repeatDownloadStrategy = SettingsManager.GetInstance().GetRepeatDownloadStrategy();
@@ -250,16 +250,16 @@ public class ViewBasicViewModel : ViewModelBase
         switch (parameter)
         {
             case "None":
-                afterDownload = AfterDownloadOperation.NONE;
+                afterDownload = AfterDownloadOperation.None;
                 break;
             case "CloseApp":
-                afterDownload = AfterDownloadOperation.CLOSE_APP;
+                afterDownload = AfterDownloadOperation.CloseApp;
                 break;
             case "CloseSystem":
-                afterDownload = AfterDownloadOperation.CLOSE_SYSTEM;
+                afterDownload = AfterDownloadOperation.CloseSystem;
                 break;
             default:
-                afterDownload = AfterDownloadOperation.NONE;
+                afterDownload = AfterDownloadOperation.None;
                 break;
         }
 
@@ -277,9 +277,9 @@ public class ViewBasicViewModel : ViewModelBase
     /// </summary>
     private void ExecuteListenClipboardCommand()
     {
-        var isListenClipboard = ListenClipboard ? AllowStatus.YES : AllowStatus.NO;
+        var isListenClipboard = ListenClipboard ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsListenClipboard(isListenClipboard);
+        var isSucceed = SettingsManager.GetInstance().SetIsListenClipboard(isListenClipboard);
         PublishTip(isSucceed);
     }
 
@@ -292,9 +292,9 @@ public class ViewBasicViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAutoParseVideoCommand()
     {
-        var isAutoParseVideo = AutoParseVideo ? AllowStatus.YES : AllowStatus.NO;
+        var isAutoParseVideo = AutoParseVideo ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsAutoParseVideo(isAutoParseVideo);
+        var isSucceed = SettingsManager.GetInstance().SetIsAutoParseVideo(isAutoParseVideo);
         PublishTip(isSucceed);
     }
 
@@ -328,9 +328,9 @@ public class ViewBasicViewModel : ViewModelBase
     /// </summary>
     private void ExecuteAutoDownloadAllCommand()
     {
-        var isAutoDownloadAll = AutoDownloadAll ? AllowStatus.YES : AllowStatus.NO;
+        var isAutoDownloadAll = AutoDownloadAll ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsAutoDownloadAll(isAutoDownloadAll);
+        var isSucceed = SettingsManager.GetInstance().SetIsAutoDownloadAll(isAutoDownloadAll);
         PublishTip(isSucceed);
     }
 
@@ -374,15 +374,15 @@ public class ViewBasicViewModel : ViewModelBase
     {
         switch (afterDownload)
         {
-            case AfterDownloadOperation.NONE:
+            case AfterDownloadOperation.None:
                 None = true;
                 break;
-            case AfterDownloadOperation.OPEN_FOLDER:
+            case AfterDownloadOperation.OpenFolder:
                 break;
-            case AfterDownloadOperation.CLOSE_APP:
+            case AfterDownloadOperation.CloseApp:
                 CloseApp = true;
                 break;
-            case AfterDownloadOperation.CLOSE_SYSTEM:
+            case AfterDownloadOperation.CloseSystem:
                 CloseSystem = true;
                 break;
         }
@@ -399,13 +399,6 @@ public class ViewBasicViewModel : ViewModelBase
             return;
         }
 
-        if (isSucceed)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(isSucceed ? DictionaryResource.GetString("TipSettingUpdated") : DictionaryResource.GetString("TipSettingFailed"));
     }
 }

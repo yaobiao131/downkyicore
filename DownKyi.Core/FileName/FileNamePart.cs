@@ -3,40 +3,40 @@
 public enum FileNamePart
 {
     // Video
-    ORDER = 1,
-    SECTION,
-    MAIN_TITLE,
-    PAGE_TITLE,
-    VIDEO_ZONE,
-    AUDIO_QUALITY,
-    VIDEO_QUALITY,
-    VIDEO_CODEC,
+    Order = 1,
+    Section,
+    MainTitle,
+    PageTitle,
+    VideoZone,
+    AudioQuality,
+    VideoQuality,
+    VideoCodec,
 
-    VIDEO_PUBLISH_TIME,
+    VideoPublishTime,
 
-    AVID,
-    BVID,
-    CID,
+    Avid,
+    Bvid,
+    Cid,
 
-    UP_MID,
-    UP_NAME,
+    UpMid,
+    UpName,
 
     // 斜杠
-    SLASH = 100,
+    Slash = 100,
 
     // HyphenSeparated
-    UNDERSCORE = 101, // 下划线
-    HYPHEN, // 连字符
-    PLUS, // 加号
-    COMMA, // 逗号
-    PERIOD, // 句号
-    AND, // and
-    NUMBER, // #
-    OPEN_PAREN, // 左圆括号
-    CLOSE_PAREN, // 右圆括号
-    OPEN_BRACKET, // 左方括号
-    CLOSE_BRACKET, // 右方括号
-    OPEN_BRACE, // 左花括号
-    CLOSE_brace, // 右花括号
-    BLANK, // 空白符
+    Underscore = 101, // 下划线
+    Hyphen, // 连字符
+    Plus, // 加号
+    Comma, // 逗号
+    Period, // 句号
+    And, // and
+    Number, // #
+    OpenParen, // 左圆括号
+    CloseParen, // 右圆括号
+    OpenBracket, // 左方括号
+    CloseBracket, // 右方括号
+    OpenBrace, // 左花括号
+    CloseBrace, // 右花括号
+    Blank, // 空白符
 }

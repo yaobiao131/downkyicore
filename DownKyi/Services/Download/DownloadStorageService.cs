@@ -9,11 +9,11 @@ public class DownloadStorageService
 {
     ~DownloadStorageService()
     {
-        DownloadingDb downloadingDb = new DownloadingDb();
+        var downloadingDb = new DownloadingDb();
         downloadingDb.Close();
-        DownloadedDb downloadedDb = new DownloadedDb();
+        var downloadedDb = new DownloadedDb();
         downloadedDb.Close();
-        DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+        var downloadBaseDb = new DownloadBaseDb();
         downloadBaseDb.Close();
     }
 
@@ -23,17 +23,17 @@ public class DownloadStorageService
     /// 添加下载中数据
     /// </summary>
     /// <param name="downloadingItem"></param>
-    public void AddDownloading(DownloadingItem downloadingItem)
+    public void AddDownloading(DownloadingItem? downloadingItem)
     {
-        if (downloadingItem == null || downloadingItem.DownloadBase == null)
+        if (downloadingItem?.DownloadBase == null)
         {
             return;
         }
 
         AddDownloadBase(downloadingItem.DownloadBase);
 
-        DownloadingDb downloadingDb = new DownloadingDb();
-        object obj = downloadingDb.QueryById(downloadingItem.DownloadBase.Uuid);
+        var downloadingDb = new DownloadingDb();
+        var obj = downloadingDb.QueryById(downloadingItem.DownloadBase.Uuid);
         if (obj == null)
         {
             downloadingDb.Insert(downloadingItem.DownloadBase.Uuid, downloadingItem.Downloading);
@@ -45,16 +45,16 @@ public class DownloadStorageService
     /// 删除下载中数据
     /// </summary>
     /// <param name="downloadingItem"></param>
-    public void RemoveDownloading(DownloadingItem downloadingItem)
+    public void RemoveDownloading(DownloadingItem? downloadingItem)
     {
-        if (downloadingItem == null || downloadingItem.DownloadBase == null)
+        if (downloadingItem?.DownloadBase == null)
         {
             return;
         }
 
         RemoveDownloadBase(downloadingItem.DownloadBase.Uuid);
 
-        DownloadingDb downloadingDb = new DownloadingDb();
+        var downloadingDb = new DownloadingDb();
         downloadingDb.Delete(downloadingItem.DownloadBase.Uuid);
         //downloadingDb.Close();
     }
@@ -66,29 +66,27 @@ public class DownloadStorageService
     public List<DownloadingItem> GetDownloading()
     {
         // 从数据库获取数据
-        DownloadingDb downloadingDb = new DownloadingDb();
-        Dictionary<string, object> dic = downloadingDb.QueryAll();
+        var downloadingDb = new DownloadingDb();
+        var dic = downloadingDb.QueryAll();
         //downloadingDb.Close();
 
         // 遍历
-        List<DownloadingItem> list = new List<DownloadingItem>();
-        foreach (KeyValuePair<string, object> item in dic)
+        var list = new List<DownloadingItem>();
+        foreach (var item in dic)
         {
-            if (item.Value is Downloading downloading)
+            if (item.Value is not Downloading downloading) continue;
+            var downloadingItem = new DownloadingItem
             {
-                DownloadingItem downloadingItem = new DownloadingItem
-                {
-                    DownloadBase = GetDownloadBase(item.Key),
-                    Downloading = downloading
-                };
+                DownloadBase = GetDownloadBase(item.Key),
+                Downloading = downloading
+            };
 
-                if (downloadingItem.DownloadBase == null)
-                {
-                    continue;
-                }
-
-                list.Add(downloadingItem);
+            if (downloadingItem.DownloadBase == null)
+            {
+                continue;
             }
+
+            list.Add(downloadingItem);
         }
 
         return list;
@@ -98,16 +96,16 @@ public class DownloadStorageService
     /// 修改下载中数据
     /// </summary>
     /// <param name="downloadingItem"></param>
-    public void UpdateDownloading(DownloadingItem downloadingItem)
+    public void UpdateDownloading(DownloadingItem? downloadingItem)
     {
-        if (downloadingItem == null || downloadingItem.DownloadBase == null)
+        if (downloadingItem?.DownloadBase == null)
         {
             return;
         }
 
         UpdateDownloadBase(downloadingItem.DownloadBase);
 
-        DownloadingDb downloadingDb = new DownloadingDb();
+        var downloadingDb = new DownloadingDb();
         downloadingDb.Update(downloadingItem.DownloadBase.Uuid, downloadingItem.Downloading);
         //downloadingDb.Close();
     }
@@ -120,17 +118,17 @@ public class DownloadStorageService
     /// 添加下载完成数据
     /// </summary>
     /// <param name="downloadedItem"></param>
-    public void AddDownloaded(DownloadedItem downloadedItem)
+    public void AddDownloaded(DownloadedItem? downloadedItem)
     {
-        if (downloadedItem == null || downloadedItem.DownloadBase == null)
+        if (downloadedItem?.DownloadBase == null)
         {
             return;
         }
 
         AddDownloadBase(downloadedItem.DownloadBase);
 
-        DownloadedDb downloadedDb = new DownloadedDb();
-        object obj = downloadedDb.QueryById(downloadedItem.DownloadBase.Uuid);
+        var downloadedDb = new DownloadedDb();
+        var obj = downloadedDb.QueryById(downloadedItem.DownloadBase.Uuid);
         if (obj == null)
         {
             downloadedDb.Insert(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
@@ -142,16 +140,16 @@ public class DownloadStorageService
     /// 删除下载完成数据
     /// </summary>
     /// <param name="downloadedItem"></param>
-    public void RemoveDownloaded(DownloadedItem downloadedItem)
+    public void RemoveDownloaded(DownloadedItem? downloadedItem)
     {
-        if (downloadedItem == null || downloadedItem.DownloadBase == null)
+        if (downloadedItem?.DownloadBase == null)
         {
             return;
         }
 
         RemoveDownloadBase(downloadedItem.DownloadBase.Uuid);
 
-        DownloadedDb downloadedDb = new DownloadedDb();
+        var downloadedDb = new DownloadedDb();
         downloadedDb.Delete(downloadedItem.DownloadBase.Uuid);
         //downloadedDb.Close();
     }
@@ -163,17 +161,17 @@ public class DownloadStorageService
     public List<DownloadedItem> GetDownloaded()
     {
         // 从数据库获取数据
-        DownloadedDb downloadedDb = new DownloadedDb();
-        Dictionary<string, object> dic = downloadedDb.QueryAll();
+        var downloadedDb = new DownloadedDb();
+        var dic = downloadedDb.QueryAll();
         //downloadedDb.Close();
 
         // 遍历
-        List<DownloadedItem> list = new List<DownloadedItem>();
-        foreach (KeyValuePair<string, object> item in dic)
+        var list = new List<DownloadedItem>();
+        foreach (var item in dic)
         {
             if (item.Value is Downloaded downloaded)
             {
-                DownloadedItem downloadedItem = new DownloadedItem
+                var downloadedItem = new DownloadedItem
                 {
                     DownloadBase = GetDownloadBase(item.Key),
                     Downloaded = downloaded
@@ -195,16 +193,16 @@ public class DownloadStorageService
     /// 修改下载完成数据
     /// </summary>
     /// <param name="downloadedItem"></param>
-    public void UpdateDownloaded(DownloadedItem downloadedItem)
+    public void UpdateDownloaded(DownloadedItem? downloadedItem)
     {
-        if (downloadedItem == null || downloadedItem.DownloadBase == null)
+        if (downloadedItem?.DownloadBase == null)
         {
             return;
         }
 
         UpdateDownloadBase(downloadedItem.DownloadBase);
 
-        DownloadedDb downloadedDb = new DownloadedDb();
+        var downloadedDb = new DownloadedDb();
         downloadedDb.Update(downloadedItem.DownloadBase.Uuid, downloadedItem.Downloaded);
         //downloadedDb.Close();
     }
@@ -217,15 +215,15 @@ public class DownloadStorageService
     /// 向数据库添加DownloadBase
     /// </summary>
     /// <param name="downloadBase"></param>
-    private void AddDownloadBase(DownloadBase downloadBase)
+    private void AddDownloadBase(DownloadBase? downloadBase)
     {
         if (downloadBase == null)
         {
             return;
         }
 
-        DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-        object obj = downloadBaseDb.QueryById(downloadBase.Uuid);
+        var downloadBaseDb = new DownloadBaseDb();
+        var obj = downloadBaseDb.QueryById(downloadBase.Uuid);
         if (obj == null)
         {
             downloadBaseDb.Insert(downloadBase.Uuid, downloadBase);
@@ -236,10 +234,10 @@ public class DownloadStorageService
     /// <summary>
     /// 从数据库删除DownloadBase
     /// </summary>
-    /// <param name="downloadBase"></param>
+    /// <param name="uuid"></param>
     private void RemoveDownloadBase(string uuid)
     {
-        DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+        var downloadBaseDb = new DownloadBaseDb();
         downloadBaseDb.Delete(uuid);
         //downloadBaseDb.Close();
     }
@@ -250,8 +248,8 @@ public class DownloadStorageService
     /// <returns></returns>
     private DownloadBase GetDownloadBase(string uuid)
     {
-        DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
-        object obj = downloadBaseDb.QueryById(uuid);
+        var downloadBaseDb = new DownloadBaseDb();
+        var obj = downloadBaseDb.QueryById(uuid);
         //downloadBaseDb.Close();
 
         return obj is DownloadBase downloadBase ? downloadBase : null;
@@ -261,14 +259,14 @@ public class DownloadStorageService
     /// 从数据库修改DownloadBase
     /// </summary>
     /// <param name="downloadBase"></param>
-    private void UpdateDownloadBase(DownloadBase downloadBase)
+    private void UpdateDownloadBase(DownloadBase? downloadBase)
     {
         if (downloadBase == null)
         {
             return;
         }
 
-        DownloadBaseDb downloadBaseDb = new DownloadBaseDb();
+        var downloadBaseDb = new DownloadBaseDb();
         downloadBaseDb.Update(downloadBase.Uuid, downloadBase);
         //downloadBaseDb.Close();
     }

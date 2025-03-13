@@ -6,7 +6,8 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmf:ViewFollowingViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <UserControl.Resources>
 
         <ControlTheme x:Key="ContentListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FriendInfo">
@@ -31,7 +32,7 @@
                                 Grid.Column="0"
                                 Width="64"
                                 Height="64"
-                                Source="{Binding Header}">
+                                asyncImageLoader:ImageLoader.Source="{Binding Header}">
                                 <Image.Clip>
                                     <EllipseGeometry
                                         Center="32,32"

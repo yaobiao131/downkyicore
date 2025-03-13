@@ -27,158 +27,157 @@ public class ViewMyFavoritesViewModel : ViewModelBase
 
     //private readonly IDialogService dialogService;
 
-    private CancellationTokenSource tokenSource1;
-    private CancellationTokenSource tokenSource2;
+    private CancellationTokenSource _tokenSource1;
+    private CancellationTokenSource _tokenSource2;
 
-    private long mid = -1;
+    private long _mid = -1;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
-    private readonly int VideoNumberInPage = 20;
+    private const int VideoNumberInPage = 20;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private bool mediaLoading;
+    private bool _mediaLoading;
 
     public bool MediaLoading
     {
-        get => mediaLoading;
-        set => SetProperty(ref mediaLoading, value);
+        get => _mediaLoading;
+        set => SetProperty(ref _mediaLoading, value);
     }
 
-    private bool mediaContentVisibility;
+    private bool _mediaContentVisibility;
 
     public bool MediaContentVisibility
     {
-        get => mediaContentVisibility;
-        set => SetProperty(ref mediaContentVisibility, value);
+        get => _mediaContentVisibility;
+        set => SetProperty(ref _mediaContentVisibility, value);
     }
 
-    private bool mediaLoadingVisibility;
+    private bool _mediaLoadingVisibility;
 
     public bool MediaLoadingVisibility
     {
-        get => mediaLoadingVisibility;
-        set => SetProperty(ref mediaLoadingVisibility, value);
+        get => _mediaLoadingVisibility;
+        set => SetProperty(ref _mediaLoadingVisibility, value);
     }
 
-    private bool mediaNoDataVisibility;
+    private bool _mediaNoDataVisibility;
 
     public bool MediaNoDataVisibility
     {
-        get => mediaNoDataVisibility;
-        set => SetProperty(ref mediaNoDataVisibility, value);
+        get => _mediaNoDataVisibility;
+        set => SetProperty(ref _mediaNoDataVisibility, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private ObservableCollection<TabHeader> tabHeaders;
+    private ObservableCollection<TabHeader> _tabHeaders;
 
     public ObservableCollection<TabHeader> TabHeaders
     {
-        get => tabHeaders;
-        set => SetProperty(ref tabHeaders, value);
+        get => _tabHeaders;
+        set => SetProperty(ref _tabHeaders, value);
     }
 
-    private int selectTabId;
+    private int _selectTabId;
 
     public int SelectTabId
     {
-        get => selectTabId;
-        set => SetProperty(ref selectTabId, value);
+        get => _selectTabId;
+        set => SetProperty(ref _selectTabId, value);
     }
 
-    private bool isEnabled = true;
+    private bool _isEnabled = true;
 
     public bool IsEnabled
     {
-        get => isEnabled;
-        set => SetProperty(ref isEnabled, value);
+        get => _isEnabled;
+        set => SetProperty(ref _isEnabled, value);
     }
 
-    private CustomPagerViewModel pager;
+    private CustomPagerViewModel _pager;
 
     public CustomPagerViewModel Pager
     {
-        get => pager;
-        set => SetProperty(ref pager, value);
+        get => _pager;
+        set => SetProperty(ref _pager, value);
     }
 
-    private ObservableCollection<FavoritesMedia> medias;
+    private ObservableCollection<FavoritesMedia> _medias;
 
     public ObservableCollection<FavoritesMedia> Medias
     {
-        get => medias;
-        set => SetProperty(ref medias, value);
+        get => _medias;
+        set => SetProperty(ref _medias, value);
     }
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
     #endregion
 
-    public ViewMyFavoritesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
-        eventAggregator)
+    public ViewMyFavoritesViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -209,10 +208,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -224,10 +222,10 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
         // 结束任务
-        tokenSource1?.Cancel();
-        tokenSource2?.Cancel();
+        _tokenSource1.Cancel();
+        _tokenSource2.Cancel();
 
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -237,18 +235,16 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ViewDownloadManagerViewModel.Tag,
             ParentViewName = Tag,
@@ -258,10 +254,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     }
 
     // 左侧tab点击事件
-    private DelegateCommand<object> leftTabHeadersCommand;
+    private DelegateCommand<object>? _leftTabHeadersCommand;
 
-    public DelegateCommand<object> LeftTabHeadersCommand => leftTabHeadersCommand ?? (leftTabHeadersCommand =
-        new DelegateCommand<object>(ExecuteLeftTabHeadersCommand, CanExecuteLeftTabHeadersCommand));
+    public DelegateCommand<object> LeftTabHeadersCommand => _leftTabHeadersCommand ??= new DelegateCommand<object>(ExecuteLeftTabHeadersCommand, CanExecuteLeftTabHeadersCommand);
 
     /// <summary>
     /// 左侧tab点击事件
@@ -269,7 +264,7 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLeftTabHeadersCommand(object parameter)
     {
-        if (!(parameter is TabHeader tabHeader))
+        if (parameter is not TabHeader tabHeader)
         {
             return;
         }
@@ -295,10 +290,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     }
 
     // 全选按钮点击事件
-    private DelegateCommand<object> selectAllCommand;
+    private DelegateCommand<object>? _selectAllCommand;
 
-    public DelegateCommand<object> SelectAllCommand =>
-        selectAllCommand ?? (selectAllCommand = new DelegateCommand<object>(ExecuteSelectAllCommand));
+    public DelegateCommand<object> SelectAllCommand => _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
 
     /// <summary>
     /// 全选按钮点击事件
@@ -323,10 +317,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> mediasCommand;
+    private DelegateCommand<object>? _mediasCommand;
 
-    public DelegateCommand<object> MediasCommand =>
-        mediasCommand ?? (mediasCommand = new DelegateCommand<object>(ExecuteMediasCommand));
+    public DelegateCommand<object> MediasCommand => _mediasCommand ??= new DelegateCommand<object>(ExecuteMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -334,27 +327,18 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteMediasCommand(object parameter)
     {
-        if (!(parameter is IList selectedMedia))
+        if (parameter is not IList selectedMedia)
         {
             return;
         }
 
-        if (selectedMedia.Count == Medias.Count)
-        {
-            IsSelectAll = true;
-        }
-        else
-        {
-            IsSelectAll = false;
-        }
+        IsSelectAll = selectedMedia.Count == Medias.Count;
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -365,11 +349,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand? _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand => _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -388,7 +370,7 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 收藏夹里只有视频
-        var addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
         // 选择文件夹
         var directory = await addToDownloadService.SetDirectory(DialogService);
@@ -410,8 +392,6 @@ public class ViewMyFavoritesViewModel : ViewModelBase
                     continue;
                 }
 
-                /// 有分P的就下载全部
-
                 // 开启服务
                 var videoInfoService = new VideoInfoService(media.Bvid);
 
@@ -429,15 +409,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish($"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     private void OnCountChanged_Pager(int count)
@@ -471,12 +445,11 @@ public class ViewMyFavoritesViewModel : ViewModelBase
 
         var tab = TabHeaders[SelectTabId];
 
-        await Task.Run(new Action(() =>
+        await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource2.Token;
+            var cancellationToken = _tokenSource2.Token;
 
-            List<Core.BiliApi.Favorites.Models.FavoritesMedia> medias =
-                FavoritesResource.GetFavoritesMedia(tab.Id, current, VideoNumberInPage);
+            var medias = FavoritesResource.GetFavoritesMedia(tab.Id, current, VideoNumberInPage);
             if (medias == null || medias.Count == 0)
             {
                 MediaContentVisibility = true;
@@ -491,7 +464,7 @@ public class ViewMyFavoritesViewModel : ViewModelBase
 
             var service = new FavoritesService();
             service.GetFavoritesMediaList(medias, Medias, EventAggregator, cancellationToken);
-        }), (tokenSource2 = new CancellationTokenSource()).Token);
+        }, (_tokenSource2 = new CancellationTokenSource()).Token);
 
         IsEnabled = true;
     }
@@ -529,8 +502,8 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         base.OnNavigatedTo(navigationContext);
 
         // 根据传入参数不同执行不同任务
-        mid = navigationContext.Parameters.GetValue<long>("Parameter");
-        if (mid == 0)
+        _mid = navigationContext.Parameters.GetValue<long>("Parameter");
+        if (_mid == 0)
         {
             return;
         }
@@ -539,12 +512,12 @@ public class ViewMyFavoritesViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource1.Token;
+            var cancellationToken = _tokenSource1.Token;
 
             var service = new FavoritesService();
-            service.GetCreatedFavorites(mid, TabHeaders, cancellationToken);
-            service.GetCollectedFavorites(mid, TabHeaders, cancellationToken);
-        }, (tokenSource1 = new CancellationTokenSource()).Token);
+            service.GetCreatedFavorites(_mid, TabHeaders, cancellationToken);
+            service.GetCollectedFavorites(_mid, TabHeaders, cancellationToken);
+        }, (_tokenSource1 = new CancellationTokenSource()).Token);
 
         if (TabHeaders.Count == 0)
         {

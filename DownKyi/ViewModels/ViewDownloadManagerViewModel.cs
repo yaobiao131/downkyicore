@@ -14,7 +14,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
 {
     public const string Tag = "PageDownloadManager";
 
-    private readonly IRegionManager regionManager;
+    private readonly IRegionManager _regionManager;
 
     #region 页面属性申明
 
@@ -39,7 +39,7 @@ public class ViewDownloadManagerViewModel : ViewModelBase
     public ViewDownloadManagerViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(
         eventAggregator)
     {
-        this.regionManager = regionManager;
+        _regionManager = regionManager;
 
         #region 属性初始化
 
@@ -101,10 +101,10 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         switch (tabHeader.Id)
         {
             case 0:
-                regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
+                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
                 break;
             case 1:
-                regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
+                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
                 break;
             default:
                 break;
@@ -124,6 +124,6 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         //// 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() => { regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
+        PropertyChangeAsync(() => { _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
     }
 }

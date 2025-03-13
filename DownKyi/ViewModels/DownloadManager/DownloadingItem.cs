@@ -27,13 +27,13 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // model数据
-        private Downloading downloading;
+        private Downloading _downloading;
         public Downloading Downloading
         {
-            get => downloading;
+            get => _downloading;
             set
             {
-                downloading = value;
+                _downloading = value;
 
                 switch (value.DownloadStatus)
                 {

@@ -3,45 +3,45 @@
 public partial class SettingsManager
 {
     // 默认下载完成后的操作
-    private readonly AfterDownloadOperation _afterDownload = AfterDownloadOperation.NONE;
+    private const AfterDownloadOperation AfterDownload = AfterDownloadOperation.None;
 
     // 是否监听剪贴板
-    private readonly AllowStatus _isListenClipboard = AllowStatus.YES;
+    private const AllowStatus IsListenClipboard = AllowStatus.Yes;
 
     // 视频详情页面是否自动解析
-    private readonly AllowStatus _isAutoParseVideo = AllowStatus.NO;
+    private const AllowStatus IsAutoParseVideo = AllowStatus.No;
 
     // 默认的视频解析项
-    private readonly ParseScope _parseScope = ParseScope.NONE;
+    private const ParseScope ParseScope = Settings.ParseScope.None;
 
     // 解析后自动下载解析视频
-    private readonly AllowStatus _isAutoDownloadAll = AllowStatus.NO;
+    private const AllowStatus IsAutoDownloadAll = AllowStatus.No;
 
     // 下载完成列表排序
-    private readonly DownloadFinishedSort _finishedSort = DownloadFinishedSort.DownloadAsc;
+    private const DownloadFinishedSort FinishedSort = DownloadFinishedSort.DownloadAsc;
 
     // 重复下载策略
-    private readonly RepeatDownloadStrategy _repeatDownloadStrategy = RepeatDownloadStrategy.Ask;
+    private const RepeatDownloadStrategy RepeatDownloadStrategy = Settings.RepeatDownloadStrategy.Ask;
 
     // 重复文件自动添加数字后缀
-    private readonly bool _repeatFileAutoAddNumberSuffix = false;
-    
+    private const bool RepeatFileAutoAddNumberSuffix = false;
+
     public ThemeMode GetThemeMode()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.ThemeMode == ThemeMode.Default)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.ThemeMode == ThemeMode.Default)
         {
             // 第一次获取，先设置默认值
             SetThemeMode(ThemeMode.Default);
             return ThemeMode.Default;
         }
 
-        return appSettings.Basic.ThemeMode;
+        return _appSettings.Basic.ThemeMode;
     }
-    
+
     public bool SetThemeMode(ThemeMode themeMode)
     {
-        appSettings.Basic.ThemeMode = themeMode;
+        _appSettings.Basic.ThemeMode = themeMode;
         return SetSettings();
     }
 
@@ -51,15 +51,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public AfterDownloadOperation GetAfterDownloadOperation()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.AfterDownload == AfterDownloadOperation.NOT_SET)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.AfterDownload == AfterDownloadOperation.NotSet)
         {
             // 第一次获取，先设置默认值
-            SetAfterDownloadOperation(_afterDownload);
-            return _afterDownload;
+            SetAfterDownloadOperation(AfterDownload);
+            return AfterDownload;
         }
 
-        return appSettings.Basic.AfterDownload;
+        return _appSettings.Basic.AfterDownload;
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAfterDownloadOperation(AfterDownloadOperation afterDownload)
     {
-        appSettings.Basic.AfterDownload = afterDownload;
+        _appSettings.Basic.AfterDownload = afterDownload;
         return SetSettings();
     }
 
@@ -77,17 +77,17 @@ public partial class SettingsManager
     /// 是否监听剪贴板
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsListenClipboard()
+    public AllowStatus GetIsListenClipboard()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.IsListenClipboard == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.IsListenClipboard == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsListenClipboard(_isListenClipboard);
-            return _isListenClipboard;
+            SetIsListenClipboard(IsListenClipboard);
+            return IsListenClipboard;
         }
 
-        return appSettings.Basic.IsListenClipboard;
+        return _appSettings.Basic.IsListenClipboard;
     }
 
     /// <summary>
@@ -95,9 +95,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isListen"></param>
     /// <returns></returns>
-    public bool IsListenClipboard(AllowStatus isListen)
+    public bool SetIsListenClipboard(AllowStatus isListen)
     {
-        appSettings.Basic.IsListenClipboard = isListen;
+        _appSettings.Basic.IsListenClipboard = isListen;
         return SetSettings();
     }
 
@@ -105,27 +105,27 @@ public partial class SettingsManager
     /// 视频详情页面是否自动解析
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsAutoParseVideo()
+    public AllowStatus GetIsAutoParseVideo()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.IsAutoParseVideo == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.IsAutoParseVideo == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsAutoParseVideo(_isAutoParseVideo);
-            return _isAutoParseVideo;
+            SetIsAutoParseVideo(IsAutoParseVideo);
+            return IsAutoParseVideo;
         }
 
-        return appSettings.Basic.IsAutoParseVideo;
+        return _appSettings.Basic.IsAutoParseVideo;
     }
 
     /// <summary>
     /// 视频详情页面是否自动解析
     /// </summary>
-    /// <param name="IsAuto"></param>
+    /// <param name="isAuto"></param>
     /// <returns></returns>
-    public bool IsAutoParseVideo(AllowStatus IsAuto)
+    public bool SetIsAutoParseVideo(AllowStatus isAuto)
     {
-        appSettings.Basic.IsAutoParseVideo = IsAuto;
+        _appSettings.Basic.IsAutoParseVideo = isAuto;
         return SetSettings();
     }
 
@@ -135,15 +135,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public ParseScope GetParseScope()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.ParseScope == ParseScope.NOT_SET)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.ParseScope == ParseScope.NotSet)
         {
             // 第一次获取，先设置默认值
-            SetParseScope(_parseScope);
-            return _parseScope;
+            SetParseScope(ParseScope);
+            return ParseScope;
         }
 
-        return appSettings.Basic.ParseScope;
+        return _appSettings.Basic.ParseScope;
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetParseScope(ParseScope parseScope)
     {
-        appSettings.Basic.ParseScope = parseScope;
+        _appSettings.Basic.ParseScope = parseScope;
         return SetSettings();
     }
 
@@ -161,17 +161,17 @@ public partial class SettingsManager
     /// 解析后是否自动下载解析视频
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsAutoDownloadAll()
+    public AllowStatus GetIsAutoDownloadAll()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.IsAutoDownloadAll == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.IsAutoDownloadAll == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsAutoDownloadAll(_isAutoDownloadAll);
-            return _isAutoDownloadAll;
+            SetIsAutoDownloadAll(IsAutoDownloadAll);
+            return IsAutoDownloadAll;
         }
 
-        return appSettings.Basic.IsAutoDownloadAll;
+        return _appSettings.Basic.IsAutoDownloadAll;
     }
 
     /// <summary>
@@ -179,9 +179,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isAutoDownloadAll"></param>
     /// <returns></returns>
-    public bool IsAutoDownloadAll(AllowStatus isAutoDownloadAll)
+    public bool SetIsAutoDownloadAll(AllowStatus isAutoDownloadAll)
     {
-        appSettings.Basic.IsAutoDownloadAll = isAutoDownloadAll;
+        _appSettings.Basic.IsAutoDownloadAll = isAutoDownloadAll;
         return SetSettings();
     }
 
@@ -191,15 +191,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public DownloadFinishedSort GetDownloadFinishedSort()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.DownloadFinishedSort == DownloadFinishedSort.NotSet)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.DownloadFinishedSort == DownloadFinishedSort.NotSet)
         {
             // 第一次获取，先设置默认值
-            SetDownloadFinishedSort(_finishedSort);
-            return _finishedSort;
+            SetDownloadFinishedSort(FinishedSort);
+            return FinishedSort;
         }
 
-        return appSettings.Basic.DownloadFinishedSort;
+        return _appSettings.Basic.DownloadFinishedSort;
     }
 
     /// <summary>
@@ -209,7 +209,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetDownloadFinishedSort(DownloadFinishedSort finishedSort)
     {
-        appSettings.Basic.DownloadFinishedSort = finishedSort;
+        _appSettings.Basic.DownloadFinishedSort = finishedSort;
         return SetSettings();
     }
 
@@ -219,15 +219,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public RepeatDownloadStrategy GetRepeatDownloadStrategy()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.RepeatDownloadStrategy == RepeatDownloadStrategy.Ask)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.RepeatDownloadStrategy == RepeatDownloadStrategy.Ask)
         {
             // 第一次获取，先设置默认值
-            SetRepeatDownloadStrategy(_repeatDownloadStrategy);
-            return _repeatDownloadStrategy;
+            SetRepeatDownloadStrategy(RepeatDownloadStrategy);
+            return RepeatDownloadStrategy;
         }
 
-        return appSettings.Basic.RepeatDownloadStrategy;
+        return _appSettings.Basic.RepeatDownloadStrategy;
     }
 
     /// <summary>
@@ -237,7 +237,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetRepeatDownloadStrategy(RepeatDownloadStrategy repeatDownloadStrategy)
     {
-        appSettings.Basic.RepeatDownloadStrategy = repeatDownloadStrategy;
+        _appSettings.Basic.RepeatDownloadStrategy = repeatDownloadStrategy;
         return SetSettings();
     }
 
@@ -247,15 +247,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool IsRepeatFileAutoAddNumberSuffix()
     {
-        appSettings = GetSettings();
-        if (appSettings.Basic.RepeatFileAutoAddNumberSuffix == false)
+        _appSettings = GetSettings();
+        if (_appSettings.Basic.RepeatFileAutoAddNumberSuffix == false)
         {
             // 第一次获取，先设置默认值
-            IsRepeatFileAutoAddNumberSuffix(_repeatFileAutoAddNumberSuffix);
-            return _repeatFileAutoAddNumberSuffix;
+            IsRepeatFileAutoAddNumberSuffix(RepeatFileAutoAddNumberSuffix);
+            return RepeatFileAutoAddNumberSuffix;
         }
 
-        return appSettings.Basic.RepeatFileAutoAddNumberSuffix;
+        return _appSettings.Basic.RepeatFileAutoAddNumberSuffix;
     }
 
     /// <summary>
@@ -266,7 +266,7 @@ public partial class SettingsManager
     /// <exception cref="NotImplementedException"></exception>
     public bool IsRepeatFileAutoAddNumberSuffix(bool repeatFileAutoAddNumberSuffix)
     {
-        appSettings.Basic.RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
+        _appSettings.Basic.RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
         return SetSettings();
     }
 }

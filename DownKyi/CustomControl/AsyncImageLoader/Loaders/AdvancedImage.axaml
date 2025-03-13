@@ -1,0 +1,20 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:DownKyi.CustomControl.AsyncImageLoader.Loaders">
+    <Design.PreviewWith>
+        <controls:AdvancedImage />
+    </Design.PreviewWith>
+
+    <Style Selector="controls|AdvancedImage">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid>
+                    <!-- CurrentImage will be rendered with codebehind, just as it is done in the Image -->
+                    <ProgressBar VerticalAlignment="Center" MinWidth="0" MaxWidth="100"
+                                 IsIndeterminate="True"
+                                 IsVisible="{TemplateBinding IsLoading}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+</Styles>

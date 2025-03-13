@@ -43,7 +43,6 @@ internal static class Constant
 
     // 历史(搜索、下载) (加密)
     public static string Download { get; } = $"{Database}/Download.db";
-    public static string History { get; } = $"{Database}/History.db";
 
     // 配置
     public static string Config { get; } = $"{Root}/Config";
@@ -60,33 +59,9 @@ internal static class Constant
     // 弹幕
     public static string Danmaku { get; } = $"{Bilibili}/Danmakus";
 
-    // 字幕
-    public static string Subtitle { get; } = $"{Bilibili}/Subtitle";
-
-    // 评论
-    // TODO
-
-    // 头图
-    public static string Toutu { get; } = $"{Bilibili}/Toutu";
-
-    // 封面
-    public static string Cover { get; } = $"{Bilibili}/Cover";
-
-    // 封面文件索引
-    public static string CoverIndex { get; } = $"{Cover}/Index.db";
-
-    // 视频快照
-    public static string Snapshot { get; } = $"{Bilibili}/Snapshot";
-
-    // 视频快照文件索引
-    public static string SnapshotIndex { get; } = $"{Cover}/Index.db";
-
-    // 用户头像
-    public static string Header { get; } = $"{Bilibili}/Header";
-
-    // 用户头像文件索引
-    public static string HeaderIndex { get; } = $"{Header}/Index.db";
-
     // 下载
     public static string Media { get; } = $"{Root}/Media";
+
+    // 缓存
+    public static string Cache { get; } = $"{Root}/Cache";
 }

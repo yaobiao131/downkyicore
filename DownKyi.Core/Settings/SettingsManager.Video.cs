@@ -7,56 +7,56 @@ namespace DownKyi.Core.Settings;
 public partial class SettingsManager
 {
     // 设置优先下载的视频编码
-    private readonly int videoCodecs = 7;
+    private const int VideoCodecs = 7;
 
     // 设置优先下载画质
-    private readonly int quality = 120;
+    private const int Quality = 120;
 
     // 设置优先下载音质
-    private readonly int audioQuality = 30280;
-    
+    private const int AudioQuality = 30280;
+
     // 设置首选视频解析方式
     private const int VideoParseType = 1;
 
     // 是否下载flv视频后转码为mp4
-    private readonly AllowStatus isTranscodingFlvToMp4 = AllowStatus.YES;
-    
+    private const AllowStatus IsTranscodingFlvToMp4 = AllowStatus.Yes;
+
     // 是否下载aac音频后转码为mp3
-    private readonly AllowStatus isTranscodingAacToMp3 = AllowStatus.YES;
+    private const AllowStatus IsTranscodingAacToMp3 = AllowStatus.Yes;
 
     // 默认下载目录
-    private readonly string saveVideoRootPath = StorageManager.GetMedia();
+    private readonly string _saveVideoRootPath = StorageManager.GetMedia();
 
     // 历史下载目录
-    private readonly List<string> historyVideoRootPaths = new();
+    private readonly List<string> _historyVideoRootPaths = new();
 
     // 是否使用默认下载目录，如果是，则每次点击下载选中项时不再询问下载目录
-    private readonly AllowStatus isUseSaveVideoRootPath = AllowStatus.NO;
+    private const AllowStatus IsUseSaveVideoRootPath = AllowStatus.No;
 
     // 下载内容
-    private readonly VideoContentSettings videoContent = new();
+    private readonly VideoContentSettings _videoContent = new();
 
     // 文件命名格式
-    private readonly List<FileNamePart> fileNameParts = new()
+    private readonly List<FileNamePart> _fileNameParts = new()
     {
-        FileNamePart.MAIN_TITLE,
-        FileNamePart.SLASH,
-        FileNamePart.SECTION,
-        FileNamePart.SLASH,
-        FileNamePart.ORDER,
-        FileNamePart.HYPHEN,
-        FileNamePart.PAGE_TITLE,
-        FileNamePart.HYPHEN,
-        FileNamePart.VIDEO_QUALITY,
-        FileNamePart.HYPHEN,
-        FileNamePart.VIDEO_CODEC,
+        FileNamePart.MainTitle,
+        FileNamePart.Slash,
+        FileNamePart.Section,
+        FileNamePart.Slash,
+        FileNamePart.Order,
+        FileNamePart.Hyphen,
+        FileNamePart.PageTitle,
+        FileNamePart.Hyphen,
+        FileNamePart.VideoQuality,
+        FileNamePart.Hyphen,
+        FileNamePart.VideoCodec,
     };
 
     // 文件命名中的时间格式
-    private readonly string fileNamePartTimeFormat = "yyyy-MM-dd";
+    private const string FileNamePartTimeFormat = "yyyy-MM-dd";
 
     // 文件命名中的序号格式
-    private readonly OrderFormat orderFormat = OrderFormat.NATURAL;
+    private const OrderFormat OrderFormat = Settings.OrderFormat.Natural;
 
     /// <summary>
     /// 获取优先下载的视频编码
@@ -64,15 +64,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public int GetVideoCodecs()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.VideoCodecs == -1)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.VideoCodecs == -1)
         {
             // 第一次获取，先设置默认值
-            SetVideoCodecs(videoCodecs);
-            return videoCodecs;
+            SetVideoCodecs(VideoCodecs);
+            return VideoCodecs;
         }
 
-        return appSettings.Video.VideoCodecs;
+        return _appSettings.Video.VideoCodecs;
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoCodecs(int videoCodecs)
     {
-        appSettings.Video.VideoCodecs = videoCodecs;
+        _appSettings.Video.VideoCodecs = videoCodecs;
         return SetSettings();
     }
 
@@ -92,15 +92,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public int GetQuality()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.Quality == -1)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.Quality == -1)
         {
             // 第一次获取，先设置默认值
-            SetQuality(quality);
-            return quality;
+            SetQuality(Quality);
+            return Quality;
         }
 
-        return appSettings.Video.Quality;
+        return _appSettings.Video.Quality;
     }
 
     /// <summary>
@@ -110,7 +110,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetQuality(int quality)
     {
-        appSettings.Video.Quality = quality;
+        _appSettings.Video.Quality = quality;
         return SetSettings();
     }
 
@@ -120,15 +120,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public int GetAudioQuality()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.AudioQuality == -1)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.AudioQuality == -1)
         {
             // 第一次获取，先设置默认值
-            SetAudioQuality(audioQuality);
-            return audioQuality;
+            SetAudioQuality(AudioQuality);
+            return AudioQuality;
         }
 
-        return appSettings.Video.AudioQuality;
+        return _appSettings.Video.AudioQuality;
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAudioQuality(int quality)
     {
-        appSettings.Video.AudioQuality = quality;
+        _appSettings.Video.AudioQuality = quality;
         return SetSettings();
     }
     
@@ -148,15 +148,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public int GetVideoParseType()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.VideoParseType == null)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.VideoParseType == null)
         {
             // 第一次获取，先设置默认值
             SetVideoParseType(VideoParseType);
             return VideoParseType;
         }
 
-        return appSettings.Video.VideoParseType;
+        return _appSettings.Video.VideoParseType;
     }
     
     /// <summary>
@@ -166,7 +166,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoParseType(int videoParseType)
     {
-        appSettings.Video.VideoParseType = videoParseType;
+        _appSettings.Video.VideoParseType = videoParseType;
         return SetSettings();
     }
 
@@ -174,17 +174,17 @@ public partial class SettingsManager
     /// 获取是否下载flv视频后转码为mp4
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsTranscodingFlvToMp4()
+    public AllowStatus GetIsTranscodingFlvToMp4()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.IsTranscodingFlvToMp4 == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.IsTranscodingFlvToMp4 == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
-            return isTranscodingFlvToMp4;
+            SetIsTranscodingFlvToMp4(IsTranscodingFlvToMp4);
+            return IsTranscodingFlvToMp4;
         }
 
-        return appSettings.Video.IsTranscodingFlvToMp4;
+        return _appSettings.Video.IsTranscodingFlvToMp4;
     }
 
     /// <summary>
@@ -192,9 +192,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isTranscodingFlvToMp4"></param>
     /// <returns></returns>
-    public bool IsTranscodingFlvToMp4(AllowStatus isTranscodingFlvToMp4)
+    public bool SetIsTranscodingFlvToMp4(AllowStatus isTranscodingFlvToMp4)
     {
-        appSettings.Video.IsTranscodingFlvToMp4 = isTranscodingFlvToMp4;
+        _appSettings.Video.IsTranscodingFlvToMp4 = isTranscodingFlvToMp4;
         return SetSettings();
     }
     
@@ -202,17 +202,17 @@ public partial class SettingsManager
     /// 获取是否下载aac音频后转码为mp3
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsTranscodingAacToMp3()
+    public AllowStatus GetIsTranscodingAacToMp3()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.IsTranscodingAacToMp3 == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.IsTranscodingAacToMp3 == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsTranscodingAacToMp3(isTranscodingAacToMp3);
-            return isTranscodingAacToMp3;
+            SetIsTranscodingAacToMp3(IsTranscodingAacToMp3);
+            return IsTranscodingAacToMp3;
         }
 
-        return appSettings.Video.IsTranscodingAacToMp3;
+        return _appSettings.Video.IsTranscodingAacToMp3;
     }
     
     /// <summary>
@@ -220,9 +220,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isTranscodingAacToMp3"></param>
     /// <returns></returns>
-    public bool IsTranscodingAacToMp3(AllowStatus isTranscodingAacToMp3)
+    public bool SetIsTranscodingAacToMp3(AllowStatus isTranscodingAacToMp3)
     {
-        appSettings.Video.IsTranscodingAacToMp3 = isTranscodingAacToMp3;
+        _appSettings.Video.IsTranscodingAacToMp3 = isTranscodingAacToMp3;
         return SetSettings();
     }
 
@@ -232,15 +232,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public string GetSaveVideoRootPath()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.SaveVideoRootPath == null)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.SaveVideoRootPath == null)
         {
             // 第一次获取，先设置默认值
-            SetSaveVideoRootPath(saveVideoRootPath);
-            return saveVideoRootPath;
+            SetSaveVideoRootPath(_saveVideoRootPath);
+            return _saveVideoRootPath;
         }
 
-        return appSettings.Video.SaveVideoRootPath;
+        return _appSettings.Video.SaveVideoRootPath;
     }
 
     /// <summary>
@@ -250,7 +250,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetSaveVideoRootPath(string path)
     {
-        appSettings.Video.SaveVideoRootPath = path;
+        _appSettings.Video.SaveVideoRootPath = path;
         return SetSettings();
     }
 
@@ -260,15 +260,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public List<string> GetHistoryVideoRootPaths()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.HistoryVideoRootPaths == null)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.HistoryVideoRootPaths == null)
         {
             // 第一次获取，先设置默认值
-            SetHistoryVideoRootPaths(historyVideoRootPaths);
-            return historyVideoRootPaths;
+            SetHistoryVideoRootPaths(_historyVideoRootPaths);
+            return _historyVideoRootPaths;
         }
 
-        return appSettings.Video.HistoryVideoRootPaths;
+        return _appSettings.Video.HistoryVideoRootPaths;
     }
 
     /// <summary>
@@ -278,7 +278,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetHistoryVideoRootPaths(List<string> historyPaths)
     {
-        appSettings.Video.HistoryVideoRootPaths = historyPaths;
+        _appSettings.Video.HistoryVideoRootPaths = historyPaths;
         return SetSettings();
     }
 
@@ -286,17 +286,17 @@ public partial class SettingsManager
     /// 获取是否使用默认下载目录
     /// </summary>
     /// <returns></returns>
-    public AllowStatus IsUseSaveVideoRootPath()
+    public AllowStatus GetIsUseSaveVideoRootPath()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.IsUseSaveVideoRootPath == AllowStatus.NONE)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.IsUseSaveVideoRootPath == AllowStatus.None)
         {
             // 第一次获取，先设置默认值
-            IsUseSaveVideoRootPath(isUseSaveVideoRootPath);
-            return isUseSaveVideoRootPath;
+            SetIsUseSaveVideoRootPath(IsUseSaveVideoRootPath);
+            return IsUseSaveVideoRootPath;
         }
 
-        return appSettings.Video.IsUseSaveVideoRootPath;
+        return _appSettings.Video.IsUseSaveVideoRootPath;
     }
 
     /// <summary>
@@ -304,9 +304,9 @@ public partial class SettingsManager
     /// </summary>
     /// <param name="isUseSaveVideoRootPath"></param>
     /// <returns></returns>
-    public bool IsUseSaveVideoRootPath(AllowStatus isUseSaveVideoRootPath)
+    public bool SetIsUseSaveVideoRootPath(AllowStatus isUseSaveVideoRootPath)
     {
-        appSettings.Video.IsUseSaveVideoRootPath = isUseSaveVideoRootPath;
+        _appSettings.Video.IsUseSaveVideoRootPath = isUseSaveVideoRootPath;
         return SetSettings();
     }
 
@@ -316,15 +316,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public VideoContentSettings GetVideoContent()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.VideoContent == null)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.VideoContent == null)
         {
             // 第一次获取，先设置默认值
-            SetVideoContent(videoContent);
-            return videoContent;
+            SetVideoContent(_videoContent);
+            return _videoContent;
         }
 
-        return appSettings.Video.VideoContent;
+        return _appSettings.Video.VideoContent;
     }
 
     /// <summary>
@@ -334,7 +334,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoContent(VideoContentSettings videoContent)
     {
-        appSettings.Video.VideoContent = videoContent;
+        _appSettings.Video.VideoContent = videoContent;
         return SetSettings();
     }
 
@@ -344,25 +344,25 @@ public partial class SettingsManager
     /// <returns></returns>
     public List<FileNamePart> GetFileNameParts()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.FileNameParts == null || appSettings.Video.FileNameParts.Count == 0)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.FileNameParts == null || _appSettings.Video.FileNameParts.Count == 0)
         {
             // 第一次获取，先设置默认值
-            SetFileNameParts(fileNameParts);
-            return fileNameParts;
+            SetFileNameParts(_fileNameParts);
+            return _fileNameParts;
         }
 
-        return appSettings.Video.FileNameParts;
+        return _appSettings.Video.FileNameParts;
     }
 
     /// <summary>
     /// 设置文件命名格式
     /// </summary>
-    /// <param name="historyPaths"></param>
+    /// <param name="fileNameParts"></param>
     /// <returns></returns>
     public bool SetFileNameParts(List<FileNamePart> fileNameParts)
     {
-        appSettings.Video.FileNameParts = fileNameParts;
+        _appSettings.Video.FileNameParts = fileNameParts;
         return SetSettings();
     }
 
@@ -372,16 +372,16 @@ public partial class SettingsManager
     /// <returns></returns>
     public string GetFileNamePartTimeFormat()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.FileNamePartTimeFormat == null ||
-            appSettings.Video.FileNamePartTimeFormat == string.Empty)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.FileNamePartTimeFormat == null ||
+            _appSettings.Video.FileNamePartTimeFormat == string.Empty)
         {
             // 第一次获取，先设置默认值
-            SetFileNamePartTimeFormat(fileNamePartTimeFormat);
-            return fileNamePartTimeFormat;
+            SetFileNamePartTimeFormat(FileNamePartTimeFormat);
+            return FileNamePartTimeFormat;
         }
 
-        return appSettings.Video.FileNamePartTimeFormat;
+        return _appSettings.Video.FileNamePartTimeFormat;
     }
 
     /// <summary>
@@ -391,7 +391,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetFileNamePartTimeFormat(string fileNamePartTimeFormat)
     {
-        appSettings.Video.FileNamePartTimeFormat = fileNamePartTimeFormat;
+        _appSettings.Video.FileNamePartTimeFormat = fileNamePartTimeFormat;
         return SetSettings();
     }
 
@@ -401,15 +401,15 @@ public partial class SettingsManager
     /// <returns></returns>
     public OrderFormat GetOrderFormat()
     {
-        appSettings = GetSettings();
-        if (appSettings.Video.OrderFormat == OrderFormat.NOT_SET)
+        _appSettings = GetSettings();
+        if (_appSettings.Video.OrderFormat == OrderFormat.NotSet)
         {
             // 第一次获取，先设置默认值
-            SetOrderFormat(orderFormat);
-            return orderFormat;
+            SetOrderFormat(OrderFormat);
+            return OrderFormat;
         }
 
-        return appSettings.Video.OrderFormat;
+        return _appSettings.Video.OrderFormat;
     }
 
     /// <summary>
@@ -419,7 +419,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetOrderFormat(OrderFormat orderFormat)
     {
-        appSettings.Video.OrderFormat = orderFormat;
+        _appSettings.Video.OrderFormat = orderFormat;
         return SetSettings();
     }
 }

@@ -39,6 +39,7 @@ public static class ListHelper
     /// <param name="list"></param>
     /// <param name="item"></param>
     /// <param name="index"></param>
+    /// <param name="currentSelection"></param>
     public static void InsertUnique<T>(Collection<T> list, T item, int index, ref T currentSelection)
     {
         if (!list.Contains(item))

@@ -140,7 +140,7 @@ public static class ParseEntrance
     /// <returns></returns>
     public static bool IsBangumiSeasonUrl(string input)
     {
-        string id = GetBangumiId(input);
+        var id = GetBangumiId(input);
         return IsBangumiSeasonId(id);
     }
 
@@ -155,14 +155,13 @@ public static class ParseEntrance
         {
             return Number.GetInt(input.Remove(0, 2));
         }
-        else if (IsBangumiSeasonUrl(input))
+
+        if (IsBangumiSeasonUrl(input))
         {
             return Number.GetInt(GetBangumiId(input).Remove(0, 2));
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
     /// <summary>
@@ -182,7 +181,7 @@ public static class ParseEntrance
     /// <returns></returns>
     public static bool IsBangumiEpisodeUrl(string input)
     {
-        string id = GetBangumiId(input);
+        var id = GetBangumiId(input);
         return IsBangumiEpisodeId(id);
     }
 
@@ -197,14 +196,13 @@ public static class ParseEntrance
         {
             return Number.GetInt(input.Remove(0, 2));
         }
-        else if (IsBangumiEpisodeUrl(input))
+
+        if (IsBangumiEpisodeUrl(input))
         {
             return Number.GetInt(GetBangumiId(input).Remove(0, 2));
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
     /// <summary>
@@ -224,7 +222,7 @@ public static class ParseEntrance
     /// <returns></returns>
     public static bool IsBangumiMediaUrl(string input)
     {
-        string id = GetBangumiId(input);
+        var id = GetBangumiId(input);
         return IsBangumiMediaId(id);
     }
 
@@ -239,14 +237,13 @@ public static class ParseEntrance
         {
             return Number.GetInt(input.Remove(0, 2));
         }
-        else if (IsBangumiMediaUrl(input))
+
+        if (IsBangumiMediaUrl(input))
         {
             return Number.GetInt(GetBangumiId(input).Remove(0, 2));
         }
-        else
-        {
-            return -1;
-        }
+
+        return -1;
     }
 
     #endregion
@@ -397,14 +394,13 @@ public static class ParseEntrance
         {
             return Regex.IsMatch(input.Remove(0, 4), @"^\d+$");
         }
-        else if (input.ToLower().StartsWith("uid"))
+
+        if (input.ToLower().StartsWith("uid"))
         {
             return Regex.IsMatch(input.Remove(0, 3), @"^\d+$");
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
 
     /// <summary>
@@ -440,11 +436,13 @@ public static class ParseEntrance
         {
             return Number.GetInt(input.Remove(0, 4));
         }
-        else if (input.ToLower().StartsWith("uid"))
+
+        if (input.ToLower().StartsWith("uid"))
         {
             return Number.GetInt(input.Remove(0, 3));
         }
-        else if (IsUserUrl(input))
+
+        if (IsUserUrl(input))
         {
             var url = EnableHttps(input);
             url = DeleteUrlParam(url);
@@ -453,15 +451,11 @@ public static class ParseEntrance
             {
                 return long.Parse(match.Value);
             }
-            else
-            {
-                return -1;
-            }
-        }
-        else
-        {
+
             return -1;
         }
+
+        return -1;
     }
 
     #endregion
@@ -520,12 +514,7 @@ public static class ParseEntrance
     private static string GetBangumiId(string input)
     {
         var id = GetId(input, BangumiUrl);
-        if (id != "")
-        {
-            return id;
-        }
-
-        return GetId(input, BangumiMediaUrl);
+        return id != "" ? id : GetId(input, BangumiMediaUrl);
     }
 
     /// <summary>
@@ -546,12 +535,7 @@ public static class ParseEntrance
     /// <returns></returns>
     private static bool IsIntId(string input, string prefix)
     {
-        if (input.ToLower().StartsWith(prefix))
-        {
-            return Regex.IsMatch(input.Remove(0, 2), @"^\d+$");
-        }
-
-        return false;
+        return input.ToLower().StartsWith(prefix) && Regex.IsMatch(input.Remove(0, 2), @"^\d+$");
     }
 
     /// <summary>
@@ -582,11 +566,6 @@ public static class ParseEntrance
             url = url.Replace(ShortUrl, VideoUrl);
         }
 
-        if (!url.StartsWith(baseUrl))
-        {
-            return "";
-        }
-
-        return url.Replace(baseUrl, "");
+        return !url.StartsWith(baseUrl) ? "" : url.Replace(baseUrl, "");
     }
 }

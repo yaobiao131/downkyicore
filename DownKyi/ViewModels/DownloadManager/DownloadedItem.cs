@@ -17,7 +17,7 @@ namespace DownKyi.ViewModels.DownloadManager
         {
         }
 
-        public DownloadedItem(IDialogService dialogService) : base(dialogService)
+        public DownloadedItem(IDialogService? dialogService) : base(dialogService)
         {
             // 打开文件夹按钮
             OpenFolder = ButtonIcon.Instance().Folder;
@@ -93,7 +93,7 @@ namespace DownKyi.ViewModels.DownloadManager
         public DelegateCommand OpenFolderCommand => _openFolderCommand ??= new DelegateCommand(ExecuteOpenFolderCommand);
 
 
-        private static IReadOnlyDictionary<string, string[]> FileSuffixMap = new Dictionary<string, string[]>
+        private static readonly IReadOnlyDictionary<string, string[]> FileSuffixMap = new Dictionary<string, string[]>
         {
             { "downloadVideo", new[] { ".mp4", ".flv" } },
             { "downloadAudio", new[] { ".aac", ".mp3" } },
@@ -101,6 +101,7 @@ namespace DownKyi.ViewModels.DownloadManager
             { "downloadDanmaku", new[] { ".ass" } },
             { "downloadSubtitle", new[] { ".srt" } }
         };
+
         /// <summary>
         /// 打开文件夹事件
         /// </summary>
@@ -110,22 +111,21 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 return;
             }
+
             var downLoadContents = DownloadBase.NeedDownloadContent.Where(e => e.Value == true).Select(e => e.Key);
             var fileSuffixes = downLoadContents
-            .Where(content => FileSuffixMap.ContainsKey(content))
-            .SelectMany(content => FileSuffixMap[content])
-            .ToArray();
-            if (fileSuffixes.Length > 0)
+                .Where(content => FileSuffixMap.ContainsKey(content))
+                .SelectMany(content => FileSuffixMap[content])
+                .ToArray();
+            if (fileSuffixes.Length <= 0) return;
+            foreach (var suffix in fileSuffixes)
             {
-                foreach (var suffix in fileSuffixes)
+                var videoPath = $"{DownloadBase.FilePath}{suffix}";
+                var fileInfo = new FileInfo(videoPath);
+                if (File.Exists(fileInfo.FullName) && fileInfo.DirectoryName != null)
                 {
-                    var videoPath = $"{DownloadBase.FilePath}{suffix}";
-                    var fileInfo = new FileInfo(videoPath);
-                    if (File.Exists(fileInfo.FullName) && fileInfo.DirectoryName != null)
-                    {
-                        PlatformHelper.OpenFolder(fileInfo.DirectoryName);
-                        return;
-                    }
+                    PlatformHelper.OpenFolder(fileInfo.DirectoryName);
+                    return;
                 }
             }
             // eventAggregator.GetEvent<MessageEvent>().Publish("没有找到视频文件，可能被删除或移动！");

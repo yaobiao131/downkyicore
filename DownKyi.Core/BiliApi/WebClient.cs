@@ -1,10 +1,11 @@
 ﻿using System.IO.Compression;
 using System.Net;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
-using Newtonsoft.Json;
 
 namespace DownKyi.Core.BiliApi;
 
@@ -12,15 +13,15 @@ internal static class WebClient
 {
     internal class SpiOrigin
     {
-        [JsonProperty("data")] public Spi? Data { get; set; }
-        public int Code { get; set; }
-        public string? Message { get; set; }
+        [JsonPropertyName("data")] public Spi? Data { get; init; }
+        public int Code { get; init; }
+        public string? Message { get; init; }
     }
 
     internal class Spi
     {
-        [JsonProperty("b_3")] public string? Bvuid3 { get; set; }
-        [JsonProperty("b_4")] public string? Bvuid4 { get; set; }
+        [JsonPropertyName("b_3")] public string? Bvuid3 { get; set; }
+        [JsonPropertyName("b_4")] public string? Bvuid4 { get; set; }
     }
 
     private static string? _bvuid3 = string.Empty;
@@ -44,7 +45,7 @@ internal static class WebClient
     {
         const string url = "https://api.bilibili.com/x/frontend/finger/spi";
         var response = RequestWeb(url);
-        var spi = JsonConvert.DeserializeObject<SpiOrigin>(response);
+        var spi = JsonSerializer.Deserialize<SpiOrigin>(response);
         _bvuid3 = spi?.Data?.Bvuid3;
         _bvuid4 = spi?.Data?.Bvuid4;
     }

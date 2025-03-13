@@ -45,7 +45,7 @@ public class Producer
 
     public void ApplyFilter()
     {
-        Dictionary<string, int> filterDetail = new Dictionary<string, int>()
+        var filterDetail = new Dictionary<string, int>()
         {
             { "top_filter", 0 },
             { "bottom_filter", 0 },
@@ -53,10 +53,10 @@ public class Producer
             //{ "custom_filter",0}
         };
 
-        List<Danmaku> danmakus = Danmakus;
+        var danmakus = Danmakus;
         //string[] orders = { "top_filter", "bottom_filter", "scroll_filter", "custom_filter" };
         string[] orders = { "top_filter", "bottom_filter", "scroll_filter" };
-        foreach (string name in orders)
+        foreach (var name in orders)
         {
             Filter filter;
             try
@@ -69,7 +69,7 @@ public class Producer
                 continue;
             }
 
-            int count = danmakus.Count;
+            var count = danmakus.Count;
             danmakus = filter.DoFilter(danmakus);
             filterDetail[name] = count - danmakus.Count;
         }
@@ -80,16 +80,12 @@ public class Producer
 
     public Dictionary<string, int> Report()
     {
-        int blockedCount = 0;
-        foreach (int count in FilterDetail.Values)
-        {
-            blockedCount += count;
-        }
+        var blockedCount = FilterDetail.Values.Sum();
 
-        int passedCount = KeepedDanmakus.Count;
-        int totalCount = blockedCount + passedCount;
+        var passedCount = KeepedDanmakus.Count;
+        var totalCount = blockedCount + passedCount;
 
-        Dictionary<string, int> ret = new Dictionary<string, int>
+        var ret = new Dictionary<string, int>
         {
             { "blocked", blockedCount },
             { "passed", passedCount },

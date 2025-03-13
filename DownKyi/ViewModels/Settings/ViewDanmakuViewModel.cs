@@ -15,96 +15,96 @@ public class ViewDanmakuViewModel : ViewModelBase
 {
     public const string Tag = "PageSettingsDanmaku";
 
-    private bool isOnNavigatedTo;
+    private bool _isOnNavigatedTo;
 
     #region 页面属性申明
 
-    private bool topFilter;
+    private bool _topFilter;
 
     public bool TopFilter
     {
-        get { return topFilter; }
-        set { SetProperty(ref topFilter, value); }
+        get => _topFilter;
+        set => SetProperty(ref _topFilter, value);
     }
 
-    private bool bottomFilter;
+    private bool _bottomFilter;
 
     public bool BottomFilter
     {
-        get { return bottomFilter; }
-        set { SetProperty(ref bottomFilter, value); }
+        get => _bottomFilter;
+        set => SetProperty(ref _bottomFilter, value);
     }
 
-    private bool scrollFilter;
+    private bool _scrollFilter;
 
     public bool ScrollFilter
     {
-        get { return scrollFilter; }
-        set { SetProperty(ref scrollFilter, value); }
+        get => _scrollFilter;
+        set => SetProperty(ref _scrollFilter, value);
     }
 
-    private int screenWidth;
+    private int _screenWidth;
 
     public int ScreenWidth
     {
-        get { return screenWidth; }
-        set { SetProperty(ref screenWidth, value); }
+        get => _screenWidth;
+        set => SetProperty(ref _screenWidth, value);
     }
 
-    private int screenHeight;
+    private int _screenHeight;
 
     public int ScreenHeight
     {
-        get { return screenHeight; }
-        set { SetProperty(ref screenHeight, value); }
+        get => _screenHeight;
+        set => SetProperty(ref _screenHeight, value);
     }
 
-    private List<string> fonts;
+    private List<string> _fonts;
 
     public List<string> Fonts
     {
-        get { return fonts; }
-        set { SetProperty(ref fonts, value); }
+        get => _fonts;
+        set => SetProperty(ref _fonts, value);
     }
 
-    private string selectedFont;
+    private string _selectedFont;
 
     public string SelectedFont
     {
-        get { return selectedFont; }
-        set { SetProperty(ref selectedFont, value); }
+        get => _selectedFont;
+        set => SetProperty(ref _selectedFont, value);
     }
 
-    private int fontSize;
+    private int _fontSize;
 
     public int FontSize
     {
-        get { return fontSize; }
-        set { SetProperty(ref fontSize, value); }
+        get => _fontSize;
+        set => SetProperty(ref _fontSize, value);
     }
 
-    private int lineCount;
+    private int _lineCount;
 
     public int LineCount
     {
-        get { return lineCount; }
-        set { SetProperty(ref lineCount, value); }
+        get => _lineCount;
+        set => SetProperty(ref _lineCount, value);
     }
 
-    private bool sync;
+    private bool _sync;
 
     public bool Sync
     {
-        get { return sync; }
-        set { SetProperty(ref sync, value); }
+        get => _sync;
+        set => SetProperty(ref _sync, value);
     }
 
-    private bool async;
+    private bool _async;
 
     public bool Async
     {
-        get { return async; }
-        set { SetProperty(ref async, value); }
+        get => _async;
+        set => SetProperty(ref _async, value);
     }
 
     #endregion
@@ -115,7 +115,7 @@ public class ViewDanmakuViewModel : ViewModelBase
 
         // 弹幕字体
         Fonts = new List<string>();
-        var fontCollection = FontManager.Current.SystemFonts.Select(x=>x.Name);
+        var fontCollection = FontManager.Current.SystemFonts.Select(x => x.Name);
         foreach (var font in fontCollection)
         {
             Fonts.Add(font);
@@ -132,19 +132,19 @@ public class ViewDanmakuViewModel : ViewModelBase
     {
         base.OnNavigatedTo(navigationContext);
 
-        isOnNavigatedTo = true;
+        _isOnNavigatedTo = true;
 
         // 屏蔽顶部弹幕
-        AllowStatus danmakuTopFilter = SettingsManager.GetInstance().GetDanmakuTopFilter();
-        TopFilter = danmakuTopFilter == AllowStatus.YES;
+        var danmakuTopFilter = SettingsManager.GetInstance().GetDanmakuTopFilter();
+        TopFilter = danmakuTopFilter == AllowStatus.Yes;
 
         // 屏蔽底部弹幕
-        AllowStatus danmakuBottomFilter = SettingsManager.GetInstance().GetDanmakuBottomFilter();
-        BottomFilter = danmakuBottomFilter == AllowStatus.YES;
+        var danmakuBottomFilter = SettingsManager.GetInstance().GetDanmakuBottomFilter();
+        BottomFilter = danmakuBottomFilter == AllowStatus.Yes;
 
         // 屏蔽滚动弹幕
-        AllowStatus danmakuScrollFilter = SettingsManager.GetInstance().GetDanmakuScrollFilter();
-        ScrollFilter = danmakuScrollFilter == AllowStatus.YES;
+        var danmakuScrollFilter = SettingsManager.GetInstance().GetDanmakuScrollFilter();
+        ScrollFilter = danmakuScrollFilter == AllowStatus.Yes;
 
         // 分辨率-宽
         ScreenWidth = SettingsManager.GetInstance().GetDanmakuScreenWidth();
@@ -153,7 +153,7 @@ public class ViewDanmakuViewModel : ViewModelBase
         ScreenHeight = SettingsManager.GetInstance().GetDanmakuScreenHeight();
 
         // 弹幕字体
-        string danmakuFont = SettingsManager.GetInstance().GetDanmakuFontName();
+        var danmakuFont = SettingsManager.GetInstance().GetDanmakuFontName();
         if (danmakuFont != null && Fonts.Contains(danmakuFont))
         {
             // 只有系统中存在当前设置的字体，才能显示
@@ -167,73 +167,66 @@ public class ViewDanmakuViewModel : ViewModelBase
         LineCount = SettingsManager.GetInstance().GetDanmakuLineCount();
 
         // 弹幕布局算法
-        DanmakuLayoutAlgorithm layoutAlgorithm = SettingsManager.GetInstance().GetDanmakuLayoutAlgorithm();
+        var layoutAlgorithm = SettingsManager.GetInstance().GetDanmakuLayoutAlgorithm();
         SetLayoutAlgorithm(layoutAlgorithm);
 
-        isOnNavigatedTo = false;
+        _isOnNavigatedTo = false;
     }
 
     #region 命令申明
 
     // 屏蔽顶部弹幕事件
-    private DelegateCommand topFilterCommand;
+    private DelegateCommand _topFilterCommand;
 
-    public DelegateCommand TopFilterCommand =>
-        topFilterCommand ?? (topFilterCommand = new DelegateCommand(ExecuteTopFilterCommand));
+    public DelegateCommand TopFilterCommand => _topFilterCommand ??= new DelegateCommand(ExecuteTopFilterCommand);
 
     /// <summary>
     /// 屏蔽顶部弹幕事件
     /// </summary>
     private void ExecuteTopFilterCommand()
     {
-        AllowStatus isTopFilter = TopFilter ? AllowStatus.YES : AllowStatus.NO;
+        var isTopFilter = TopFilter ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuTopFilter(isTopFilter);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuTopFilter(isTopFilter);
         PublishTip(isSucceed);
     }
 
     // 屏蔽底部弹幕事件
-    private DelegateCommand bottomFilterCommand;
+    private DelegateCommand _bottomFilterCommand;
 
-    public DelegateCommand BottomFilterCommand => bottomFilterCommand ??
-                                                  (bottomFilterCommand =
-                                                      new DelegateCommand(ExecuteBottomFilterCommand));
+    public DelegateCommand BottomFilterCommand => _bottomFilterCommand ??= new DelegateCommand(ExecuteBottomFilterCommand);
 
     /// <summary>
     /// 屏蔽底部弹幕事件
     /// </summary>
     private void ExecuteBottomFilterCommand()
     {
-        AllowStatus isBottomFilter = BottomFilter ? AllowStatus.YES : AllowStatus.NO;
+        var isBottomFilter = BottomFilter ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuBottomFilter(isBottomFilter);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuBottomFilter(isBottomFilter);
         PublishTip(isSucceed);
     }
 
     // 屏蔽滚动弹幕事件
-    private DelegateCommand scrollFilterCommand;
+    private DelegateCommand _scrollFilterCommand;
 
-    public DelegateCommand ScrollFilterCommand => scrollFilterCommand ??
-                                                  (scrollFilterCommand =
-                                                      new DelegateCommand(ExecuteScrollFilterCommand));
+    public DelegateCommand ScrollFilterCommand => _scrollFilterCommand ??= new DelegateCommand(ExecuteScrollFilterCommand);
 
     /// <summary>
     /// 屏蔽滚动弹幕事件
     /// </summary>
     private void ExecuteScrollFilterCommand()
     {
-        AllowStatus isScrollFilter = ScrollFilter ? AllowStatus.YES : AllowStatus.NO;
+        var isScrollFilter = ScrollFilter ? AllowStatus.Yes : AllowStatus.No;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuScrollFilter(isScrollFilter);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuScrollFilter(isScrollFilter);
         PublishTip(isSucceed);
     }
 
     // 设置分辨率-宽事件
-    private DelegateCommand<string> screenWidthCommand;
+    private DelegateCommand<string> _screenWidthCommand;
 
-    public DelegateCommand<string> ScreenWidthCommand => screenWidthCommand ??
-                                                         (screenWidthCommand =
-                                                             new DelegateCommand<string>(ExecuteScreenWidthCommand));
+    public DelegateCommand<string> ScreenWidthCommand => _screenWidthCommand ??= new DelegateCommand<string>(ExecuteScreenWidthCommand);
 
     /// <summary>
     /// 设置分辨率-宽事件
@@ -241,19 +234,17 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteScreenWidthCommand(string parameter)
     {
-        int width = (int)Number.GetInt(parameter);
+        var width = (int)Number.GetInt(parameter);
         ScreenWidth = width;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuScreenWidth(ScreenWidth);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuScreenWidth(ScreenWidth);
         PublishTip(isSucceed);
     }
 
     // 设置分辨率-高事件
-    private DelegateCommand<string> screenHeightCommand;
+    private DelegateCommand<string> _screenHeightCommand;
 
-    public DelegateCommand<string> ScreenHeightCommand => screenHeightCommand ??
-                                                          (screenHeightCommand =
-                                                              new DelegateCommand<string>(ExecuteScreenHeightCommand));
+    public DelegateCommand<string> ScreenHeightCommand => _screenHeightCommand ??= new DelegateCommand<string>(ExecuteScreenHeightCommand);
 
     /// <summary>
     /// 设置分辨率-高事件
@@ -261,19 +252,17 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteScreenHeightCommand(string parameter)
     {
-        int height = (int)Number.GetInt(parameter);
+        var height = (int)Number.GetInt(parameter);
         ScreenHeight = height;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuScreenHeight(ScreenHeight);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuScreenHeight(ScreenHeight);
         PublishTip(isSucceed);
     }
 
     // 弹幕字体选择事件
-    private DelegateCommand<string> fontSelectCommand;
+    private DelegateCommand<string> _fontSelectCommand;
 
-    public DelegateCommand<string> FontSelectCommand => fontSelectCommand ??
-                                                        (fontSelectCommand =
-                                                            new DelegateCommand<string>(ExecuteFontSelectCommand));
+    public DelegateCommand<string> FontSelectCommand => _fontSelectCommand ??= new DelegateCommand<string>(ExecuteFontSelectCommand);
 
     /// <summary>
     /// 弹幕字体选择事件
@@ -281,15 +270,14 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteFontSelectCommand(string parameter)
     {
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuFontName(parameter);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuFontName(parameter);
         PublishTip(isSucceed);
     }
 
     // 弹幕字体大小事件
-    private DelegateCommand<string> fontSizeCommand;
+    private DelegateCommand<string> _fontSizeCommand;
 
-    public DelegateCommand<string> FontSizeCommand =>
-        fontSizeCommand ?? (fontSizeCommand = new DelegateCommand<string>(ExecuteFontSizeCommand));
+    public DelegateCommand<string> FontSizeCommand => _fontSizeCommand ??= new DelegateCommand<string>(ExecuteFontSizeCommand);
 
     /// <summary>
     /// 弹幕字体大小事件
@@ -297,18 +285,17 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteFontSizeCommand(string parameter)
     {
-        int fontSize = (int)Number.GetInt(parameter);
+        var fontSize = (int)Number.GetInt(parameter);
         FontSize = fontSize;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuFontSize(FontSize);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuFontSize(FontSize);
         PublishTip(isSucceed);
     }
 
     // 弹幕限制行数事件
-    private DelegateCommand<string> lineCountCommand;
+    private DelegateCommand<string> _lineCountCommand;
 
-    public DelegateCommand<string> LineCountCommand =>
-        lineCountCommand ?? (lineCountCommand = new DelegateCommand<string>(ExecuteLineCountCommand));
+    public DelegateCommand<string> LineCountCommand => _lineCountCommand ??= new DelegateCommand<string>(ExecuteLineCountCommand);
 
     /// <summary>
     /// 弹幕限制行数事件
@@ -316,20 +303,17 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLineCountCommand(string parameter)
     {
-        int lineCount = (int)Number.GetInt(parameter);
+        var lineCount = (int)Number.GetInt(parameter);
         LineCount = lineCount;
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuLineCount(LineCount);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuLineCount(LineCount);
         PublishTip(isSucceed);
     }
 
     // 弹幕布局算法事件
-    private DelegateCommand<string> layoutAlgorithmCommand;
+    private DelegateCommand<string> _layoutAlgorithmCommand;
 
-    public DelegateCommand<string> LayoutAlgorithmCommand => layoutAlgorithmCommand ??
-                                                             (layoutAlgorithmCommand =
-                                                                 new DelegateCommand<string>(
-                                                                     ExecuteLayoutAlgorithmCommand));
+    public DelegateCommand<string> LayoutAlgorithmCommand => _layoutAlgorithmCommand ??= new DelegateCommand<string>(ExecuteLayoutAlgorithmCommand);
 
     /// <summary>
     /// 弹幕布局算法事件
@@ -337,21 +321,14 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLayoutAlgorithmCommand(string parameter)
     {
-        DanmakuLayoutAlgorithm layoutAlgorithm;
-        switch (parameter)
+        var layoutAlgorithm = parameter switch
         {
-            case "Sync":
-                layoutAlgorithm = DanmakuLayoutAlgorithm.SYNC;
-                break;
-            case "Async":
-                layoutAlgorithm = DanmakuLayoutAlgorithm.ASYNC;
-                break;
-            default:
-                layoutAlgorithm = DanmakuLayoutAlgorithm.SYNC;
-                break;
-        }
+            "Sync" => DanmakuLayoutAlgorithm.Sync,
+            "Async" => DanmakuLayoutAlgorithm.Async,
+            _ => DanmakuLayoutAlgorithm.Sync
+        };
 
-        bool isSucceed = SettingsManager.GetInstance().SetDanmakuLayoutAlgorithm(layoutAlgorithm);
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuLayoutAlgorithm(layoutAlgorithm);
         PublishTip(isSucceed);
 
         if (isSucceed)
@@ -370,15 +347,15 @@ public class ViewDanmakuViewModel : ViewModelBase
     {
         switch (layoutAlgorithm)
         {
-            case DanmakuLayoutAlgorithm.SYNC:
+            case DanmakuLayoutAlgorithm.Sync:
                 Sync = true;
                 Async = false;
                 break;
-            case DanmakuLayoutAlgorithm.ASYNC:
+            case DanmakuLayoutAlgorithm.Async:
                 Sync = false;
                 Async = true;
                 break;
-            case DanmakuLayoutAlgorithm.NONE:
+            case DanmakuLayoutAlgorithm.None:
                 Sync = false;
                 Async = false;
                 break;
@@ -393,18 +370,11 @@ public class ViewDanmakuViewModel : ViewModelBase
     /// <param name="isSucceed"></param>
     private void PublishTip(bool isSucceed)
     {
-        if (isOnNavigatedTo)
+        if (_isOnNavigatedTo)
         {
             return;
         }
 
-        if (isSucceed)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(isSucceed ? DictionaryResource.GetString("TipSettingUpdated") : DictionaryResource.GetString("TipSettingFailed"));
     }
 }

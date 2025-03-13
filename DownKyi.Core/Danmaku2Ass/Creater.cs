@@ -22,14 +22,14 @@ public class Creater
     {
         var scroll = new Collision(Config.LineCount);
         var stayed = new Collision(Config.LineCount);
-        Dictionary<string, Collision> collisions = new Dictionary<string, Collision>
+        var collisions = new Dictionary<string, Collision>
         {
             { "scroll", scroll },
             { "top", stayed },
             { "bottom", stayed }
         };
 
-        List<Subtitle> subtitles = new List<Subtitle>();
+        var subtitles = new List<Subtitle>();
         foreach (var danmaku in Danmakus)
         {
             // 丢弃不支持的
@@ -41,9 +41,7 @@ public class Creater
             // 创建显示方式对象
             var display = Display.Factory(Config, danmaku);
             var collision = collisions[danmaku.Style];
-            var detect = collision.Detect(display);
-            int lineIndex = detect.Item1;
-            float waitingOffset = detect.Item2;
+            var (lineIndex, waitingOffset) = collision.Detect(display);
 
             // 超过容忍的偏移量，丢弃掉此条弹幕
             if (waitingOffset > Config.DropOffset)
@@ -56,8 +54,8 @@ public class Creater
             collision.Update(display.Leave, lineIndex, waitingOffset);
 
             // 再加上自定义偏移
-            float offset = waitingOffset + Config.CustomOffset;
-            Subtitle subtitle = new Subtitle(danmaku, display, offset);
+            var offset = waitingOffset + Config.CustomOffset;
+            var subtitle = new Subtitle(danmaku, display, offset);
 
             subtitles.Add(subtitle);
         }
@@ -67,18 +65,14 @@ public class Creater
 
     protected string SetText()
     {
-        string header = Config.HeaderTemplate
+        var header = Config.HeaderTemplate
             .Replace("{title}", Config.Title)
             .Replace("{width}", Config.ScreenWidth.ToString())
             .Replace("{height}", Config.ScreenHeight.ToString())
             .Replace("{fontname}", Config.FontName)
             .Replace("{fontsize}", Config.BaseFontSize.ToString());
 
-        string events = string.Empty;
-        foreach (var subtitle in Subtitles)
-        {
-            events += "\n" + subtitle.Text;
-        }
+        var events = Subtitles.Aggregate(string.Empty, (current, subtitle) => current + "\n" + subtitle.Text);
 
         return header + events;
     }

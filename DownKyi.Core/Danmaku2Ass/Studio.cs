@@ -40,7 +40,7 @@ public class Studio
     /// <returns></returns>
     protected int SetKeepedCount()
     {
-        return Creater.Subtitles.Count();
+        return Creater.Subtitles.Count;
     }
 
     /// <summary>
@@ -74,7 +74,7 @@ public class Studio
 
     public Dictionary<string, int> Report()
     {
-        return new Dictionary<string, int>()
+        return new Dictionary<string, int>
         {
             { "total", Danmakus.Count },
             { "droped", DropedCount },

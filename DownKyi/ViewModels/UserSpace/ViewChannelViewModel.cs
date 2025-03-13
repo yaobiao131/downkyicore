@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.Users.Models;
-using DownKyi.Core.Storage;
-using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
@@ -118,23 +114,10 @@ public class ViewChannelViewModel : ViewModelBase
                 continue;
             }
 
-            Bitmap image = null;
-            if (channel.Cover == null || channel.Cover == "")
-            {
-                image = ImageHelper.LoadFromResource(new Uri($"avares://DownKyi/Resources/video-placeholder.png"));
-            }
-            else
-            {
-                StorageCover storageCover = new StorageCover();
-                string cover = null;
-                await Task.Run(() => { cover = storageCover.GetCover(channel.Cover); });
-                image = storageCover.GetCoverThumbnail(cover, 190, 190);
-            }
-
             // 当地时区
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            DateTime dateCTime = startTime.AddSeconds(channel.Mtime);
-            string mtime = dateCTime.ToString("yyyy-MM-dd");
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);;
+            var dateCTime = startTime.AddSeconds(channel.Mtime);
+            var mtime = dateCTime.ToString("yyyy-MM-dd");
 
             Channels.Add(new Channel
             {

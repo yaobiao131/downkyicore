@@ -132,14 +132,14 @@ public class DownloadDb
     /// </summary>
     /// <param name="uuid"></param>
     /// <returns></returns>
-    public object QueryById(string uuid)
+    public object? QueryById(string uuid)
     {
-        string sql = $"select * from {tableName} where id glob '{uuid}'";
-        Dictionary<string, object> query = Query(sql);
+        var sql = $"select * from {tableName} where id glob '{uuid}'";
+        var query = Query(sql);
 
         if (query.ContainsKey(uuid))
         {
-            query.TryGetValue(uuid, out object obj);
+            query.TryGetValue(uuid, out var obj);
             return obj;
         }
         else
@@ -155,7 +155,7 @@ public class DownloadDb
     /// <returns></returns>
     private Dictionary<string, object> Query(string sql)
     {
-        Dictionary<string, object> objects = new Dictionary<string, object>();
+        var objects = new Dictionary<string, object>();
 
         dbHelper.ExecuteQuery(sql, reader =>
         {
@@ -164,13 +164,13 @@ public class DownloadDb
                 try
                 {
                     // 读取字节数组
-                    byte[] array = (byte[])reader["data"];
+                    var array = (byte[])reader["data"];
                     // 定义一个流
-                    MemoryStream stream = new MemoryStream(array);
+                    var stream = new MemoryStream(array);
                     //定义一个格式化器
-                    BinaryFormatter formatter = new BinaryFormatter();
+                    var formatter = new BinaryFormatter();
                     // 反序列化
-                    object obj = formatter.Deserialize(stream);
+                    var obj = formatter.Deserialize(stream);
 
                     objects.Add((string)reader["id"], obj);
                 }
@@ -190,7 +190,7 @@ public class DownloadDb
     /// </summary>
     protected void CreateTable()
     {
-        string sql = $"create table if not exists {tableName} (id varchar(255) unique, data blob)";
+        var sql = $"create table if not exists {tableName} (id varchar(255) unique, data blob)";
         dbHelper.ExecuteNonQuery(sql);
     }
 }

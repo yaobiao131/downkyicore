@@ -20,11 +20,11 @@
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Command="{Binding UseSSLCommand}"
+                Command="{Binding UseSslCommand}"
                 Content="{DynamicResource UseSSL}"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
-                IsChecked="{Binding UseSSL, Mode=TwoWay}" />
+                IsChecked="{Binding UseSsl, Mode=TwoWay}" />
 
             <TextBlock
                 Margin="0,20,0,0"
@@ -67,7 +67,7 @@
                         Content="{DynamicResource Aria2cDownloader}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding Aria2c}" />
+                        IsChecked="{Binding Aria2C}" />
                     <RadioButton
                         Margin="20,0,0,0"
                         Command="{Binding SelectDownloaderCommand}"
@@ -75,7 +75,7 @@
                         Content="{DynamicResource CustomAria2cDownloader}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding CustomAria2c}" />
+                        IsChecked="{Binding CustomAria2C}" />
                 </StackPanel>
             </StackPanel>
             <TextBlock
@@ -138,47 +138,58 @@
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
                     IsChecked="{Binding IsHttpProxy, Mode=TwoWay}" />
-            </StackPanel>
-
-            <StackPanel x:Name="NameAria" IsVisible="{Binding Aria2c}">
-                <!--<StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding Aria2c}" Value="True">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Aria2c}" Value="False">
-                                <Setter Property="Visibility" Value="Collapsed" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>-->
-
-                <!--<StackPanel
+                
+                <StackPanel
+                    Name="NameHttpProxyPanel"
+                    IsVisible="{Binding IsHttpProxy}"
                     Margin="0,20,0,0"
                     Orientation="Horizontal"
                     ToolTip.Tip="{DynamicResource PressEnterToApplySettingTip}">
-                    <TextBlock
-                        Width="100"
-                        VerticalAlignment="Center"
-                        FontSize="12"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{DynamicResource AriaServerHost}" />
-                    <TextBox
-                        Name="NameAriaLocalHost"
-                        Width="100"
-                        VerticalContentAlignment="Center"
-                        IsReadOnly="True"
-                        Text="{Binding AriaHost}">
-                        <i:Interaction.Behaviors>
-                            <iac:KeyUpBehavior Key="Enter">
-                                <ia:InvokeCommandAction Command="{Binding AriaHostCommand}"
-                                                        CommandParameter="{Binding ElementName=NameAriaLocalHost, Path=Text}" />
-                            </iac:KeyUpBehavior>
-                        </i:Interaction.Behaviors>
-                    </TextBox>
-                </StackPanel>-->
 
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{DynamicResource HttpProxy}" />
+                        <TextBox
+                            Name="NameHttpProxy"
+                            Width="200"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding HttpProxy}">
+                            <i:Interaction.Behaviors>
+                                <iac:ExecuteCommandOnKeyDownBehavior
+                                    Key="Enter"
+                                    Command="{Binding HttpProxyCommand}"
+                                    CommandParameter="{Binding ElementName=NameHttpProxy, Path=Text}">
+                                </iac:ExecuteCommandOnKeyDownBehavior>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                    </StackPanel>
+                    <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontSize="12"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            Text="{DynamicResource HttpProxyPort}" />
+                        <TextBox
+                            Name="NameHttpProxyPort"
+                            Width="100"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding HttpProxyPort}">
+                            <i:Interaction.Behaviors>
+                                <iac:ExecuteCommandOnKeyDownBehavior
+                                    Key="Enter"
+                                    Command="{Binding HttpProxyPortCommand}"
+                                    CommandParameter="{Binding ElementName=NameHttpProxyPort, Path=Text}">
+                                </iac:ExecuteCommandOnKeyDownBehavior>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel x:Name="NameAria" IsVisible="{Binding Aria2C}">
                 <StackPanel
                     Margin="0,20,0,0"
                     Orientation="Horizontal"
@@ -424,7 +435,7 @@
                 </StackPanel>
             </StackPanel>
 
-            <StackPanel x:Name="NameCustomAria" IsVisible="{Binding CustomAria2c}">
+            <StackPanel x:Name="NameCustomAria" IsVisible="{Binding CustomAria2C}">
                 <StackPanel
                     Margin="0,20,0,0"
                     Orientation="Horizontal"

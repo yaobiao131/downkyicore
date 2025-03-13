@@ -10,7 +10,7 @@ public static class Hash
     /// </summary>
     /// <param name="input"></param>
     /// <returns></returns>
-    public static string GetMd5Hash(string? input)
+    public static string? GetMd5Hash(string? input)
     {
         if (input == null)
         {
@@ -45,7 +45,7 @@ public static class Hash
         try
         {
             var file = new FileStream(fileName, FileMode.Open);
-            MD5 md5 = new MD5CryptoServiceProvider();
+            var md5 = MD5.Create();
             var retVal = md5.ComputeHash(file);
             file.Close();
 

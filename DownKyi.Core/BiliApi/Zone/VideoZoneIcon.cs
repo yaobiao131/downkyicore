@@ -5,7 +5,7 @@
 /// </summary>
 public class VideoZoneIcon
 {
-    private static VideoZoneIcon instance;
+    private static VideoZoneIcon? _instance;
 
     /// <summary>
     /// 获取VideoZoneIcon实例
@@ -13,12 +13,7 @@ public class VideoZoneIcon
     /// <returns></returns>
     public static VideoZoneIcon Instance()
     {
-        if (instance == null)
-        {
-            instance = new VideoZoneIcon();
-        }
-
-        return instance;
+        return _instance ??= new VideoZoneIcon();
     }
 
     /// <summary>
@@ -35,55 +30,32 @@ public class VideoZoneIcon
     /// <returns></returns>
     public string GetZoneImageKey(int tid)
     {
-        switch (tid)
+        return tid switch
         {
             // 课堂
-            case -10:
-                return "Zone.cheeseDrawingImage";
-            case 1:
-                return "Zone.dougaDrawingImage";
-            case 13:
-                return "Zone.animeDrawingImage";
-            case 167:
-                return "Zone.guochuangDrawingImage";
-            case 3:
-                return "Zone.musicDrawingImage";
-            case 129:
-                return "Zone.danceDrawingImage";
-            case 4:
-                return "Zone.gameDrawingImage";
-            case 36:
-                return "Zone.techDrawingImage";
-            case 188:
-                return "Zone.digitalDrawingImage";
-            case 234:
-                return "Zone.sportsDrawingImage";
-            case 223:
-                return "Zone.carDrawingImage";
-            case 160:
-                return "Zone.lifeDrawingImage";
-            case 211:
-                return "Zone.foodDrawingImage";
-            case 217:
-                return "Zone.animalDrawingImage";
-            case 119:
-                return "Zone.kichikuDrawingImage";
-            case 155:
-                return "Zone.fashionDrawingImage";
-            case 202:
-                return "Zone.informationDrawingImage";
-            case 5:
-                return "Zone.entDrawingImage";
-            case 181:
-                return "Zone.cinephileDrawingImage";
-            case 177:
-                return "Zone.documentaryDrawingImage";
-            case 23:
-                return "Zone.movieDrawingImage";
-            case 11:
-                return "Zone.teleplayDrawingImage";
-            default:
-                return "videoUpDrawingImage";
-        }
+            -10 => "Zone.cheeseDrawingImage",
+            1 => "Zone.dougaDrawingImage",
+            3 => "Zone.musicDrawingImage",
+            4 => "Zone.gameDrawingImage",
+            5 => "Zone.entDrawingImage",
+            11 => "Zone.teleplayDrawingImage",
+            13 => "Zone.animeDrawingImage",
+            23 => "Zone.movieDrawingImage",
+            36 => "Zone.techDrawingImage",
+            119 => "Zone.kichikuDrawingImage",
+            129 => "Zone.danceDrawingImage",
+            155 => "Zone.fashionDrawingImage",
+            160 => "Zone.lifeDrawingImage",
+            167 => "Zone.guochuangDrawingImage",
+            177 => "Zone.documentaryDrawingImage",
+            181 => "Zone.cinephileDrawingImage",
+            188 => "Zone.digitalDrawingImage",
+            202 => "Zone.informationDrawingImage",
+            211 => "Zone.foodDrawingImage",
+            217 => "Zone.animalDrawingImage",
+            223 => "Zone.carDrawingImage",
+            234 => "Zone.sportsDrawingImage",
+            _ => "videoUpDrawingImage"
+        };
     }
 }

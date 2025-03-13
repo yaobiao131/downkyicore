@@ -50,17 +50,17 @@ internal static class Utils
             return "0:00:00.00";
         }
 
-        int i = (int)Math.Floor(seconds / 1.0);
-        int dec = (int)(Math.Round(seconds % 1.0f, 2) * 100);
+        var i = (int)Math.Floor(seconds / 1.0);
+        var dec = (int)(Math.Round(seconds % 1.0f, 2) * 100);
         if (dec >= 100)
         {
             dec = 99;
         }
 
-        int min = (int)Math.Floor(i / 60.0);
-        int second = (int)(i % 60.0f);
+        var min = (int)Math.Floor(i / 60.0);
+        var second = (int)(i % 60.0f);
 
-        int hour = (int)Math.Floor(min / 60.0);
+        var hour = (int)Math.Floor(min / 60.0);
         min = (int)Math.Floor(min % 60.0f);
 
         return $"{hour:D}:{min:D2}:{second:D2}.{dec:D2}";
@@ -73,15 +73,9 @@ internal static class Utils
     /// <returns></returns>
     public static float Hms2second(string hms)
     {
-        string[] numbers = hms.Split(':');
-        float seconds = 0;
+        var numbers = hms.Split(':');
 
-        for (int i = 0; i < numbers.Length; i++)
-        {
-            seconds += (float)(float.Parse(numbers[numbers.Length - i - 1]) * Math.Pow(60, i));
-        }
-
-        return seconds;
+        return numbers.Select((t, i) => (float)(float.Parse(numbers[numbers.Length - i - 1]) * Math.Pow(60, i))).Sum();
     }
 
     /// <summary>
@@ -92,14 +86,9 @@ internal static class Utils
     /// <returns></returns>
     public static float Xhms2second(string xhms)
     {
-        string[] args = xhms.Replace("+", " +").Replace("-", " -").Split(' ');
-        float result = 0;
-        foreach (string hms in args)
-        {
-            result += Hms2second(hms);
-        }
+        var args = xhms.Replace("+", " +").Replace("-", " -").Split(' ');
 
-        return result;
+        return args.Sum(Hms2second);
     }
 
     /// <summary>
@@ -110,7 +99,6 @@ internal static class Utils
     public static string Int2rgb(int integer)
     {
         return integer.ToString("X").PadLeft(6, '0');
-        ;
     }
 
     /// <summary>
@@ -120,8 +108,8 @@ internal static class Utils
     /// <returns></returns>
     public static string Int2bgr(int integer)
     {
-        string rgb = Int2rgb(integer);
-        string bgr = rgb.Substring(4, 2) + rgb.Substring(2, 2) + rgb.Substring(0, 2);
+        var rgb = Int2rgb(integer);
+        var bgr = rgb.Substring(4, 2) + rgb.Substring(2, 2) + rgb.Substring(0, 2);
         return bgr;
     }
 
@@ -132,7 +120,7 @@ internal static class Utils
     /// <returns></returns>
     public static float[] Int2hls(int integer)
     {
-        string rgb = Int2rgb(integer);
+        var rgb = Int2rgb(integer);
         int[] rgb_decimals = { 0, 0, 0 };
         rgb_decimals[0] = int.Parse(rgb.Substring(0, 2), NumberStyles.HexNumber);
         rgb_decimals[1] = int.Parse(rgb.Substring(2, 2), NumberStyles.HexNumber);
@@ -142,7 +130,7 @@ internal static class Utils
         rgb_coordinates[0] = (int)Math.Floor(rgb_decimals[0] / 255.0);
         rgb_coordinates[1] = (int)Math.Floor(rgb_decimals[1] / 255.0);
         rgb_coordinates[2] = (int)Math.Floor(rgb_decimals[2] / 255.0);
-        float[] hls_corrdinates = Rgb2hls(rgb_coordinates);
+        var hls_corrdinates = Rgb2hls(rgb_coordinates);
 
         float[] hls = { 0, 0, 0 };
         hls[0] = hls_corrdinates[0] * 360;
@@ -162,8 +150,8 @@ internal static class Utils
     private static float[] Rgb2hls(int[] rgb)
     {
         float[] hls = { 0, 0, 0 };
-        int maxc = rgb.Max();
-        int minc = rgb.Min();
+        var maxc = rgb.Max();
+        var minc = rgb.Min();
         hls[1] = (minc + maxc) / 2.0f;
         if (minc == maxc)
         {
@@ -195,7 +183,7 @@ internal static class Utils
             hls[0] = 4.0f + gc - rc;
         }
 
-        hls[0] = (hls[0] / 6.0f) % 1.0f;
+        hls[0] = hls[0] / 6.0f % 1.0f;
         return hls;
     }
 
@@ -211,23 +199,20 @@ internal static class Utils
             return true;
         }
 
-        float[] hls = Int2hls(integer);
-        float hue = hls[0];
-        float lightness = hls[1];
+        var hls = Int2hls(integer);
+        var hue = hls[0];
+        var lightness = hls[1];
 
-        // HSL 色轮见
-        // http://zh.wikipedia.org/zh-cn/HSL和HSV色彩空间
-        // 以下的数值都是我的主观判断认为是暗色
-        if ((hue > 30 && hue < 210) && lightness < 33)
+        switch (hue)
         {
-            return true;
+            // HSL 色轮见
+            // http://zh.wikipedia.org/zh-cn/HSL和HSV色彩空间
+            // 以下的数值都是我的主观判断认为是暗色
+            case > 30 and < 210 when lightness < 33:
+            case < 30 or > 210 when lightness < 66:
+                return true;
+            default:
+                return false;
         }
-
-        if ((hue < 30 || hue > 210) && lightness < 66)
-        {
-            return true;
-        }
-
-        return false;
     }
 }

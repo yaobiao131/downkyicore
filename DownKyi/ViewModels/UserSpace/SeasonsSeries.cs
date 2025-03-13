@@ -8,12 +8,12 @@ public class SeasonsSeries : BindableBase
 {
     public long Id { get; set; }
 
-    private Bitmap cover;
+    private string _cover;
 
-    public Bitmap Cover
+    public string Cover
     {
-        get => cover;
-        set => SetProperty(ref cover, value);
+        get => _cover;
+        set => SetProperty(ref _cover, value);
     }
 
     private VectorImage typeImage;

@@ -6,6 +6,7 @@
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewPublicationViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:PublicationMedia">
@@ -26,7 +27,7 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding CoverUrl}" />
                                 </Border.Background>
                                 <Grid Width="190" Height="119">
                                     <Image

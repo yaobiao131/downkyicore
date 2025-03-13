@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.Users;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.Logging;
@@ -40,16 +39,16 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _userName, value);
     }
 
-    private Bitmap _header;
+    private string _header = string.Empty;
 
-    public Bitmap Header
+    public string Header
     {
         get => _header;
         set => SetProperty(ref _header, value);
     }
 
 
-    private VectorImage _textLogo;
+    private VectorImage _textLogo = new();
 
     public VectorImage TextLogo
     {
@@ -57,7 +56,7 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _textLogo, value);
     }
 
-    private string _inputText;
+    private string _inputText = string.Empty;
 
     public string InputText
     {
@@ -65,7 +64,7 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _inputText, value);
     }
 
-    private VectorImage _generalSearch;
+    private VectorImage _generalSearch = new();
 
     public VectorImage GeneralSearch
     {
@@ -73,7 +72,7 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _generalSearch, value);
     }
 
-    private VectorImage _settings;
+    private VectorImage _settings = new();
 
     public VectorImage Settings
     {
@@ -81,7 +80,7 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _settings, value);
     }
 
-    private VectorImage _downloadManager;
+    private VectorImage _downloadManager = new();
 
     public VectorImage DownloadManager
     {
@@ -89,7 +88,7 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _downloadManager, value);
     }
 
-    private VectorImage _toolbox;
+    private VectorImage _toolbox = new();
 
     public VectorImage Toolbox
     {
@@ -101,7 +100,7 @@ public class ViewIndexViewModel : ViewModelBase
     public ViewIndexViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
     {
         _loginPanelVisibility = true;
-        Header = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/default_header.jpg"));
+        Header = "avares://DownKyi/Resources/default_header.jpg";
 
         TextLogo = LogoIcon.Instance().TextLogo;
         TextLogo.Fill = DictionaryResource.GetColor("ColorPrimary");
@@ -132,7 +131,7 @@ public class ViewIndexViewModel : ViewModelBase
     {
         EnterBili();
     }
-    
+
     // 登录事件
     private DelegateCommand? _loginCommand;
     public DelegateCommand LoginCommand => _loginCommand ??= new DelegateCommand(ExecuteLogin);
@@ -142,7 +141,7 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private void ExecuteLogin()
     {
-        if (UserName == null)
+        if (UserName is null or "")
         {
             NavigateToView.NavigationView(EventAggregator, ViewLoginViewModel.Tag, Tag, null);
         }
@@ -279,7 +278,7 @@ public class ViewIndexViewModel : ViewModelBase
             if (!File.Exists(StorageManager.GetLogin()))
             {
                 LoginPanelVisibility = true;
-                Header = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/default_header.jpg"));
+                Header = "avares://DownKyi/Resources/default_header.jpg";
                 UserName = null;
                 return;
             }
@@ -288,20 +287,13 @@ public class ViewIndexViewModel : ViewModelBase
 
             if (userInfo != null)
             {
-                if (userInfo.Face != null)
-                {
-                    Header = new StorageHeader().GetHeaderThumbnail(userInfo.Mid, userInfo.Name, userInfo.Face, 36, 36);
-                }
-                else
-                {
-                    Header = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/default_header.jpg"));
-                }
+                Header = userInfo.Face ?? "avares://DownKyi/Resources/default_header.jpg";
 
                 UserName = userInfo.Name;
             }
             else
             {
-                Header = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/default_header.jpg"));
+                Header = "avares://DownKyi/Resources/default_header.jpg";
                 UserName = null;
             }
         }
@@ -323,32 +315,24 @@ public class ViewIndexViewModel : ViewModelBase
 
         // 根据传入参数不同执行不同任务
         var parameter = navigationContext.Parameters.GetValue<string>("Parameter");
-        if (parameter == null)
+        switch (parameter)
         {
-            // 其他情况只更新设置的用户信息，不更新UI
-            UpdateUserInfo(true);
-            return;
-        }
-
-        // 启动
-        if (parameter == "start")
-        {
-            UpdateUserInfo();
-        }
-        // 从登录页面返回
-        else if (parameter == "login")
-        {
-            UpdateUserInfo();
-        }
-        // 注销
-        else if (parameter == "logout")
-        {
-            UpdateUserInfo();
-        }
-        else
-        {
-            // 其他情况只更新设置的用户信息，不更新UI
-            UpdateUserInfo(true);
+            case null:
+                // 其他情况只更新设置的用户信息，不更新UI
+                UpdateUserInfo(true);
+                return;
+            // 启动
+            case "start":
+            // 从登录页面返回
+            case "login":
+            // 注销
+            case "logout":
+                UpdateUserInfo();
+                break;
+            default:
+                // 其他情况只更新设置的用户信息，不更新UI
+                UpdateUserInfo(true);
+                break;
         }
     }
 }

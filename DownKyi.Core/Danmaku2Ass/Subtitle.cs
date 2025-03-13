@@ -103,47 +103,30 @@ public class Subtitle
             //return "\\3c&HFFFFFF";
             return "\\3c&H000000";
         }
-        else
-        {
-            return "\\3c&H000000";
-        }
+
+        return "\\3c&H000000";
         //return "";
     }
 
     protected string SetFontSizeMarkup()
     {
-        if (Display.IsScaled)
-        {
-            return $"\\fs{Display.FontSize}";
-        }
-
-        return "";
+        return Display.IsScaled ? $"\\fs{Display.FontSize}" : "";
     }
 
     protected string SetStyleMarkup()
     {
-        if (Danmaku.Style == "scroll")
-        {
-            return $"\\move({Position["x1"]}, {Position["y1"]}, {Position["x2"]}, {Position["y2"]})";
-        }
-
-        return $"\\a6\\pos({Position["x1"]}, {Position["y1"]})";
+        return Danmaku.Style == "scroll" ? $"\\move({Position["x1"]}, {Position["y1"]}, {Position["x2"]}, {Position["y2"]})" : $"\\a6\\pos({Position["x1"]}, {Position["y1"]})";
     }
 
     protected string SetLayerMarkup()
     {
-        if (Danmaku.Style != "scroll")
-        {
-            return "-2";
-        }
-
-        return "-1";
+        return Danmaku.Style != "scroll" ? "-2" : "-1";
     }
 
     protected string SetContentMarkup()
     {
-        string markup = StyleMarkup + ColorMarkup + BorderMarkup + FontSizeMarkup;
-        string content = Utils.CorrectTypos(Danmaku.Content);
+        var markup = StyleMarkup + ColorMarkup + BorderMarkup + FontSizeMarkup;
+        var content = Utils.CorrectTypos(Danmaku.Content);
         return $"{{{markup}}}{content}";
     }
 

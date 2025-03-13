@@ -279,9 +279,7 @@ public class ViewFollowingViewModel : ViewModelBase
         ContentNoDataVisibility = false;
         foreach (var item in contents)
         {
-            var storageHeader = new StorageHeader();
-            var header = storageHeader.GetHeaderThumbnail(item.Mid, item.Name, item.Face, 64, 64);
-            PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = header, Name = item.Name, Sign = item.Sign }); });
+            PropertyChangeAsync(() => { Contents.Add(new FriendInfo(EventAggregator) { Mid = item.Mid, Header = item.Face, Name = item.Name, Sign = item.Sign }); });
         }
     }
 
@@ -354,19 +352,12 @@ public class ViewFollowingViewModel : ViewModelBase
 
         var tab = TabHeaders[SelectTabId];
 
-        bool isSucceed;
-        switch (tab.Id)
+        var isSucceed = tab.Id switch
         {
-            case -1:
-                isSucceed = await LoadAllFollowings(current, NumberInPage);
-                break;
-            case -2:
-                isSucceed = await LoadWhispers(current, NumberInPage);
-                break;
-            default:
-                isSucceed = await LoadFollowingGroupContent(tab.Id, current, NumberInPage);
-                break;
-        }
+            -1 => await LoadAllFollowings(current, NumberInPage),
+            -2 => await LoadWhispers(current, NumberInPage),
+            _ => await LoadFollowingGroupContent(tab.Id, current, NumberInPage)
+        };
 
         if (isSucceed)
         {
@@ -424,7 +415,7 @@ public class ViewFollowingViewModel : ViewModelBase
         var isFirst = navigationContext.Parameters.GetValue<bool>("isFirst");
         if (isFirst)
         {
-            async void Init()
+            async Task Init()
             {
                 InitView();
                 // 初始化左侧列表

@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using DownKyi.Core.Storage;
 using static System.DateTime;
+using static System.Threading.Thread;
 
 namespace DownKyi.Core.Logging;
 
@@ -10,29 +11,28 @@ namespace DownKyi.Core.Logging;
 /// </summary>
 public class LogManager
 {
-    private static readonly ConcurrentQueue<Tuple<string, string>> LogQueue =
-        new ConcurrentQueue<Tuple<string, string>>();
+    private static readonly ConcurrentQueue<Tuple<string, string>> LogQueue = new();
 
     /// <summary>
     /// 自定义事件
     /// </summary>
-    public static event Action<LogInfo> Event;
+    public static event Action<LogInfo>? Event;
 
     static LogManager()
     {
         var writeTask = new Task(obj =>
         {
+            var temp = new List<string[]>();
             while (true)
             {
                 Pause.WaitOne(1000, true);
-                List<string[]> temp = new List<string[]>();
                 foreach (var logItem in LogQueue)
                 {
-                    string logPath = logItem.Item1;
-                    string logMergeContent = string.Concat(logItem.Item2, Environment.NewLine,
+                    var logPath = logItem.Item1;
+                    var logMergeContent = string.Concat(logItem.Item2, Environment.NewLine,
                         "----------------------------------------------------------------------------------------------------------------------",
                         Environment.NewLine);
-                    string[] logArr = temp.FirstOrDefault(d => d[0].Equals(logPath));
+                    var logArr = temp.FirstOrDefault(d => d[0].Equals(logPath));
                     if (logArr != null)
                     {
                         logArr[1] = string.Concat(logArr[1], logMergeContent);
@@ -59,7 +59,7 @@ public class LogManager
         writeTask.Start();
     }
 
-    private static AutoResetEvent Pause => new AutoResetEvent(false);
+    private static AutoResetEvent Pause => new(false);
 
     /// <summary>
     /// 日志存放目录，windows默认日志放在当前应用程序运行目录下的Logs文件夹中,macOS、linux存放于applicationData目录下
@@ -72,14 +72,13 @@ public class LogManager
     /// <param name="info"></param>
     public static void Info(string info)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(info).ToUpper()}  {info}"));
-        var log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(info).ToUpper()}  {info}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Info,
             Message = info,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId
+            ThreadId = Environment.CurrentManagedThreadId
         };
         Event?.Invoke(log);
     }
@@ -91,14 +90,13 @@ public class LogManager
     /// <param name="info"></param>
     public static void Info(string source, string info)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(info).ToUpper()}   {source}  {info}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(info).ToUpper()}   {source}  {info}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Info,
             Message = info,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source
         };
         Event?.Invoke(log);
@@ -112,13 +110,13 @@ public class LogManager
     public static void Info(Type source, string info)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(info).ToUpper()}   {source.FullName}  {info}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(info).ToUpper()}   {source.FullName}  {info}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Info,
             Message = info,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName
         };
         Event?.Invoke(log);
@@ -130,14 +128,13 @@ public class LogManager
     /// <param name="debug">异常对象</param>
     public static void Debug(string debug)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(debug).ToUpper()}   {debug}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(debug).ToUpper()}   {debug}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Debug,
             Message = debug,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId
+            ThreadId = Environment.CurrentManagedThreadId
         };
         Event?.Invoke(log);
     }
@@ -149,14 +146,13 @@ public class LogManager
     /// <param name="debug">异常对象</param>
     public static void Debug(string source, string debug)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(debug).ToUpper()}   {source}  {debug}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(debug).ToUpper()}   {source}  {debug}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Debug,
             Message = debug,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source
         };
         Event?.Invoke(log);
@@ -169,14 +165,13 @@ public class LogManager
     /// <param name="debug">异常对象</param>
     public static void Debug(Type source, string debug)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(debug).ToUpper()}   {source.FullName}  {debug}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(debug).ToUpper()}   {source.FullName}  {debug}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Debug,
             Message = debug,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName
         };
         Event?.Invoke(log);
@@ -189,13 +184,13 @@ public class LogManager
     public static void Error(Exception error)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(error).ToUpper()}   {error.Source}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(error).ToUpper()}   {error.Source}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Error,
             Message = error.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = error.Source,
             Exception = error,
             ExceptionType = error.GetType().Name
@@ -211,13 +206,13 @@ public class LogManager
     public static void Error(Type source, Exception error)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(error).ToUpper()}   {source.FullName}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(error).ToUpper()}   {source.FullName}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Error,
             Message = error.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName,
             Exception = error,
             ExceptionType = error.GetType().Name
@@ -232,14 +227,13 @@ public class LogManager
     /// <param name="error">异常信息</param>
     public static void Error(Type source, string error)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(error).ToUpper()}   {source.FullName}  {error}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(error).ToUpper()}   {source.FullName}  {error}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Error,
             Message = error,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName,
             //Exception = error,
             ExceptionType = error.GetType().Name
@@ -255,13 +249,13 @@ public class LogManager
     public static void Error(string source, Exception error)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(error).ToUpper()}   {source}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(error).ToUpper()}   {source}  {error.Message}{Environment.NewLine}{error.StackTrace}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Error,
             Message = error.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source,
             Exception = error,
             ExceptionType = error.GetType().Name
@@ -276,14 +270,13 @@ public class LogManager
     /// <param name="error">异常信息</param>
     public static void Error(string source, string error)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(error).ToUpper()}   {source}  {error}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(error).ToUpper()}   {source}  {error}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Error,
             Message = error,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source,
             //Exception = error,
             ExceptionType = error.GetType().Name
@@ -298,13 +291,13 @@ public class LogManager
     public static void Fatal(Exception fatal)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(fatal).ToUpper()}   {fatal.Source}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(fatal).ToUpper()}   {fatal.Source}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
+        LogInfo log = new LogInfo
         {
             LogLevel = LogLevel.Fatal,
             Message = fatal.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = fatal.Source,
             Exception = fatal,
             ExceptionType = fatal.GetType().Name
@@ -320,13 +313,13 @@ public class LogManager
     public static void Fatal(Type source, Exception fatal)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(fatal).ToUpper()}   {source.FullName}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(fatal).ToUpper()}   {source.FullName}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Fatal,
             Message = fatal.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName,
             Exception = fatal,
             ExceptionType = fatal.GetType().Name
@@ -341,14 +334,13 @@ public class LogManager
     /// <param name="fatal">异常对象</param>
     public static void Fatal(Type source, string fatal)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(fatal).ToUpper()}   {source.FullName}  {fatal}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(fatal).ToUpper()}   {source.FullName}  {fatal}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Fatal,
             Message = fatal,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source.FullName,
             //Exception = fatal,
             ExceptionType = fatal.GetType().Name
@@ -364,13 +356,13 @@ public class LogManager
     public static void Fatal(string source, Exception fatal)
     {
         LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(fatal).ToUpper()}   {source}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
-        LogInfo log = new LogInfo()
+            $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(fatal).ToUpper()}   {source}  {fatal.Message}{Environment.NewLine}{fatal.StackTrace}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Fatal,
             Message = fatal.Message,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source,
             Exception = fatal,
             ExceptionType = fatal.GetType().Name
@@ -385,14 +377,13 @@ public class LogManager
     /// <param name="fatal">异常对象</param>
     public static void Fatal(string source, string fatal)
     {
-        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(),
-            $"{Now}   [{Thread.CurrentThread.ManagedThreadId}]   {nameof(fatal).ToUpper()}   {source}  {fatal}"));
-        LogInfo log = new LogInfo()
+        LogQueue.Enqueue(new Tuple<string, string>(GetLogPath(), $"{Now}   [{Environment.CurrentManagedThreadId}]   {nameof(fatal).ToUpper()}   {source}  {fatal}"));
+        var log = new LogInfo
         {
             LogLevel = LogLevel.Fatal,
             Message = fatal,
             Time = Now,
-            ThreadId = Thread.CurrentThread.ManagedThreadId,
+            ThreadId = Environment.CurrentManagedThreadId,
             Source = source,
             ExceptionType = fatal.GetType().Name
         };
@@ -402,21 +393,18 @@ public class LogManager
     private static string GetLogPath()
     {
         string newFilePath;
-        var logDir = string.IsNullOrEmpty(LogDirectory)
-            ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs")
-            : LogDirectory;
+        var logDir = string.IsNullOrEmpty(LogDirectory) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs") : LogDirectory;
         Directory.CreateDirectory(logDir);
-        string extension = ".log";
-        string fileNameNotExt = Now.ToString("yyyyMMdd");
-        string fileNamePattern = string.Concat(fileNameNotExt, "(*)", extension);
-        List<string> filePaths = Directory.GetFiles(logDir, fileNamePattern, SearchOption.TopDirectoryOnly).ToList();
+        const string extension = ".log";
+        var fileNameNotExt = Now.ToString("yyyyMMdd");
+        var fileNamePattern = string.Concat(fileNameNotExt, "(*)", extension);
+        var filePaths = Directory.GetFiles(logDir, fileNamePattern, SearchOption.TopDirectoryOnly).ToList();
 
         if (filePaths.Count > 0)
         {
-            int fileMaxLen = filePaths.Max(d => d.Length);
-            string lastFilePath =
-                filePaths.Where(d => d.Length == fileMaxLen).OrderByDescending(d => d).FirstOrDefault();
-            if (new FileInfo(lastFilePath).Length > 1 * 1024 * 1024)
+            var fileMaxLen = filePaths.Max(d => d.Length);
+            var lastFilePath = filePaths.Where(d => d.Length == fileMaxLen).OrderByDescending(d => d).FirstOrDefault();
+            if (lastFilePath != null && new FileInfo(lastFilePath).Length > 1 * 1024 * 1024)
             {
                 var no = new Regex(@"(?is)(?<=\()(.*)(?=\))").Match(Path.GetFileName(lastFilePath)).Value;
                 var parse = int.TryParse(no, out int tempno);
@@ -447,10 +435,8 @@ public class LogManager
                 File.CreateText(logPath).Close();
             }
 
-            using (var sw = File.AppendText(logPath))
-            {
-                sw.Write(logContent);
-            }
+            using var sw = File.AppendText(logPath);
+            sw.Write(logContent);
         }
         catch (Exception)
         {

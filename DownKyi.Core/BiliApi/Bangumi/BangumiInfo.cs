@@ -14,9 +14,9 @@ public static class BangumiInfo
     /// <returns></returns>
     public static BangumiMedia BangumiMediaInfo(long mediaId)
     {
-        string url = $"https://api.bilibili.com/pgc/review/user?media_id={mediaId}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/pgc/review/user?media_id={mediaId}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
@@ -25,10 +25,8 @@ public static class BangumiInfo
             {
                 return media.Result.Media;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         catch (Exception e)
         {
@@ -44,10 +42,10 @@ public static class BangumiInfo
     /// <param name="seasonId"></param>
     /// <param name="episodeId"></param>
     /// <returns></returns>
-    public static BangumiSeason BangumiSeasonInfo(long seasonId = -1, long episodeId = -1)
+    public static BangumiSeason? BangumiSeasonInfo(long seasonId = -1, long episodeId = -1)
     {
-        string baseUrl = "https://api.bilibili.com/pgc/view/web/season";
-        string referer = "https://www.bilibili.com";
+        const string baseUrl = "https://api.bilibili.com/pgc/view/web/season";
+        const string referer = "https://www.bilibili.com";
         string url;
         if (seasonId > -1)
         {
@@ -62,19 +60,12 @@ public static class BangumiInfo
             return null;
         }
 
-        string response = WebClient.RequestWeb(url, referer);
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
             var bangumiSeason = JsonConvert.DeserializeObject<BangumiSeasonOrigin>(response);
-            if (bangumiSeason != null)
-            {
-                return bangumiSeason.Result;
-            }
-            else
-            {
-                return null;
-            }
+            return bangumiSeason?.Result;
         }
         catch (Exception e)
         {

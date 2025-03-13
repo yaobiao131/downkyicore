@@ -5,119 +5,118 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class VideoInfoView : BindableBase
 {
-    public string CoverUrl { get; set; }
+    private string _coverUrl;
+
+    public string CoverUrl
+    {
+        get => _coverUrl;
+        set => SetProperty(ref _coverUrl, value);
+    }
+
     public long UpperMid { get; set; }
     public int TypeId { get; set; }
 
-    private Bitmap cover;
-
-    public Bitmap Cover
-    {
-        get => cover;
-        set => SetProperty(ref cover, value);
-    }
-
-    private string title;
+    private string _title;
 
     public string Title
     {
-        get => title;
-        set => SetProperty(ref title, value);
+        get => _title;
+        set => SetProperty(ref _title, value);
     }
 
-    private string videoZone;
+    private string _videoZone;
 
     public string VideoZone
     {
-        get => videoZone;
-        set => SetProperty(ref videoZone, value);
+        get => _videoZone;
+        set => SetProperty(ref _videoZone, value);
     }
 
-    private string createTime;
+    private string _createTime;
 
     public string CreateTime
     {
-        get => createTime;
-        set => SetProperty(ref createTime, value);
+        get => _createTime;
+        set => SetProperty(ref _createTime, value);
     }
 
-    private string playNumber;
+    private string _playNumber;
 
     public string PlayNumber
     {
-        get => playNumber;
-        set => SetProperty(ref playNumber, value);
+        get => _playNumber;
+        set => SetProperty(ref _playNumber, value);
     }
 
-    private string danmakuNumber;
+    private string _danmakuNumber;
 
     public string DanmakuNumber
     {
-        get => danmakuNumber;
-        set => SetProperty(ref danmakuNumber, value);
+        get => _danmakuNumber;
+        set => SetProperty(ref _danmakuNumber, value);
     }
 
-    private string likeNumber;
+    private string _likeNumber;
 
     public string LikeNumber
     {
-        get => likeNumber;
-        set => SetProperty(ref likeNumber, value);
+        get => _likeNumber;
+        set => SetProperty(ref _likeNumber, value);
     }
 
-    private string coinNumber;
+    private string _coinNumber;
 
     public string CoinNumber
     {
-        get => coinNumber;
-        set => SetProperty(ref coinNumber, value);
+        get => _coinNumber;
+        set => SetProperty(ref _coinNumber, value);
     }
 
-    private string favoriteNumber;
+    private string _favoriteNumber;
 
     public string FavoriteNumber
     {
-        get => favoriteNumber;
-        set => SetProperty(ref favoriteNumber, value);
+        get => _favoriteNumber;
+        set => SetProperty(ref _favoriteNumber, value);
     }
 
-    private string shareNumber;
+    private string _shareNumber;
 
     public string ShareNumber
     {
-        get => shareNumber;
-        set => SetProperty(ref shareNumber, value);
+        get => _shareNumber;
+        set => SetProperty(ref _shareNumber, value);
     }
 
-    private string replyNumber;
+    private string _replyNumber;
 
     public string ReplyNumber
     {
-        get => replyNumber;
-        set => SetProperty(ref replyNumber, value);
+        get => _replyNumber;
+        set => SetProperty(ref _replyNumber, value);
     }
 
-    private string description;
+    private string _description;
 
     public string Description
     {
-        get => description;
-        set => SetProperty(ref description, value);
+        get => _description;
+        set => SetProperty(ref _description, value);
     }
 
-    private string upName;
+    private string _upName;
 
     public string UpName
     {
-        get => upName;
-        set => SetProperty(ref upName, value);
+        get => _upName;
+        set => SetProperty(ref _upName, value);
     }
 
-    private Bitmap upHeader;
+    private string _upHeader;
 
-    public Bitmap UpHeader
+    public string UpHeader
     {
-        get => upHeader;
-        set => SetProperty(ref upHeader, value);
+        get => _upHeader;
+        set => SetProperty(ref _upHeader, value);
     }
 }

@@ -87,15 +87,13 @@ public static class Format
     /// <returns></returns>
     public static string FormatSpeed(float speed)
     {
-        string formatSpeed = speed switch
+        return speed switch
         {
             <= 0 => "0B/s",
             < 1024 => $"{speed:F2}B/s",
             < 1024 * 1024 => $"{speed / 1024:F2}KB/s",
             _ => $"{speed / 1024 / 1024:F2}MB/s"
         };
-
-        return formatSpeed;
     }
 
     /// <summary>
@@ -105,16 +103,14 @@ public static class Format
     /// <returns></returns>
     public static string FormatFileSize(long fileSize)
     {
-        string formatFileSize = fileSize switch
+        return fileSize switch
         {
             <= 0 => "0B",
-            < 1024 => fileSize.ToString() + "B",
+            < 1024 => fileSize + "B",
             < 1024 * 1024 => (fileSize / 1024.0).ToString("#.##") + "KB",
             < 1024 * 1024 * 1024 => (fileSize / 1024.0 / 1024.0).ToString("#.##") + "MB",
             _ => (fileSize / 1024.0 / 1024.0 / 1024.0).ToString("#.##") + "GB"
         };
-
-        return formatFileSize;
     }
 
     /// <summary>
@@ -128,9 +124,9 @@ public static class Format
         destName = Path.GetInvalidFileNameChars().Aggregate(destName, (current, c) => current.Replace(c.ToString(), string.Empty));
 
         var cleanedName = destName
-             .SkipWhile(c => c == ' ' || c == '.')
+             .SkipWhile(c => c is ' ' or '.')
              .Reverse()
-             .SkipWhile(c => c == ' ' || c == '.')
+             .SkipWhile(c => c is ' ' or '.')
              .Reverse()
              .ToArray();
 

@@ -18,12 +18,12 @@ public static partial class Encryptor
         try
         {
             var rgbKey = Encoding.UTF8.GetBytes(encryptKey[..8]); //转换为字节
-            var rgbIV = Encoding.UTF8.GetBytes(encryptKey[..8]);
+            var rgbIv = Encoding.UTF8.GetBytes(encryptKey[..8]);
             var inputByteArray = Encoding.UTF8.GetBytes(encryptString);
-            var dCSP = new DESCryptoServiceProvider(); //实例化数据加密标准
+            var des = DES.Create(); //实例化数据加密标准
             var mStream = new MemoryStream(); //实例化内存流
             //将数据流链接到加密转换的流
-            var cStream = new CryptoStream(mStream, dCSP.CreateEncryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
+            var cStream = new CryptoStream(mStream, des.CreateEncryptor(rgbKey, rgbIv), CryptoStreamMode.Write);
             cStream.Write(inputByteArray, 0, inputByteArray.Length);
             cStream.FlushFinalBlock();
             // 转base64
@@ -48,11 +48,11 @@ public static partial class Encryptor
         try
         {
             var rgbKey = Encoding.UTF8.GetBytes(decryptKey);
-            var rgbIV = Encoding.UTF8.GetBytes(decryptKey);
+            var rgbIv = Encoding.UTF8.GetBytes(decryptKey);
             var inputByteArray = Convert.FromBase64String(decryptString);
-            var DCSP = new DESCryptoServiceProvider();
+            var des = DES.Create();
             var mStream = new MemoryStream();
-            var cStream = new CryptoStream(mStream, DCSP.CreateDecryptor(rgbKey, rgbIV), CryptoStreamMode.Write);
+            var cStream = new CryptoStream(mStream, des.CreateDecryptor(rgbKey, rgbIv), CryptoStreamMode.Write);
             cStream.Write(inputByteArray, 0, inputByteArray.Length);
             cStream.FlushFinalBlock();
             return Encoding.UTF8.GetString(mStream.ToArray());

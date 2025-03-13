@@ -14,39 +14,39 @@ public class ViewSettingsViewModel : ViewModelBase
 {
     public const string Tag = "PageSettings";
 
-    private readonly IRegionManager regionManager;
+    private readonly IRegionManager _regionManager;
 
     #region 页面属性申明
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private List<TabHeader> tabHeaders;
+    private List<TabHeader> _tabHeaders;
 
     public List<TabHeader> TabHeaders
     {
-        get => tabHeaders;
-        set => SetProperty(ref tabHeaders, value);
+        get => _tabHeaders;
+        set => SetProperty(ref _tabHeaders, value);
     }
 
-    private int selectTabId;
+    private int _selectTabId;
 
     public int SelectTabId
     {
-        get => selectTabId;
-        set => SetProperty(ref selectTabId, value);
+        get => _selectTabId;
+        set => SetProperty(ref _selectTabId, value);
     }
 
     #endregion
 
     public ViewSettingsViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(eventAggregator)
     {
-        this.regionManager = regionManager;
+        _regionManager = regionManager;
 
         #region 属性初始化
 
@@ -68,17 +68,16 @@ public class ViewSettingsViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
     /// </summary>
     private void ExecuteBackSpace()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -88,12 +87,9 @@ public class ViewSettingsViewModel : ViewModelBase
     }
 
     // 左侧tab点击事件
-    private DelegateCommand<object> leftTabHeadersCommand;
+    private DelegateCommand<object> _leftTabHeadersCommand;
 
-    public DelegateCommand<object> LeftTabHeadersCommand => leftTabHeadersCommand ??
-                                                            (leftTabHeadersCommand =
-                                                                new DelegateCommand<object>(
-                                                                    ExecuteLeftTabHeadersCommand));
+    public DelegateCommand<object> LeftTabHeadersCommand => _leftTabHeadersCommand ??= new DelegateCommand<object>(ExecuteLeftTabHeadersCommand);
 
     /// <summary>
     /// 左侧tab点击事件
@@ -101,44 +97,41 @@ public class ViewSettingsViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteLeftTabHeadersCommand(object parameter)
     {
-        if (!(parameter is TabHeader tabHeader))
+        if (parameter is not TabHeader tabHeader)
         {
             return;
         }
 
-        NavigationParameters param = new NavigationParameters();
-
         switch (tabHeader.Id)
         {
             case 0:
-                regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag, param);
+                _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
                 break;
             case 1:
-                regionManager.RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag, param);
+                _regionManager.RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag);
                 break;
             case 2:
-                regionManager.RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag, param);
+                _regionManager.RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag);
                 break;
             case 3:
-                regionManager.RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag, param);
+                _regionManager.RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag);
                 break;
             case 4:
-                regionManager.RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag, param);
+                _regionManager.RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag);
                 break;
         }
     }
 
-    private DelegateCommand loadedCommand;
+    private DelegateCommand _loadedCommand;
 
-    public DelegateCommand LoadedCommand =>
-        loadedCommand ?? (loadedCommand = new DelegateCommand(ExecuteLoadedCommand));
+    public DelegateCommand LoadedCommand => _loadedCommand ??= new DelegateCommand(ExecuteLoadedCommand);
 
     /// <summary>
     /// region加载完成事件
     /// </summary>
     private void ExecuteLoadedCommand()
     {
-        regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag, new NavigationParameters());
+        _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
     }
 
     #endregion
@@ -153,12 +146,9 @@ public class ViewSettingsViewModel : ViewModelBase
 
         // 进入设置页面时显示的设置项
         SelectTabId = 0;
-        
-        PropertyChangeAsync(() =>
-        {
-            regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag, new NavigationParameters());
-        });
-        
+
+        PropertyChangeAsync(() => { _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
+
         ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
     }
 }

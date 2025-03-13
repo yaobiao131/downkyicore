@@ -13,7 +13,7 @@ public class AlertService
 
     public AlertService(IDialogService? dialogService)
     {
-        this._dialogService = dialogService;
+        _dialogService = dialogService;
     }
 
     /// <summary>

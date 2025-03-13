@@ -6,7 +6,8 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <Grid RowDefinitions="*">
         <ListBox
             x:Name="NameSeasonsSeries"
@@ -61,7 +62,7 @@
                                         Cursor="Hand">
                                         <Border.Background>
                                             <!--  长宽比：1.6  -->
-                                            <ImageBrush Source="{Binding Cover}" Stretch="Fill" />
+                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" Stretch="Fill" />
                                         </Border.Background>
                                         <Border
                                             Width="70"

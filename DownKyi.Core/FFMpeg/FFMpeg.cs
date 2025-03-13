@@ -17,8 +17,7 @@ public class FFMpeg
 
     private FFMpeg()
     {
-        GlobalFFOptions.Configure(new FFOptions
-            { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
+        GlobalFFOptions.Configure(new FFOptions { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
         FFMpegHelper.VerifyFFMpegExists(GlobalFFOptions.Current);
     }
 
@@ -54,7 +53,7 @@ public class FFMpeg
 
         if (video == null || !File.Exists(video))
         {
-            if (SettingsManager.GetInstance().IsTranscodingAacToMp3() == AllowStatus.YES)
+            if (SettingsManager.GetInstance().GetIsTranscodingAacToMp3() == AllowStatus.Yes)
             {
                 arguments = FFMpegArguments.FromFileInput(audio).OutputToFile(
                     destVideo,

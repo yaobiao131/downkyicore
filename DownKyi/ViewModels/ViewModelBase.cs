@@ -28,7 +28,7 @@ public class ViewModelBase : BindableBase, INavigationAware
     public virtual void OnNavigatedTo(NavigationContext navigationContext)
     {
         Journal = navigationContext.NavigationService.Journal;
-        string viewName = navigationContext.Parameters.GetValue<string>("Parent");
+        var viewName = navigationContext.Parameters.GetValue<string>("Parent");
         if (viewName != null)
         {
             ParentView = viewName;

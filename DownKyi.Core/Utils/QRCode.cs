@@ -3,7 +3,7 @@ using QRCoder;
 
 namespace DownKyi.Core.Utils;
 
-public static class QRCode
+public static class QrCode
 {
     /// <summary>
     /// 生成二维码
@@ -16,25 +16,22 @@ public static class QRCode
     /// <param name="iconBorder">图标边框厚度</param>
     /// <param name="whiteEdge">二维码白边</param>
     /// <returns>位图</returns>
-    public static Bitmap EncodeQRCode(string msg, int version, int pixel, string? iconPath, int iconSize, int iconBorder, bool whiteEdge)
+    public static Bitmap EncodeQrCode(string msg, int version, int pixel, string? iconPath, int iconSize, int iconBorder, bool whiteEdge)
     {
         var codeGenerator = new QRCodeGenerator();
 
-        var codeData = codeGenerator.CreateQrCode(msg, QRCodeGenerator.ECCLevel.H /* 这里设置容错率的一个级别 */, true,
-            false, QRCodeGenerator.EciMode.Utf8, version);
+        var codeData = codeGenerator.CreateQrCode(msg, QRCodeGenerator.ECCLevel.H /* 这里设置容错率的一个级别 */, true, false, QRCodeGenerator.EciMode.Utf8, version);
 
         var qrCode = new BitmapByteQRCode(codeData);
         var qrCodeAsBitmapByteArr = qrCode.GetGraphic(20);
 
-        Bitmap icon;
-        icon = string.IsNullOrEmpty(iconPath) ? null : new Bitmap(iconPath);
+        // Bitmap icon;
+        // icon = string.IsNullOrEmpty(iconPath) ? null : new Bitmap(iconPath);
 
-        Bitmap bmp;
         using var ms = new MemoryStream(qrCodeAsBitmapByteArr);
-        bmp = new Bitmap(ms);
+        var bmp = new Bitmap(ms);
 
         // Bitmap bmp = qrCode.GetGraphic(pixel, Color.FromRgb(0,0,0), Color.FromRgb(255,255,255), icon, icon_size, icon_border, white_edge);
-
         return bmp;
     }
 }

@@ -1,13 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 
 namespace DownKyi.Core.Utils.Encryptor;
 
 public static partial class Encryptor
 {
-    private const ulong FC_TAG = 0xFC010203040506CF;
-    private const int BUFFER_SIZE = 128 * 1024;
+    private const ulong FcTag = 0xFC010203040506CF;
+    private const int BufferSize = 128 * 1024;
 
     /// <summary>
     /// 加密文件
@@ -17,59 +15,54 @@ public static partial class Encryptor
     /// <param name="password">加密密码</param>
     public static void EncryptFile(string inFile, string outFile, string password)
     {
-        using (FileStream fin = File.OpenRead(inFile), fout = File.OpenWrite(outFile))
+        using FileStream fin = File.OpenRead(inFile), fout = File.OpenWrite(outFile);
+        var lSize = fin.Length; // 输入文件长度
+        var size = (int)lSize;
+        var bytes = new byte[BufferSize]; // 缓存
+        var read = -1; // 输入文件读取数量
+        var value = 0;
+
+        // 获取IV和salt
+        var iv = GenerateRandomBytes(16);
+        var salt = GenerateRandomBytes(16);
+
+        // 创建加密对象
+        var sma = CreateRijndael(password, salt);
+        sma.IV = iv;
+
+        // 在输出文件开始部分写入IV和salt
+        fout.Write(iv, 0, iv.Length);
+        fout.Write(salt, 0, salt.Length);
+
+        // 创建散列加密
+        HashAlgorithm hasher = SHA256.Create();
+        using CryptoStream cout = new(fout, sma.CreateEncryptor(), CryptoStreamMode.Write), chash = new(Stream.Null, hasher, CryptoStreamMode.Write);
+        var bw = new BinaryWriter(cout);
+        bw.Write(lSize);
+
+        bw.Write(FcTag);
+
+        // 读写字节块到加密流缓冲区
+        while ((read = fin.Read(bytes, 0, bytes.Length)) != 0)
         {
-            long lSize = fin.Length; // 输入文件长度
-            int size = (int)lSize;
-            byte[] bytes = new byte[BUFFER_SIZE]; // 缓存
-            int read = -1; // 输入文件读取数量
-            int value = 0;
-
-            // 获取IV和salt
-            byte[] IV = GenerateRandomBytes(16);
-            byte[] salt = GenerateRandomBytes(16);
-
-            // 创建加密对象
-            SymmetricAlgorithm sma = CreateRijndael(password, salt);
-            sma.IV = IV;
-
-            // 在输出文件开始部分写入IV和salt
-            fout.Write(IV, 0, IV.Length);
-            fout.Write(salt, 0, salt.Length);
-
-            // 创建散列加密
-            HashAlgorithm hasher = SHA256.Create();
-            using (CryptoStream cout = new(fout, sma.CreateEncryptor(), CryptoStreamMode.Write),
-                   chash = new(Stream.Null, hasher, CryptoStreamMode.Write))
-            {
-                BinaryWriter bw = new BinaryWriter(cout);
-                bw.Write(lSize);
-
-                bw.Write(FC_TAG);
-
-                // 读写字节块到加密流缓冲区
-                while ((read = fin.Read(bytes, 0, bytes.Length)) != 0)
-                {
-                    cout.Write(bytes, 0, read);
-                    chash.Write(bytes, 0, read);
-                    value += read;
-                }
-
-                // 关闭加密流
-                chash.Flush();
-                chash.Close();
-
-                // 读取散列
-                byte[] hash = hasher.Hash;
-
-                // 输入文件写入散列
-                cout.Write(hash, 0, hash.Length);
-
-                // 关闭文件流
-                cout.Flush();
-                cout.Close();
-            }
+            cout.Write(bytes, 0, read);
+            chash.Write(bytes, 0, read);
+            value += read;
         }
+
+        // 关闭加密流
+        chash.Flush();
+        chash.Close();
+
+        // 读取散列
+        var hash = hasher.Hash;
+
+        // 输入文件写入散列
+        cout.Write(hash, 0, hash.Length);
+
+        // 关闭文件流
+        cout.Flush();
+        cout.Close();
     }
 
     /// <summary>
@@ -81,86 +74,81 @@ public static partial class Encryptor
     public static void DecryptFile(string inFile, string outFile, string password)
     {
         // 创建打开文件流
-        using (FileStream fin = File.OpenRead(inFile), fout = File.OpenWrite(outFile))
+        using FileStream fin = File.OpenRead(inFile), fout = File.OpenWrite(outFile);
+        var size = (int)fin.Length;
+        var bytes = new byte[BufferSize];
+        var read = -1;
+        var value = 0;
+        var outValue = 0;
+
+        var iv = new byte[16];
+        fin.Read(iv, 0, 16);
+        var salt = new byte[16];
+        fin.Read(salt, 0, 16);
+
+        var sma = CreateRijndael(password, salt);
+        sma.IV = iv;
+
+        value = 32;
+        long lSize = -1;
+
+        // 创建散列对象, 校验文件
+        HashAlgorithm hasher = SHA256.Create();
+
+        try
         {
-            int size = (int)fin.Length;
-            byte[] bytes = new byte[BUFFER_SIZE];
-            int read = -1;
-            int value = 0;
-            int outValue = 0;
+            using CryptoStream cin = new(fin, sma.CreateDecryptor(), CryptoStreamMode.Read),
+                chash = new(Stream.Null, hasher, CryptoStreamMode.Write);
+            // 读取文件长度
+            var br = new BinaryReader(cin);
+            lSize = br.ReadInt64();
+            var tag = br.ReadUInt64();
 
-            byte[] IV = new byte[16];
-            fin.Read(IV, 0, 16);
-            byte[] salt = new byte[16];
-            fin.Read(salt, 0, 16);
+            if (FcTag != tag) throw new CryptoHelpException("文件被破坏");
 
-            SymmetricAlgorithm sma = CreateRijndael(password, salt);
-            sma.IV = IV;
+            var numReads = lSize / BufferSize;
 
-            value = 32;
-            long lSize = -1;
+            var slack = lSize % BufferSize;
 
-            // 创建散列对象, 校验文件
-            HashAlgorithm hasher = SHA256.Create();
-
-            try
+            for (var i = 0; i < numReads; ++i)
             {
-                using (CryptoStream cin = new(fin, sma.CreateDecryptor(), CryptoStreamMode.Read),
-                       chash = new(Stream.Null, hasher, CryptoStreamMode.Write))
-                {
-                    // 读取文件长度
-                    BinaryReader br = new BinaryReader(cin);
-                    lSize = br.ReadInt64();
-                    ulong tag = br.ReadUInt64();
-
-                    if (FC_TAG != tag)
-                        throw new CryptoHelpException("文件被破坏");
-
-                    long numReads = lSize / BUFFER_SIZE;
-
-                    long slack = lSize % BUFFER_SIZE;
-
-                    for (int i = 0; i < numReads; ++i)
-                    {
-                        read = cin.Read(bytes, 0, bytes.Length);
-                        fout.Write(bytes, 0, read);
-                        chash.Write(bytes, 0, read);
-                        value += read;
-                        outValue += read;
-                    }
-
-                    if (slack > 0)
-                    {
-                        read = cin.Read(bytes, 0, (int)slack);
-                        fout.Write(bytes, 0, read);
-                        chash.Write(bytes, 0, read);
-                        value += read;
-                        outValue += read;
-                    }
-
-                    chash.Flush();
-                    chash.Close();
-
-                    fout.Flush();
-                    fout.Close();
-
-                    byte[] curHash = hasher.Hash;
-
-                    // 获取比较和旧的散列对象
-                    byte[] oldHash = new byte[hasher.HashSize / 8];
-                    read = cin.Read(oldHash, 0, oldHash.Length);
-                    if ((oldHash.Length != read) || (!CheckByteArrays(oldHash, curHash)))
-                        throw new CryptoHelpException("文件被破坏");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("DecryptFile()发生异常: {0}", e);
+                read = cin.Read(bytes, 0, bytes.Length);
+                fout.Write(bytes, 0, read);
+                chash.Write(bytes, 0, read);
+                value += read;
+                outValue += read;
             }
 
-            if (outValue != lSize)
-                throw new CryptoHelpException("文件大小不匹配");
+            if (slack > 0)
+            {
+                read = cin.Read(bytes, 0, (int)slack);
+                fout.Write(bytes, 0, read);
+                chash.Write(bytes, 0, read);
+                value += read;
+                outValue += read;
+            }
+
+            chash.Flush();
+            chash.Close();
+
+            fout.Flush();
+            fout.Close();
+
+            var curHash = hasher.Hash;
+
+            // 获取比较和旧的散列对象
+            var oldHash = new byte[hasher.HashSize / 8];
+            read = cin.Read(oldHash, 0, oldHash.Length);
+            if (oldHash.Length != read || !CheckByteArrays(oldHash, curHash))
+                throw new CryptoHelpException("文件被破坏");
         }
+        catch (Exception e)
+        {
+            Console.WriteLine("DecryptFile()发生异常: {0}", e);
+        }
+
+        if (outValue != lSize)
+            throw new CryptoHelpException("文件大小不匹配");
     }
 
     /// <summary>
@@ -173,7 +161,7 @@ public static partial class Encryptor
     {
         if (b1.Length == b2.Length)
         {
-            for (int i = 0; i < b1.Length; ++i)
+            for (var i = 0; i < b1.Length; ++i)
             {
                 if (b1[i] != b2[i])
                     return false;
@@ -193,9 +181,9 @@ public static partial class Encryptor
     /// <returns>加密对象</returns>
     private static SymmetricAlgorithm CreateRijndael(string password, byte[] salt)
     {
-        PasswordDeriveBytes pdb = new PasswordDeriveBytes(password, salt, "SHA256", 1000);
+        var pdb = new PasswordDeriveBytes(password, salt, "SHA256", 1000);
 
-        SymmetricAlgorithm sma = Rijndael.Create();
+        SymmetricAlgorithm sma = Aes.Create();
         sma.KeySize = 256;
         sma.Key = pdb.GetBytes(32);
         sma.Padding = PaddingMode.Zeros;
@@ -210,9 +198,9 @@ public static partial class Encryptor
     private static byte[] GenerateRandomBytes(int count)
     {
         // 加密文件随机数生成
-        RandomNumberGenerator rand = new RNGCryptoServiceProvider();
+        var rand = RandomNumberGenerator.Create();
 
-        byte[] bytes = new byte[count];
+        var bytes = new byte[count];
         rand.GetBytes(bytes);
         return bytes;
     }

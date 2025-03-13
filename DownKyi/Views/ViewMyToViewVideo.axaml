@@ -8,6 +8,7 @@
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewMyToViewVideoViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:ToViewMedia">
@@ -29,7 +30,7 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
                                 </Border.Background>
                             </Border>
 
@@ -84,7 +85,7 @@
                                         VerticalAlignment="Center"
                                         CornerRadius="12">
                                         <Border.Background>
-                                            <ImageBrush Source="{Binding UpHeader}" />
+                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding UpHeader}" />
                                         </Border.Background>
                                     </Border>
                                     <TextBlock

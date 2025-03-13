@@ -4,28 +4,28 @@ namespace DownKyi.Core.FileName;
 
 public class FileName
 {
-    private readonly List<FileNamePart> nameParts;
-    private string order = "ORDER";
-    private string section = "SECTION";
-    private string mainTitle = "MAIN_TITLE";
-    private string pageTitle = "PAGE_TITLE";
-    private string videoZone = "VIDEO_ZONE";
-    private string audioQuality = "AUDIO_QUALITY";
-    private string videoQuality = "VIDEO_QUALITY";
-    private string videoCodec = "VIDEO_CODEC";
+    private readonly List<FileNamePart> _nameParts;
+    private string _order = "ORDER";
+    private string _section = "SECTION";
+    private string _mainTitle = "MAIN_TITLE";
+    private string _pageTitle = "PAGE_TITLE";
+    private string _videoZone = "VIDEO_ZONE";
+    private string _audioQuality = "AUDIO_QUALITY";
+    private string _videoQuality = "VIDEO_QUALITY";
+    private string _videoCodec = "VIDEO_CODEC";
 
-    private string videoPublishTime = "VIDEO_PUBLISH_TIME";
+    private string _videoPublishTime = "VIDEO_PUBLISH_TIME";
 
-    private long avid = -1;
-    private string bvid = "BVID";
-    private long cid = -1;
+    private long _avid = -1;
+    private string _bvid = "BVID";
+    private long _cid = -1;
 
-    private long upMid = -1;
-    private string upName = "UP_NAME";
+    private long _upMid = -1;
+    private string _upName = "UP_NAME";
 
     private FileName(List<FileNamePart> nameParts)
     {
-        this.nameParts = nameParts;
+        this._nameParts = nameParts;
     }
 
     public static FileName Builder(List<FileNamePart> nameParts)
@@ -35,149 +35,149 @@ public class FileName
 
     public FileName SetOrder(int order)
     {
-        this.order = order.ToString();
+        _order = order.ToString();
         return this;
     }
 
     public FileName SetOrder(int order, int count)
     {
-        int length = Math.Abs(count).ToString().Length;
-        this.order = order.ToString("D" + length);
+        var length = Math.Abs(count).ToString().Length;
+        _order = order.ToString("D" + length);
 
         return this;
     }
 
     public FileName SetSection(string section)
     {
-        this.section = section;
+        _section = section;
         return this;
     }
 
     public FileName SetMainTitle(string mainTitle)
     {
-        this.mainTitle = mainTitle;
+        _mainTitle = mainTitle;
         return this;
     }
 
     public FileName SetPageTitle(string pageTitle)
     {
-        this.pageTitle = pageTitle;
+        _pageTitle = pageTitle;
         return this;
     }
 
     public FileName SetVideoZone(string videoZone)
     {
-        this.videoZone = videoZone;
+        _videoZone = videoZone;
         return this;
     }
 
     public FileName SetAudioQuality(string audioQuality)
     {
-        this.audioQuality = audioQuality;
+        _audioQuality = audioQuality;
         return this;
     }
 
     public FileName SetVideoQuality(string videoQuality)
     {
-        this.videoQuality = videoQuality;
+        _videoQuality = videoQuality;
         return this;
     }
 
     public FileName SetVideoCodec(string videoCodec)
     {
-        this.videoCodec = videoCodec;
+        _videoCodec = videoCodec;
         return this;
     }
 
     public FileName SetVideoPublishTime(string videoPublishTime)
     {
-        this.videoPublishTime = videoPublishTime;
+        _videoPublishTime = videoPublishTime;
         return this;
     }
 
     public FileName SetAvid(long avid)
     {
-        this.avid = avid;
+        _avid = avid;
         return this;
     }
 
     public FileName SetBvid(string bvid)
     {
-        this.bvid = bvid;
+        _bvid = bvid;
         return this;
     }
 
     public FileName SetCid(long cid)
     {
-        this.cid = cid;
+        _cid = cid;
         return this;
     }
 
     public FileName SetUpMid(long upMid)
     {
-        this.upMid = upMid;
+        _upMid = upMid;
         return this;
     }
 
     public FileName SetUpName(string upName)
     {
-        this.upName = upName;
+        _upName = upName;
         return this;
     }
 
     public string RelativePath()
     {
-        string path = string.Empty;
+        var path = string.Empty;
 
-        foreach (FileNamePart part in nameParts)
+        foreach (var part in _nameParts)
         {
             switch (part)
             {
-                case FileNamePart.ORDER:
-                    path += order;
+                case FileNamePart.Order:
+                    path += _order;
                     break;
-                case FileNamePart.SECTION:
-                    path += section;
+                case FileNamePart.Section:
+                    path += _section;
                     break;
-                case FileNamePart.MAIN_TITLE:
-                    path += mainTitle;
+                case FileNamePart.MainTitle:
+                    path += _mainTitle;
                     break;
-                case FileNamePart.PAGE_TITLE:
-                    path += pageTitle;
+                case FileNamePart.PageTitle:
+                    path += _pageTitle;
                     break;
-                case FileNamePart.VIDEO_ZONE:
-                    path += videoZone;
+                case FileNamePart.VideoZone:
+                    path += _videoZone;
                     break;
-                case FileNamePart.AUDIO_QUALITY:
-                    path += audioQuality;
+                case FileNamePart.AudioQuality:
+                    path += _audioQuality;
                     break;
-                case FileNamePart.VIDEO_QUALITY:
-                    path += videoQuality;
+                case FileNamePart.VideoQuality:
+                    path += _videoQuality;
                     break;
-                case FileNamePart.VIDEO_CODEC:
-                    path += videoCodec;
+                case FileNamePart.VideoCodec:
+                    path += _videoCodec;
                     break;
-                case FileNamePart.VIDEO_PUBLISH_TIME:
-                    path += videoPublishTime;
+                case FileNamePart.VideoPublishTime:
+                    path += _videoPublishTime;
                     break;
-                case FileNamePart.AVID:
-                    path += $"av{avid}";
+                case FileNamePart.Avid:
+                    path += $"av{_avid}";
                     break;
-                case FileNamePart.BVID:
-                    path += bvid;
+                case FileNamePart.Bvid:
+                    path += _bvid;
                     break;
-                case FileNamePart.CID:
-                    path += cid;
+                case FileNamePart.Cid:
+                    path += _cid;
                     break;
-                case FileNamePart.UP_MID:
-                    path += upMid;
+                case FileNamePart.UpMid:
+                    path += _upMid;
                     break;
-                case FileNamePart.UP_NAME:
-                    path += upName;
+                case FileNamePart.UpName:
+                    path += _upName;
                     break;
             }
 
-            if (((int)part) >= 100)
+            if ((int)part >= 100)
             {
                 path += HyphenSeparated.Hyphen[(int)part];
             }

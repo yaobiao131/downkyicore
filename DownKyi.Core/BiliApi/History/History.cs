@@ -1,7 +1,7 @@
 ﻿using DownKyi.Core.BiliApi.History.Models;
 using DownKyi.Core.Logging;
 using Newtonsoft.Json;
-using System;
+using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.History
 {
@@ -19,9 +19,9 @@ namespace DownKyi.Core.BiliApi.History
         /// <param name="ps">每页项数</param>
         /// <param name="business">历史记录ID类型</param>
         /// <returns></returns>
-        public static HistoryData GetHistory(long startId, long startTime, int ps = 30, HistoryBusiness business = HistoryBusiness.ARCHIVE)
+        public static HistoryData? GetHistory(long startId, long startTime, int ps = 30, HistoryBusiness business = HistoryBusiness.ARCHIVE)
         {
-            string businessStr = string.Empty;
+            var businessStr = string.Empty;
             switch (business)
             {
                 case HistoryBusiness.ARCHIVE:
@@ -41,9 +41,9 @@ namespace DownKyi.Core.BiliApi.History
                     break;
             }
 
-            string url = $"https://api.bilibili.com/x/web-interface/history/cursor?max={startId}&view_at={startTime}&ps={ps}&business={businessStr}";
-            string referer = "https://www.bilibili.com";
-            string response = WebClient.RequestWeb(url, referer);
+            var url = $"https://api.bilibili.com/x/web-interface/history/cursor?max={startId}&view_at={startTime}&ps={ps}&business={businessStr}";
+            const string referer = "https://www.bilibili.com";
+            var response = WebClient.RequestWeb(url, referer);
 
             try
             {
@@ -53,7 +53,7 @@ namespace DownKyi.Core.BiliApi.History
             }
             catch (Exception e)
             {
-                Utils.Debugging.Console.PrintLine("GetHistory()发生异常: {0}", e);
+                Console.PrintLine("GetHistory()发生异常: {0}", e);
                 LogManager.Error("History", e);
                 return null;
             }

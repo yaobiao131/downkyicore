@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.History;
 using DownKyi.Core.BiliApi.VideoStream;
-using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.Events;
 using DownKyi.Images;
@@ -29,7 +26,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
     private CancellationTokenSource? _tokenSource;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
-    private readonly int VideoNumberInPage = 30;
+    private const int VideoNumberInPage = 30;
 
     #region 页面属性申明
 
@@ -266,7 +263,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // BANGUMI类型
-        var addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
         // 选择文件夹
         var directory = await addToDownloadService.SetDirectory(DialogService);
@@ -291,16 +288,12 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 // 有分P的就下载全部
 
                 // 开启服务
-                IInfoService? service = null;
-                switch (media.Business)
+                IInfoService? service = media.Business switch
                 {
-                    case "archive":
-                        service = new VideoInfoService(media.Url);
-                        break;
-                    case "pgc":
-                        service = new BangumiInfoService(media.Url);
-                        break;
-                }
+                    "archive" => new VideoInfoService(media.Url),
+                    "pgc" => new BangumiInfoService(media.Url),
+                    _ => null
+                };
 
                 if (service == null)
                 {
@@ -321,16 +314,9 @@ public class ViewMyHistoryViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish(
-                    $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     private async void UpdateHistoryMediaList()
@@ -341,10 +327,10 @@ public class ViewMyHistoryViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            var cancellationToken = _tokenSource.Token;
+            var cancellationToken = _tokenSource?.Token;
 
             var historyList = History.GetHistory(0, 0, VideoNumberInPage);
-            if (historyList == null || historyList.List == null || historyList.List.Count == 0)
+            if (historyList?.List == null || historyList.List.Count == 0)
             {
                 LoadingVisibility = false;
                 NoDataVisibility = true;
@@ -364,103 +350,47 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 }
 
                 // 播放url
-                var url = "https://www.bilibili.com";
-                switch (history.History.Business)
+                var url = history.History.Business switch
                 {
-                    case "archive":
-                        url = "https://www.bilibili.com/video/" + history.History.Bvid;
-                        break;
-                    case "pgc":
-                        url = history.Uri;
-                        break;
-                }
+                    "archive" => "https://www.bilibili.com/video/" + history.History.Bvid,
+                    "pgc" => history.Uri,
+                    _ => "https://www.bilibili.com"
+                };
 
                 // 查询、保存封面
                 var coverUrl = history.Cover;
-                Bitmap cover;
-                if (coverUrl == null || coverUrl == "")
+                if (!coverUrl.ToLower().StartsWith("http"))
                 {
-                    cover = null;
-                }
-                else
-                {
-                    if (!coverUrl.ToLower().StartsWith("http"))
-                    {
-                        coverUrl = $"https:{history.Cover}";
-                    }
-
-                    var storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(history.History.Oid, history.History.Bvid,
-                        history.History.Cid, coverUrl, 160, 100);
+                    coverUrl = $"https:{history.Cover}";
                 }
 
                 // 获取用户头像
-                string upName;
-                Bitmap upHeader;
-                if (history.AuthorFace != null)
-                {
-                    upName = history.AuthorName;
-                    StorageHeader storageHeader = new StorageHeader();
-                    upHeader = storageHeader.GetHeaderThumbnail(history.AuthorMid, upName, history.AuthorFace, 24, 24);
-                }
-                else
-                {
-                    upName = "";
-                    upHeader = null;
-                }
+                var upName = history.AuthorFace != null ? history.AuthorName : "";
 
 
                 // 观看平台
-                VectorImage platform;
-                switch (history.History.Dt)
+                var platform = history.History.Dt switch
                 {
-                    case 1:
-                    case 3:
-                    case 5:
-                    case 7:
+                    1 or 3 or 5 or 7 =>
                         // 手机端
-                        platform = NormalIcon.Instance().PlatformMobile;
-                        break;
-                    case 2:
+                        NormalIcon.Instance().PlatformMobile,
+                    2 =>
                         // web端
-                        platform = NormalIcon.Instance().PlatformPC;
-                        break;
-                    case 4:
-                    case 6:
+                        NormalIcon.Instance().PlatformPC,
+                    4 or 6 =>
                         // pad端
-                        platform = NormalIcon.Instance().PlatformIpad;
-                        break;
-                    case 33:
+                        NormalIcon.Instance().PlatformIpad,
+                    33 =>
                         // TV端
-                        platform = NormalIcon.Instance().PlatformTV;
-                        break;
-                    default:
-                        // 其他
-                        platform = null;
-                        break;
-                }
+                        NormalIcon.Instance().PlatformTV,
+                    _ => null
+                };
 
                 // 是否显示Partdesc
-                bool partdescVisibility;
-                if (history.NewDesc == "")
-                {
-                    partdescVisibility = false;
-                }
-                else
-                {
-                    partdescVisibility = true;
-                }
+                var partdescVisibility = history.NewDesc != "";
 
                 // 是否显示UP主信息和分区信息
-                bool upAndTagVisibility;
-                if (history.History.Business == "archive")
-                {
-                    upAndTagVisibility = true;
-                }
-                else
-                {
-                    upAndTagVisibility = false;
-                }
+                var upAndTagVisibility = history.History.Business == "archive";
 
                 App.PropertyChangeAsync(() =>
                 {
@@ -489,9 +419,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                         Bvid = history.History.Bvid,
                         Url = url,
                         UpMid = history.AuthorMid,
-                        Cover = cover ??
-                                ImageHelper.LoadFromResource(
-                                    new Uri($"avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
                         Title = history.Title,
                         SubTitle = history.ShowTitle,
                         Duration = history.Duration,
@@ -500,7 +428,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                         Progress = progress,
                         Platform = platform,
                         UpName = upName,
-                        UpHeader = upHeader,
+                        UpHeader = history.AuthorFace ?? "",
 
                         PartdescVisibility = partdescVisibility,
                         UpAndTagVisibility = upAndTagVisibility,
@@ -514,7 +442,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 });
 
                 // 判断是否该结束线程，若为true，跳出循环
-                if (cancellationToken.IsCancellationRequested)
+                if (cancellationToken?.IsCancellationRequested == true)
                 {
                     break;
                 }

@@ -32,7 +32,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     private long _mid = -1;
 
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
-    private readonly int _videoNumberInPage = 15;
+    private const int VideoNumberInPage = 15;
 
     #region 页面属性申明
 
@@ -145,7 +145,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     public ViewMyBangumiFollowViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -345,7 +345,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 订阅里只有BANGUMI类型
-        var addToDownloadService = new AddToDownloadService(PlayStreamType.BANGUMI);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Bangumi);
 
         // 选择文件夹
         var directory = await addToDownloadService.SetDirectory(DialogService);
@@ -367,8 +367,6 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                     continue;
                 }
 
-                /// 有分P的就下载全部
-
                 // 开启服务
                 var service = new BangumiInfoService($"{ParseEntrance.BangumiMediaUrl}md{media.MediaId}");
 
@@ -386,15 +384,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish($"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     private void OnCountChanged_Pager(int count)
@@ -433,8 +425,8 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
         {
             var cancellationToken = _tokenSource.Token;
 
-            var bangumiFollows = Core.BiliApi.Users.UserSpace.GetBangumiFollow(_mid, type, current, _videoNumberInPage);
-            if (bangumiFollows == null || bangumiFollows.List == null || bangumiFollows.List.Count == 0)
+            var bangumiFollows = Core.BiliApi.Users.UserSpace.GetBangumiFollow(_mid, type, current, VideoNumberInPage);
+            if (bangumiFollows?.List == null || bangumiFollows.List.Count == 0)
             {
                 LoadingVisibility = false;
                 NoDataVisibility = true;
@@ -442,7 +434,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
             }
 
             // 更新总页码
-            Pager.Count = (int)Math.Ceiling((double)bangumiFollows.Total / _videoNumberInPage);
+            Pager.Count = (int)Math.Ceiling((double)bangumiFollows.Total / VideoNumberInPage);
             // 更新内容
             ContentVisibility = true;
 
@@ -450,20 +442,9 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
             {
                 // 查询、保存封面
                 var coverUrl = bangumiFollow.Cover;
-                Bitmap cover;
-                if (coverUrl == null || coverUrl == "")
+                if (!coverUrl.ToLower().StartsWith("http"))
                 {
-                    cover = null;
-                }
-                else
-                {
-                    if (!coverUrl.ToLower().StartsWith("http"))
-                    {
-                        coverUrl = $"https:{bangumiFollow.Cover}";
-                    }
-
-                    var storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(bangumiFollow.MediaId, bangumiFollow.SeasonId.ToString(), -1, coverUrl, 110, 140);
+                    coverUrl = $"https:{bangumiFollow.Cover}";
                 }
 
                 // 地区
@@ -501,9 +482,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                         SeasonTypeName = bangumiFollow.SeasonTypeName,
                         Area = area,
                         Badge = bangumiFollow.Badge,
-                        Cover = cover ??
-                                ImageHelper.LoadFromResource(
-                                    new Uri($"avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
                         Evaluate = bangumiFollow.Evaluate,
                         IndexShow = indexShow,
                         Progress = progress

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.History;
 using DownKyi.Core.BiliApi.VideoStream;
-using DownKyi.Core.Storage;
 using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.PrismExtension.Dialog;
@@ -25,80 +22,80 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
 {
     public const string Tag = "PageMyToView";
 
-    private CancellationTokenSource tokenSource;
+    private CancellationTokenSource _tokenSource;
 
     #region 页面属性申明
 
-    private string pageName = Tag;
+    private string _pageName = Tag;
 
     public string PageName
     {
-        get => pageName;
-        set => SetProperty(ref pageName, value);
+        get => _pageName;
+        set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage arrowBack;
+    private VectorImage _arrowBack;
 
     public VectorImage ArrowBack
     {
-        get => arrowBack;
-        set => SetProperty(ref arrowBack, value);
+        get => _arrowBack;
+        set => SetProperty(ref _arrowBack, value);
     }
 
-    private VectorImage downloadManage;
+    private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
     {
-        get => downloadManage;
-        set => SetProperty(ref downloadManage, value);
+        get => _downloadManage;
+        set => SetProperty(ref _downloadManage, value);
     }
 
-    private bool contentVisibility;
+    private bool _contentVisibility;
 
     public bool ContentVisibility
     {
-        get => contentVisibility;
-        set => SetProperty(ref contentVisibility, value);
+        get => _contentVisibility;
+        set => SetProperty(ref _contentVisibility, value);
     }
 
-    private ObservableCollection<ToViewMedia> medias;
+    private ObservableCollection<ToViewMedia> _medias;
 
     public ObservableCollection<ToViewMedia> Medias
     {
-        get => medias;
-        set => SetProperty(ref medias, value);
+        get => _medias;
+        set => SetProperty(ref _medias, value);
     }
 
-    private bool isSelectAll;
+    private bool _isSelectAll;
 
     public bool IsSelectAll
     {
-        get => isSelectAll;
-        set => SetProperty(ref isSelectAll, value);
+        get => _isSelectAll;
+        set => SetProperty(ref _isSelectAll, value);
     }
 
-    private bool loading;
+    private bool _loading;
 
     public bool Loading
     {
-        get => loading;
-        set => SetProperty(ref loading, value);
+        get => _loading;
+        set => SetProperty(ref _loading, value);
     }
 
-    private bool loadingVisibility;
+    private bool _loadingVisibility;
 
     public bool LoadingVisibility
     {
-        get => loadingVisibility;
-        set => SetProperty(ref loadingVisibility, value);
+        get => _loadingVisibility;
+        set => SetProperty(ref _loadingVisibility, value);
     }
 
-    private bool noDataVisibility;
+    private bool _noDataVisibility;
 
     public bool NoDataVisibility
     {
-        get => noDataVisibility;
-        set => SetProperty(ref noDataVisibility, value);
+        get => _noDataVisibility;
+        set => SetProperty(ref _noDataVisibility, value);
     }
 
     #endregion
@@ -106,7 +103,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     public ViewMyToViewVideoViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
         eventAggregator)
     {
-        this.DialogService = dialogService;
+        DialogService = dialogService;
 
         #region 属性初始化
 
@@ -132,10 +129,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand backSpaceCommand;
+    private DelegateCommand? _backSpaceCommand;
 
-    public DelegateCommand BackSpaceCommand =>
-        backSpaceCommand ?? (backSpaceCommand = new DelegateCommand(ExecuteBackSpace));
+    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -147,9 +143,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
         // 结束任务
-        tokenSource?.Cancel();
+        _tokenSource?.Cancel();
 
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ParentView,
             ParentViewName = null,
@@ -159,18 +155,16 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     // 前往下载管理页面
-    private DelegateCommand downloadManagerCommand;
+    private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => downloadManagerCommand ??
-                                                     (downloadManagerCommand =
-                                                         new DelegateCommand(ExecuteDownloadManagerCommand));
+    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 前往下载管理页面
     /// </summary>
     private void ExecuteDownloadManagerCommand()
     {
-        NavigationParam parameter = new NavigationParam
+        var parameter = new NavigationParam
         {
             ViewName = ViewDownloadManagerViewModel.Tag,
             ParentViewName = Tag,
@@ -180,10 +174,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     // 全选按钮点击事件
-    private DelegateCommand<object> selectAllCommand;
+    private DelegateCommand<object>? _selectAllCommand;
 
-    public DelegateCommand<object> SelectAllCommand =>
-        selectAllCommand ?? (selectAllCommand = new DelegateCommand<object>(ExecuteSelectAllCommand));
+    public DelegateCommand<object> SelectAllCommand => _selectAllCommand ??= new DelegateCommand<object>(ExecuteSelectAllCommand);
 
     /// <summary>
     /// 全选按钮点击事件
@@ -208,10 +201,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     // 列表选择事件
-    private DelegateCommand<object> mediasCommand;
+    private DelegateCommand<object>? _mediasCommand;
 
-    public DelegateCommand<object> MediasCommand =>
-        mediasCommand ?? (mediasCommand = new DelegateCommand<object>(ExecuteMediasCommand));
+    public DelegateCommand<object> MediasCommand => _mediasCommand ??= new DelegateCommand<object>(ExecuteMediasCommand);
 
     /// <summary>
     /// 列表选择事件
@@ -219,27 +211,18 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteMediasCommand(object parameter)
     {
-        if (!(parameter is IList selectedMedia))
+        if (parameter is not IList selectedMedia)
         {
             return;
         }
 
-        if (selectedMedia.Count == Medias.Count)
-        {
-            IsSelectAll = true;
-        }
-        else
-        {
-            IsSelectAll = false;
-        }
+        IsSelectAll = selectedMedia.Count == Medias.Count;
     }
 
     // 添加选中项到下载列表事件
-    private DelegateCommand addToDownloadCommand;
+    private DelegateCommand? _addToDownloadCommand;
 
-    public DelegateCommand AddToDownloadCommand => addToDownloadCommand ??
-                                                   (addToDownloadCommand =
-                                                       new DelegateCommand(ExecuteAddToDownloadCommand));
+    public DelegateCommand AddToDownloadCommand => _addToDownloadCommand ??= new DelegateCommand(ExecuteAddToDownloadCommand);
 
     /// <summary>
     /// 添加选中项到下载列表事件
@@ -250,11 +233,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     // 添加所有视频到下载列表事件
-    private DelegateCommand addAllToDownloadCommand;
+    private DelegateCommand? _addAllToDownloadCommand;
 
-    public DelegateCommand AddAllToDownloadCommand => addAllToDownloadCommand ??
-                                                      (addAllToDownloadCommand =
-                                                          new DelegateCommand(ExecuteAddAllToDownloadCommand));
+    public DelegateCommand AddAllToDownloadCommand => _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
     /// <summary>
     /// 添加所有视频到下载列表事件
@@ -273,13 +254,13 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     private async void AddToDownload(bool isOnlySelected)
     {
         // 稍后再看里只有视频
-        AddToDownloadService addToDownloadService = new AddToDownloadService(PlayStreamType.VIDEO);
+        var addToDownloadService = new AddToDownloadService(PlayStreamType.Video);
 
         // 选择文件夹
-        string directory = await addToDownloadService.SetDirectory(DialogService);
+        var directory = await addToDownloadService.SetDirectory(DialogService);
 
         // 视频计数
-        int i = 0;
+        var i = 0;
         await Task.Run(async () =>
         {
             // 为了避免执行其他操作时，
@@ -298,7 +279,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
                 /// 有分P的就下载全部
 
                 // 开启服务
-                VideoInfoService videoInfoService = new VideoInfoService(media.Bvid);
+                var videoInfoService = new VideoInfoService(media.Bvid);
 
                 addToDownloadService.SetVideoInfoService(videoInfoService);
                 addToDownloadService.GetVideo();
@@ -314,16 +295,9 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
         }
 
         // 通知用户添加到下载列表的结果
-        if (i <= 0)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipAddDownloadingZero"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>()
-                .Publish(
-                    $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(i <= 0
+            ? DictionaryResource.GetString("TipAddDownloadingZero")
+            : $"{DictionaryResource.GetString("TipAddDownloadingFinished1")}{i}{DictionaryResource.GetString("TipAddDownloadingFinished2")}");
     }
 
     private async void UpdateToViewMediaList()
@@ -334,7 +308,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            CancellationToken cancellationToken = tokenSource.Token;
+            CancellationToken cancellationToken = _tokenSource.Token;
 
             var toViewList = ToView.GetToView();
             if (toViewList == null || toViewList.Count == 0)
@@ -347,53 +321,36 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
             foreach (var toView in toViewList)
             {
                 // 查询、保存封面
-                string coverUrl = toView.Pic;
-                Bitmap cover;
-                if (coverUrl == null || coverUrl == "")
+                var coverUrl = toView.Pic;
+                if (!coverUrl.ToLower().StartsWith("http"))
                 {
-                    cover = null;
-                }
-                else
-                {
-                    if (!coverUrl.ToLower().StartsWith("http"))
-                    {
-                        coverUrl = $"https:{toView.Pic}";
-                    }
-
-                    StorageCover storageCover = new StorageCover();
-                    cover = storageCover.GetCoverThumbnail(toView.Aid, toView.Bvid, toView.Cid, coverUrl, 160, 100);
+                    coverUrl = $"https:{toView.Pic}";
                 }
 
                 // 获取用户头像
                 long upMid = -1;
                 string upName;
-                Bitmap upHeader;
                 if (toView.Owner != null && toView.Owner.Face != null)
                 {
                     upMid = toView.Owner.Mid;
                     upName = toView.Owner.Name;
-                    StorageHeader storageHeader = new StorageHeader();
-                    upHeader = storageHeader.GetHeaderThumbnail(toView.Owner.Mid, upName, toView.Owner.Face, 24, 24);
                 }
                 else
                 {
                     upName = "";
-                    upHeader = null;
                 }
 
                 App.PropertyChangeAsync(() =>
                 {
-                    ToViewMedia media = new ToViewMedia(EventAggregator)
+                    var media = new ToViewMedia(EventAggregator)
                     {
                         Aid = toView.Aid,
                         Bvid = toView.Bvid,
                         UpMid = upMid,
-                        Cover = cover ??
-                                ImageHelper.LoadFromResource(
-                                    new Uri($"avares://DownKyi/Resources/video-placeholder.png")),
+                        Cover = coverUrl,
                         Title = toView.Title,
                         UpName = upName,
-                        UpHeader = upHeader
+                        UpHeader = toView.Owner?.Face ?? ""
                     };
 
                     Medias.Add(media);
@@ -409,7 +366,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
                     break;
                 }
             }
-        }, (tokenSource = new CancellationTokenSource()).Token);
+        }, (_tokenSource = new CancellationTokenSource()).Token);
     }
 
     /// <summary>
@@ -443,7 +400,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
         DownloadManage.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 根据传入参数不同执行不同任务
-        long mid = navigationContext.Parameters.GetValue<long>("Parameter");
+        var mid = navigationContext.Parameters.GetValue<long>("Parameter");
         if (mid == 0)
         {
             IsSelectAll = false;

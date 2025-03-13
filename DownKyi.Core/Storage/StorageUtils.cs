@@ -4,7 +4,7 @@ using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.Storage;
 
-internal static class StorageUtils
+public static class StorageUtils
 {
     /// <summary>
     /// 下载图片

@@ -7,10 +7,10 @@ namespace DownKyi.Core.Storage.Database;
 
 public class DbHelper
 {
-    private readonly string connStr;
-    private readonly SqliteConnection conn;
+    private readonly string _connStr;
+    private readonly SqliteConnection? _conn;
 
-    private static readonly Dictionary<string, SqliteConnection> database = new();
+    private static readonly Dictionary<string, SqliteConnection> Database = new();
 
     /// <summary>
     /// 创建一个数据库
@@ -18,23 +18,23 @@ public class DbHelper
     /// <param name="dbPath"></param>
     public DbHelper(string dbPath)
     {
-        connStr = new SqliteConnectionStringBuilder
+        _connStr = new SqliteConnectionStringBuilder
         {
             Mode = SqliteOpenMode.ReadWriteCreate,
             DataSource = dbPath
         }.ToString();
-        if (database.ContainsKey(connStr))
+        if (Database.TryGetValue(_connStr, out var value))
         {
-            conn = database[connStr];
+            _conn = value;
 
-            if (conn != null)
+            if (_conn != null)
             {
                 return;
             }
         }
 
-        conn = new SqliteConnection(connStr);
-        database.Add(connStr, conn);
+        _conn = new SqliteConnection(_connStr);
+        Database.Add(_connStr, _conn);
     }
 
     /// <summary>
@@ -44,25 +44,25 @@ public class DbHelper
     /// <param name="secretKey"></param>
     public DbHelper(string dbPath, string secretKey)
     {
-        connStr = new SqliteConnectionStringBuilder
+        _connStr = new SqliteConnectionStringBuilder
         {
             Mode = SqliteOpenMode.ReadWriteCreate,
             Password = secretKey,
             DataSource = dbPath
         }.ToString();
-        if (database.ContainsKey(connStr))
+        if (Database.TryGetValue(_connStr, out var value))
         {
-            conn = database[connStr];
+            _conn = value;
 
-            if (conn != null)
+            if (_conn != null)
             {
                 return;
             }
         }
 
-        conn = new SqliteConnection(connStr);
+        _conn = new SqliteConnection(_connStr);
         // conn.SetPassword(secretKey);
-        database.Add(connStr, conn);
+        Database.Add(_connStr, _conn);
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class DbHelper
     /// <returns></returns>
     public bool IsOpen()
     {
-        return conn.State == ConnectionState.Open;
+        return _conn?.State == ConnectionState.Open;
     }
 
     /// <summary>
@@ -79,14 +79,14 @@ public class DbHelper
     /// </summary>
     public void Open()
     {
-        if (conn == null)
+        if (_conn == null)
         {
             return;
         }
 
         if (!IsOpen())
         {
-            conn.Open();
+            _conn.Open();
         }
     }
 
@@ -95,47 +95,44 @@ public class DbHelper
     /// </summary>
     public void Close()
     {
-        if (conn == null)
+        if (_conn == null)
         {
             return;
         }
 
-        if (IsOpen())
-        {
-            conn.Close();
+        if (!IsOpen()) return;
+        _conn.Close();
 
-            database.Remove(connStr);
-        }
+        Database.Remove(_connStr);
     }
 
     /// <summary>
     /// 执行一条SQL语句
     /// </summary>
     /// <param name="sql"></param>
-    public void ExecuteNonQuery(string sql, Action<SqliteParameterCollection> action = null)
+    /// <param name="action"></param>
+    public void ExecuteNonQuery(string sql, Action<SqliteParameterCollection>? action = null)
     {
-        if (conn == null)
+        if (_conn == null)
         {
             return;
         }
 
         try
         {
-            lock (conn)
+            lock (_conn)
             {
                 Open();
-                using (var tr = conn.BeginTransaction())
+                using var tr = _conn.BeginTransaction();
+                using (var command = _conn.CreateCommand())
                 {
-                    using (var command = conn.CreateCommand())
-                    {
-                        command.CommandText = sql;
-                        // 添加参数
-                        action?.Invoke(command.Parameters);
-                        command.ExecuteNonQuery();
-                    }
-
-                    tr.Commit();
+                    command.CommandText = sql;
+                    // 添加参数
+                    action?.Invoke(command.Parameters);
+                    command.ExecuteNonQuery();
                 }
+
+                tr.Commit();
             }
         }
         catch (SqliteException e)
@@ -152,22 +149,20 @@ public class DbHelper
     /// <param name="action"></param>
     public void ExecuteQuery(string sql, Action<SqliteDataReader> action)
     {
-        if (conn == null)
+        if (_conn == null)
         {
             return;
         }
 
         try
         {
-            lock (conn)
+            lock (_conn)
             {
                 Open();
-                using (var command = conn.CreateCommand())
-                {
-                    command.CommandText = sql;
-                    var reader = command.ExecuteReader();
-                    action(reader);
-                }
+                using var command = _conn.CreateCommand();
+                command.CommandText = sql;
+                var reader = command.ExecuteReader();
+                action(reader);
             }
         }
         catch (SqliteException e)

@@ -20,7 +20,7 @@ public class FavoritesService : IFavoritesService
     /// </summary>
     /// <param name="mediaId"></param>
     /// <returns></returns>
-    public Favorites GetFavorites(long mediaId)
+    public Favorites? GetFavorites(long mediaId)
     {
         var favoritesMetaInfo = FavoritesInfo.GetFavoritesInfo(mediaId);
         if (favoritesMetaInfo == null)
@@ -29,24 +29,10 @@ public class FavoritesService : IFavoritesService
         }
 
         // 查询、保存封面
-        var storageCover = new StorageCover();
-        var coverUrl = favoritesMetaInfo.Cover;
-        var cover = storageCover.GetCoverThumbnail(favoritesMetaInfo.Id, "Favorites", favoritesMetaInfo.Mid, coverUrl, 300, 188);
+        var coverUrl = favoritesMetaInfo?.Cover;
 
         // 获取用户头像
-        string upName;
-        string header;
-        if (favoritesMetaInfo.Upper != null)
-        {
-            upName = favoritesMetaInfo.Upper.Name;
-            var storageHeader = new StorageHeader();
-            header = storageHeader.GetHeader(favoritesMetaInfo.Upper.Mid, favoritesMetaInfo.Upper.Name, favoritesMetaInfo.Upper.Face);
-        }
-        else
-        {
-            upName = "";
-            header = null;
-        }
+        var upName = favoritesMetaInfo?.Upper != null ? favoritesMetaInfo.Upper.Name : "";
 
         // 为Favorites赋值
         var favorites = new Favorites();
@@ -54,10 +40,9 @@ public class FavoritesService : IFavoritesService
         {
             favorites.CoverUrl = coverUrl;
 
-            favorites.Cover = cover;
             favorites.Title = favoritesMetaInfo.Title;
 
-            var startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1)); // 当地时区
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
             var dateTime = startTime.AddSeconds(favoritesMetaInfo.Ctime);
             favorites.CreateTime = dateTime.ToString("yyyy-MM-dd HH:mm:ss");
 
@@ -69,17 +54,8 @@ public class FavoritesService : IFavoritesService
             favorites.MediaCount = favoritesMetaInfo.MediaCount;
 
             favorites.UpName = upName;
-            if (header != null)
-            {
-                var storageHeader = new StorageHeader();
-                favorites.UpHeader = storageHeader.GetHeaderThumbnail(header, 48, 48);
-
-                favorites.UpperMid = favoritesMetaInfo.Upper.Mid;
-            }
-            else
-            {
-                favorites.UpHeader = null;
-            }
+            favorites.UpHeader = favoritesMetaInfo.Upper.Face;
+            favorites.UpperMid = favoritesMetaInfo.Upper.Mid;
         });
 
         return favorites;
@@ -136,12 +112,10 @@ public class FavoritesService : IFavoritesService
             order++;
 
             // 查询、保存封面
-            var storageCover = new StorageCover();
             var coverUrl = media.Cover;
-            Bitmap cover = storageCover.GetCoverThumbnail(media.Id, media.Bvid, -1, coverUrl, 200, 125);
 
             // 当地时区
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);;
 
             // 创建时间
             var dateCTime = startTime.AddSeconds(media.Ctime);
@@ -158,7 +132,7 @@ public class FavoritesService : IFavoritesService
                     Avid = media.Id,
                     Bvid = media.Bvid,
                     Order = order,
-                    Cover = cover,
+                    Cover = coverUrl,
                     Title = media.Title,
                     PlayNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Play) : "0",
                     DanmakuNumber = media.CntInfo != null ? Format.FormatNumber(media.CntInfo.Danmaku) : "0",

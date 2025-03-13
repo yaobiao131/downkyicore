@@ -8,6 +8,7 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
              xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewVideoDetailViewModel">
     <Grid RowDefinitions="50,10,*">
 
@@ -96,7 +97,7 @@
                     MaxWidth="300"
                     VerticalAlignment="Top"
                     DockPanel.Dock="Left"
-                    Source="{Binding VideoInfoView.Cover}">
+                    asyncImageLoader:ImageLoader.Source="{Binding VideoInfoView.CoverUrl}">
                     <Image.ContextMenu>
                         <ContextMenu>
                             <!-- <MenuItem Command="{Binding CopyCoverCommand}" Header="{DynamicResource CopyCover}" /> -->
@@ -112,7 +113,7 @@
 
                     <Grid Grid.Row="0" ColumnDefinitions="*,120">
                         <Grid Grid.Row="0" RowDefinitions="3*,2*,2*">
-                            <TextBlock
+                            <SelectableTextBlock
                                 Grid.Row="0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
@@ -219,7 +220,7 @@
                             <Image
                                 Width="48"
                                 Height="48"
-                                Source="{Binding VideoInfoView.UpHeader}">
+                                asyncImageLoader:ImageLoader.Source="{Binding VideoInfoView.UpHeader}">
                                 <Image.Clip>
                                     <EllipseGeometry
                                         Center="24,24"
@@ -240,13 +241,10 @@
                         Grid.Row="1"
                         Margin="0,5,0,0"
                         VerticalScrollBarVisibility="Auto">
-                        <TextBox
+                        <SelectableTextBlock
                             Background="{x:Null}"
-                            BorderBrush="{x:Null}"
-                            BorderThickness="0"
                             FontSize="12"
                             Foreground="{DynamicResource BrushTextDark}"
-                            IsReadOnly="True"
                             Text="{Binding VideoInfoView.Description}"
                             TextWrapping="WrapWithOverflow" />
                     </ScrollViewer>

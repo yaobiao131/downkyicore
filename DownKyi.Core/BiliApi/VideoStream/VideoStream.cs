@@ -17,14 +17,24 @@ public static class VideoStream
     /// <param name="bvid"></param>
     /// <param name="cid"></param>
     /// <returns></returns>
-    public static PlayerV2 PlayerV2(long avid, string bvid, long cid)
+    public static PlayerV2? PlayerV2(long avid, string? bvid, long cid)
     {
-        var parameters = new Dictionary<string, object>
+        var parameters = new Dictionary<string, object?>();
+
+        if (avid > 0)
         {
-            { "avid", avid },
-            { "bvid", bvid },
-            { "cid", cid },
-        };
+            parameters.Add("bvid", bvid);
+        }
+
+        if (bvid != null)
+        {
+            parameters.Add("avid", avid);
+        }
+        else if (cid > 0)
+        {
+            parameters.Add("cid", cid);
+        }
+
         var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
         var url = $"https://api.bilibili.com/x/player/wbi/v2?{query}";
         const string referer = "https://www.bilibili.com";
@@ -51,7 +61,7 @@ public static class VideoStream
     /// <param name="bvid"></param>
     /// <param name="cid"></param>
     /// <returns></returns>
-    public static List<SubRipText> GetSubtitle(long avid, string bvid, long cid)
+    public static List<SubRipText>? GetSubtitle(long avid, string? bvid, long cid)
     {
         var subRipTexts = new List<SubRipText>();
 
@@ -107,7 +117,7 @@ public static class VideoStream
     /// <returns></returns>
     public static PlayUrl GetVideoPlayUrl(long avid, string bvid, long cid, int quality = 125)
     {
-        var parameters = new Dictionary<string, object>
+        var parameters = new Dictionary<string, object?>
         {
             { "fourk", 1 },
             { "fnver", 0 },
@@ -242,11 +252,13 @@ public static class VideoStream
             {
                 return null;
             }
-            else if (playUrl.Data != null)
+
+            if (playUrl.Data != null)
             {
                 return playUrl.Data;
             }
-            else if (playUrl.Result != null)
+
+            if (playUrl.Result != null)
             {
                 return playUrl.Result;
             }
@@ -287,18 +299,18 @@ public static class VideoStream
             {
                 return null;
             }
-            else if (playUrl.Data != null)
+
+            if (playUrl.Data != null)
             {
                 return playUrl.Data;
             }
-            else if (playUrl.Result != null)
+
+            if (playUrl.Result != null)
             {
                 return playUrl.Result;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
         catch (Exception e)
         {

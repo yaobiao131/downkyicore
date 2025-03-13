@@ -2,7 +2,7 @@
 
 public static class BangumiType
 {
-    public static Dictionary<int, string> Type = new Dictionary<int, string>()
+    public static readonly Dictionary<int, string> Type = new()
     {
         { 1, "Anime" },
         { 2, "Movie" },
@@ -16,7 +16,7 @@ public static class BangumiType
         { 10, "Unknown" }
     };
 
-    public static Dictionary<int, int> TypeId = new Dictionary<int, int>()
+    public static readonly Dictionary<int, int> TypeId = new()
     {
         { 1, 13 },
         { 2, 23 },

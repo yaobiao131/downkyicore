@@ -25,20 +25,20 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private ObservableCollection<SeasonsSeries> seasonsSeries;
+    private ObservableCollection<SeasonsSeries> _seasonsSeries;
 
     public ObservableCollection<SeasonsSeries> SeasonsSeries
     {
-        get => seasonsSeries;
-        set => SetProperty(ref seasonsSeries, value);
+        get => _seasonsSeries;
+        set => SetProperty(ref _seasonsSeries, value);
     }
 
-    private int selectedItem;
+    private int _selectedItem;
 
     public int SelectedItem
     {
-        get => selectedItem;
-        set => SetProperty(ref selectedItem, value);
+        get => _selectedItem;
+        set => SetProperty(ref _selectedItem, value);
     }
 
     #endregion
@@ -55,12 +55,9 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     #region 命令申明
 
     // 视频选择事件
-    private DelegateCommand<object> seasonsSeriesCommand;
+    private DelegateCommand<object> _seasonsSeriesCommand;
 
-    public DelegateCommand<object> SeasonsSeriesCommand => seasonsSeriesCommand ??
-                                                           (seasonsSeriesCommand =
-                                                               new DelegateCommand<object>(
-                                                                   ExecuteSeasonsSeriesCommand));
+    public DelegateCommand<object> SeasonsSeriesCommand => _seasonsSeriesCommand ??= new DelegateCommand<object>(ExecuteSeasonsSeriesCommand);
 
     /// <summary>
     /// 视频选择事件
@@ -68,13 +65,13 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteSeasonsSeriesCommand(object parameter)
     {
-        if (!(parameter is SeasonsSeries seasonsSeries))
+        if (parameter is not SeasonsSeries seasonsSeries)
         {
             return;
         }
 
         // 应该用枚举的，偷懒直接用数字
-        int type = 0;
+        var type = 0;
         if (seasonsSeries.TypeImage == NormalIcon.Instance().SeasonsSeries)
         {
             type = 1;
@@ -84,7 +81,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
             type = 2;
         }
 
-        Dictionary<string, object> data = new Dictionary<string, object>
+        var data = new Dictionary<string, object>
         {
             { "mid", mid },
             { "id", seasonsSeries.Id },
@@ -94,7 +91,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         };
 
         // 进入视频页面
-        NavigationParam param = new NavigationParam
+        var param = new NavigationParam
         {
             ViewName = ViewModels.ViewSeasonsSeriesViewModel.Tag,
             ParentViewName = ViewUserSpaceViewModel.Tag,
@@ -119,7 +116,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     /// 接收mid参数
     /// </summary>
     /// <param name="navigationContext"></param>
-    public async override void OnNavigatedTo(NavigationContext navigationContext)
+    public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);
 
@@ -143,23 +140,20 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 continue;
             }
 
-            Bitmap image = null;
+            string? image;
             if (item.Meta.Cover == null || item.Meta.Cover == "")
             {
-                image = ImageHelper.LoadFromResource(new Uri("avares://DownKyi/Resources/video-placeholder.png"));
+                image = "avares://DownKyi/Resources/video-placeholder.png";
             }
             else
             {
-                StorageCover storageCover = new StorageCover();
-                string cover = null;
-                await Task.Run(() => { cover = storageCover.GetCover(item.Meta.Cover); });
-                image = storageCover.GetCoverThumbnail(cover, 190, 190);
+                image = item.Meta.Cover;
             }
 
             // 当地时区
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            DateTime dateCTime = startTime.AddSeconds(item.Meta.Ptime);
-            string mtime = dateCTime.ToString("yyyy-MM-dd");
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
+            var dateCTime = startTime.AddSeconds(item.Meta.Ptime);
+            var mtime = dateCTime.ToString("yyyy-MM-dd");
 
             SeasonsSeries.Add(new SeasonsSeries
             {
@@ -179,23 +173,20 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                 continue;
             }
 
-            Bitmap image = null;
+            string? image;
             if (item.Meta.Cover == null || item.Meta.Cover == "")
             {
-                image = ImageHelper.LoadFromResource(new Uri($"avares://DownKyi/Resources/video-placeholder.png"));
+                image = "avares://DownKyi/Resources/video-placeholder.png";
             }
             else
             {
-                StorageCover storageCover = new StorageCover();
-                string cover = null;
-                await Task.Run(() => { cover = storageCover.GetCover(item.Meta.Cover); });
-                image = storageCover.GetCoverThumbnail(cover, 190, 190);
+                image = item.Meta.Cover;
             }
 
             // 当地时区
-            DateTime startTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
-            DateTime dateCTime = startTime.AddSeconds(item.Meta.Mtime);
-            string mtime = dateCTime.ToString("yyyy-MM-dd");
+            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);;
+            var dateCTime = startTime.AddSeconds(item.Meta.Mtime);
+            var mtime = dateCTime.ToString("yyyy-MM-dd");
 
             SeasonsSeries.Add(new SeasonsSeries
             {

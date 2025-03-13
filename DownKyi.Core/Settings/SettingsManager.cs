@@ -14,17 +14,17 @@ namespace DownKyi.Core.Settings;
 
 public partial class SettingsManager
 {
-    private static SettingsManager instance;
+    private static SettingsManager? _instance;
 
     // 内存中保存一份配置
-    private AppSettings appSettings;
+    private AppSettings _appSettings;
 
 #if DEBUG
     // 设置的配置文件
-    private readonly string settingsName = StorageManager.GetSettings() + "_debug.json";
+    private readonly string _settingsName = StorageManager.GetSettings() + "_debug.json";
 #else
         // 设置的配置文件
-        private readonly string settingsName = Storage.StorageManager.GetSettings();
+        private readonly string _settingsName = Storage.StorageManager.GetSettings();
 
         // 密钥
         private readonly string password = "YO1J$4#p";
@@ -36,12 +36,7 @@ public partial class SettingsManager
     /// <returns></returns>
     public static SettingsManager GetInstance()
     {
-        if (instance == null)
-        {
-            instance = new SettingsManager();
-        }
-
-        return instance;
+        return _instance ??= new SettingsManager();
     }
 
     /// <summary>
@@ -49,7 +44,7 @@ public partial class SettingsManager
     /// </summary>
     private SettingsManager()
     {
-        appSettings = GetSettings();
+        _appSettings = GetSettings();
     }
 
     /// <summary>
@@ -58,9 +53,9 @@ public partial class SettingsManager
     /// <returns></returns>
     private AppSettings GetSettings()
     {
-        if (appSettings != null)
+        if (_appSettings != null)
         {
-            return appSettings;
+            return _appSettings;
         }
 
         try
@@ -70,9 +65,8 @@ public partial class SettingsManager
             //string jsonWordTemplate = streamReader.ReadToEnd();
             //streamReader.Close();
             //fileStream.Close();
-            string jsonWordTemplate = string.Empty;
-            using (var stream = new FileStream(settingsName, FileMode.Open, FileAccess.Read,
-                       FileShare.ReadWrite | FileShare.Delete))
+            var jsonWordTemplate = string.Empty;
+            using (var stream = new FileStream(_settingsName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
             {
                 using (var reader = new StreamReader(stream, Encoding.UTF8))
                 {
@@ -104,7 +98,7 @@ public partial class SettingsManager
     {
         try
         {
-            string json = JsonConvert.SerializeObject(appSettings);
+            var json = JsonConvert.SerializeObject(_appSettings);
 
 #if DEBUG
 #else
@@ -112,7 +106,7 @@ public partial class SettingsManager
                 json = Encryptor.EncryptString(json, password);
 #endif
 
-            File.WriteAllText(settingsName, json);
+            File.WriteAllText(_settingsName, json);
             return true;
         }
         catch (Exception e)

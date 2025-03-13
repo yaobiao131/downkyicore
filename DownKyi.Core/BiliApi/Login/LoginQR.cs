@@ -3,10 +3,11 @@ using DownKyi.Core.BiliApi.Login.Models;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Utils;
 using Newtonsoft.Json;
+using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.Login;
 
-public static class LoginQR
+public static class LoginQr
 {
     /// <summary>
     /// 申请二维码URL及扫码密钥（web端）
@@ -14,16 +15,15 @@ public static class LoginQR
     /// <returns></returns>
     public static LoginUrlOrigin? GetLoginUrl()
     {
-        string getLoginUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate";
-        string response = WebClient.RequestWeb(getLoginUrl);
-        Console.Out.WriteLine(response);
+        const string getLoginUrl = "https://passport.bilibili.com/x/passport-login/web/qrcode/generate";
+        var response = WebClient.RequestWeb(getLoginUrl);
         try
         {
             return JsonConvert.DeserializeObject<LoginUrlOrigin>(response);
         }
         catch (Exception e)
         {
-            Utils.Debugging.Console.PrintLine("GetLoginUrl()发生异常: {0}", e);
+            Console.PrintLine("GetLoginUrl()发生异常: {0}", e);
             LogManager.Error("LoginQR", e);
             return null;
         }
@@ -33,13 +33,12 @@ public static class LoginQR
     /// 使用扫码登录（web端）
     /// </summary>
     /// <param name="qrcodeKey"></param>
-    /// <param name="goUrl"></param>
     /// <returns></returns>
-    public static LoginStatus? GetLoginStatus(string qrcodeKey, string goUrl = "https://www.bilibili.com")
+    public static LoginStatus? GetLoginStatus(string qrcodeKey)
     {
-        string url = "https://passport.bilibili.com/x/passport-login/web/qrcode/poll?qrcode_key=" + qrcodeKey;
+        var url = $"https://passport.bilibili.com/x/passport-login/web/qrcode/poll?qrcode_key={qrcodeKey}";
 
-        string response = WebClient.RequestWeb(url);
+        var response = WebClient.RequestWeb(url);
 
         try
         {
@@ -47,7 +46,7 @@ public static class LoginQR
         }
         catch (Exception e)
         {
-            Utils.Debugging.Console.PrintLine("GetLoginInfo()发生异常: {0}", e);
+            Console.PrintLine("GetLoginInfo()发生异常: {0}", e);
             LogManager.Error("LoginQR", e);
             return null;
         }
@@ -57,16 +56,16 @@ public static class LoginQR
     /// 获得登录二维码
     /// </summary>
     /// <returns></returns>
-    public static Bitmap GetLoginQRCode()
+    public static Bitmap? GetLoginQrCode()
     {
         try
         {
-            string loginUrl = GetLoginUrl().Data.Url;
-            return GetLoginQRCode(loginUrl);
+            var loginUrl = GetLoginUrl()?.Data?.Url;
+            return GetLoginQrCode(loginUrl);
         }
         catch (Exception e)
         {
-            Utils.Debugging.Console.PrintLine("GetLoginQRCode()发生异常: {0}", e);
+            Console.PrintLine("GetLoginQrCode()发生异常: {0}", e);
             LogManager.Error("LoginQR", e);
             return null;
         }
@@ -77,10 +76,11 @@ public static class LoginQR
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    public static Bitmap GetLoginQRCode(string url)
+    public static Bitmap? GetLoginQrCode(string? url)
     {
+        if (url == null) return null;
         // 设置的参数影响app能否成功扫码
-        Bitmap qrCode = QRCode.EncodeQRCode(url, 11, 10, null, 0, 0, false);
+        var qrCode = QrCode.EncodeQrCode(url, 11, 10, null, 0, 0, false);
 
         return qrCode;
     }

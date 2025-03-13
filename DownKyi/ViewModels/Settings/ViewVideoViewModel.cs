@@ -19,32 +19,32 @@ public class ViewVideoViewModel : ViewModelBase
 {
     public const string Tag = "PageSettingsVideo";
 
-    private bool isOnNavigatedTo;
+    private bool _isOnNavigatedTo;
 
     #region 页面属性申明
 
-    private List<Quality> videoCodecs;
+    private List<Quality> _videoCodecs;
 
     public List<Quality> VideoCodecs
     {
-        get => videoCodecs;
-        set => SetProperty(ref videoCodecs, value);
+        get => _videoCodecs;
+        set => SetProperty(ref _videoCodecs, value);
     }
 
-    private Quality selectedVideoCodec;
+    private Quality _selectedVideoCodec;
 
     public Quality SelectedVideoCodec
     {
-        get => selectedVideoCodec;
-        set => SetProperty(ref selectedVideoCodec, value);
+        get => _selectedVideoCodec;
+        set => SetProperty(ref _selectedVideoCodec, value);
     }
 
-    private List<Quality> videoQualityList;
+    private List<Quality> _videoQualityList;
 
     public List<Quality> VideoQualityList
     {
-        get => videoQualityList;
-        set => SetProperty(ref videoQualityList, value);
+        get => _videoQualityList;
+        set => SetProperty(ref _videoQualityList, value);
     }
 
     private Quality _selectedVideoQuality;
@@ -94,7 +94,7 @@ public class ViewVideoViewModel : ViewModelBase
         get => _isTranscodingFlvToMp4;
         set => SetProperty(ref _isTranscodingFlvToMp4, value);
     }
-    
+
     private bool _isTranscodingAacToMp3;
 
     public bool IsTranscodingAacToMp3
@@ -284,10 +284,10 @@ public class ViewVideoViewModel : ViewModelBase
         // 文件命名中的序号格式
         OrderFormatList = new List<OrderFormatDisplay>
         {
-            new() { Name = DictionaryResource.GetString("OrderFormatNatural"), OrderFormat = OrderFormat.NATURAL },
+            new() { Name = DictionaryResource.GetString("OrderFormatNatural"), OrderFormat = OrderFormat.Natural },
             new()
             {
-                Name = DictionaryResource.GetString("OrderFormatLeadingZeros"), OrderFormat = OrderFormat.LEADING_ZEROS
+                Name = DictionaryResource.GetString("OrderFormatLeadingZeros"), OrderFormat = OrderFormat.LeadingZeros
             },
         };
 
@@ -302,7 +302,7 @@ public class ViewVideoViewModel : ViewModelBase
     {
         base.OnNavigatedTo(navigationContext);
 
-        isOnNavigatedTo = true;
+        _isOnNavigatedTo = true;
 
         // 优先下载的视频编码
         var videoCodecs = SettingsManager.GetInstance().GetVideoCodecs();
@@ -322,16 +322,16 @@ public class ViewVideoViewModel : ViewModelBase
         SelectedVideoParseType = VideoParseTypeList.FirstOrDefault(t => t.Id == videoParseType);
 
         // 是否下载flv视频后转码为mp4
-        var isTranscodingFlvToMp4 = SettingsManager.GetInstance().IsTranscodingFlvToMp4();
-        IsTranscodingFlvToMp4 = isTranscodingFlvToMp4 == AllowStatus.YES;
-        
+        var isTranscodingFlvToMp4 = SettingsManager.GetInstance().GetIsTranscodingFlvToMp4();
+        IsTranscodingFlvToMp4 = isTranscodingFlvToMp4 == AllowStatus.Yes;
+
         // 是否下载aac音频后转码为mp3
-        var isTranscodingAacToMp3 = SettingsManager.GetInstance().IsTranscodingAacToMp3();
-        IsTranscodingAacToMp3 = isTranscodingAacToMp3 == AllowStatus.YES;
+        var isTranscodingAacToMp3 = SettingsManager.GetInstance().GetIsTranscodingAacToMp3();
+        IsTranscodingAacToMp3 = isTranscodingAacToMp3 == AllowStatus.Yes;
 
         // 是否使用默认下载目录
-        var isUseSaveVideoRootPath = SettingsManager.GetInstance().IsUseSaveVideoRootPath();
-        IsUseDefaultDirectory = isUseSaveVideoRootPath == AllowStatus.YES;
+        var isUseSaveVideoRootPath = SettingsManager.GetInstance().GetIsUseSaveVideoRootPath();
+        IsUseDefaultDirectory = isUseSaveVideoRootPath == AllowStatus.Yes;
 
         // 默认下载目录
         SaveVideoDirectory = SettingsManager.GetInstance().GetSaveVideoRootPath();
@@ -367,10 +367,10 @@ public class ViewVideoViewModel : ViewModelBase
         SelectedFileNamePartTimeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
 
         // 文件命名中的序号格式
-        OrderFormat orderFormat = SettingsManager.GetInstance().GetOrderFormat();
+        var orderFormat = SettingsManager.GetInstance().GetOrderFormat();
         OrderFormatDisplay = OrderFormatList.FirstOrDefault(t => { return t.OrderFormat == orderFormat; });
 
-        isOnNavigatedTo = false;
+        _isOnNavigatedTo = false;
     }
 
     #region 命令申明
@@ -408,12 +408,12 @@ public class ViewVideoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteVideoQualityCommand(object parameter)
     {
-        if (!(parameter is Quality resolution))
+        if (parameter is not Quality resolution)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetQuality(resolution.Id);
+        var isSucceed = SettingsManager.GetInstance().SetQuality(resolution.Id);
         PublishTip(isSucceed);
     }
 
@@ -428,12 +428,12 @@ public class ViewVideoViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteAudioQualityCommand(object parameter)
     {
-        if (!(parameter is Quality quality))
+        if (parameter is not Quality quality)
         {
             return;
         }
 
-        bool isSucceed = SettingsManager.GetInstance().SetAudioQuality(quality.Id);
+        var isSucceed = SettingsManager.GetInstance().SetAudioQuality(quality.Id);
         PublishTip(isSucceed);
     }
 
@@ -468,25 +468,25 @@ public class ViewVideoViewModel : ViewModelBase
     /// </summary>
     private void ExecuteIsTranscodingFlvToMp4Command()
     {
-        var isTranscodingFlvToMp4 = IsTranscodingFlvToMp4 ? AllowStatus.YES : AllowStatus.NO;
+        var isTranscodingFlvToMp4 = IsTranscodingFlvToMp4 ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsTranscodingFlvToMp4(isTranscodingFlvToMp4);
+        var isSucceed = SettingsManager.GetInstance().SetIsTranscodingFlvToMp4(isTranscodingFlvToMp4);
         PublishTip(isSucceed);
     }
-    
+
     // 是否下载aac音频后转码为mp3事件
     private DelegateCommand? _isTranscodingAacToMp3Command;
-    
+
     public DelegateCommand IsTranscodingAacToMp3Command => _isTranscodingAacToMp3Command ??= new DelegateCommand(ExecuteIsTranscodingAacToMp3Command);
-    
+
     /// <summary>
     /// 是否下载aac音频后转码为mp3事件
     /// </summary>
     private void ExecuteIsTranscodingAacToMp3Command()
     {
-        var isTranscodingAacToMp3 = IsTranscodingAacToMp3 ? AllowStatus.YES : AllowStatus.NO;
-    
-        var isSucceed = SettingsManager.GetInstance().IsTranscodingAacToMp3(isTranscodingAacToMp3);
+        var isTranscodingAacToMp3 = IsTranscodingAacToMp3 ? AllowStatus.Yes : AllowStatus.No;
+
+        var isSucceed = SettingsManager.GetInstance().SetIsTranscodingAacToMp3(isTranscodingAacToMp3);
         PublishTip(isSucceed);
     }
 
@@ -500,9 +500,9 @@ public class ViewVideoViewModel : ViewModelBase
     /// </summary>
     private void ExecuteIsUseDefaultDirectoryCommand()
     {
-        var isUseDefaultDirectory = IsUseDefaultDirectory ? AllowStatus.YES : AllowStatus.NO;
+        var isUseDefaultDirectory = IsUseDefaultDirectory ? AllowStatus.Yes : AllowStatus.No;
 
-        var isSucceed = SettingsManager.GetInstance().IsUseSaveVideoRootPath(isUseDefaultDirectory);
+        var isSucceed = SettingsManager.GetInstance().SetIsUseSaveVideoRootPath(isUseDefaultDirectory);
         PublishTip(isSucceed);
     }
 
@@ -692,7 +692,7 @@ public class ViewVideoViewModel : ViewModelBase
             return;
         }
 
-        bool isSucceed = SelectedFileName.Remove((DisplayFileNamePart)parameter);
+        var isSucceed = SelectedFileName.Remove((DisplayFileNamePart)parameter);
         if (!isSucceed)
         {
             PublishTip(isSucceed);
@@ -729,11 +729,7 @@ public class ViewVideoViewModel : ViewModelBase
 
         SelectedFileName.Add((DisplayFileNamePart)parameter);
 
-        var fileName = new List<FileNamePart>();
-        foreach (var item in SelectedFileName)
-        {
-            fileName.Add(item.Id);
-        }
+        var fileName = SelectedFileName.Select(item => item.Id).ToList();
 
         var isSucceed = SettingsManager.GetInstance().SetFileNameParts(fileName);
         PublishTip(isSucceed);
@@ -882,20 +878,20 @@ public class ViewVideoViewModel : ViewModelBase
     {
         var display = item switch
         {
-            FileNamePart.ORDER => DictionaryResource.GetString("DisplayOrder"),
-            FileNamePart.SECTION => DictionaryResource.GetString("DisplaySection"),
-            FileNamePart.MAIN_TITLE => DictionaryResource.GetString("DisplayMainTitle"),
-            FileNamePart.PAGE_TITLE => DictionaryResource.GetString("DisplayPageTitle"),
-            FileNamePart.VIDEO_ZONE => DictionaryResource.GetString("DisplayVideoZone"),
-            FileNamePart.AUDIO_QUALITY => DictionaryResource.GetString("DisplayAudioQuality"),
-            FileNamePart.VIDEO_QUALITY => DictionaryResource.GetString("DisplayVideoQuality"),
-            FileNamePart.VIDEO_CODEC => DictionaryResource.GetString("DisplayVideoCodec"),
-            FileNamePart.VIDEO_PUBLISH_TIME => DictionaryResource.GetString("DisplayVideoPublishTime"),
-            FileNamePart.AVID => "avid",
-            FileNamePart.BVID => "bvid",
-            FileNamePart.CID => "cid",
-            FileNamePart.UP_MID => DictionaryResource.GetString("DisplayUpMid"),
-            FileNamePart.UP_NAME => DictionaryResource.GetString("DisplayUpName"),
+            FileNamePart.Order => DictionaryResource.GetString("DisplayOrder"),
+            FileNamePart.Section => DictionaryResource.GetString("DisplaySection"),
+            FileNamePart.MainTitle => DictionaryResource.GetString("DisplayMainTitle"),
+            FileNamePart.PageTitle => DictionaryResource.GetString("DisplayPageTitle"),
+            FileNamePart.VideoZone => DictionaryResource.GetString("DisplayVideoZone"),
+            FileNamePart.AudioQuality => DictionaryResource.GetString("DisplayAudioQuality"),
+            FileNamePart.VideoQuality => DictionaryResource.GetString("DisplayVideoQuality"),
+            FileNamePart.VideoCodec => DictionaryResource.GetString("DisplayVideoCodec"),
+            FileNamePart.VideoPublishTime => DictionaryResource.GetString("DisplayVideoPublishTime"),
+            FileNamePart.Avid => "avid",
+            FileNamePart.Bvid => "bvid",
+            FileNamePart.Cid => "cid",
+            FileNamePart.UpMid => DictionaryResource.GetString("DisplayUpMid"),
+            FileNamePart.UpName => DictionaryResource.GetString("DisplayUpName"),
             _ => string.Empty
         };
 
@@ -918,18 +914,11 @@ public class ViewVideoViewModel : ViewModelBase
     /// <param name="isSucceed"></param>
     private void PublishTip(bool isSucceed)
     {
-        if (isOnNavigatedTo)
+        if (_isOnNavigatedTo)
         {
             return;
         }
 
-        if (isSucceed)
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingUpdated"));
-        }
-        else
-        {
-            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipSettingFailed"));
-        }
+        EventAggregator.GetEvent<MessageEvent>().Publish(isSucceed ? DictionaryResource.GetString("TipSettingUpdated") : DictionaryResource.GetString("TipSettingFailed"));
     }
 }

@@ -84,17 +84,17 @@ public class ViewUserSpaceViewModel : ViewModelBase
         set => SetProperty(ref _topNavigationBg, value);
     }
 
-    private Bitmap _background;
+    private string _background;
 
-    public Bitmap Background
+    public string Background
     {
         get => _background;
         set => SetProperty(ref _background, value);
     }
 
-    private Bitmap _header;
+    private string _header;
 
-    public Bitmap Header
+    public string Header
     {
         get => _header;
         set => SetProperty(ref _header, value);
@@ -185,7 +185,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
     public ViewUserSpaceViewModel(IRegionManager regionManager, IEventAggregator eventAggregator) : base(
         eventAggregator)
     {
-        this._regionManager = regionManager;
+        _regionManager = regionManager;
 
         #region 属性初始化
 
@@ -277,21 +277,13 @@ public class ViewUserSpaceViewModel : ViewModelBase
             return;
         }
 
-        Dictionary<string, object> data = new Dictionary<string, object>
+        var data = new Dictionary<string, object>
         {
             { "mid", mid },
             { "friendId", 0 }
         };
 
-        string parentViewName;
-        if (ParentView == ViewFriendsViewModel.Tag)
-        {
-            parentViewName = ViewIndexViewModel.Tag;
-        }
-        else
-        {
-            parentViewName = Tag;
-        }
+        var parentViewName = ParentView == ViewFriendsViewModel.Tag ? ViewIndexViewModel.Tag : Tag;
 
         switch (banner.Id)
         {
@@ -347,7 +339,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
     private async void UpdateSpaceInfo()
     {
         var isNoData = true;
-        Uri? toutuUri = null;
+        string? toutuUri = null;
         string? headerUri = null;
         Uri? sexUri = null;
         Uri? levelUri = null;
@@ -356,16 +348,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         {
             // 背景图片
             var spaceSettings = Core.BiliApi.Users.UserSpace.GetSpaceSettings(mid);
-            if (spaceSettings != null)
-            {
-                var storageCover = new StorageCover();
-                var toutu = storageCover.GetCover($"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}");
-                toutuUri = new Uri(toutu);
-            }
-            else
-            {
-                toutuUri = new Uri("avares://DownKyi/Resources/backgound/9-绿荫秘境.png");
-            }
+            toutuUri = spaceSettings != null ? $"https://i0.hdslb.com/{spaceSettings.Toutu.Limg}" : "avares://DownKyi/Resources/backgound/9-绿荫秘境.png";
 
             // 用户信息
             var userInfo = UserInfo.GetUserInfoForSpace(mid);
@@ -374,8 +357,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
                 isNoData = false;
 
                 // 头像
-                var storageHeader = new StorageHeader();
-                headerUri = storageHeader.GetHeader(mid, userInfo.Name, userInfo.Face);
+                headerUri = userInfo.Face;
                 // 用户名
                 UserName = userInfo.Name;
                 sexUri = userInfo.Sex switch
@@ -432,8 +414,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         else
         {
             // 头像
-            var storageHeader = new StorageHeader();
-            Header = storageHeader.GetHeaderThumbnail(headerUri, 64, 64);
+            Header = headerUri;
             // 性别
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
             // 等级
@@ -441,7 +422,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
 
             ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
             TopNavigationBg = DictionaryResource.GetColor("ColorMask100");
-            Background = ImageHelper.LoadFromResource(toutuUri);
+            Background = toutuUri;
 
             ViewVisibility = true;
             LoadingVisibility = false;
@@ -453,7 +434,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
         // 投稿视频
         List<SpacePublicationListTypeVideoZone>? publicationTypes = null;
         await Task.Run(() => { publicationTypes = Core.BiliApi.Users.UserSpace.GetPublicationType(mid); });
-        if (publicationTypes != null && publicationTypes.Count > 0)
+        if (publicationTypes is { Count: > 0 })
         {
             TabLeftBanners.Add(new TabLeftBanner
             {

@@ -15,7 +15,7 @@ public class Downloading // : DownloadBase
     }
 
     // Aria相关
-    public string Gid { get; set; }
+    public string? Gid { get; set; }
 
     // 下载的文件
     public Dictionary<string, string> DownloadFiles { get; set; }

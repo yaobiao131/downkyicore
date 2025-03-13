@@ -148,6 +148,8 @@ public partial class App : PrismApplication
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
+                    if (e.NewItems == null) return;
+
                     foreach (var item in e.NewItems)
                     {
                         if (item is DownloadingItem downloading)
@@ -160,6 +162,8 @@ public partial class App : PrismApplication
 
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
+                    if (e.OldItems == null) return;
+
                     foreach (var item in e.OldItems)
                     {
                         if (item is DownloadingItem downloading)
@@ -179,6 +183,7 @@ public partial class App : PrismApplication
             {
                 if (e.Action == NotifyCollectionChangedAction.Add)
                 {
+                    if (e.NewItems == null) return;
                     foreach (var item in e.NewItems)
                     {
                         if (item is DownloadedItem downloaded)
@@ -191,6 +196,7 @@ public partial class App : PrismApplication
 
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
+                    if (e.OldItems == null) return;
                     foreach (var item in e.OldItems)
                     {
                         if (item is DownloadedItem downloaded)
@@ -207,16 +213,16 @@ public partial class App : PrismApplication
         var download = SettingsManager.GetInstance().GetDownloader();
         switch (download)
         {
-            case Core.Settings.Downloader.NOT_SET:
+            case Core.Settings.Downloader.NotSet:
                 break;
-            case Core.Settings.Downloader.BUILT_IN:
-                _downloadService = new BuiltinDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+            case Core.Settings.Downloader.BuiltIn:
+                _downloadService = new BuiltinDownloadService(DownloadingList, DownloadedList, (IDialogService?)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
-            case Core.Settings.Downloader.ARIA:
-                _downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+            case Core.Settings.Downloader.Aria:
+                _downloadService = new AriaDownloadService(DownloadingList, DownloadedList, (IDialogService?)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
-            case Core.Settings.Downloader.CUSTOM_ARIA:
-                _downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService)Container.GetContainer().GetService(typeof(IDialogService)));
+            case Core.Settings.Downloader.CustomAria:
+                _downloadService = new CustomAriaDownloadService(DownloadingList, DownloadedList, (IDialogService?)Container.GetContainer().GetService(typeof(IDialogService)));
                 break;
         }
 
@@ -264,7 +270,7 @@ public partial class App : PrismApplication
                 // 按序号排序
                 list?.Sort((x, y) =>
                 {
-                    var compare = x.MainTitle.CompareTo(y.MainTitle);
+                    var compare = string.Compare(x.MainTitle, y.MainTitle, StringComparison.Ordinal);
                     return compare == 0 ? x.Order.CompareTo(y.Order) : compare;
                 });
                 break;

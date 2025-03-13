@@ -9,11 +9,11 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class BangumiFollowMedia : BindableBase
 {
-    protected readonly IEventAggregator eventAggregator;
+    protected readonly IEventAggregator EventAggregator;
 
     public BangumiFollowMedia(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        this.EventAggregator = eventAggregator;
     }
 
     // media id
@@ -34,9 +34,9 @@ public class BangumiFollowMedia : BindableBase
     }
 
     // 封面
-    private Bitmap cover;
+    private string cover;
 
-    public Bitmap Cover
+    public string Cover
     {
         get => cover;
         set => SetProperty(ref cover, value);
@@ -121,12 +121,12 @@ public class BangumiFollowMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteTitleCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag,
+        NavigateToView.NavigationView(EventAggregator, ViewVideoDetailViewModel.Tag, tag,
             $"{ParseEntrance.BangumiMediaUrl}md{MediaId}");
     }
 

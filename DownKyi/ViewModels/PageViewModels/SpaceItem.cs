@@ -5,12 +5,12 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class SpaceItem : BindableBase
 {
-    private bool isEnabled;
+    private bool _isEnabled;
 
     public bool IsEnabled
     {
-        get => isEnabled;
-        set => SetProperty(ref isEnabled, value);
+        get => _isEnabled;
+        set => SetProperty(ref _isEnabled, value);
     }
 
     private VectorImage image;

@@ -16,7 +16,7 @@ namespace DownKyi.ViewModels.Dialogs;
 public class ViewDownloadSetterViewModel : BaseDialogViewModel
 {
     public const string Tag = "DialogDownloadSetter";
-    private readonly IEventAggregator eventAggregator;
+    private readonly IEventAggregator _eventAggregator;
 
     // 历史文件夹的数量
     private const int MaxDirectoryListCount = 20;
@@ -134,7 +134,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
     public ViewDownloadSetterViewModel(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        _eventAggregator = eventAggregator;
 
         #region 属性初始化
 
@@ -175,7 +175,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         Directory = directory;
 
         // 是否使用默认下载目录
-        IsDefaultDownloadDirectory = SettingsManager.GetInstance().IsUseSaveVideoRootPath() == AllowStatus.YES;
+        IsDefaultDownloadDirectory = SettingsManager.GetInstance().GetIsUseSaveVideoRootPath() == AllowStatus.Yes;
 
         #endregion
     }
@@ -196,7 +196,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
 
         if (directory == null)
         {
-            eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
+            _eventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("WarningNullDirectory"));
             Directory = string.Empty;
         }
         else
@@ -372,7 +372,7 @@ public class ViewDownloadSetterViewModel : BaseDialogViewModel
         }
 
         // 设此文件夹为默认下载文件夹
-        SettingsManager.GetInstance().IsUseSaveVideoRootPath(IsDefaultDownloadDirectory ? AllowStatus.YES : AllowStatus.NO);
+        SettingsManager.GetInstance().SetIsUseSaveVideoRootPath(IsDefaultDownloadDirectory ? AllowStatus.Yes : AllowStatus.No);
 
         // 将Directory移动到第一项
         // 如果直接在ComboBox中选择的就需要

@@ -9,11 +9,11 @@ namespace DownKyi.ViewModels.PageViewModels;
 
 public class FavoritesMedia : BindableBase
 {
-    protected readonly IEventAggregator eventAggregator;
+    protected readonly IEventAggregator EventAggregator;
 
     public FavoritesMedia(IEventAggregator eventAggregator)
     {
-        this.eventAggregator = eventAggregator;
+        EventAggregator = eventAggregator;
     }
 
     public long Avid { get; set; }
@@ -38,9 +38,9 @@ public class FavoritesMedia : BindableBase
         set => SetProperty(ref order, value);
     }
 
-    private Bitmap cover;
+    private string cover;
 
-    public Bitmap Cover
+    public string Cover
     {
         get => cover;
         set => SetProperty(ref cover, value);
@@ -115,10 +115,9 @@ public class FavoritesMedia : BindableBase
     #region 命令申明
 
     // 视频标题点击事件
-    private DelegateCommand<object> titleCommand;
+    private DelegateCommand<object> _titleCommand;
 
-    public DelegateCommand<object> TitleCommand =>
-        titleCommand ?? (titleCommand = new DelegateCommand<object>(ExecuteTitleCommand));
+    public DelegateCommand<object> TitleCommand => _titleCommand ??= new DelegateCommand<object>(ExecuteTitleCommand);
 
     /// <summary>
     /// 视频标题点击事件
@@ -126,21 +125,19 @@ public class FavoritesMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteTitleCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        NavigateToView.NavigationView(eventAggregator, ViewVideoDetailViewModel.Tag, tag,
+        NavigateToView.NavigationView(EventAggregator, ViewVideoDetailViewModel.Tag, tag,
             $"{ParseEntrance.VideoUrl}{Bvid}");
     }
 
     // 视频的UP主点击事件
-    private DelegateCommand<object> videoUpperCommand;
+    private DelegateCommand<object> _videoUpperCommand;
 
-    public DelegateCommand<object> VideoUpperCommand => videoUpperCommand ??
-                                                        (videoUpperCommand =
-                                                            new DelegateCommand<object>(ExecuteVideoUpperCommand));
+    public DelegateCommand<object> VideoUpperCommand => _videoUpperCommand ??= new DelegateCommand<object>(ExecuteVideoUpperCommand);
 
     /// <summary>
     /// 视频的UP主点击事件
@@ -148,12 +145,12 @@ public class FavoritesMedia : BindableBase
     /// <param name="parameter"></param>
     private void ExecuteVideoUpperCommand(object parameter)
     {
-        if (!(parameter is string tag))
+        if (parameter is not string tag)
         {
             return;
         }
 
-        // NavigateToView.NavigateToViewUserSpace(eventAggregator, tag, UpMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, tag, UpMid);
     }
 
     #endregion

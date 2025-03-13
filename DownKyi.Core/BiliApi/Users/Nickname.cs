@@ -15,15 +15,15 @@ public class Nickname
     /// </summary>
     /// <param name="nickName"></param>
     /// <returns></returns>
-    public static NicknameStatus CheckNickname(string nickName)
+    public static NicknameStatus? CheckNickname(string nickName)
     {
-        string url = $"https://api.bilibili.com/x/relation/stat?nickName={nickName}";
-        string referer = "https://www.bilibili.com";
-        string response = WebClient.RequestWeb(url, referer);
+        var url = $"https://api.bilibili.com/x/relation/stat?nickName={nickName}";
+        const string referer = "https://www.bilibili.com";
+        var response = WebClient.RequestWeb(url, referer);
 
         try
         {
-            NicknameStatus nickname = JsonConvert.DeserializeObject<NicknameStatus>(response);
+            var nickname = JsonConvert.DeserializeObject<NicknameStatus>(response);
             return nickname;
         }
         catch (Exception e)
