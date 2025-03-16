@@ -252,40 +252,44 @@
                 </Grid>
             </DockPanel>
 
-            <Grid Grid.Row="1" Margin="10,10,10,10" RowDefinitions="auto,*,40">
-                <ListBox
-                    x:Name="NameVideoSections"
-                    Grid.Row="0"
-                    ItemContainerTheme="{StaticResource TagItemStyle}"
-                    ItemsSource="{Binding VideoSections, Mode=TwoWay}"
-                    Theme="{StaticResource TagStyle}"
-                    SelectionMode="Single">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding VideoSectionsCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoSections,Path=SelectedItem}" />
-                        </ia:EventTriggerBehavior>
-                        <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="0">
-                            <ia:ChangePropertyAction PropertyName="Height" Value="0" />
-                        </ia:DataTriggerBehavior>
-                        <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="1">
-                            <ia:ChangePropertyAction PropertyName="Height" Value="0" />
-                        </ia:DataTriggerBehavior>
-                        <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}"
-                                                ComparisonCondition="GreaterThan" Value="1">
-                            <ia:ChangePropertyAction PropertyName="Height" Value="Nan" />
-                        </ia:DataTriggerBehavior>
-                    </i:Interaction.Behaviors>
-                </ListBox>
-
+            <Grid Grid.Row="1" Margin="10,10,10,10" RowDefinitions="200,4,*,40">
+               <ScrollViewer MinHeight="200">
+                   <ListBox
+                   
+                       x:Name="NameVideoSections"
+                       Grid.Row="0"
+                       ItemContainerTheme="{StaticResource TagItemStyle}"
+                       ItemsSource="{Binding VideoSections, Mode=TwoWay}"
+                       Theme="{StaticResource TagStyle}"
+                       SelectionMode="Single">
+                       <ListBox.ItemsPanel>
+                           <ItemsPanelTemplate>
+                               <WrapPanel Orientation="Horizontal" />
+                           </ItemsPanelTemplate>
+                       </ListBox.ItemsPanel>
+                       <i:Interaction.Behaviors>
+                           <ia:EventTriggerBehavior EventName="SelectionChanged">
+                               <ia:InvokeCommandAction Command="{Binding VideoSectionsCommand}"
+                                                       CommandParameter="{Binding ElementName=NameVideoSections,Path=SelectedItem}" />
+                           </ia:EventTriggerBehavior>
+                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="0">
+                               <ia:ChangePropertyAction PropertyName="Height" Value="0" />
+                           </ia:DataTriggerBehavior>
+                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="1">
+                               <ia:ChangePropertyAction PropertyName="Height" Value="0" />
+                           </ia:DataTriggerBehavior>
+                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}"
+                                                   ComparisonCondition="GreaterThan" Value="1">
+                               <ia:ChangePropertyAction PropertyName="Height" Value="Nan" />
+                           </ia:DataTriggerBehavior>
+                       </i:Interaction.Behaviors>
+                   </ListBox>
+               </ScrollViewer>
+                
+                <GridSplitter Grid.Row="1" ResizeDirection="Rows"></GridSplitter>
                 <DataGrid
                     x:Name="NameVideoPages"
-                    Grid.Row="1"
+                    Grid.Row="2"
                     BorderThickness="1"
                     BorderBrush="Gray"
                     CanUserSortColumns="False"
@@ -426,7 +430,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Grid Grid.Row="2" Margin="0,10,0,0" ColumnDefinitions="60,80,140,*,100,100">
+                <Grid Grid.Row="3" Margin="0,10,0,0" ColumnDefinitions="60,80,140,*,100,100">
                     <CheckBox
                         Grid.Column="0"
                         HorizontalAlignment="Left"
