@@ -10,6 +10,7 @@ using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
+using DownKyi.CustomAction;
 using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Services;
@@ -121,6 +122,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         set => SetProperty(ref _noDataVisibility, value);
     }
 
+
+    public ResetGridSplitterBehavior ResetGridBehavior { get; set; } = new();
+
     #endregion
 
     public ViewVideoDetailViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(eventAggregator, dialogService)
@@ -186,6 +190,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
 
     private DelegateCommand? _inputSearchCommand;
+    
 
     public DelegateCommand InputSearchCommand => _inputSearchCommand ??= new DelegateCommand(ExecuteInputSearchCommand);
 
@@ -351,7 +356,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         var section = VideoSections.FirstOrDefault(item => item.IsSelected);
-
+       
         if (section == null)
         {
             return;
@@ -391,7 +396,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     // 解析视频流事件
     private DelegateCommand<object>? _parseCommand;
-
+    
     public DelegateCommand<object> ParseCommand => _parseCommand ??= new DelegateCommand<object>(ExecuteParseCommand, CanExecuteParseCommand);
 
     /// <summary>
@@ -583,14 +588,15 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private void InitView()
     {
         LogManager.Debug(Tag, "初始化页面元素");
-
+        ResetGridBehavior.ResetGrid();
         LoadingVisibility = true;
         ContentVisibility = false;
         NoDataVisibility = false;
-
         VideoSections.Clear();
         CaCheVideoSections.Clear();
     }
+    
+   
 
     /// <summary>
     /// 更新页面的统一方法
