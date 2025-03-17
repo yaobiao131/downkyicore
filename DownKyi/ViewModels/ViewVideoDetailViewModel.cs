@@ -604,7 +604,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
         if (_infoService == null || refresh)
         {
             // 视频
-            if (ParseEntrance.IsAvUrl(input) || ParseEntrance.IsBvUrl(input))
+            if (ParseEntrance.IsAvUrl(input) || ParseEntrance.IsBvUrl(input) 
+                || ParseEntrance.IsAvId(input) || ParseEntrance.IsBvId(input))
             {
                 _infoService = new VideoInfoService(input);
             }
