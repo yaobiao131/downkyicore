@@ -76,11 +76,7 @@ public class BaseWebImageLoader : IAsyncImageLoader
         }
 
         var externalBytes = await LoadDataFromExternalAsync(url);
-        // if (externalBytes == null) return null;
-
-        // using var memoryStream = new MemoryStream(externalBytes);
-        // var bitmap = new Bitmap(memoryStream);
-        // await SaveToGlobalCache(url, externalBytes).ConfigureAwait(false);
+        await SaveToGlobalCache(url, externalBytes).ConfigureAwait(false);
         return externalBytes;
     }
 
@@ -178,9 +174,9 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url">Target url</param>
     /// <returns>Image bytes</returns>
-    protected  virtual async Task<byte[]> LoadDataFromExternalAsync(string url)
+    protected  virtual Task<byte[]> LoadDataFromExternalAsync(string url)
     {
-        return await HttpClient.GetByteArrayAsync(url);
+        return  HttpClient.GetByteArrayAsync(url);
     }
 
     /// <summary>
