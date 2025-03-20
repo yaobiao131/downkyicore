@@ -7,7 +7,7 @@ namespace DownKyi.CustomControl.AsyncImageLoader.Loaders;
 
 public class RamCachedWebImageLoader : BaseWebImageLoader
 {
-    private readonly ConcurrentDictionary<string, Task<Bitmap?>> _memoryCache = new();
+    private readonly ConcurrentDictionary<string, Task<byte[]?>> _memoryCache = new();
 
     /// <inheritdoc />
     public RamCachedWebImageLoader()
@@ -20,12 +20,12 @@ public class RamCachedWebImageLoader : BaseWebImageLoader
     }
 
     /// <inheritdoc />
-    public override async Task<Bitmap?> ProvideImageAsync(string url)
+    public override async Task<Bitmap?> ProvideImageAsync(string url, int maxWidth, int maxHeight,int quality)
     {
-        var bitmap = await _memoryCache.GetOrAdd(url, LoadAsync).ConfigureAwait(false);
+        var bytes = await _memoryCache.GetOrAdd(url, LoadBytesAsync).ConfigureAwait(false);
         // If load failed - remove from cache and return
         // Next load attempt will try to load image again
-        if (bitmap == null) _memoryCache.TryRemove(url, out _);
-        return bitmap;
+        if (bytes == null) _memoryCache.TryRemove(url, out _);
+        return ConvertToLowResolution(bytes,maxWidth,maxHeight,quality);
     }
 }

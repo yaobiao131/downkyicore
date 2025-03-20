@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Logging;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using SkiaSharp;
 
 namespace DownKyi.CustomControl.AsyncImageLoader.Loaders;
 
@@ -14,15 +15,15 @@ public class BaseWebImageLoader : IAsyncImageLoader
     private readonly bool _shouldDisposeHttpClient;
 
     /// <summary>
-    ///     Initializes a new instance with new <see cref="HttpClient" /> instance
+    ///     Initializes a new instance with new <see cref="System.Net.Http.HttpClient" /> instance
     /// </summary>
     public BaseWebImageLoader() : this(new HttpClient(), true)
     {
     }
 
     /// <summary>
-    ///     Initializes a new instance with the provided <see cref="HttpClient" />, and specifies whether that
-    ///     <see cref="HttpClient" /> should be disposed when this instance is disposed.
+    ///     Initializes a new instance with the provided <see cref="System.Net.Http.HttpClient" />, and specifies whether that
+    ///     <see cref="System.Net.Http.HttpClient" /> should be disposed when this instance is disposed.
     /// </summary>
     /// <param name="httpClient">The HttpMessageHandler responsible for processing the HTTP response messages.</param>
     /// <param name="disposeHttpClient">
@@ -36,12 +37,22 @@ public class BaseWebImageLoader : IAsyncImageLoader
         _logger = Logger.TryGet(LogEventLevel.Error, ImageLoader.AsyncImageLoaderLogArea);
     }
 
-    protected HttpClient HttpClient { get; }
+
+    protected  HttpClient HttpClient { get;}
 
     /// <inheritdoc />
-    public virtual async Task<Bitmap?> ProvideImageAsync(string url)
+    public virtual async Task<Bitmap?> ProvideImageAsync(string url, int maxWidth, int maxHeight, int quality)
     {
-        return await LoadAsync(url).ConfigureAwait(false);
+        try
+        {
+            var bytes = await LoadBytesAsync(url);
+            return ConvertToLowResolution(bytes,maxWidth,maxHeight, quality);
+        }
+        catch (Exception e)
+        {
+            _logger?.Log(this, "Failed to resolve image: {RequestUri}\nException: {Exception}", url, e);
+            return null;
+        }
     }
 
     public void Dispose()
@@ -55,30 +66,74 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url">Target url</param>
     /// <returns>Bitmap</returns>
-    protected virtual async Task<Bitmap?> LoadAsync(string url)
+    protected virtual async Task<byte[]?> LoadBytesAsync(string url)
     {
-        var internalOrCachedBitmap =
-            await LoadFromLocalAsync(url).ConfigureAwait(false)
-            ?? await LoadFromInternalAsync(url).ConfigureAwait(false)
-            ?? await LoadFromGlobalCache(url).ConfigureAwait(false);
-        if (internalOrCachedBitmap != null) return internalOrCachedBitmap;
-
-        try
+        var loaders = new[] { LoadFromLocalAsync, LoadFromInternalAsync, LoadFromGlobalCache };
+        var internalOrCachedBytes = await TryLoadBytesAsync(loaders, url);
+        if (internalOrCachedBytes?.Length > 0)
         {
-            var externalBytes = await LoadDataFromExternalAsync(url).ConfigureAwait(false);
-            if (externalBytes == null) return null;
-
-            using var memoryStream = new MemoryStream(externalBytes);
-            var bitmap = new Bitmap(memoryStream);
-            await SaveToGlobalCache(url, externalBytes).ConfigureAwait(false);
-            return bitmap;
+            return internalOrCachedBytes;
         }
-        catch (Exception e)
+
+        var externalBytes = await LoadDataFromExternalAsync(url);
+        // if (externalBytes == null) return null;
+
+        // using var memoryStream = new MemoryStream(externalBytes);
+        // var bitmap = new Bitmap(memoryStream);
+        // await SaveToGlobalCache(url, externalBytes).ConfigureAwait(false);
+        return externalBytes;
+    }
+
+    private async Task<byte[]> TryLoadBytesAsync(Func<string, Task<byte[]>>[] loaders, string url)
+    {
+        foreach (var loader in loaders)
         {
-            _logger?.Log(this, "Failed to resolve image: {RequestUri}\nException: {Exception}", url, e);
-
-            return null;
+            var result = await loader(url);
+            if (result?.Length > 0)
+            {
+                return result;
+            }
         }
+
+        return Array.Empty<byte>();
+    }
+
+
+    public Bitmap ConvertToLowResolution(byte[] bytes, int maxWidth, int maxHeight, int quality = 75)
+    {
+        if (maxWidth <= 0 || maxHeight <= 0)
+        {
+            return new Bitmap(new MemoryStream(bytes));
+        }
+        using var skImage = SKImage.FromEncodedData(bytes);
+        var (targetWidth, targetHeight) = CalculateScaling(skImage.Width, skImage.Height, maxWidth, maxHeight);
+
+    
+        var scaledInfo = new SKImageInfo(
+            targetWidth,
+            targetHeight,
+            SKColorType.Rgba8888, 
+            SKAlphaType.Premul);
+        
+        using var surface = SKSurface.Create(scaledInfo);
+        using var canvas = surface.Canvas;
+        canvas.Clear(SKColors.Transparent);
+        canvas.DrawImage(skImage, new SKRect(0, 0, targetWidth, targetHeight));
+        
+        using var scaledImage = surface.Snapshot();
+        using var skData = scaledImage.Encode(SKEncodedImageFormat.Jpeg, 75);
+        
+        using var stream = skData.AsStream();
+        return new Bitmap(stream);
+    }
+    
+    private (int width, int height) CalculateScaling(int origWidth, int origHeight, int maxW, int maxH)
+    {
+        double ratio = Math.Min((double)maxW / origWidth, (double)maxH / origHeight);
+        return (
+            (int)Math.Round(origWidth * ratio),
+            (int)Math.Round(origHeight * ratio)
+        );
     }
 
     /// <summary>
@@ -86,9 +141,9 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    private Task<Bitmap?> LoadFromLocalAsync(string url)
+    private Task<byte[]> LoadFromLocalAsync(string url)
     {
-        return Task.FromResult(File.Exists(url) ? new Bitmap(url) : null);
+        return File.Exists(url) ? File.ReadAllBytesAsync(url) : Task.FromResult<byte[]>(Array.Empty<byte>());
     }
 
     /// <summary>
@@ -98,28 +153,23 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url">Target url</param>
     /// <returns>Bitmap</returns>
-    protected virtual Task<Bitmap?> LoadFromInternalAsync(string url)
+    protected virtual async Task<byte[]> LoadFromInternalAsync(string url)
     {
-        try
-        {
-            var uri = url.StartsWith("/")
-                ? new Uri(url, UriKind.Relative)
-                : new Uri(url, UriKind.RelativeOrAbsolute);
+        var uri = url.StartsWith("/")
+            ? new Uri(url, UriKind.Relative)
+            : new Uri(url, UriKind.RelativeOrAbsolute);
 
-            if (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
-                return Task.FromResult<Bitmap?>(null);
+        if (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
+            return Array.Empty<byte>();
 
-            if (uri is { IsAbsoluteUri: true, IsFile: true })
-                return Task.FromResult(new Bitmap(uri.LocalPath))!;
+        if (uri is { IsAbsoluteUri: true, IsFile: true })
+            return await File.ReadAllBytesAsync(uri.LocalPath).ConfigureAwait(false);
 
-            return Task.FromResult(new Bitmap(AssetLoader.Open(uri)))!;
-        }
-        catch (Exception e)
-        {
-            _logger?.Log(this,
-                "Failed to resolve image from request with uri: {RequestUri}\nException: {Exception}", url, e);
-            return Task.FromResult<Bitmap?>(null);
-        }
+        using var stream = AssetLoader.Open(uri);
+
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        return memoryStream.ToArray();
     }
 
     /// <summary>
@@ -128,18 +178,9 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url">Target url</param>
     /// <returns>Image bytes</returns>
-    protected virtual async Task<byte[]?> LoadDataFromExternalAsync(string url)
+    protected  virtual async Task<byte[]> LoadDataFromExternalAsync(string url)
     {
-        try
-        {
-            return await HttpClient.GetByteArrayAsync(url).ConfigureAwait(false);
-        }
-        catch (Exception e)
-        {
-            _logger?.Log(this,
-                "Failed to resolve image from request with uri: {RequestUri}\nException: {Exception}", url, e);
-            return null;
-        }
+        return await HttpClient.GetByteArrayAsync(url);
     }
 
     /// <summary>
@@ -147,10 +188,10 @@ public class BaseWebImageLoader : IAsyncImageLoader
     /// </summary>
     /// <param name="url">Target url</param>
     /// <returns>Bitmap</returns>
-    protected virtual Task<Bitmap?> LoadFromGlobalCache(string url)
+    protected virtual Task<byte[]> LoadFromGlobalCache(string url)
     {
         // Current implementation does not provide global caching
-        return Task.FromResult<Bitmap?>(null);
+        return Task.FromResult<byte[]>(Array.Empty<byte>());
     }
 
     /// <summary>

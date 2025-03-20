@@ -24,7 +24,24 @@ public static class ImageLoader
 
     public static readonly AttachedProperty<bool> IsLoadingProperty =
         AvaloniaProperty.RegisterAttached<Image, bool>("IsLoading", typeof(ImageLoader));
+    
+    public static readonly AttachedProperty<int> MaxRenderWidthProperty =
+        AvaloniaProperty.RegisterAttached<Image, int>("MaxRenderWidth", typeof(ImageLoader), 200);
 
+    public static readonly AttachedProperty<int> MaxRenderHeightProperty =
+        AvaloniaProperty.RegisterAttached<Image, int>("MaxRenderHeight", typeof(ImageLoader), 200);
+
+    public static readonly AttachedProperty<int> QualityProperty = AvaloniaProperty.RegisterAttached<Image, int>(
+        "Quality", typeof(ImageLoader), defaultValue: 65, 
+        coerce:(s, e) =>
+        {
+            if (e > 100 || e < 0)
+            {
+                return 65;
+            }
+            return e;
+        }
+    );
     static ImageLoader()
     {
         SourceProperty.Changed.AddClassHandler<Image>(OnSourceChanged);
@@ -54,7 +71,9 @@ public static class ImageLoader
         }
 
         SetIsLoading(sender, true);
-
+        var  quality = GetQuality(sender);
+        int width = (int)sender.Width;
+        int height = (int)sender.Height;
         var bitmap = await Task.Run(async () =>
         {
             try
@@ -63,7 +82,7 @@ public static class ImageLoader
                 // The Bitmap constructor is expensive and cannot be cancelled
                 await Task.Delay(10, cts.Token);
 
-                return await AsyncImageLoader.ProvideImageAsync(url);
+                return await AsyncImageLoader.ProvideImageAsync(url,width,height,quality);
             }
             catch (TaskCanceledException)
             {
@@ -94,11 +113,45 @@ public static class ImageLoader
     {
         element.SetValue(SourceProperty, value);
     }
+    
+    public static int GetQuality(Image element)
+    {
+        return element.GetValue(QualityProperty);
+    }
+    
+    public static int GetMaxRenderHeight(Image element)
+    {
+        return element.GetValue(MaxRenderHeightProperty);
+    }
+    
+    public static int GetMaxRenderWidth(Image element)
+    {
+        return element.GetValue(MaxRenderWidthProperty);
+    }
+    
+    public static void SetMaxRenderHeight(Image element, int? value)
+    {
+        element.SetValue(MaxRenderHeightProperty, value);
+    }
+    
+    public static void SetMaxRenderWidth(Image element, int? value)
+    {
+        element.SetValue(MaxRenderWidthProperty, value);
+    }
+    
+    
+
+    public static void SetQuality(Image element, int? value)
+    {
+        element.SetValue(QualityProperty, value);
+    }
 
     public static bool GetIsLoading(Image element)
     {
         return element.GetValue(IsLoadingProperty);
     }
+    
+    
 
     private static void SetIsLoading(Image element, bool value)
     {

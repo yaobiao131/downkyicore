@@ -23,11 +23,10 @@ public class DiskCachedWebImageLoader : BaseWebImageLoader
     }
 
     /// <inheritdoc />
-    protected override Task<Bitmap?> LoadFromGlobalCache(string url)
+    protected override Task<byte[]> LoadFromGlobalCache(string url)
     {
         var path = Path.Combine(_cacheFolder, CreateMd5(url));
-
-        return File.Exists(path) ? Task.FromResult<Bitmap?>(new Bitmap(path)) : Task.FromResult<Bitmap?>(null);
+        return File.Exists(path) ? File.ReadAllBytesAsync(path) : Task.FromResult<byte[]>(Array.Empty<byte>());
     }
 
 #if NETSTANDARD2_1
