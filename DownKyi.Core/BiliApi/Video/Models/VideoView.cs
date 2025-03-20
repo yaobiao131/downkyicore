@@ -50,7 +50,7 @@ public class VideoView : BaseModel
     [JsonProperty("pages")] public List<VideoPage> Pages { get; set; }
     [JsonProperty("subtitle")] public VideoSubtitle Subtitle { get; set; }
 
-    [JsonProperty("ugc_season")] public UgcSeason UgcSeason { get; set; }
+    [JsonProperty("ugc_season")] public UgcSeason? UgcSeason { get; set; }
     //[JsonProperty("staff")]
     //public List<Staff> staff { get; set; }
     //[JsonProperty("user_garb")]

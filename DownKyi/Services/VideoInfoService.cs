@@ -126,57 +126,54 @@ public class VideoInfoService : IInfoService
     /// <returns></returns>
     public List<VideoSection>? GetVideoSections(bool noUgc = false)
     {
-        if (_videoView.UgcSeason?.Sections?.Count > 0)
+        if (!(_videoView?.UgcSeason?.Sections?.Count > 0)) return null;
+        var videoSections = new List<VideoSection>();
+
+        // 不需要ugc内容
+        if (noUgc)
         {
-            var videoSections = new List<VideoSection>();
-
-            // 不需要ugc内容
-            if (noUgc)
-            {
-                videoSections.Add(CreateDefaultVideoSection());
-                return videoSections;
-            }
-
-            var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
-            var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);;
-
-            foreach (var section in _videoView.UgcSeason.Sections)
-            {
-                var pages = new List<VideoPage>();
-                var order = 0;
-                foreach (var episode in section.Episodes)
-                {
-                    if (episode.Pages?.Count > 1)
-                    {
-                        var videoSection = CreateVideoSectionFromEpisode(section, episode, startTime, timeFormat);
-                        videoSections.Add(videoSection);
-                    }
-                    else
-                    {
-                        pages.Add(GenerateVideoPage(episode, ++order, startTime, timeFormat));
-                    }
-                }
-
-                if (pages.Count > 0)
-                {
-                    var videoSection = new VideoSection
-                    {
-                        Id = section.Id,
-                        Title = section.Title,
-                        VideoPages = pages
-                    };
-                    videoSections.Add(videoSection);
-                }
-            }
-
-            if (videoSections.Count > 0)
-            {
-                videoSections[0].IsSelected = true;
-            }
-
+            videoSections.Add(CreateDefaultVideoSection());
             return videoSections;
         }
-        return null;
+
+        var timeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
+        var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local);
+
+        foreach (var section in _videoView.UgcSeason.Sections)
+        {
+            var pages = new List<VideoPage>();
+            var order = 0;
+            foreach (var episode in section.Episodes)
+            {
+                if (episode.Pages?.Count > 1)
+                {
+                    var videoSection = CreateVideoSectionFromEpisode(section, episode, startTime, timeFormat);
+                    videoSections.Add(videoSection);
+                }
+                else
+                {
+                    pages.Add(GenerateVideoPage(episode, ++order, startTime, timeFormat));
+                }
+            }
+
+            if (pages.Count <= 0) continue;
+            {
+                var videoSection = new VideoSection
+                {
+                    Id = section.Id,
+                    Title = section.Title,
+                    VideoPages = pages
+                };
+                videoSections.Add(videoSection);
+            }
+        }
+
+        if (videoSections.Count > 0)
+        {
+            videoSections[0].IsSelected = true;
+        }
+
+        return videoSections;
     }
 
     private VideoSection CreateDefaultVideoSection()
