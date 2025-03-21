@@ -9,7 +9,8 @@
              x:DataType="vm:ViewMyHistoryViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
+             xmlns:customAction="clr-namespace:DownKyi.CustomAction">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:HistoryMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -246,11 +247,13 @@
                 x:Name="NameMedias"
                 Grid.Row="0"
                 BorderThickness="0"
-                ItemsSource="{Binding Medias}"
                 ItemContainerTheme="{StaticResource MediaListStyle}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectionMode="Multiple">
                 <i:Interaction.Behaviors>
+                    <customAction:IncrementalLoadingBehavior  
+                        x:TypeArguments="vmp:HistoryMedia"
+                        LoadPageFunc="{Binding LoadPageFunc}"/>
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding MediasCommand}"
                                                 CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
@@ -258,7 +261,7 @@
                 </i:Interaction.Behaviors>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <VirtualizingStackPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Theme>
