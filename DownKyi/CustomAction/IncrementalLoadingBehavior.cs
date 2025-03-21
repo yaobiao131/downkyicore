@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Xaml.Interactivity;
+using ImTools;
 
 namespace DownKyi.CustomAction;
 
@@ -51,6 +52,7 @@ public class IncrementalLoadingBehavior<T>: Behavior<ListBox>
 
         isLoading = true;
         var items = await LoadPageFunc(currentPage);
+        if(items == null || items.Length == 0) return;
         foreach (var item in items)
         {
             AssociatedObject.Items.Add(item);

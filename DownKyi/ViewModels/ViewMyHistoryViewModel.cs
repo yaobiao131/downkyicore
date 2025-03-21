@@ -259,19 +259,30 @@ public class ViewMyHistoryViewModel : ViewModelBase
         int startIndex = (page - 1) * VideoNumberInPage;
         return Task.Run<HistoryMedia[]>(() =>
         {
-            var result = History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
-            foreach (var item in result.List)
+            App.PropertyChangeAsync(() =>
             {
-                var history = Convert(item, EventAggregator);
-                if (history != null)
+                LoadingVisibility = true;
+            });
+            var result = History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
+            if (result?.List?.Count > 0)
+            {
+                foreach (var item in result.List)
                 {
-                    Medias.Add(history);
+                    var history = Convert(item, EventAggregator);
+                    if (history != null)
+                    {
+                        Medias.Add(history);
+                    }
                 }
+                App.PropertyChangeAsync(() =>
+                {
+                    LoadingVisibility = false;
+                });
+                _nextMax = result.Cursor.Max;
+                _nextViewAt = result.Cursor.ViewAt;
+                return Medias.Skip(startIndex).Take(VideoNumberInPage).ToArray();
             }
-
-            _nextMax = result.Cursor.Max;
-            _nextViewAt = result.Cursor.ViewAt;
-            return Medias.Skip(startIndex).Take(VideoNumberInPage).ToArray();
+           return Array.Empty<HistoryMedia>();
         });
     };
 
