@@ -20,14 +20,10 @@
                             Name="nameMediaPanel"
                             Width="308"
                             Height="140"
-                            Margin="25,15,10,5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="110" />
-                                <ColumnDefinition />
-                            </Grid.ColumnDefinitions>
-
+                            Margin="25,15,10,5"
+                            ColumnDefinitions="110,*">
                             <Border
-                                Name="nameCover"
+                                Name="NameCover"
                                 Grid.Column="0"
                                 Width="110"
                                 Height="140"
@@ -40,13 +36,14 @@
                             </Border>
 
                             <Image
-                                Name="nameChecked"
+                                Name="NameChecked"
                                 Grid.Column="0"
                                 Width="24"
                                 Height="24"
                                 Margin="10"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
+                                IsVisible="False"
                                 Source="/Resources/checked.png" />
 
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
@@ -95,21 +92,15 @@
                                 </StackPanel>
                             </StackPanel>
                         </Grid>
-                        <!--<ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="nameChecked" Property="Visibility" Value="Visible" />
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="nameChecked" Property="Visibility" Value="Hidden" />
-                            </Trigger>
-                            <Trigger SourceName="nameTitle" Property="IsMouseOver" Value="True">
-                                <Setter TargetName="nameTitle" Property="Foreground"
-                                        Value="{DynamicResource BrushPrimary}" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>-->
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style Selector="^ /template/ Image#nameChecked">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#nameTitle:pointerover">
+                <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+            </Style>
         </ControlTheme>
     </UserControl.Resources>
     <Grid RowDefinitions="50,1,*">
@@ -176,33 +167,24 @@
                                         <TextBlock
                                             Name="nameText"
                                             Padding="0,0,0,3"
-                                            Text="{Binding Title}" />
-                                        <TextBlock Name="nameIndicator" Height="1.5" />
+                                            Foreground="{DynamicResource BrushTextDark}"
+                                            Text="{ReflectionBinding Title}" />
+                                        <TextBlock Name="nameIndicator" Height="1.5" IsVisible="False"
+                                                   Background="{DynamicResource BrushTextDark}" />
                                     </StackPanel>
-
-                                    <!--<ControlTemplate.Triggers>
-                                        <Trigger Property="Selector.IsSelected" Value="False">
-                                            <Setter TargetName="nameText" Property="Foreground"
-                                                    Value="{DynamicResource BrushTextDark}" />
-                                            <Setter TargetName="nameIndicator" Property="Visibility" Value="Hidden" />
-                                            <Setter TargetName="nameIndicator" Property="Background"
-                                                    Value="{DynamicResource BrushTextDark}" />
-                                        </Trigger>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="nameText" Property="Foreground"
-                                                    Value="{DynamicResource BrushPrimary}" />
-                                        </Trigger>
-                                        <Trigger Property="Selector.IsSelected" Value="True">
-                                            <Setter TargetName="nameText" Property="Foreground"
-                                                    Value="{DynamicResource BrushPrimary}" />
-                                            <Setter TargetName="nameIndicator" Property="Visibility" Value="Visible" />
-                                            <Setter TargetName="nameIndicator" Property="Background"
-                                                    Value="{DynamicResource BrushPrimary}" />
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>-->
                                 </ControlTemplate>
                             </Setter.Value>
                         </Setter>
+                        <Style Selector="^:pointerover /template/ TextBlock#nameText">
+                            <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                        </Style>
+                        <Style Selector="^:selected /template/ TextBlock#nameText">
+                            <Setter Property="Foreground" Value="{DynamicResource BrushPrimary}" />
+                        </Style>
+                        <Style Selector="^:selected /template/ TextBlock#nameIndicator">
+                            <Setter Property="IsVisible" Value="True" />
+                            <Setter Property="Background" Value="{DynamicResource BrushPrimary}" />
+                        </Style>
                     </ControlTheme>
                 </ListBox.ItemContainerTheme>
                 <ListBox.Theme>
@@ -307,11 +289,11 @@
                     Foreground="{DynamicResource BrushTextDark}"
                     IsChecked="{Binding IsSelectAll, Mode=TwoWay}" />
 
-                <!--<custom:CustomPager
+                <custom:CustomPager
                     Grid.Column="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    DataContext="{Binding Pager}" />-->
+                    DataContext="{Binding Pager}" />
 
                 <Button
                     Grid.Column="2"

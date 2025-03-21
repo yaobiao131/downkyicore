@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.CustomControl.CustomPager"
              xmlns:vmc="clr-namespace:DownKyi.CustomControl"
-             x:DataType="vmc:CustomPagerViewModel">
+             x:DataType="vmc:CustomPagerViewModel"
+             x:CompileBindings="False">
 
     <UserControl.Resources>
         <DrawingImage x:Key="ToLeftDrawingImage">
