@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DownKyi.Core.BiliApi.History;
+using DownKyi.Core.BiliApi.History.Models;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.Utils;
 using DownKyi.Events;
@@ -246,6 +249,43 @@ public class ViewMyHistoryViewModel : ViewModelBase
     public DelegateCommand AddAllToDownloadCommand =>
         _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
 
+
+    private long _nextMax = 0;
+
+    private long _nextViewAt = 0;
+
+    public Func<int, Task<HistoryMedia[]>> LoadPageFunc => (page) =>
+    {
+        int startIndex = (page - 1) * VideoNumberInPage;
+        return Task.Run<HistoryMedia[]>(() =>
+        {
+            App.PropertyChangeAsync(() =>
+            {
+                LoadingVisibility = true;
+            });
+            var result = History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
+            if (result?.List?.Count > 0)
+            {
+                foreach (var item in result.List)
+                {
+                    var history = Convert(item, EventAggregator);
+                    if (history != null)
+                    {
+                        Medias.Add(history);
+                    }
+                }
+                App.PropertyChangeAsync(() =>
+                {
+                    LoadingVisibility = false;
+                });
+                _nextMax = result.Cursor.Max;
+                _nextViewAt = result.Cursor.ViewAt;
+                return Medias.Skip(startIndex).Take(VideoNumberInPage).ToArray();
+            }
+           return Array.Empty<HistoryMedia>();
+        });
+    };
+
     /// <summary>
     /// 添加所有视频到下载列表事件
     /// </summary>
@@ -327,8 +367,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
 
         await Task.Run(() =>
         {
-            var cancellationToken = _tokenSource?.Token;
-
             var historyList = History.GetHistory(0, 0, VideoNumberInPage);
             if (historyList?.List == null || historyList.List.Count == 0)
             {
@@ -336,118 +374,13 @@ public class ViewMyHistoryViewModel : ViewModelBase
                 NoDataVisibility = true;
                 return;
             }
-
-            foreach (var history in historyList.List)
+            App.PropertyChangeAsync(() =>
             {
-                if (history.History == null)
-                {
-                    continue;
-                }
-
-                if (history.History.Business != "archive" && history.History.Business != "pgc")
-                {
-                    continue;
-                }
-
-                // 播放url
-                var url = history.History.Business switch
-                {
-                    "archive" => "https://www.bilibili.com/video/" + history.History.Bvid,
-                    "pgc" => history.Uri,
-                    _ => "https://www.bilibili.com"
-                };
-
-                // 查询、保存封面
-                var coverUrl = history.Cover;
-                if (!coverUrl.ToLower().StartsWith("http"))
-                {
-                    coverUrl = $"https:{history.Cover}";
-                }
-
-                // 获取用户头像
-                var upName = history.AuthorFace != null ? history.AuthorName : "";
-
-
-                // 观看平台
-                var platform = history.History.Dt switch
-                {
-                    1 or 3 or 5 or 7 =>
-                        // 手机端
-                        NormalIcon.Instance().PlatformMobile,
-                    2 =>
-                        // web端
-                        NormalIcon.Instance().PlatformPC,
-                    4 or 6 =>
-                        // pad端
-                        NormalIcon.Instance().PlatformIpad,
-                    33 =>
-                        // TV端
-                        NormalIcon.Instance().PlatformTV,
-                    _ => null
-                };
-
-                // 是否显示Partdesc
-                var partdescVisibility = history.NewDesc != "";
-
-                // 是否显示UP主信息和分区信息
-                var upAndTagVisibility = history.History.Business == "archive";
-
-                App.PropertyChangeAsync(() =>
-                {
-                    // 观看进度
-                    // -1 已看完
-                    // 0 刚开始
-                    // >0 看到 progress
-                    string progress;
-                    if (history.Progress == -1)
-                    {
-                        progress = DictionaryResource.GetString("HistoryFinished");
-                    }
-                    else if (history.Progress == 0)
-                    {
-                        progress = DictionaryResource.GetString("HistoryStarted");
-                    }
-                    else
-                    {
-                        progress = DictionaryResource.GetString("HistoryWatch") + " " +
-                                   Format.FormatDuration3(history.Progress);
-                    }
-
-                    var media = new HistoryMedia(EventAggregator)
-                    {
-                        Business = history.History.Business,
-                        Bvid = history.History.Bvid,
-                        Url = url,
-                        UpMid = history.AuthorMid,
-                        Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
-                        Title = history.Title,
-                        SubTitle = history.ShowTitle,
-                        Duration = history.Duration,
-                        TagName = history.TagName,
-                        Partdesc = history.NewDesc,
-                        Progress = progress,
-                        Platform = platform,
-                        UpName = upName,
-                        UpHeader = history.AuthorFace ?? "",
-
-                        PartdescVisibility = partdescVisibility,
-                        UpAndTagVisibility = upAndTagVisibility,
-                    };
-
-                    Medias.Add(media);
-
-                    ContentVisibility = true;
-                    LoadingVisibility = false;
-                    NoDataVisibility = false;
-                });
-
-                // 判断是否该结束线程，若为true，跳出循环
-                if (cancellationToken?.IsCancellationRequested == true)
-                {
-                    break;
-                }
-            }
-        }, (_tokenSource = new CancellationTokenSource()).Token);
+                ContentVisibility = true;
+                LoadingVisibility = false;
+                NoDataVisibility = false;
+            });
+        });
     }
 
     /// <summary>
@@ -501,5 +434,69 @@ public class ViewMyHistoryViewModel : ViewModelBase
         InitView();
 
         UpdateHistoryMediaList();
+    }
+
+    private static bool IsValidBusiness(string business)
+        => business is "archive" or "pgc";
+
+    private static string BuildMediaUrl(HistoryList history) =>
+        history.History.Business switch
+        {
+            "archive" => $"https://www.bilibili.com/video/{history.History.Bvid}",
+            "pgc" => history.Uri,
+            _ => "https://www.bilibili.com"
+        };
+
+    private static string ProcessCoverUrl(string originalUrl) =>
+        !string.IsNullOrEmpty(originalUrl) && !originalUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? $"https:{originalUrl}"
+            : originalUrl;
+
+    private static VectorImage? GetPlatformIcon(int dt) =>
+        dt switch
+        {
+            1 or 3 or 5 or 7 => NormalIcon.Instance().PlatformMobile,
+            2 => NormalIcon.Instance().PlatformPC,
+            4 or 6 => NormalIcon.Instance().PlatformIpad,
+            33 => NormalIcon.Instance().PlatformTV,
+            _ => null
+        };
+
+    private static string BuildProgressText(long progress) =>
+        progress switch
+        {
+            -1 => DictionaryResource.GetString("HistoryFinished"),
+            0 => DictionaryResource.GetString("HistoryStarted"),
+            _ => $"{DictionaryResource.GetString("HistoryWatch")} {Format.FormatDuration3(progress)}"
+        };
+
+    public static HistoryMedia Convert(HistoryList history, IEventAggregator eventAggregator)
+    {
+        if (history?.History == null || !IsValidBusiness(history.History.Business))
+            return null;
+
+        var url = BuildMediaUrl(history);
+        var coverUrl = ProcessCoverUrl(history.Cover);
+        var platform = GetPlatformIcon(history.History.Dt);
+
+        return new HistoryMedia(eventAggregator)
+        {
+            Business = history.History.Business,
+            Bvid = history.History.Bvid,
+            Url = url,
+            UpMid = history.AuthorMid,
+            Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
+            Title = history.Title,
+            SubTitle = history.ShowTitle,
+            Duration = history.Duration,
+            TagName = history.TagName,
+            Partdesc = history.NewDesc,
+            Progress = BuildProgressText(history.Progress),
+            Platform = platform,
+            UpName = history.AuthorFace != null ? history.AuthorName : "",
+            UpHeader = history.AuthorFace ?? "",
+            PartdescVisibility = !string.IsNullOrEmpty(history.NewDesc),
+            UpAndTagVisibility = history.History.Business == "archive"
+        };
     }
 }
