@@ -59,7 +59,7 @@
                                     TextTrimming="CharacterEllipsis"
                                     ToolTip.Tip="{Binding Title}">
                                     <i:Interaction.Behaviors>
-                                        <ia:EventTriggerBehavior EventName="MouseLeftButtonUp">
+                                        <ia:EventTriggerBehavior EventName="PointerPressed">
                                             <ia:InvokeCommandAction Command="{Binding TitleCommand}"
                                                                     CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                                         </ia:EventTriggerBehavior>
