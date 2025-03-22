@@ -139,6 +139,8 @@ public class ViewMyHistoryViewModel : ViewModelBase
     private DelegateCommand? _backSpaceCommand;
 
     public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
+    
+ 
 
     /// <summary>
     /// 返回事件
@@ -248,44 +250,33 @@ public class ViewMyHistoryViewModel : ViewModelBase
 
     public DelegateCommand AddAllToDownloadCommand =>
         _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
+    
+    private DelegateCommand? _loadMoreCommand;
 
-
+    public DelegateCommand LoadMoreCommand =>
+        _addAllToDownloadCommand ??= new DelegateCommand(ExecuteLoadMoreCommand);
+    
     private long _nextMax = 0;
 
     private long _nextViewAt = 0;
 
-    public Func<int, Task<HistoryMedia[]>> LoadPageFunc => (page) =>
+    public async void ExecuteLoadMoreCommand()
     {
-        int startIndex = (page - 1) * VideoNumberInPage;
-        return Task.Run<HistoryMedia[]>(() =>
+        if(NoDataVisibility) return;
+        LoadingVisibility = true;
+        var result = await Task<HistoryData>.Run(() =>
         {
-            App.PropertyChangeAsync(() =>
-            {
-                LoadingVisibility = true;
-            });
-            var result = History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
-            if (result?.List?.Count > 0)
-            {
-                foreach (var item in result.List)
-                {
-                    var history = Convert(item, EventAggregator);
-                    if (history != null)
-                    {
-                        Medias.Add(history);
-                    }
-                }
-                App.PropertyChangeAsync(() =>
-                {
-                    LoadingVisibility = false;
-                });
-                _nextMax = result.Cursor.Max;
-                _nextViewAt = result.Cursor.ViewAt;
-                return Medias.Skip(startIndex).Take(VideoNumberInPage).ToArray();
-            }
-           return Array.Empty<HistoryMedia>();
+            return History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
         });
-    };
-
+        if (result?.List?.Count > 0)
+        {
+            Medias.AddRange(result.List.Select(x => Convert(x,EventAggregator))
+                .Where(v => v != null && !string.IsNullOrEmpty(v.Title)).ToList());
+            _nextMax = result.Cursor.Max;
+            _nextViewAt = result.Cursor.ViewAt;
+        }
+        LoadingVisibility = false;
+    }
     /// <summary>
     /// 添加所有视频到下载列表事件
     /// </summary>
@@ -368,18 +359,23 @@ public class ViewMyHistoryViewModel : ViewModelBase
         await Task.Run(() =>
         {
             var historyList = History.GetHistory(0, 0, VideoNumberInPage);
-            if (historyList?.List == null || historyList.List.Count == 0)
+            if (historyList?.List?.Count > 0)
             {
-                LoadingVisibility = false;
-                NoDataVisibility = true;
-                return;
+                App.PropertyChangeAsync(() =>
+                {
+                    ContentVisibility = true;
+                    LoadingVisibility = false;
+                    NoDataVisibility = false;
+                });
             }
-            App.PropertyChangeAsync(() =>
+            else
             {
-                ContentVisibility = true;
-                LoadingVisibility = false;
-                NoDataVisibility = false;
-            });
+               App.PropertyChangeAsync(() =>
+               {
+                   LoadingVisibility = false;
+                   NoDataVisibility = true;
+               });
+            }
         });
     }
 
@@ -399,6 +395,8 @@ public class ViewMyHistoryViewModel : ViewModelBase
         LoadingVisibility = false;
         NoDataVisibility = false;
 
+        _nextMax = 0;
+        _nextViewAt = 0;
         Medias.Clear();
         IsSelectAll = false;
     }
@@ -470,7 +468,7 @@ public class ViewMyHistoryViewModel : ViewModelBase
             _ => $"{DictionaryResource.GetString("HistoryWatch")} {Format.FormatDuration3(progress)}"
         };
 
-    public static HistoryMedia Convert(HistoryList history, IEventAggregator eventAggregator)
+    public static HistoryMedia? Convert(HistoryList history, IEventAggregator eventAggregator)
     {
         if (history?.History == null || !IsValidBusiness(history.History.Business))
             return null;
