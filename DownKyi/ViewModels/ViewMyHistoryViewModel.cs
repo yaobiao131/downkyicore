@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DownKyi.Commands;
 using DownKyi.Core.BiliApi.History;
 using DownKyi.Core.BiliApi.History.Models;
 using DownKyi.Core.BiliApi.VideoStream;
@@ -251,16 +252,13 @@ public class ViewMyHistoryViewModel : ViewModelBase
     public DelegateCommand AddAllToDownloadCommand =>
         _addAllToDownloadCommand ??= new DelegateCommand(ExecuteAddAllToDownloadCommand);
     
-    private DelegateCommand? _loadMoreCommand;
-
-    public DelegateCommand LoadMoreCommand =>
-        _addAllToDownloadCommand ??= new DelegateCommand(ExecuteLoadMoreCommand);
+    public AsyncDelegateCommand LoadMoreCommand => new (ExecuteLoadMoreCommand);
     
     private long _nextMax = 0;
 
     private long _nextViewAt = 0;
 
-    public async void ExecuteLoadMoreCommand()
+    public async Task ExecuteLoadMoreCommand(object obj,CancellationToken token)
     {
         if(NoDataVisibility) return;
         LoadingVisibility = true;
