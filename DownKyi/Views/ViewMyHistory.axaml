@@ -9,7 +9,8 @@
              x:DataType="vm:ViewMyHistoryViewModel"
              xmlns:i="using:Avalonia.Xaml.Interactivity"
              xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
+             xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
+             xmlns:customAction="clr-namespace:DownKyi.CustomAction">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:HistoryMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -41,7 +42,8 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" Stretch="UniformToFill" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
 
@@ -144,7 +146,8 @@
                                                 VerticalAlignment="Center"
                                                 CornerRadius="12">
                                                 <Border.Background>
-                                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding UpHeader}" />
+                                                    <ImageBrush
+                                                        asyncImageLoader:ImageBrushLoader.Source="{Binding UpHeader}" />
                                                 </Border.Background>
                                             </Border>
                                             <TextBlock
@@ -243,14 +246,20 @@
 
         <Grid Grid.Row="2" IsVisible="{Binding ContentVisibility}" RowDefinitions="*,1,50">
             <ListBox
+                ItemsSource="{Binding Medias}"
                 x:Name="NameMedias"
                 Grid.Row="0"
                 BorderThickness="0"
-                ItemsSource="{Binding Medias}"
                 ItemContainerTheme="{StaticResource MediaListStyle}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                 SelectionMode="Multiple">
                 <i:Interaction.Behaviors>
+                    <customAction:InfiniteScrollBehavior 
+                     
+                        LoadMoreCommand="{Binding LoadMoreCommand}">
+                        
+                    </customAction:InfiniteScrollBehavior>
+                    
                     <ia:EventTriggerBehavior EventName="SelectionChanged">
                         <ia:InvokeCommandAction Command="{Binding MediasCommand}"
                                                 CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
@@ -258,7 +267,7 @@
                 </i:Interaction.Behaviors>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel />
+                        <VirtualizingStackPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
                 <ListBox.Theme>
