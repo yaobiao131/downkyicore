@@ -24,6 +24,18 @@ public class AdvancedImage : ContentControl
     public static readonly StyledProperty<string?> SourceProperty = AvaloniaProperty.Register<AdvancedImage, string?>(nameof(Source));
 
     /// <summary>
+    ///     Defines the <see cref="QualityProperty" /> property.
+    /// </summary>
+    public static readonly StyledProperty<int> QualityProperty = AvaloniaProperty.Register<AdvancedImage, int>(nameof(Source),defaultValue:25,coerce:
+        (s, e) =>
+        {
+            if (e > 100 || e < 0)
+            {
+                return 25;
+            }
+            return e;
+        });
+    /// <summary>
     ///     Defines the <see cref="ShouldLoaderChangeTriggerUpdate" /> property.
     /// </summary>
     public static readonly DirectProperty<AdvancedImage, bool> ShouldLoaderChangeTriggerUpdateProperty =
@@ -117,6 +129,16 @@ public class AdvancedImage : ContentControl
     {
         get => GetValue(SourceProperty);
         set => SetValue(SourceProperty, value);
+    }
+    
+    /// <summary>
+    ///   Gets or sets the quality of the image that will be displayed
+    /// </summary>
+    
+    public int Quality
+    {
+        get => GetValue(QualityProperty);
+        set => SetValue(QualityProperty, value);
     }
 
     /// <summary>
@@ -236,7 +258,7 @@ public class AdvancedImage : ContentControl
                 }
 
                 loader ??= ImageLoader.AsyncImageLoader;
-                return await loader.ProvideImageAsync(source);
+                return await loader.ProvideImageAsync(source,(int)Width,(int)Height,Quality);
             }
             catch (TaskCanceledException)
             {
