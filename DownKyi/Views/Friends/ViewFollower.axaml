@@ -5,8 +5,6 @@
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmf:ViewFollowerViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <UserControl.Resources>
         <ControlTheme x:Key="ContentListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FriendInfo">
@@ -22,8 +20,7 @@
                             <Interaction.Behaviors>
                                 <ExecuteCommandOnPointerReleasedBehavior
                                     Command="{Binding UserCommand}"
-                                    CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
-                                </ExecuteCommandOnPointerReleasedBehavior>
+                                    CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
                             </Interaction.Behaviors>
 
                             <Image
