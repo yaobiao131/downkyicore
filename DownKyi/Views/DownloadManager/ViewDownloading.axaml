@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloading"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
-             x:DataType="vmdm:ViewDownloadingViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vmdm:ViewDownloadingViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="DownloadingStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadingItem">
             <Setter Property="Template">
@@ -86,13 +84,13 @@
                                                 FontSize="12"
                                                 Foreground="{DynamicResource BrushTextDark}"
                                                 Text="{Binding StringFormat={} {0}, Path=DownloadStatusTitle}">
-                                                <i:Interaction.Behaviors>
-                                                    <ia:DataTriggerBehavior Binding="{Binding DownloadContent}"
-                                                                            Value="">
-                                                        <ia:ChangePropertyAction PropertyName="Text"
-                                                            Value="{Binding DownloadStatusTitle}" />
-                                                    </ia:DataTriggerBehavior>
-                                                </i:Interaction.Behaviors>
+                                                <Interaction.Behaviors>
+                                                    <DataTriggerBehavior Binding="{Binding DownloadContent}"
+                                                                         Value="">
+                                                        <ChangePropertyAction PropertyName="Text"
+                                                                              Value="{Binding DownloadStatusTitle}" />
+                                                    </DataTriggerBehavior>
+                                                </Interaction.Behaviors>
                                             </TextBlock>
                                         </StackPanel>
 
@@ -280,7 +278,6 @@
             Width="256"
             Height="256"
             Source="/Resources/nodata02.png"
-            IsVisible="{Binding !DownloadingList.Count}">
-        </Image>
+            IsVisible="{Binding !DownloadingList.Count}" />
     </Grid>
 </UserControl>

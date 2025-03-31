@@ -4,10 +4,7 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             x:DataType="vms:ViewVideoViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:id="clr-namespace:Avalonia.Xaml.Interactions.Draggable;assembly=Avalonia.Xaml.Interactions.Draggable">
+             x:DataType="vms:ViewVideoViewModel">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
 
@@ -27,12 +24,12 @@
                     VerticalContentAlignment="Center"
                     ItemsSource="{Binding VideoCodecs}"
                     SelectedValue="{Binding SelectedVideoCodec}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding VideoCodecsCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoCodecs,Path=SelectedValue}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding VideoCodecsCommand}"
+                                                 CommandParameter="{Binding ElementName=NameVideoCodecs,Path=SelectedValue}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -48,12 +45,12 @@
                     DisplayMemberBinding="{ReflectionBinding Name}"
                     ItemsSource="{Binding VideoQualityList}"
                     SelectedItem="{Binding SelectedVideoQuality}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding VideoQualityCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoQualityList,Path=SelectedValue}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding VideoQualityCommand}"
+                                                 CommandParameter="{Binding ElementName=NameVideoQualityList,Path=SelectedValue}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -69,12 +66,12 @@
                     DisplayMemberBinding="{ReflectionBinding Name}"
                     ItemsSource="{Binding AudioQualityList}"
                     SelectedItem="{Binding SelectedAudioQuality}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding AudioQualityCommand}"
-                                                    CommandParameter="{Binding ElementName=NameAudioQualityList,Path=SelectedValue}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding AudioQualityCommand}"
+                                                 CommandParameter="{Binding ElementName=NameAudioQualityList,Path=SelectedValue}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -90,12 +87,12 @@
                     DisplayMemberBinding="{Binding Name}"
                     ItemsSource="{Binding VideoParseTypeList}"
                     SelectedItem="{Binding SelectedVideoParseType}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding VideoParseTypeCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoParseTypeList,Path=SelectedValue}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding VideoParseTypeCommand}"
+                                                 CommandParameter="{Binding ElementName=NameVideoParseTypeList,Path=SelectedValue}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </ComboBox>
             </StackPanel>
             <CheckBox
@@ -107,7 +104,7 @@
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding IsTranscodingFlvToMp4, Mode=TwoWay}" />
-            
+
             <CheckBox
                 Margin="0,20,0,0"
                 HorizontalAlignment="Left"
@@ -117,7 +114,7 @@
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding IsTranscodingAacToMp3, Mode=TwoWay}" />
-            
+
             <TextBlock
                 Height="1"
                 Margin="0,20,0,0"
@@ -241,12 +238,12 @@
                         SelectedIndex="{Binding SelectedOptionalField}"
                         SelectionMode="Single"
                         Theme="{StaticResource Tag2Style}">
-                        <i:Interaction.Behaviors>
-                            <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                <ia:InvokeCommandAction Command="{Binding OptionalFieldsCommand}"
-                                                        CommandParameter="{Binding ElementName=NameOptionalFields, Path=SelectedItem}" />
-                            </ia:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="SelectionChanged">
+                                <InvokeCommandAction Command="{Binding OptionalFieldsCommand}"
+                                                     CommandParameter="{Binding ElementName=NameOptionalFields, Path=SelectedItem}" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
                     </ListBox>
 
                     <TextBlock
@@ -263,21 +260,21 @@
                         ItemsSource="{Binding SelectedFileName, Mode=TwoWay}"
                         SelectionMode="Single"
                         Theme="{StaticResource Tag2Style}">
-                        <i:Interaction.Behaviors>
-                            <ia:EventTriggerBehavior EventName="DoubleTapped">
-                                <ia:InvokeCommandAction Command="{Binding SelectedFileNameRightCommand}"
-                                                        CommandParameter="{Binding ElementName=NameSelectedFileName, Path=SelectedItem}" />
-                            </ia:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="DoubleTapped">
+                                <InvokeCommandAction Command="{Binding SelectedFileNameRightCommand}"
+                                                     CommandParameter="{Binding ElementName=NameSelectedFileName, Path=SelectedItem}" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
                         <ListBox.ItemContainerTheme>
                             <ControlTheme BasedOn="{StaticResource TagItem2Style}" TargetType="{x:Type ListBoxItem}">
                                 <Setter Property="DragDrop.AllowDrop" Value="True" />
-                                <Setter Property="(i:Interaction.Behaviors)">
-                                    <i:BehaviorCollectionTemplate>
-                                        <i:BehaviorCollection>
-                                            <id:ItemDragBehavior Orientation="Horizontal" />
-                                        </i:BehaviorCollection>
-                                    </i:BehaviorCollectionTemplate>
+                                <Setter Property="(Interaction.Behaviors)">
+                                    <BehaviorCollectionTemplate>
+                                        <BehaviorCollection>
+                                            <ItemDragBehavior Orientation="Horizontal" />
+                                        </BehaviorCollection>
+                                    </BehaviorCollectionTemplate>
                                 </Setter>
                             </ControlTheme>
                         </ListBox.ItemContainerTheme>
@@ -309,12 +306,12 @@
                                 VerticalContentAlignment="Center"
                                 ItemsSource="{Binding FileNamePartTimeFormatList}"
                                 SelectedItem="{Binding SelectedFileNamePartTimeFormat}">
-                                <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                        <ia:InvokeCommandAction Command="{Binding FileNamePartTimeFormatCommand}"
-                                                                CommandParameter="{Binding ElementName=NameFileNamePartTimeFormat, Path=SelectedItem}" />
-                                    </ia:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="SelectionChanged">
+                                        <InvokeCommandAction Command="{Binding FileNamePartTimeFormatCommand}"
+                                                             CommandParameter="{Binding ElementName=NameFileNamePartTimeFormat, Path=SelectedItem}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
                             </ComboBox>
                         </StackPanel>
                         <StackPanel
@@ -335,12 +332,12 @@
                                 DisplayMemberBinding="{Binding Name}"
                                 ItemsSource="{Binding OrderFormatList}"
                                 SelectedItem="{Binding OrderFormatDisplay}">
-                                <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                        <ia:InvokeCommandAction Command="{Binding OrderFormatCommand}"
-                                                                CommandParameter="{Binding ElementName=NameOrderFormat, Path=SelectedItem}" />
-                                    </ia:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="SelectionChanged">
+                                        <InvokeCommandAction Command="{Binding OrderFormatCommand}"
+                                                             CommandParameter="{Binding ElementName=NameOrderFormat, Path=SelectedItem}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
                             </ComboBox>
                         </StackPanel>
                         <Button

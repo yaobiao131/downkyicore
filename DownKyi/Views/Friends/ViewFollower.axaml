@@ -19,12 +19,12 @@
                             Height="80"
                             Margin="15,15,10,5"
                             Cursor="Hand" ColumnDefinitions="80,*">
-                            <i:Interaction.Behaviors>
-                                <iac:ExecuteCommandOnPointerReleasedBehavior
+                            <Interaction.Behaviors>
+                                <ExecuteCommandOnPointerReleasedBehavior
                                     Command="{Binding UserCommand}"
                                     CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
-                                </iac:ExecuteCommandOnPointerReleasedBehavior>
-                            </i:Interaction.Behaviors>
+                                </ExecuteCommandOnPointerReleasedBehavior>
+                            </Interaction.Behaviors>
 
                             <Image
                                 Grid.Column="0"
@@ -77,12 +77,12 @@
                 ItemContainerTheme="{StaticResource ContentListStyle}"
                 ItemsSource="{Binding Contents}"
                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <!--<i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding ContentsCommand}"
+                <!--<Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding ContentsCommand}"
                                                 CommandParameter="{Binding ElementName=nameContents, Path=SelectedItems}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>-->
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>-->
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel />

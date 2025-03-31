@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.Toolbox.ViewBiliHelper"
              xmlns:vm="clr-namespace:DownKyi.ViewModels.Toolbox"
-             x:DataType="vm:ViewBiliHelperViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vm:ViewBiliHelperViewModel">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -33,12 +31,12 @@
                                 Margin="10"
                                 VerticalContentAlignment="Center"
                                 Text="{Binding Avid, Mode=TwoWay}">
-                                <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="TextChanged">
-                                        <ia:InvokeCommandAction Command="{Binding AvidCommand}"
-                                                                CommandParameter="{Binding ElementName=NameAvid, Path=Text}" />
-                                    </ia:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="TextChanged">
+                                        <InvokeCommandAction Command="{Binding AvidCommand}"
+                                                             CommandParameter="{Binding ElementName=NameAvid, Path=Text}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
                             </TextBox>
                         </StackPanel>
 
@@ -54,12 +52,12 @@
                                 Margin="10"
                                 VerticalContentAlignment="Center"
                                 Text="{Binding Bvid, Mode=TwoWay}">
-                                <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="TextChanged">
-                                        <ia:InvokeCommandAction Command="{Binding BvidCommand}"
-                                                                CommandParameter="{Binding ElementName=NameBvid, Path=Text}" />
-                                    </ia:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="TextChanged">
+                                        <InvokeCommandAction Command="{Binding BvidCommand}"
+                                                             CommandParameter="{Binding ElementName=NameBvid, Path=Text}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
                             </TextBox>
                         </StackPanel>
 
@@ -117,11 +115,11 @@
                             FontSize="12"
                             IsReadOnly="True"
                             Text="{Binding UserMid, Mode=TwoWay}">
-                            <i:Interaction.Behaviors>
-                                <ia:EventTriggerBehavior EventName="PointerReleased">
-                                    <ia:InvokeCommandAction Command="{Binding VisitUserSpaceCommand}" />
-                                </ia:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
+                            <Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="PointerReleased">
+                                    <InvokeCommandAction Command="{Binding VisitUserSpaceCommand}" />
+                                </EventTriggerBehavior>
+                            </Interaction.Behaviors>
                             <TextBox.Styles>
                                 <Style Selector="TextBox">
                                     <Setter Property="Foreground" Value="{DynamicResource BrushTextDark}" />

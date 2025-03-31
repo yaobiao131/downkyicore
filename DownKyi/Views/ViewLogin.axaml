@@ -4,9 +4,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:Class="DownKyi.Views.ViewLogin"
-             x:DataType="vm:ViewLoginViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vm:ViewLoginViewModel">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -75,23 +73,23 @@
             Grid.Row="2"
             MaxHeight="300"
             Source="/Resources/login/qrcode_login_tip.png">
-            <i:Interaction.Behaviors>
-                <ia:DataTriggerBehavior
+            <Interaction.Behaviors>
+                <DataTriggerBehavior
                     Binding="{Binding Path=IsPointerOver, ElementName=NameLoginQrCode}"
                     Value="True">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" TargetObject="NameLoginQrCodeTip" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior
+                    <ChangePropertyAction PropertyName="IsVisible" Value="True" TargetObject="NameLoginQrCodeTip" />
+                </DataTriggerBehavior>
+                <DataTriggerBehavior
                     Binding="{Binding Path=IsPointerOver, ElementName=NameLoginQrCodeTip}"
                     Value="False">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior
+                    <ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
+                </DataTriggerBehavior>
+                <DataTriggerBehavior
                     Binding="{Binding Path=IsVisible, ElementName=NameLoginQrCodeStatus}"
                     Value="True">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
-                </ia:DataTriggerBehavior>
-            </i:Interaction.Behaviors>
+                    <ChangePropertyAction PropertyName="IsVisible" Value="False" TargetObject="NameLoginQrCodeTip" />
+                </DataTriggerBehavior>
+            </Interaction.Behaviors>
         </Image>
 
 

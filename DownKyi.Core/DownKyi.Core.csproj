@@ -7,7 +7,7 @@
         <RuntimeIdentifier>$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</RuntimeIdentifier>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.2.5" />
+        <PackageReference Include="Avalonia" Version="11.2.6" />
         <PackageReference Include="FFMpegCore" Version="5.2.0" />
         <PackageReference Include="Google.Protobuf" Version="3.25.1"/>
         <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="9.0.3" />

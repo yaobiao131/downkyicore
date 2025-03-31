@@ -1,68 +1,67 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-            Width="400"
-			 Height="360"
-			    xmlns:prism="http://prismlibrary.com/"
-			   xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
-			    prism:ViewModelLocator.AutoWireViewModel="True"
-			  xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
-			  x:DataType="vmd:NewVersionAvailableDialogViewModel"
+             Width="400"
+             Height="360"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             x:DataType="vmd:NewVersionAvailableDialogViewModel"
              x:Class="DownKyi.Views.Dialogs.NewVersionAvailableDialog">
-	<Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
-		<Grid RowDefinitions="40,*">
-			<Grid
-			   Grid.Row="0"
-			   Background="{DynamicResource BrushBackgroundGreyTranslucent3}"
-			   KeyboardNavigation.TabNavigation="None" ColumnDefinitions="*,100,*,50">
-				<TextBlock
-					    Text="{DynamicResource NewVersionTitle}"
-					   FontSize="15"
-					 VerticalAlignment="Center"
-						 Grid.Column="1"
-						HorizontalAlignment="Right"
-					   Grid.Row="0"/>
-				<Button
-						  Grid.Column="4"
-						  Command="{Binding CloseCommand}"
-						  Theme="{StaticResource ImageBtnStyle}">
-					<Path
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
+        <Grid RowDefinitions="40,*">
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}"
+                KeyboardNavigation.TabNavigation="None" ColumnDefinitions="*,100,*,50">
+                <TextBlock
+                    Text="{DynamicResource NewVersionTitle}"
+                    FontSize="15"
+                    VerticalAlignment="Center"
+                    Grid.Column="1"
+                    HorizontalAlignment="Right"
+                    Grid.Row="0" />
+                <Button
+                    Grid.Column="4"
+                    Command="{Binding CloseCommand}"
+                    Theme="{StaticResource ImageBtnStyle}">
+                    <Path
                         Width="{Binding CloseIcon.Width}"
                         Height="{Binding CloseIcon.Height}"
                         Data="{Binding CloseIcon.Data}"
                         Fill="{Binding CloseIcon.Fill}"
                         Stretch="UniformToFill" />
-				</Button>
-			</Grid>
+                </Button>
+            </Grid>
 
-			<Grid Grid.Row="1" RowDefinitions="4*,*,15">
-				<ScrollViewer
-				 Grid.Row="0" 
-				  VerticalScrollBarVisibility="Auto">
-					<ItemsControl ItemsSource="{Binding Messages}">
-						<ItemsControl.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Margin="15,5,0,0" TextWrapping="Wrap">
-									<TextBlock.Inlines>
-										<Run Text="{Binding Text}" 
-											 
-											 FontWeight="{Binding FontWeight}"
-											 FontSize="{Binding FontSize}" />
-									</TextBlock.Inlines>
-								</TextBlock>
-							</DataTemplate>
-						</ItemsControl.ItemTemplate>
-					</ItemsControl>
-				</ScrollViewer>
-				<Button
-				 Grid.Row="1"
-				 Width="90"
-				 HorizontalAlignment="Center"
-				 VerticalAlignment="Bottom"
-				 Command="{Binding AllowCommand}"
-				 Content="{DynamicResource ActionUpdate}"
-				 FontSize="12"
-				 Theme="{StaticResource BtnStyle}" />
-			</Grid>
-		</Grid>
-		</Border>
+            <Grid Grid.Row="1" RowDefinitions="4*,*,15">
+                <ScrollViewer
+                    Grid.Row="0"
+                    VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding Messages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="15,5,0,0" TextWrapping="Wrap">
+                                    <TextBlock.Inlines>
+                                        <Run Text="{Binding Text}"
+
+                                             FontWeight="{Binding FontWeight}"
+                                             FontSize="{Binding FontSize}" />
+                                    </TextBlock.Inlines>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Button
+                    Grid.Row="1"
+                    Width="90"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding AllowCommand}"
+                    Content="{DynamicResource ActionUpdate}"
+                    FontSize="12"
+                    Theme="{StaticResource BtnStyle}" />
+            </Grid>
+        </Grid>
+    </Border>
 </UserControl>

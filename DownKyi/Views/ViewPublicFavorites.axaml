@@ -3,8 +3,6 @@
              x:Class="DownKyi.Views.ViewPublicFavorites"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
@@ -214,11 +212,11 @@
                     Cursor="Hand"
                     Orientation="Horizontal"
                     ToolTip.Tip="{Binding Favorites.UpName}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="PointerReleased">
-                            <ia:InvokeCommandAction Command="{Binding UpperCommand}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction Command="{Binding UpperCommand}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
 
                     <Image
                         Width="48"
@@ -273,12 +271,12 @@
                 Margin="30,0,0,0"
                 ItemsSource="{Binding FavoritesMedias, Mode=TwoWay}"
                 SelectionMode="Multiple">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding FavoritesMediasCommand}"
-                                                CommandParameter="{Binding ElementName=NameFavoritesMedias, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding FavoritesMediasCommand}"
+                                             CommandParameter="{Binding ElementName=NameFavoritesMedias, Path=SelectedItem}" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
                 <ListBox.Template>
                     <ControlTemplate TargetType="{x:Type ListBox}">
                         <ScrollViewer
@@ -347,20 +345,19 @@
                                                 Text="{Binding Title}"
                                                 TextTrimming="CharacterEllipsis"
                                                 ToolTip.Tip="{Binding Title}">
-                                                <i:Interaction.Behaviors>
-                                                    <ia:EventTriggerBehavior EventName="PointerReleased">
-                                                        <ia:InvokeCommandAction Command="{Binding TitleCommand}"
-                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                                                    </ia:EventTriggerBehavior>
-                                                </i:Interaction.Behaviors>
+                                                <Interaction.Behaviors>
+                                                    <EventTriggerBehavior EventName="PointerReleased">
+                                                        <InvokeCommandAction Command="{Binding TitleCommand}"
+                                                                             CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                                    </EventTriggerBehavior>
+                                                </Interaction.Behaviors>
                                                 <TextBlock.Styles>
                                                     <Style Selector="TextBlock">
                                                         <Setter Property="Foreground"
                                                                 Value="{DynamicResource BrushTextDark}" />
                                                         <Style Selector="^:pointerover">
                                                             <Setter Property="Foreground"
-                                                                    Value="{DynamicResource BrushPrimary}">
-                                                            </Setter>
+                                                                    Value="{DynamicResource BrushPrimary}" />
                                                         </Style>
                                                     </Style>
                                                 </TextBlock.Styles>
@@ -410,12 +407,12 @@
                                                 Cursor="Hand"
                                                 FontSize="12"
                                                 Text="{Binding UpName, StringFormat={}UP: {0}}">
-                                                <i:Interaction.Behaviors>
-                                                    <ia:EventTriggerBehavior EventName="PointerReleased">
-                                                        <ia:InvokeCommandAction Command="{Binding VideoUpperCommand}"
-                                                            CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                                                    </ia:EventTriggerBehavior>
-                                                </i:Interaction.Behaviors>
+                                                <Interaction.Behaviors>
+                                                    <EventTriggerBehavior EventName="PointerReleased">
+                                                        <InvokeCommandAction Command="{Binding VideoUpperCommand}"
+                                                                             CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                                    </EventTriggerBehavior>
+                                                </Interaction.Behaviors>
                                                 <TextBlock.Styles>
                                                     <Style Selector="TextBlock">
                                                         <Setter Property="Foreground"

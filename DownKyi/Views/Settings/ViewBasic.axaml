@@ -4,9 +4,7 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
-             x:DataType="vms:ViewBasicViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vms:ViewBasicViewModel">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="50,0" Orientation="Vertical">
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -121,12 +119,12 @@
                     DisplayMemberBinding="{Binding Name}"
                     ItemsSource="{Binding ParseScopes}"
                     SelectedItem="{Binding SelectedParseScope}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding ParseScopesCommand}"
-                                                    CommandParameter="{Binding ElementName=NameParseScopes, Path=SelectedItem}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding ParseScopesCommand}"
+                                                 CommandParameter="{Binding ElementName=NameParseScopes, Path=SelectedItem}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
 
                 </ComboBox>
             </StackPanel>
@@ -151,12 +149,12 @@
                     DisplayMemberBinding="{Binding Name}"
                     ItemsSource="{Binding RepeatDownloadStrategy}"
                     SelectedItem="{Binding SelectedRepeatDownloadStrategy}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding RepeatDownloadStrategyCommand}"
-                                                    CommandParameter="{Binding ElementName=NameRepeatDownloadStrategy, Path=SelectedItem}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding RepeatDownloadStrategyCommand}"
+                                                 CommandParameter="{Binding ElementName=NameRepeatDownloadStrategy, Path=SelectedItem}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
 
                 </ComboBox>
             </StackPanel>

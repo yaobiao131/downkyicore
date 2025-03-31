@@ -4,7 +4,6 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
-             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
              x:DataType="vmd:ViewAlertDialogViewModel">
 
     <!-- <prismExtension:Dialog.Theme> -->

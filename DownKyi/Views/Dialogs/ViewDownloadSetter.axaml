@@ -4,7 +4,6 @@
              x:Class="DownKyi.Views.Dialogs.ViewDownloadSetter"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
              x:DataType="vmd:ViewDownloadSetterViewModel">
     <!-- <prismExtension:Dialog.Theme> -->
     <!--     <ControlTheme TargetType="Window"> -->

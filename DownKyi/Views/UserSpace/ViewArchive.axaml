@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.UserSpace.ViewArchive"
              xmlns:vmu="clr-namespace:DownKyi.ViewModels.UserSpace"
-             x:DataType="vmu:ViewArchiveViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vmu:ViewArchiveViewModel">
     <Grid RowDefinitions="*">
 
         <ListBox Name="NamePublicationZones"
@@ -12,12 +10,12 @@
                  ItemsSource="{Binding PublicationZones}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                  SelectedIndex="{Binding SelectedItem}">
-            <i:Interaction.Behaviors>
-                <ia:EventTriggerBehavior EventName="SelectionChanged">
-                    <ia:InvokeCommandAction Command="{Binding PublicationZonesCommand}"
-                                            CommandParameter="{Binding ElementName=NamePublicationZones, Path=SelectedItem}" />
-                </ia:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="SelectionChanged">
+                    <InvokeCommandAction Command="{Binding PublicationZonesCommand}"
+                                         CommandParameter="{Binding ElementName=NamePublicationZones, Path=SelectedItem}" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />

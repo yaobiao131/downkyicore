@@ -5,9 +5,7 @@
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              x:DataType="vm:ViewFriendsViewModel"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid RowDefinitions="50,1,*">
         <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
             <Button
@@ -43,12 +41,12 @@
                 ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                 SelectedIndex="{Binding SelectTabId, Mode=TwoWay}">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding TabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=NameTabHeaders, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding TabHeadersCommand}"
+                                             CommandParameter="{Binding ElementName=NameTabHeaders, Path=SelectedItem}" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel

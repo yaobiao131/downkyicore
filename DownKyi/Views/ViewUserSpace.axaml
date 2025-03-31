@@ -1,7 +1,5 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              x:Class="DownKyi.Views.ViewUserSpace"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
@@ -237,12 +235,12 @@
                                     Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
-                        <i:Interaction.Behaviors>
-                            <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                <ia:InvokeCommandAction Command="{Binding TabLeftBannersCommand}"
-                                                        CommandParameter="{Binding ElementName=NameTabLeftBanners, Path=SelectedItem}" />
-                            </ia:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="SelectionChanged">
+                                <InvokeCommandAction Command="{Binding TabLeftBannersCommand}"
+                                                     CommandParameter="{Binding ElementName=NameTabLeftBanners, Path=SelectedItem}" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
                     </ListBox>
                     <ListBox
                         Name="NameTabRightBanners"
@@ -260,12 +258,12 @@
                                     Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
-                        <i:Interaction.Behaviors>
-                            <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                <ia:InvokeCommandAction Command="{Binding TabRightBannersCommand}"
-                                                        CommandParameter="{Binding ElementName=NameTabRightBanners, Path=SelectedItem}" />
-                            </ia:EventTriggerBehavior>
-                        </i:Interaction.Behaviors>
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="SelectionChanged">
+                                <InvokeCommandAction Command="{Binding TabRightBannersCommand}"
+                                                     CommandParameter="{Binding ElementName=NameTabRightBanners, Path=SelectedItem}" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
                     </ListBox>
                 </Grid>
                 <!--  内容区content  -->

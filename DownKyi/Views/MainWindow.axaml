@@ -11,18 +11,16 @@
         MinHeight="550"
         Title="{DynamicResource AppName}"
         Icon="/Resources/favicon.ico"
-        xmlns:i="using:Avalonia.Xaml.Interactivity"
-        xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
         WindowState="{Binding WinState}">
 
-    <i:Interaction.Behaviors>
-        <ia:EventTriggerBehavior EventName="Closing">
-            <ia:InvokeCommandAction Command="{Binding ClosingCommand}" />
-        </ia:EventTriggerBehavior>
-        <ia:EventTriggerBehavior EventName="Opened">
-            <ia:InvokeCommandAction Command="{Binding LoadedCommand}" />
-        </ia:EventTriggerBehavior>
-    </i:Interaction.Behaviors>
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Closing">
+            <InvokeCommandAction Command="{Binding ClosingCommand}" />
+        </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Opened">
+            <InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
     <Grid RowDefinitions="*">
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
 

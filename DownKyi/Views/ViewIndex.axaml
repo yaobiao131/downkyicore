@@ -2,9 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
-             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vm:ViewIndexViewModel"
@@ -17,11 +14,11 @@
                   VerticalAlignment="Bottom"
                   Cursor="Hand"
                   IsVisible="{Binding LoginPanelVisibility}" ColumnDefinitions="*,*">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="PointerReleased">
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="PointerReleased">
                         <InvokeCommandAction Command="{Binding LoginCommand}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
                 <Image
                     Grid.Column="0"
                     Width="36"
@@ -50,8 +47,7 @@
                     FontSize="14"
                     Foreground="{DynamicResource BrushPrimary}"
                     Text="{DynamicResource Login}"
-                    IsVisible="{Binding UserName,Converter={x:Static StringConverters.IsNullOrEmpty}}">
-                </TextBlock>
+                    IsVisible="{Binding UserName,Converter={x:Static StringConverters.IsNullOrEmpty}}" />
             </Grid>
         </Grid>
 
@@ -83,9 +79,9 @@
                     FontSize="16"
                     Watermark="{DynamicResource IndexHintText}"
                     Text="{Binding InputText,Mode=TwoWay}">
-                    <i:Interaction.Behaviors>
-                        <iac:ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
+                    </Interaction.Behaviors>
                 </TextBox>
             </Border>
             <Button
@@ -117,11 +113,11 @@
                     VerticalAlignment="Center"
                     Cursor="Hand"
                     Orientation="Vertical">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="PointerReleased">
-                            <ia:InvokeCommandAction Command="{Binding SettingsCommand}"></ia:InvokeCommandAction>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction Command="{Binding SettingsCommand}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                     <Border
                         Width="64"
                         Height="64"
@@ -152,11 +148,11 @@
                     VerticalAlignment="Center"
                     Cursor="Hand"
                     Orientation="Vertical">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="PointerReleased">
-                            <ia:InvokeCommandAction Command="{Binding DownloadManagerCommand}"></ia:InvokeCommandAction>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction Command="{Binding DownloadManagerCommand}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                     <Border
                         Width="64"
                         Height="64"
@@ -187,11 +183,11 @@
                     VerticalAlignment="Center"
                     Cursor="Hand"
                     Orientation="Vertical">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="PointerReleased">
-                            <ia:InvokeCommandAction Command="{Binding ToolboxCommand}"></ia:InvokeCommandAction>
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction Command="{Binding ToolboxCommand}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                     <Border
                         Width="64"
                         Height="64"

@@ -2,8 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.ViewMyFavorites"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
@@ -25,20 +23,20 @@
                                 Height="115"
                                 HorizontalAlignment="Center"
                                 CornerRadius="5">
-                                <i:Interaction.Behaviors>
-                                    <ia:DataTriggerBehavior
+                                <Interaction.Behaviors>
+                                    <DataTriggerBehavior
                                         Binding="{Binding IsPointerOver,RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                         Value="True">
-                                        <ia:ChangePropertyAction PropertyName="IsVisible" TargetObject="NameInfoPanel"
-                                                                 Value="True" />
-                                    </ia:DataTriggerBehavior>
-                                    <ia:DataTriggerBehavior
+                                        <ChangePropertyAction PropertyName="IsVisible" TargetObject="NameInfoPanel"
+                                                              Value="True" />
+                                    </DataTriggerBehavior>
+                                    <DataTriggerBehavior
                                         Binding="{Binding IsPointerOver,RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                         Value="False">
-                                        <ia:ChangePropertyAction PropertyName="IsVisible" TargetObject="NameInfoPanel"
-                                                                 Value="False" />
-                                    </ia:DataTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                        <ChangePropertyAction PropertyName="IsVisible" TargetObject="NameInfoPanel"
+                                                              Value="False" />
+                                    </DataTriggerBehavior>
+                                </Interaction.Behaviors>
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
                                     <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
@@ -113,12 +111,12 @@
                                 TextTrimming="CharacterEllipsis"
                                 TextWrapping="WrapWithOverflow"
                                 ToolTip.Tip="{Binding Title}">
-                                <i:Interaction.Behaviors>
-                                    <ia:EventTriggerBehavior EventName="PointerReleased">
-                                        <ia:InvokeCommandAction Command="{Binding TitleCommand}"
-                                                                CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                                    </ia:EventTriggerBehavior>
-                                </i:Interaction.Behaviors>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="PointerReleased">
+                                        <InvokeCommandAction Command="{Binding TitleCommand}"
+                                                             CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
                             </TextBlock>
                             <Grid Grid.Row="2" ColumnDefinitions="120,*">
                                 <StackPanel Grid.Column="0" Orientation="Horizontal">
@@ -224,12 +222,12 @@
                 ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
                 Theme="{StaticResource LeftTabHeaderStyle}"
                 SelectedIndex="{Binding SelectTabId, Mode=TwoWay}">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
+                                             CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
             </ListBox>
 
             <Grid
@@ -246,12 +244,12 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     SelectionMode="Multiple"
                     ItemContainerTheme="{StaticResource MediaListStyle}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding MediasCommand}"
-                                                    CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding MediasCommand}"
+                                                 CommandParameter="{Binding ElementName=NameMedias, Path=SelectedItems}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
 
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -308,7 +306,7 @@
                         Content="{DynamicResource DownloadSelectedPublication}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushText}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnStyle}" />
 
                     <Button
                         Grid.Column="3"
@@ -319,7 +317,7 @@
                         Content="{DynamicResource DownloadAllPublication}"
                         FontSize="12"
                         Foreground="{DynamicResource BrushText}"
-                        Theme="{StaticResource BtnStyle}"/>
+                        Theme="{StaticResource BtnStyle}" />
                 </Grid>
             </Grid>
 

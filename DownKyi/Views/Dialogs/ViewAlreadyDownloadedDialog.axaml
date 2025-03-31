@@ -4,7 +4,6 @@
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:Class="DownKyi.Views.Dialogs.ViewAlreadyDownloadedDialog"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
-             xmlns:prismExtension="clr-namespace:DownKyi.PrismExtension.Dialog"
              x:DataType="vmd:ViewAlreadyDownloadedDialogViewModel">
 
     <!-- <prismExtension:Dialog.Theme> -->

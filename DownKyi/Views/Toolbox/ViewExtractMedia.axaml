@@ -1,8 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.Toolbox.ViewExtractMedia"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:vm="clr-namespace:DownKyi.ViewModels.Toolbox"
              x:DataType="vm:ViewExtractMediaViewModel">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
@@ -73,13 +71,13 @@
                     IsReadOnly="True"
                     Text="{Binding Status, Mode=TwoWay}"
                     ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="TextChanged">
-                            <ia:InvokeCommandAction
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="TextChanged">
+                            <InvokeCommandAction
                                 Command="{Binding StatusCommand}"
                                 CommandParameter="{Binding $self}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </TextBox>
             </Grid>
         </Grid>

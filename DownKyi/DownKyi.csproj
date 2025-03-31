@@ -16,17 +16,17 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.5" />
+        <PackageReference Include="Avalonia" Version="11.2.6" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.6" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.2.6" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.6" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.5" />
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.2.0.14" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.6" />
+        <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.6" />
         <PackageReference Include="Downloader" Version="3.3.4" />
         <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
         <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073" />
+        <PackageReference Include="Xaml.Behaviors" Version="11.2.0.14" />
     </ItemGroup>
 
 

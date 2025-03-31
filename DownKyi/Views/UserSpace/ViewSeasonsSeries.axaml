@@ -5,8 +5,6 @@
              x:DataType="vmu:ViewSeasonsSeriesViewModel"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <Grid RowDefinitions="*">
         <ListBox
@@ -14,12 +12,12 @@
             ItemsSource="{Binding SeasonsSeries}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             SelectedIndex="{Binding SelectedItem}">
-            <i:Interaction.Behaviors>
-                <ia:EventTriggerBehavior EventName="SelectionChanged">
-                    <ia:InvokeCommandAction Command="{Binding SeasonsSeriesCommand}"
-                                            CommandParameter="{Binding ElementName=NameSeasonsSeries, Path=SelectedItem}" />
-                </ia:EventTriggerBehavior>
-            </i:Interaction.Behaviors>
+            <Interaction.Behaviors>
+                <EventTriggerBehavior EventName="SelectionChanged">
+                    <InvokeCommandAction Command="{Binding SeasonsSeriesCommand}"
+                                         CommandParameter="{Binding ElementName=NameSeasonsSeries, Path=SelectedItem}" />
+                </EventTriggerBehavior>
+            </Interaction.Behaviors>
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
@@ -62,7 +60,8 @@
                                         Cursor="Hand">
                                         <Border.Background>
                                             <!--  长宽比：1.6  -->
-                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" Stretch="Fill" />
+                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                        Stretch="Fill" />
                                         </Border.Background>
                                         <Border
                                             Width="70"

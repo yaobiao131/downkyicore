@@ -4,9 +4,7 @@
              x:Class="DownKyi.Views.Toolbox.ViewDelogo"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             x:DataType="vm:ViewDelogoViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vm:ViewDelogoViewModel">
     <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
         <Grid Margin="50,0" RowDefinitions="168,*">
             <StackPanel Grid.Row="0" Orientation="Vertical">
@@ -103,12 +101,12 @@
                     IsReadOnly="True"
                     Text="{Binding Status, Mode=TwoWay}"
                     ScrollViewer.VerticalScrollBarVisibility="Visible">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="TextChanged">
-                            <ia:InvokeCommandAction Command="{Binding StatusCommand}"
-                                                    CommandParameter="{Binding $self}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="TextChanged">
+                            <InvokeCommandAction Command="{Binding StatusCommand}"
+                                                 CommandParameter="{Binding $self}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </TextBox>
             </Grid>
         </Grid>

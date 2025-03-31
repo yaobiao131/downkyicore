@@ -3,11 +3,8 @@
              x:Class="DownKyi.Views.ViewVideoDetail"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
-             xmlns:iac="clr-namespace:Avalonia.Xaml.Interactions.Custom;assembly=Avalonia.Xaml.Interactions.Custom"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewVideoDetailViewModel">
     <Grid RowDefinitions="50,10,*">
@@ -39,12 +36,11 @@
                     BorderThickness="0"
                     FontSize="12"
                     Text="{Binding InputText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                    <i:Interaction.Behaviors>
-                        <iac:ExecuteCommandOnKeyDownBehavior
+                    <Interaction.Behaviors>
+                        <ExecuteCommandOnKeyDownBehavior
                             Key="Enter"
-                            Command="{Binding InputCommand}">
-                        </iac:ExecuteCommandOnKeyDownBehavior>
-                    </i:Interaction.Behaviors>
+                            Command="{Binding InputCommand}" />
+                    </Interaction.Behaviors>
                 </TextBox>
             </Border>
 
@@ -212,11 +208,11 @@
                             Name="NameUp"
                             Grid.Column="1"
                             Cursor="Hand">
-                            <i:Interaction.Behaviors>
-                                <ia:EventTriggerBehavior EventName="PointerReleased">
-                                    <ia:InvokeCommandAction Command="{Binding UpperCommand}" />
-                                </ia:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
+                            <Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="PointerReleased">
+                                    <InvokeCommandAction Command="{Binding UpperCommand}" />
+                                </EventTriggerBehavior>
+                            </Interaction.Behaviors>
                             <Image
                                 Width="48"
                                 Height="48"
@@ -251,47 +247,45 @@
                 </Grid>
             </DockPanel>
 
-            <Grid Grid.Row="1" Margin="10,10,10,10" 
+            <Grid Grid.Row="1" Margin="10,10,10,10"
                   RowDefinitions="Auto,5,*,40">
-               <ScrollViewer Grid.Row="0" 
-                             MaxHeight="220"
-                             VerticalScrollBarVisibility="Auto">
-                   <ListBox
-                       x:Name="NameVideoSections"
-                       ItemContainerTheme="{StaticResource TagItemStyle}"
-                       ItemsSource="{Binding VideoSections, Mode=TwoWay}"
-                       Theme="{StaticResource TagStyle}"
-                       SelectionMode="Single">
-                       <ListBox.ItemsPanel>
-                           <ItemsPanelTemplate>
-                               <WrapPanel Orientation="Horizontal" />
-                           </ItemsPanelTemplate>
-                       </ListBox.ItemsPanel>
-                       <i:Interaction.Behaviors>
-                           <ia:EventTriggerBehavior EventName="SelectionChanged">
-                               <ia:InvokeCommandAction Command="{Binding VideoSectionsCommand}"
-                                                       CommandParameter="{Binding ElementName=NameVideoSections,Path=SelectedItem}" />
-                           </ia:EventTriggerBehavior>
-                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="0">
-                               <ia:ChangePropertyAction PropertyName="Height" Value="0" />
-                           </ia:DataTriggerBehavior>
-                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="1">
-                               <ia:ChangePropertyAction PropertyName="Height" Value="0" />
-                           </ia:DataTriggerBehavior>
-                           <ia:DataTriggerBehavior Binding="{Binding VideoSections.Count}"
-                                                   ComparisonCondition="GreaterThan" Value="1">
-                               <ia:ChangePropertyAction PropertyName="Height" Value="Nan" />
-                           </ia:DataTriggerBehavior>
-                       </i:Interaction.Behaviors>
-                   </ListBox>
-               </ScrollViewer>
-                
+                <ScrollViewer Grid.Row="0"
+                              MaxHeight="220"
+                              VerticalScrollBarVisibility="Auto">
+                    <ListBox
+                        x:Name="NameVideoSections"
+                        ItemContainerTheme="{StaticResource TagItemStyle}"
+                        ItemsSource="{Binding VideoSections, Mode=TwoWay}"
+                        Theme="{StaticResource TagStyle}"
+                        SelectionMode="Single">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="SelectionChanged">
+                                <InvokeCommandAction Command="{Binding VideoSectionsCommand}"
+                                                     CommandParameter="{Binding ElementName=NameVideoSections,Path=SelectedItem}" />
+                            </EventTriggerBehavior>
+                            <DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="0">
+                                <ChangePropertyAction PropertyName="Height" Value="0" />
+                            </DataTriggerBehavior>
+                            <DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="1">
+                                <ChangePropertyAction PropertyName="Height" Value="0" />
+                            </DataTriggerBehavior>
+                            <DataTriggerBehavior Binding="{Binding VideoSections.Count}"
+                                                 ComparisonCondition="GreaterThan" Value="1">
+                                <ChangePropertyAction PropertyName="Height" Value="Nan" />
+                            </DataTriggerBehavior>
+                        </Interaction.Behaviors>
+                    </ListBox>
+                </ScrollViewer>
+
                 <GridSplitter Grid.Row="1"
                               ShowsPreview="True"
                               behavior:GridSplitterExtensions.ResetGridBehavior="{Binding ResetGridBehavior}"
-                              ResizeDirection="Rows">
-                   
-                </GridSplitter>
+                              ResizeDirection="Rows" />
                 <DataGrid
                     x:Name="NameVideoPages"
                     Grid.Row="2"
@@ -306,8 +300,8 @@
                     <DataGrid.ColumnHeaderTheme>
                         <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
                             <!-- <Setter Property="Background" Value="{DynamicResource BrushHeaderGrey}" /> -->
-                            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
-                            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                            <Setter Property="VerticalContentAlignment" Value="Center" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
@@ -366,12 +360,12 @@
                             </Setter>
                         </ControlTheme>
                     </DataGrid.ColumnHeaderTheme>
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding VideoPagesCommand}"
-                                                    CommandParameter="{Binding ElementName=NameVideoPages, Path=SelectedItems}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding VideoPagesCommand}"
+                                                 CommandParameter="{Binding ElementName=NameVideoPages, Path=SelectedItems}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                     <DataGrid.Columns>
                         <DataGridTextColumn
                             Width="50"
@@ -409,12 +403,12 @@
                                             SelectedValueBinding="{Binding Quality}"
                                             ItemsSource="{Binding VideoQualityList,Mode=OneWay}"
                                             SelectedItem="{Binding VideoQuality,Mode=TwoWay}">
-                                            <i:Interaction.Behaviors>
-                                                <ia:EventTriggerBehavior EventName="SelectionChanged">
-                                                    <ia:InvokeCommandAction
+                                            <Interaction.Behaviors>
+                                                <EventTriggerBehavior EventName="SelectionChanged">
+                                                    <InvokeCommandAction
                                                         Command="{Binding VideoQualitySelectedCommand}" />
-                                                </ia:EventTriggerBehavior>
-                                            </i:Interaction.Behaviors>
+                                                </EventTriggerBehavior>
+                                            </Interaction.Behaviors>
                                         </ComboBox>
                                     </Grid>
                                 </DataTemplate>
@@ -463,12 +457,11 @@
                         Watermark="{DynamicResource SearchVideoByName}"
                         Text="{Binding Path=InputSearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         TextWrapping="Wrap">
-                        <i:Interaction.Behaviors>
-                            <iac:ExecuteCommandOnKeyDownBehavior
+                        <Interaction.Behaviors>
+                            <ExecuteCommandOnKeyDownBehavior
                                 Key="Enter"
-                                Command="{Binding InputSearchCommand}">
-                            </iac:ExecuteCommandOnKeyDownBehavior>
-                        </i:Interaction.Behaviors>
+                                Command="{Binding InputSearchCommand}" />
+                        </Interaction.Behaviors>
                     </TextBox>
                     <Button
                         Grid.Column="4"

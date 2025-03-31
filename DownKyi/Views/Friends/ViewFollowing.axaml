@@ -5,8 +5,6 @@
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmf:ViewFollowingViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader">
     <UserControl.Resources>
 
@@ -20,13 +18,13 @@
                             Height="80"
                             Margin="15,15,10,5"
                             Cursor="Hand" ColumnDefinitions="80,*">
-                            <i:Interaction.Behaviors>
-                                <ia:EventTriggerBehavior EventName="PointerReleased">
-                                    <ia:InvokeCommandAction
+                            <Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="PointerReleased">
+                                    <InvokeCommandAction
                                         Command="{Binding UserCommand}"
                                         CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
-                                </ia:EventTriggerBehavior>
-                            </i:Interaction.Behaviors>
+                                </EventTriggerBehavior>
+                            </Interaction.Behaviors>
 
                             <Image
                                 Grid.Column="0"
@@ -81,13 +79,13 @@
                 ItemsSource="{Binding TabHeaders}"
                 SelectedIndex="{Binding SelectTabId}"
                 Theme="{StaticResource LeftTabHeaderStyle}">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction
                             Command="{Binding LeftTabHeadersCommand}"
                             CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
             </ListBox>
             <!--  右侧内容区  -->
             <Grid

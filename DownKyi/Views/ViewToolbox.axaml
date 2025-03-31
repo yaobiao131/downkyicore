@@ -2,8 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.ViewToolbox"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              x:DataType="vm:ViewToolboxViewModel">
@@ -48,12 +46,12 @@
                 Theme="{StaticResource LeftTabHeaderStyle}"
                 ItemsSource="{Binding TabHeaders}"
                 SelectedIndex="{Binding SelectTabId}">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
+                                             CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
             </ListBox>
 
             <!--  右侧内容区  -->

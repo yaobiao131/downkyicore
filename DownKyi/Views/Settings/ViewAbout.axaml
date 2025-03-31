@@ -1,8 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.Settings.ViewAbout"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vms="clr-namespace:DownKyi.ViewModels.Settings"
@@ -42,11 +40,11 @@
                     FontSize="18"
                     Foreground="{DynamicResource BrushPrimary}"
                     Text="{Binding AppName}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="PointerReleased">
-                            <ia:InvokeCommandAction Command="{Binding AppNameCommand}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="PointerReleased">
+                            <InvokeCommandAction Command="{Binding AppNameCommand}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                 </TextBlock>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">

@@ -2,9 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloadFinished"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
-             x:DataType="vmdm:ViewDownloadFinishedViewModel"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions">
+             x:DataType="vmdm:ViewDownloadFinishedViewModel">
     <UserControl.Resources>
         <ControlTheme x:Key="DownloadedStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadedItem">
             <Setter Property="Template">
@@ -207,12 +205,12 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     SelectedIndex="{Binding FinishedSortBy}">
-                    <i:Interaction.Behaviors>
-                        <ia:EventTriggerBehavior EventName="SelectionChanged">
-                            <ia:InvokeCommandAction Command="{Binding FinishedSortCommand}"
-                                                    CommandParameter="{Binding ElementName=NameFinishedSort, Path=SelectedIndex}" />
-                        </ia:EventTriggerBehavior>
-                    </i:Interaction.Behaviors>
+                    <Interaction.Behaviors>
+                        <EventTriggerBehavior EventName="SelectionChanged">
+                            <InvokeCommandAction Command="{Binding FinishedSortCommand}"
+                                                 CommandParameter="{Binding ElementName=NameFinishedSort, Path=SelectedIndex}" />
+                        </EventTriggerBehavior>
+                    </Interaction.Behaviors>
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByTimeAsc}" />
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByTimeDesc}" />
                     <ComboBoxItem Content="{DynamicResource DownloadedSortByOrder}" />
@@ -234,18 +232,18 @@
             Width="256"
             Height="256"
             Source="/Resources/nodata02.png" IsVisible="{Binding !DownloadedList.Count}">
-            <!--<i:Interaction.Behaviors>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadedList}" Value="{x:Null}">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior Binding="{Binding DownloadedList.Count}" Value="0">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="True" />
-                </ia:DataTriggerBehavior>
-                <ia:DataTriggerBehavior
+            <!--<Interaction.Behaviors>
+                <DataTriggerBehavior Binding="{Binding DownloadedList}" Value="{x:Null}">
+                    <ChangePropertyAction PropertyName="IsVisible" Value="True" />
+                </DataTriggerBehavior>
+                <DataTriggerBehavior Binding="{Binding DownloadedList.Count}" Value="0">
+                    <ChangePropertyAction PropertyName="IsVisible" Value="True" />
+                </DataTriggerBehavior>
+                <DataTriggerBehavior
                     Binding="{Binding DownloadedList.Count, Converter={StaticResource CountConverter}}" Value="true">
-                    <ia:ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                </ia:DataTriggerBehavior>
-            </i:Interaction.Behaviors>-->
+                    <ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                </DataTriggerBehavior>
+            </Interaction.Behaviors>-->
         </Image>
     </Grid>
 </UserControl>

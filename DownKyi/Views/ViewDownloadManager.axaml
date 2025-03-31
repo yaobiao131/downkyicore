@@ -3,8 +3,6 @@
              x:Class="DownKyi.Views.ViewDownloadManager"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
-             xmlns:i="using:Avalonia.Xaml.Interactivity"
-             xmlns:ia="clr-namespace:Avalonia.Xaml.Interactions.Core;assembly=Avalonia.Xaml.Interactions"
              x:DataType="vm:ViewDownloadManagerViewModel"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid RowDefinitions="50,1,*">
@@ -45,12 +43,12 @@
                 SelectedIndex="{Binding SelectTabId}"
                 ItemContainerTheme="{StaticResource LeftTabHeaderItemStyle}"
                 Theme="{StaticResource LeftTabHeaderStyle}">
-                <i:Interaction.Behaviors>
-                    <ia:EventTriggerBehavior EventName="SelectionChanged">
-                        <ia:InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
-                                                CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
-                    </ia:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
+                <Interaction.Behaviors>
+                    <EventTriggerBehavior EventName="SelectionChanged">
+                        <InvokeCommandAction Command="{Binding LeftTabHeadersCommand}"
+                                             CommandParameter="{Binding ElementName=NameLeftTabHeaders, Path=SelectedItem}" />
+                    </EventTriggerBehavior>
+                </Interaction.Behaviors>
             </ListBox>
             <!--  右侧内容区  -->
             <ContentControl Grid.Column="1" prism:RegionManager.RegionName="DownloadManagerContentRegion" />
