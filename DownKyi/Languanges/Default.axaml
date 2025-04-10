@@ -352,5 +352,9 @@
     <system:String x:Key="Yes">是</system:String>
     <system:String x:Key="No">否</system:String>
     <system:String x:Key="ApplyToAll">全部应用</system:String>
-
+    
+    
+    <!-- CustomControl -->
+    <system:String x:Key="Page">页</system:String>
+    <system:String x:Key="JumpTo">跳至</system:String>
 </ResourceDictionary>

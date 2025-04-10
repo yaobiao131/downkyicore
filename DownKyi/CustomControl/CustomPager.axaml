@@ -3,6 +3,7 @@
              x:Class="DownKyi.CustomControl.CustomPager"
              xmlns:vmc="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmc:CustomPagerViewModel"
+             xmlns:action="clr-namespace:DownKyi.CustomAction"
              x:CompileBindings="False">
 
     <UserControl.Resources>
@@ -234,5 +235,35 @@
                 VerticalAlignment="Center"
                 Source="{StaticResource ToRightDrawingImage}" />
         </Button>
+       
+        <Panel Margin="20,0,0,0">
+             <StackPanel Orientation="Horizontal"  >
+                 <TextBox 
+                     x:Name="JumpPageNumberTextBox"
+                     Margin="5,0,0,0"
+                     VerticalAlignment="Center"  
+                     MaxLength="5"
+                     Watermark="{DynamicResource JumpTo}"
+                     CornerRadius="4"
+                     Width="65">
+                     <Interaction.Behaviors>
+                         <ExecuteCommandOnKeyDownBehavior 
+                             Key="Enter" 
+                             CommandParameter="{Binding #JumpPageNumberTextBox.Text}"
+                             Command="{Binding JumpCommand}" />
+                         <action:NumericInputBehavior/>
+                     </Interaction.Behaviors>
+                 </TextBox>
+                 
+                 <TextBlock
+                     Margin="5,0,0,0"
+                     VerticalAlignment="Center"
+                            Foreground="#666">
+                     <Run>/</Run>
+                     <Run Text="{Binding Count}" ></Run>
+                     <Run Text="{DynamicResource Page}"></Run>
+                 </TextBlock>
+             </StackPanel>
+        </Panel>
     </StackPanel>
 </UserControl>
