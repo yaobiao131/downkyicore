@@ -220,10 +220,9 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         InitView();
 
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
         // 结束任务
-        _tokenSource1.Cancel();
-        _tokenSource2.Cancel();
+        _tokenSource1?.Cancel();
+        _tokenSource2?.Cancel();
 
         var parameter = new NavigationParam
         {
