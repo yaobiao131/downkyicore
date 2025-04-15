@@ -30,7 +30,8 @@ public static class VideoStream
         {
             parameters.Add("avid", avid);
         }
-        else if (cid > 0)
+
+        if (cid > 0)
         {
             parameters.Add("cid", cid);
         }

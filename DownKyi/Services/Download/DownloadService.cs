@@ -261,7 +261,7 @@ public abstract class DownloadService
 
         foreach (var subRip in subRipTexts)
         {
-            var srtFile = $"{downloading.DownloadBase.FilePath}.srt";
+            var srtFile = $"{downloading.DownloadBase.FilePath}_{subRip.LanDoc}.srt";
             try
             {
                 File.WriteAllText(srtFile, subRip.SrtString);
@@ -276,6 +276,14 @@ public abstract class DownloadService
                 Console.PrintLine($"{Tag}.DownloadSubtitle()发生异常: {0}", e);
                 LogManager.Error($"{Tag}.DownloadSubtitle()", e);
             }
+        }
+
+        // subRipTexts中第一个复制为不带后缀的字幕,保证能自动匹配到字幕
+        if (srtFiles.Count > 0)
+        {
+            var srtFile = $"{downloading.DownloadBase.FilePath}.srt";
+            File.Copy(srtFiles[0], srtFile);
+            srtFiles.Add(srtFile);
         }
 
         return srtFiles;
