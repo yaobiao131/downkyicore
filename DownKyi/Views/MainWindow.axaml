@@ -11,6 +11,7 @@
         MinHeight="550"
         Title="{DynamicResource AppName}"
         Icon="/Resources/favicon.ico"
+        WindowStartupLocation="CenterScreen"
         WindowState="{Binding WinState}">
 
     <Interaction.Behaviors>
