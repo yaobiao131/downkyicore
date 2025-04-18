@@ -56,5 +56,7 @@
 
     <SolidColorBrush x:Key="BrushMoney" Color="{DynamicResource ColorMoney}" />
     <SolidColorBrush x:Key="BrushPublication" Color="{DynamicResource ColorPublication}" />
+    
+    <SolidColorBrush x:Key="BrushDataGridHighlight" Color="{DynamicResource ColorDataGridHighlight}" />
 
 </ResourceDictionary>

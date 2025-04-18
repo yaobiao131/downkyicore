@@ -56,5 +56,7 @@
     
     <Color x:Key="ColorMoney">#FFFFAE00</Color>
     <Color x:Key="ColorPublication">#FF02B5DA</Color>
+    
+    <Color x:Key="ColorDataGridHighlight">#80D0E8</Color>
 
 </ResourceDictionary>

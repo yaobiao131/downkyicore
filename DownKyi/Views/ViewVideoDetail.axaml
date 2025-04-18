@@ -442,8 +442,15 @@
                                       BasedOn="{StaticResource {x:Type DataGridRow}}">
                             <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
                                 <Setter Property="IsVisible" Value="False" />
-                                <Setter Property="Fill" Value="{DynamicResource SystemAccentColor}" />
+                                <Setter Property="Fill" Value="{DynamicResource BrushDataGridHighlight}" />
                             </Style>
+                            
+                            <Style Selector="^:pointerover /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="IsVisible" Value="True" />
+                                <Setter Property="Opacity" Value="0.3" />
+                            </Style>
+                            
+                          
                         </ControlTheme>
                     </DataGrid.RowTheme>
                     
