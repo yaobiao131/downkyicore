@@ -450,7 +450,11 @@
                                 <Setter Property="Opacity" Value="0.3" />
                             </Style>
                             
-                          
+                            <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="IsVisible" Value="True" />    
+                                <Setter Property="Opacity" Value="1" />
+                            </Style>
+                            
                         </ControlTheme>
                     </DataGrid.RowTheme>
                     
