@@ -63,7 +63,7 @@
                 Grid.Column="0"
                 Margin="10,10,10,10"
                 Orientation="Vertical">
-                <Image asyncImageLoader:ImageLoader.Source="{Binding Favorites.CoverUrl}">
+                <Image asyncImageLoader:ImageLoader.Source="{Binding Favorites.CoverUrl}" >
                     <Image.ContextMenu>
                         <ContextMenu>
                             <MenuItem Command="{Binding CopyCoverCommand}" Header="{DynamicResource CopyCover}" />
