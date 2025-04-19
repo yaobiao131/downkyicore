@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+</Project>

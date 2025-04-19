@@ -1,0 +1,20 @@
+<Project ToolsVersion="15.0">
+    <ItemGroup>
+        <PackageVersion Include="Avalonia" Version="11.2.7"/>
+        <PackageVersion Include="Avalonia.Controls.DataGrid" Version="11.2.7"/>
+        <PackageVersion Include="Avalonia.Desktop" Version="11.2.7"/>
+        <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.2.7"/>
+        <PackageVersion Include="Avalonia.Diagnostics" Version="11.2.7"/>
+        <PackageVersion Include="Avalonia.Themes.Simple" Version="11.2.7"/>
+        <PackageVersion Include="Xaml.Behaviors" Version="11.2.7"/>
+        <PackageVersion Include="Downloader" Version="3.3.4"/>
+        <PackageVersion Include="Prism.Avalonia" Version="8.1.97.11073"/>
+        <PackageVersion Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073"/>
+        <PackageVersion Include="FFMpegCore" Version="5.1.0"/>
+        <PackageVersion Include="Google.Protobuf" Version="3.25.1"/>
+        <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="9.0.4"/>
+        <PackageVersion Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageVersion Include="QRCoder" Version="1.6.0"/>
+        <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.11"/>
+    </ItemGroup>
+</Project>

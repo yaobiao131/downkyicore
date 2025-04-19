@@ -11,33 +11,33 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Resources\**" />
+        <AvaloniaResource Include="Resources\**"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.2.6" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.2.6" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.2.6" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.2.6" />
+        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia.Controls.DataGrid"/>
+        <PackageReference Include="Avalonia.Desktop"/>
+        <PackageReference Include="Avalonia.Fonts.Inter"/>
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.2.6" />
-        <PackageReference Include="Avalonia.Themes.Simple" Version="11.2.6" />
-        <PackageReference Include="Downloader" Version="3.3.4" />
-        <PackageReference Include="Prism.Avalonia" Version="8.1.97.11073" />
-        <PackageReference Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073" />
-        <PackageReference Include="Xaml.Behaviors" Version="11.2.0.14" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics"/>
+        <PackageReference Include="Avalonia.Themes.Simple"/>
+        <PackageReference Include="Downloader"/>
+        <PackageReference Include="Prism.Avalonia"/>
+        <PackageReference Include="Prism.DryIoc.Avalonia"/>
+        <PackageReference Include="Xaml.Behaviors"/>
     </ItemGroup>
 
 
     <ItemGroup>
-      <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj" />
+        <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj"/>
     </ItemGroup>
 
 
     <ItemGroup>
-      <Compile Update="Views\Dialogs\NewVersionAvailableDialog.axaml.cs">
-        <DependentUpon>NewVersionAvailableDialog.axaml</DependentUpon>
-      </Compile>
+        <Compile Update="Views\Dialogs\NewVersionAvailableDialog.axaml.cs">
+            <DependentUpon>NewVersionAvailableDialog.axaml</DependentUpon>
+        </Compile>
     </ItemGroup>
 </Project>
