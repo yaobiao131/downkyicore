@@ -19,5 +19,7 @@
     <Color x:Key="ColorText">Black</Color>
     <Color x:Key="ColorTextDark">white</Color>
     <Color x:Key="ColorTabHeaderGrey">#FF141414</Color>
+    
+    <Color x:Key="ColorDataGridHighlight">#096085</Color>
 
 </ResourceDictionary>
