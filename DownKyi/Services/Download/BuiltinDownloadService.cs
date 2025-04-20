@@ -317,13 +317,15 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         {
             ChunkCount = SettingsManager.GetInstance().GetSplit(),
             RequestConfiguration = requestConfiguration,
-            ParallelDownload = true
+            ParallelDownload = true,
+            ParallelCount = 2,
+            MaximumMemoryBufferBytes = 1024 * 1024 * 50
         };
         foreach (var url in urls)
         {
             var downloader = new Downloader.DownloadService(downloadOpt);
             var isComplete = false;
-            downloader.DownloadFileCompleted += (_, args) =>
+            downloader.DownloadFileCompleted += (_, _) =>
             {
                 if (File.Exists(Path.Combine(path, localFileName)))
                 {

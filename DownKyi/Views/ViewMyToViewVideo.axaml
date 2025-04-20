@@ -28,7 +28,9 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                asyncImageLoader:ImageBrushLoader.Width="160"
+                                                asyncImageLoader:ImageBrushLoader.Height="100" />
                                 </Border.Background>
                             </Border>
 
@@ -83,7 +85,9 @@
                                         VerticalAlignment="Center"
                                         CornerRadius="12">
                                         <Border.Background>
-                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding UpHeader}" />
+                                            <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding UpHeader}"
+                                                        asyncImageLoader:ImageBrushLoader.Width="24"
+                                                        asyncImageLoader:ImageBrushLoader.Height="24" />
                                         </Border.Background>
                                     </Border>
                                     <TextBlock

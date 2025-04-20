@@ -29,7 +29,9 @@
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                asyncImageLoader:ImageBrushLoader.Width="110"
+                                                asyncImageLoader:ImageBrushLoader.Height="140" />
                                 </Border.Background>
                             </Border>
 

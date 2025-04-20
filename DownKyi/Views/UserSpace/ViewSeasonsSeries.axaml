@@ -61,6 +61,8 @@
                                         <Border.Background>
                                             <!--  长宽比：1.6  -->
                                             <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                        asyncImageLoader:ImageBrushLoader.Width="190"
+                                                        asyncImageLoader:ImageBrushLoader.Height="119"
                                                         Stretch="Fill" />
                                         </Border.Background>
                                         <Border

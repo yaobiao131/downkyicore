@@ -54,7 +54,7 @@ public class AlertService
         return ShowMessage(image, title, message, 1);
     }
 
-    public async Task<ButtonResult> ShowMessage(VectorImage image, string type, string message, int buttonNumber)
+    public async Task<ButtonResult> ShowMessage(VectorImage image, string title, string message, int buttonNumber)
     {
         var result = ButtonResult.None;
         if (_dialogService == null)
@@ -65,7 +65,7 @@ public class AlertService
         var param = new DialogParameters
         {
             { "image", image },
-            { "title", type },
+            { "title", title },
             { "message", message },
             { "button_number", buttonNumber }
         };

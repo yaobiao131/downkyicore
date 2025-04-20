@@ -5,8 +5,7 @@ namespace DownKyi.PrismExtension.Dialog;
 
 public class Dialog : Prism.Services.Dialogs.Dialog
 {
-    public static readonly AvaloniaProperty ThemeProperty =
-        AvaloniaProperty.RegisterAttached<AvaloniaObject, ControlTheme>("Theme", typeof(Dialog));
+    public static readonly AvaloniaProperty ThemeProperty = AvaloniaProperty.RegisterAttached<AvaloniaObject, ControlTheme>("Theme", typeof(Dialog));
 
     /// <summary>
     /// Gets the value for the <see cref="ThemeProperty"/> attached property.

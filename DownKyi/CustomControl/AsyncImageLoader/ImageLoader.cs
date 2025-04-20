@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Logging;
-using Avalonia.Media.Imaging;
+using Avalonia.Threading;
 using DownKyi.Core.Storage;
 using DownKyi.CustomControl.AsyncImageLoader.Loaders;
 
@@ -62,6 +62,13 @@ public static class ImageLoader
                 // A small delay allows to cancel early if the image goes out of screen too fast (eg. scrolling)
                 // The Bitmap constructor is expensive and cannot be cancelled
                 await Task.Delay(10, cts.Token);
+                if (sender.DesiredSize.Width != 0 && sender.DesiredSize.Height != 0)
+                {
+                    var scale = Dispatcher.UIThread.Invoke(() => App.Current.MainWindow.DesktopScaling);
+                    var actualWidth = Convert.ToInt32(sender.DesiredSize.Width * scale);
+                    var actualHeight = Convert.ToInt32(sender.DesiredSize.Height * scale);
+                    return (await AsyncImageLoader.ProvideImageAsync(url))?.CreateScaledBitmap(new PixelSize(actualWidth, actualHeight));
+                }
 
                 return await AsyncImageLoader.ProvideImageAsync(url);
             }
@@ -75,10 +82,10 @@ public static class ImageLoader
 
                 return null;
             }
-        });
+        }, cts.Token);
 
         if (bitmap != null && !cts.Token.IsCancellationRequested)
-            sender.Source = bitmap!;
+            sender.Source = bitmap;
 
         // "It is not guaranteed to be thread safe by ICollection, but ConcurrentDictionary's implementation is. Additionally, we recently exposed this API for .NET 5 as a public ConcurrentDictionary.TryRemove"
         ((ICollection<KeyValuePair<Image, CancellationTokenSource>>)PendingOperations).Remove(new KeyValuePair<Image, CancellationTokenSource>(sender, cts));
@@ -103,5 +110,29 @@ public static class ImageLoader
     private static void SetIsLoading(Image element, bool value)
     {
         element.SetValue(IsLoadingProperty, value);
+    }
+
+    public static readonly AttachedProperty<int> WidthProperty = AvaloniaProperty.RegisterAttached<Image, int>("Width", typeof(ImageLoader));
+
+    public static int GetWidth(Image element)
+    {
+        return element.GetValue(WidthProperty);
+    }
+
+    public static void SetWidth(Image element, int value)
+    {
+        element.SetValue(WidthProperty, value);
+    }
+
+    public static readonly AttachedProperty<int> HeightProperty = AvaloniaProperty.RegisterAttached<Image, int>("Height", typeof(ImageLoader));
+
+    public static int GetHeight(Image element)
+    {
+        return element.GetValue(HeightProperty);
+    }
+
+    public static void SetHeight(Image element, int value)
+    {
+        element.SetValue(HeightProperty, value);
     }
 }

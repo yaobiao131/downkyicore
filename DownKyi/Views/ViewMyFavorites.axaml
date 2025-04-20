@@ -39,7 +39,9 @@
                                 </Interaction.Behaviors>
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
-                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}" />
+                                    <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
+                                                asyncImageLoader:ImageBrushLoader.Width="185"
+                                                asyncImageLoader:ImageBrushLoader.Height="115" />
                                 </Border.Background>
                                 <Border
                                     Name="NameInfoPanel"
