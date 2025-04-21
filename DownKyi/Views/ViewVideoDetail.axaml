@@ -7,6 +7,14 @@
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewVideoDetailViewModel">
+    
+    <UserControl.Resources>
+        <ControlTheme TargetType="TextBlock" x:Key="DataGridCellTextBlockTheme">
+            <Setter Property="Margin" Value="{DynamicResource DataGridTextColumnCellTextBlockMargin}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource ColorTextDark}"></Setter>
+        </ControlTheme>
+    </UserControl.Resources>
     <Grid RowDefinitions="50,10,*">
 
         <Grid Grid.Row="0" ColumnDefinitions="40,*,50">
@@ -428,6 +436,29 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
+                    
+                    <DataGrid.RowTheme>
+                        <ControlTheme TargetType="DataGridRow" 
+                                      BasedOn="{StaticResource {x:Type DataGridRow}}">
+                            <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="IsVisible" Value="False" />
+                                <Setter Property="Fill" Value="{DynamicResource BrushDataGridHighlight}" />
+                            </Style>
+                            
+                            <Style Selector="^:pointerover /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="IsVisible" Value="True" />
+                                <Setter Property="Opacity" Value="0.3" />
+                            </Style>
+                            
+                            <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
+                                <Setter Property="IsVisible" Value="True" />    
+                                <Setter Property="Opacity" Value="1" />
+                            </Style>
+                            
+                        </ControlTheme>
+                    </DataGrid.RowTheme>
+                    
+                  
                 </DataGrid>
 
                 <Grid Grid.Row="3"
