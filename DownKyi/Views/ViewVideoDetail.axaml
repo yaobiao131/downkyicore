@@ -380,7 +380,7 @@
                             Header="{DynamicResource Order}"
                             Binding="{ReflectionBinding Order}" />
                         <DataGridTextColumn
-                            Width="540"
+                            Width="*"
                             Binding="{ReflectionBinding Name}"
                             Header="{DynamicResource Name}" />
                         <DataGridTextColumn
