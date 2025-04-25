@@ -300,42 +300,47 @@
                     VerticalAlignment="Stretch"
                     BorderThickness="1"
                     BorderBrush="Gray"
-                    CanUserSortColumns="False"
                     CanUserResizeColumns="True"
                     IsReadOnly="True"
                     ItemsSource="{ReflectionBinding ElementName=NameVideoSections, Path=SelectedItem.VideoPages, Mode=TwoWay}"
                     SelectionMode="Extended">
                     <DataGrid.ColumnHeaderTheme>
                         <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
-                            <!-- <Setter Property="Background" Value="{DynamicResource BrushHeaderGrey}" /> -->
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
                             <Setter Property="VerticalContentAlignment" Value="Center" />
+                            <Setter Property="Height" Value="30"></Setter>
+                            <Setter Property="Padding" Value="4" />
+                            <Setter Property="Background" Value="Transparent"></Setter>
                             <Setter Property="Template">
-                                <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
-                                        <Grid>
-                                            <Border
-                                                x:Name="HeaderBorder"
-                                                Height="30"
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition MaxHeight="10" />
-                                                        <RowDefinition />
-                                                    </Grid.RowDefinitions>
-                                                    <Border Grid.RowSpan="2" Padding="{TemplateBinding Padding}">
-                                                        <ContentPresenter
-                                                            x:Name="HeaderContent"
-                                                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                            Content="{TemplateBinding Content}"
-                                                            ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                            RecognizesAccessKey="True" />
-                                                    </Border>
-                                                </Grid>
-                                            </Border>
-                                            <Canvas>
+                                        <Border 
+                                            x:Name="HeaderBorder"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}">
+                                                <Grid ColumnDefinitions="*,Auto">
+                                                       <Grid
+                                                           Margin="{TemplateBinding Padding}"
+                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                           ColumnDefinitions="*,Auto">
+                                                           <ContentPresenter
+                                                               x:Name="HeaderContent"
+                                                               Content="{TemplateBinding Content}"
+                                                               ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                               RecognizesAccessKey="True" />
+                                
+                                                           <Path Grid.Column="1" Name="SortIcon"
+                                                                 Width="8"
+                                                                 Margin="4,0,0,0"
+                                                                 HorizontalAlignment="Left"
+                                                                 VerticalAlignment="Center"
+                                                                 Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z "
+                                                                 Fill="{TemplateBinding Foreground}"
+                                                                 IsVisible="False"
+                                                                 Stretch="Uniform" />
+                                                       </Grid>
+                    
+                                            <Canvas Grid.Column="1">
                                                 <Thumb x:Name="PART_HeaderGripper">
                                                     <Thumb.Theme>
                                                         <ControlTheme TargetType="{x:Type Thumb}">
@@ -363,9 +368,23 @@
                                                 </Thumb>
                                             </Canvas>
                                         </Grid>
+                                        </Border>
+                                    
                                     </ControlTemplate>
-                                </Setter.Value>
                             </Setter>
+                            
+                            <Style Selector="^:sortascending /template/ Path#SortIcon">
+                                <Setter Property="IsVisible" Value="True" />
+                            </Style>
+                    
+                            <Style Selector="^:sortdescending /template/ Path#SortIcon">
+                                <Setter Property="IsVisible" Value="True" />
+                                <Setter Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1" ScaleY="-1" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
                         </ControlTheme>
                     </DataGrid.ColumnHeaderTheme>
                     <Interaction.Behaviors>
