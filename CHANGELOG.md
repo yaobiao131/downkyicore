@@ -1,5 +1,39 @@
 # 更新日志
 
+## [1.0.18] - 2025-04-25
+
+### Bug Fixes
+
+- 修复编译问题和升级avalonia版本
+- 优化datagrid宽度
+- 优化asyncImageLoader内存占用
+- 修复vs打开项目兼容性
+- 修复字幕下载 Fixes: #254
+- 修复收藏夹页面返回概率会出现的崩溃
+- 修复我的订阅页面显示效果
+- 修复个人空间-我的订阅 点击出现的崩溃
+- 修复解析闪退 Fixes: #244
+- 下载闪退 #244
+
+### Features
+
+- 视频解析页DataGrid新增排序功能
+- 调整主窗口默认位置至屏幕中心
+- 加入页面跳转
+- 完善观看历史无限滚动功能
+- 个人空间-历史记录 加入增量加载，支持无限滚动
+
+### Miscellaneous Tasks
+
+- 升级avalonia到最新版并替换Xaml.Behaviors包
+- 升级avalonia到最新版并替换Xaml.Behaviors包
+
+### Refactor
+
+- 更改解析页DataGrid选中行高亮颜色
+- 触发加载数据修改为异步命令
+- 重新实现无限滚动功能
+
 ## [1.0.17] - 2025-03-19
 
 ### Bug Fixes
@@ -12,6 +46,10 @@
 
 - 在视频解析页面中，新增支持视频av或bv号搜索
 - 导航离开或页面刷新重置分割器的影响
+
+### Miscellaneous Tasks
+
+- 升级action版本
 
 ### Refactor
 
