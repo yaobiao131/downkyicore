@@ -193,6 +193,10 @@
     <system:String x:Key="Network">网络</system:String>
     <system:String x:Key="UseSSL">启用https（若下载器提示SSL错误，则关闭此项）</system:String>
     <system:String x:Key="UserAgent">UserAgent：</system:String>
+    <system:String x:Key="NetworkProxySetting">网络代理设置</system:String>
+    <system:String x:Key="NetworkProxyNone">无</system:String>
+    <system:String x:Key="NetworkProxySystem">使用系统代理</system:String>
+    <system:String x:Key="NetworkProxyCustom">使用自定义代理</system:String>
     <system:String x:Key="SelectDownloader">选择下载器（重启生效）：</system:String>
     <system:String x:Key="BuiltinDownloader">内建下载器</system:String>
     <system:String x:Key="Aria2cDownloader">Aria2下载器</system:String>

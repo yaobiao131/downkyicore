@@ -102,6 +102,27 @@ internal static class WebClient
             //request.ContentType = "application/json,text/html,application/xhtml+xml,application/xml;charset=UTF-8";
             request.Headers["accept-language"] = "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7";
             request.Headers["accept-encoding"] = "gzip, deflate, br";
+            switch (SettingsManager.GetInstance().GetNetworkProxy())
+            {
+                case NetworkProxy.None:
+                    request.Proxy = null;
+                    break;
+                case NetworkProxy.System:
+                    request.Proxy = WebRequest.GetSystemWebProxy();
+                    break;
+                case NetworkProxy.Custom:
+                {
+                    try
+                    {
+                        request.Proxy = new WebProxy(SettingsManager.GetInstance().GetCustomProxy());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+                    break;
+            }
 
             // referer
             if (referer != null)

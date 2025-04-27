@@ -79,6 +79,22 @@ public class ViewNetworkViewModel : ViewModelBase
         set => SetProperty(ref _selectedMaxCurrentDownload, value);
     }
 
+    private NetworkProxy _networkProxy;
+
+    public NetworkProxy NetworkProxy
+    {
+        get => _networkProxy;
+        set => SetProperty(ref _networkProxy, value);
+    }
+
+    private string? _customNetworkProxy;
+
+    public string? CustomNetworkProxy
+    {
+        get => _customNetworkProxy;
+        set => SetProperty(ref _customNetworkProxy, value);
+    }
+
     private List<int> _splits;
 
     public List<int> Splits
@@ -337,6 +353,10 @@ public class ViewNetworkViewModel : ViewModelBase
                 break;
         }
 
+        NetworkProxy = SettingsManager.GetInstance().GetNetworkProxy();
+
+        CustomNetworkProxy = SettingsManager.GetInstance().GetCustomProxy();
+
         // builtin同时下载数
         SelectedMaxCurrentDownload = SettingsManager.GetInstance().GetMaxCurrentDownloads();
 
@@ -471,6 +491,34 @@ public class ViewNetworkViewModel : ViewModelBase
             // }
         }
     }
+
+    private DelegateCommand<object>? _networkProxyCommand;
+
+    public DelegateCommand<object> NetworkProxyCommand => _networkProxyCommand ??= new DelegateCommand<object>(ExecuteNetworkProxyCommand);
+
+    private void ExecuteNetworkProxyCommand(object obj)
+    {
+        if (obj is not NetworkProxy networkProxy) return;
+        NetworkProxy = networkProxy;
+        var isSucceed = SettingsManager.GetInstance().SetNetworkProxy(networkProxy);
+        PublishTip(isSucceed);
+    }
+    
+    // builtin的http代理的地址事件
+    private DelegateCommand<string>? _customNetworkProxyCommand;
+
+    public DelegateCommand<string> CustomNetworkProxyCommand => _customNetworkProxyCommand ??= new DelegateCommand<string>(ExecuteCustomNetworkProxyCommand);
+
+    /// <summary>
+    /// builtin的http代理的地址事件
+    /// </summary>
+    /// <param name="parameter"></param>
+    private void ExecuteCustomNetworkProxyCommand(string parameter)
+    {
+        var isSucceed = SettingsManager.GetInstance().SetCustomProxy(parameter);
+        PublishTip(isSucceed);
+    }
+    
 
     // builtin同时下载数事件
     private DelegateCommand<object>? _maxCurrentDownloadsCommand;

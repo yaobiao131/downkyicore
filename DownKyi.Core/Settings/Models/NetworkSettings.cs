@@ -13,10 +13,14 @@ public class NetworkSettings
     public string UserAgent { get; set; } = string.Empty;
 
     public Downloader Downloader { get; set; } = Downloader.NotSet;
-    public int MaxCurrentDownloads { get; set; } = -1;
+
+    public NetworkProxy NetworkProxy { get; set; } = NetworkProxy.None;
+    
+    public string CustomNetworkProxy { get; set; } = string.Empty;
 
     #region built-in
 
+    public int MaxCurrentDownloads { get; set; } = -1;
     public int Split { get; set; } = -1;
     public AllowStatus IsHttpProxy { get; set; } = AllowStatus.None;
     public string? HttpProxy { get; set; }

@@ -1,5 +1,6 @@
 ﻿// using DownKyi.Core.Aria2cNet.Server;
 
+using System.Net;
 using DownKyi.Core.Aria2cNet.Server;
 
 namespace DownKyi.Core.Settings
@@ -17,6 +18,9 @@ namespace DownKyi.Core.Settings
 
         // 下载器
         private const Downloader Downloader = Settings.Downloader.Aria;
+
+        private const NetworkProxy NetworkProxy = Settings.NetworkProxy.None;
+        private readonly string _customNetworkProxy = string.Empty;
 
         // 最大同时下载数(任务数)
         private const int MaxCurrentDownloads = 3;
@@ -163,6 +167,54 @@ namespace DownKyi.Core.Settings
         public bool SetDownloader(Downloader downloader)
         {
             _appSettings.Network.Downloader = downloader;
+            return SetSettings();
+        }
+
+        /// <summary>
+        /// 获取网络代理类型
+        /// </summary>
+        /// <returns></returns>
+        public NetworkProxy GetNetworkProxy()
+        {
+            _appSettings = GetSettings();
+            if (_appSettings.Network.NetworkProxy != NetworkProxy.None) return _appSettings.Network.NetworkProxy;
+            SetNetworkProxy(NetworkProxy);
+            return NetworkProxy;
+        }
+
+        /// <summary>
+        /// 设置网络代理类型
+        /// </summary>
+        /// <param name="networkProxy"></param>
+        /// <returns></returns>
+        public bool SetNetworkProxy(NetworkProxy networkProxy)
+        {
+            _appSettings.Network.NetworkProxy = networkProxy;
+            return SetSettings();
+        }
+
+        public string GetCustomProxy()
+        {
+            _appSettings = GetSettings();
+            if (_appSettings.Network.NetworkProxy == NetworkProxy.Custom && !string.IsNullOrEmpty(_appSettings.Network.CustomNetworkProxy))
+                return _appSettings.Network.CustomNetworkProxy;
+            // 第一次获取，先设置默认值
+            SetCustomProxy(_customNetworkProxy);
+            return _customNetworkProxy;
+        }
+
+        public bool SetCustomProxy(string proxyUrl)
+        {
+            _appSettings.Network.CustomNetworkProxy = proxyUrl;
+            try
+            {
+                _ = new WebProxy(proxyUrl);
+            }
+            catch (UriFormatException)
+            {
+                return false;
+            }
+
             return SetSettings();
         }
 
