@@ -22,10 +22,10 @@ public class LogManager
     {
         var writeTask = new Task(obj =>
         {
-            var temp = new List<string[]>();
             while (true)
             {
                 Pause.WaitOne(1000, true);
+                var temp = new List<string[]>();
                 foreach (var logItem in LogQueue)
                 {
                     var logPath = logItem.Item1;
