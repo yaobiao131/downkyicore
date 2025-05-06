@@ -307,8 +307,8 @@ public class BangumiInfoService : IInfoService
             videoInfoView.Description = _bangumiSeason.Evaluate;
 
             videoInfoView.UpName = upName;
-            videoInfoView.UpHeader = _bangumiSeason.UpInfo.Avatar;
-            videoInfoView.UpperMid = _bangumiSeason.UpInfo.Mid;
+            videoInfoView.UpHeader = _bangumiSeason.UpInfo?.Avatar;
+            videoInfoView.UpperMid = _bangumiSeason.UpInfo?.Mid ?? -1;
         });
 
         return videoInfoView;
