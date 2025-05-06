@@ -61,5 +61,5 @@ public class BangumiSeason : BaseModel
     [JsonProperty("title")] public string Title { get; set; }
     [JsonProperty("total")] public int Total { get; set; }
     [JsonProperty("type")] public int Type { get; set; }
-    [JsonProperty("up_info")] public BangumiUpInfo UpInfo { get; set; }
+    [JsonProperty("up_info")] public BangumiUpInfo? UpInfo { get; set; }
 }
