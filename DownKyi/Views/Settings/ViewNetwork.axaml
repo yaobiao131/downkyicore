@@ -29,13 +29,7 @@
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding UseSsl, Mode=TwoWay}" />
 
-            <TextBlock
-                Margin="0,20,0,0"
-                FontSize="12"
-                Foreground="{DynamicResource BrushTextDark}"
-                Text="{DynamicResource UserAgent}" />
-
-            <HeaderedContentControl
+             <HeaderedContentControl
                 Margin="0,20,0,0"
                 Padding="10,5"
                 HorizontalAlignment="Left"
@@ -93,7 +87,14 @@
                     </StackPanel>
                 </StackPanel>
             </HeaderedContentControl>
-
+            
+            
+            <TextBlock
+                Margin="0,20,0,0"
+                FontSize="12"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource UserAgent}" />
+            
             <TextBox
                 Name="NameUserAgent"
                 Margin="0,10,0,0"
