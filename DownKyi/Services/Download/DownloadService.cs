@@ -282,7 +282,7 @@ public abstract class DownloadService
         if (srtFiles.Count > 0)
         {
             var srtFile = $"{downloading.DownloadBase.FilePath}.srt";
-            File.Copy(srtFiles[0], srtFile);
+            File.Copy(srtFiles[0], srtFile,true);
             srtFiles.Add(srtFile);
         }
 
