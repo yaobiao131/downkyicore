@@ -32,6 +32,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
 {
     public const string Tag = "PageVideoDetail";
 
+    
+    private Stack<(string,string)> _navParamStack = new ();
     // 保存输入字符串，避免被用户修改
     private string _input;
 
@@ -155,9 +157,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private void ExecuteBackSpace()
     {
+        var v = _navParamStack.Pop();
         var parameter = new NavigationParam
         {
-            ViewName = ParentView,
+            ViewName = v.Item1,
             ParentViewName = null,
             Parameter = null
         };
@@ -786,6 +789,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
+        base.OnNavigatedTo(navigationContext);
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
         DownloadManage.Width = 24;
@@ -809,8 +813,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
                 InputText = input;
                 PropertyChangeAsync(ExecuteInputCommand);
             }
+            
+            _navParamStack.Push((ParentView,param));
         }
-
-        base.OnNavigatedTo(navigationContext);
+        else if (_navParamStack.Count > 0)
+        {
+            if (LoadingVisibility != true)
+            {
+                InputText = _navParamStack.Peek().Item2;
+                PropertyChangeAsync(ExecuteInputCommand);
+            }
+        }
     }
 }
