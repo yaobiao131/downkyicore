@@ -42,8 +42,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            6.0.x
+          dotnet-version: '6.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -111,8 +110,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            6.0.x
+          dotnet-version: '6.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -172,8 +170,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: |
-            6.0.x
+          dotnet-version: '6.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -200,7 +197,14 @@ jobs:
           chmod +x sign.sh
           ./sign.sh
         working-directory: ./script/macos
-      - name: Create DMG  
+      - name: Notarize app
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent 哔哩下载姬.app 哔哩下载姬.zip
+          xcrun notarytool submit 哔哩下载姬.zip --apple-id "${{ secrets.APPLE_ID }}" --team-id "${{ secrets.TEAM_ID }}" --password "${{ secrets.APP_SPECIFIC_PASSWORD }}" --wait
+          xcrun stapler staple 哔哩下载姬.app
+          rm -rf ./哔哩下载姬.zip
+        working-directory: ./script/macos
+      - name: Create DMG
         run: |
           create-dmg \
           --hdiutil-quiet \
@@ -209,6 +213,11 @@ jobs:
           --app-drop-link 495 175 \
           --window-size 660 400 \
           DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg 哔哩下载姬.app
+        working-directory: ./script/macos
+      - name: Notarize DMG
+        run: |
+          xcrun notarytool submit DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg --apple-id "${{ secrets.APPLE_ID }}" --team-id "${{ secrets.TEAM_ID }}" --password "${{ secrets.APP_SPECIFIC_PASSWORD }}" --wait
+          xcrun stapler staple DownKyi-${{ steps.version.outputs.content }}-osx-${{ matrix.cpu }}.dmg
         working-directory: ./script/macos
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
