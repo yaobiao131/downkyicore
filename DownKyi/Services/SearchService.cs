@@ -79,11 +79,11 @@ public class SearchService
         // 用户（参数传入mid）
         else if (ParseEntrance.IsUserId(justId))
         {
-            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(input));
+            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(justId));
         }
         else if (ParseEntrance.IsUserUrl(justId))
         {
-            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(input));
+            NavigateToView.NavigateToViewUserSpace(eventAggregator, ViewIndexViewModel.Tag, ParseEntrance.GetUserId(justId));
         }
         // 收藏夹
         else if (ParseEntrance.IsFavoritesId(justId))
