@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
@@ -16,6 +18,10 @@ namespace DownKyi.ViewModels;
 public class MainWindowViewModel : BindableBase
 {
     private readonly IEventAggregator _eventAggregator;
+
+    private readonly IRegionManager _regionManager;
+
+    private const string ContentRegion = nameof(ContentRegion);
 
     private ClipboardListener? _clipboardListener;
 
@@ -50,6 +56,9 @@ public class MainWindowViewModel : BindableBase
 
     public DelegateCommand ClosingCommand => _closingCommand ??= _closingCommand = new DelegateCommand(ExecuteClosingCommand);
 
+    public DelegateCommand<PointerPressedEventArgs> PointerPressedCommand =>
+        new (ExecutePointerPressed);
+    
     private void ExecuteClosingCommand()
     {
         if (_clipboardListener == null) return;
@@ -57,11 +66,29 @@ public class MainWindowViewModel : BindableBase
         _clipboardListener.Dispose();
     }
 
+    private void ExecutePointerPressed(PointerPressedEventArgs e)
+    {
+        var point = e.GetCurrentPoint(null);
+        var updateKind = point.Properties.PointerUpdateKind;
+        if (updateKind == PointerUpdateKind.XButton1Pressed)
+        {
+            var v = GetCurrentUserControl()?.DataContext;
+            if (v is ViewModelBase vm)
+            {
+                vm.ExecuteBackSpace();
+                e.Handled = true;
+            }
+        }
+    }
+    
+    private UserControl? GetCurrentUserControl() =>  _regionManager
+        .Regions[ContentRegion].ActiveViews
+        .FirstOrDefault() as UserControl;
 
     public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
     {
         _eventAggregator = eventAggregator;
-
+        _regionManager = regionManager;
         #region MyRegion
 
         _eventAggregator.GetEvent<NavigationEvent>().Subscribe(view =>
@@ -71,7 +98,7 @@ public class MainWindowViewModel : BindableBase
                 { "Parent", view.ParentViewName },
                 { "Parameter", view.Parameter }
             };
-            regionManager.RequestNavigate("ContentRegion", view.ViewName, param);
+            regionManager.RequestNavigate(ContentRegion, view.ViewName, param);
         });
 
         // 订阅消息发送事件

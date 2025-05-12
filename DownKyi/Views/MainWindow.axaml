@@ -21,6 +21,10 @@
         <EventTriggerBehavior EventName="Opened">
             <InvokeCommandAction Command="{Binding LoadedCommand}" />
         </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="PointerPressed">
+            <InvokeCommandAction Command="{Binding PointerPressedCommand}" 
+                                 PassEventArgsToCommand="True"/>
+        </EventTriggerBehavior>
     </Interaction.Behaviors>
     <Grid RowDefinitions="*">
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />

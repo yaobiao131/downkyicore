@@ -153,7 +153,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <summary>
     /// 返回
     /// </summary>
-    private void ExecuteBackSpace()
+    protected internal override void ExecuteBackSpace()
     {
         var parameter = new NavigationParam
         {

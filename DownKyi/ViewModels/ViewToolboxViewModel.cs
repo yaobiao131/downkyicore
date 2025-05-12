@@ -62,7 +62,7 @@ namespace DownKyi.ViewModels
         /// <summary>
         /// 返回事件
         /// </summary>
-        private void ExecuteBackSpace()
+        protected internal override void ExecuteBackSpace()
         {
             var parameter = new NavigationParam
             {
