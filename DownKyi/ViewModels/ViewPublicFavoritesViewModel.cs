@@ -165,7 +165,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     /// <summary>
     /// 返回
     /// </summary>
-    private void ExecuteBackSpace()
+    protected internal override void ExecuteBackSpace()
     {
         // 结束任务
         _tokenSource?.Cancel();

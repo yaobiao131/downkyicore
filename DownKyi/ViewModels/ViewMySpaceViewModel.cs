@@ -330,7 +330,7 @@ public class ViewMySpaceViewModel : ViewModelBase
     /// <summary>
     /// 返回事件
     /// </summary>
-    private void ExecuteBackSpace()
+    protected internal override void ExecuteBackSpace()
     {
         // 结束任务
         _tokenSource?.Cancel();

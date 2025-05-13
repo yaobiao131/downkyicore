@@ -55,7 +55,7 @@ public class ViewLoginViewModel : ViewModelBase
 
     public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
-    private void ExecuteBackSpace()
+    protected internal override void ExecuteBackSpace()
     {
         // 初始化状态
         InitStatus();

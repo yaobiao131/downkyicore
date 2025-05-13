@@ -164,7 +164,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     /// <summary>
     /// 返回事件
     /// </summary>
-    private void ExecuteBackSpace()
+    protected internal override void ExecuteBackSpace()
     {
         ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
