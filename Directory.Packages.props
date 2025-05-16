@@ -4,7 +4,7 @@
     <PackageVersion Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.0" />
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="11.2.8" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.0" />
     <PackageVersion Include="Avalonia.Themes.Simple" Version="11.3.0" />
     <PackageVersion Include="Xaml.Behaviors" Version="11.3.0" />
     <PackageVersion Include="Downloader" Version="3.3.4" />
