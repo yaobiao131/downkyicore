@@ -1,0 +1,49 @@
+<linker>
+    <assembly fullname="DryIoc">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="Prism.DryIoc.Avalonia">
+        <type fullname="*" />
+    </assembly>
+    
+    <assembly fullname="Prism">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="Prism.Avalonia">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="Avalonia.Controls">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="Avalonia.Controls.DataGrid">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="DownKyi.Core">
+        <type fullname="*" />
+    </assembly>
+    
+    <assembly fullname="DownKyi">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="System.Net.Primitives">
+        <type fullname="System.Net.Cookie" />
+        <type fullname="System.Net.CookieContainer" />
+        <type fullname="System.Net.CookieCollection" />
+    </assembly>
+
+    <assembly fullname="System.Runtime.Serialization.Formatters">
+        <type fullname="*" />
+    </assembly>
+
+    <assembly fullname="System.Runtime.Serialization">
+        <type fullname="*" />
+    </assembly>
+    
+    
+</linker>

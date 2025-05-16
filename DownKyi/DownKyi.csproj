@@ -7,6 +7,8 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>link</TrimMode>
         <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
     </PropertyGroup>
 
@@ -14,6 +16,13 @@
         <AvaloniaResource Include="Resources\**"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <TrimmerRootAssembly Include="mscorlib" />
+        <TrimmerRootDescriptor Include="Linker.xml" />
+    </ItemGroup>
+    <PropertyGroup>
+        <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
+    </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Avalonia"/>
@@ -39,5 +48,12 @@
         <Compile Update="Views\Dialogs\NewVersionAvailableDialog.axaml.cs">
             <DependentUpon>NewVersionAvailableDialog.axaml</DependentUpon>
         </Compile>
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <None Update="Linker.xml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 </Project>

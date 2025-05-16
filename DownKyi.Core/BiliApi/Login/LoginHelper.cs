@@ -110,7 +110,7 @@ namespace DownKyi.Core.BiliApi.Login
                 return "";
             }
 
-            var cookies = ObjectHelper.GetAllCookies(cookieContainer);
+            var cookies = cookieContainer.GetAllCookies();
 
             var cookie = cookies.Aggregate(string.Empty, (current, item) => current + (item + ";"));
 

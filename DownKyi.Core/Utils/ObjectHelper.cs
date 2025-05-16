@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -9,6 +10,8 @@ namespace DownKyi.Core.Utils;
 
 public static class ObjectHelper
 {
+
+    private const string EncryptKey = "k5F9#pL@";
     /// <summary>
     /// 解析二维码登录返回的url，用于设置cookie
     /// </summary>
@@ -64,46 +67,27 @@ public static class ObjectHelper
 
         return cookieContainer;
     }
-
-    /// <summary>
-    /// 将CookieContainer中的所有的Cookie读出来
-    /// </summary>
-    /// <param name="cc"></param>
-    /// <returns></returns>
-    public static List<Cookie> GetAllCookies(CookieContainer cc)
-    {
-        var lstCookies = new List<Cookie>();
-
-        var table = (Hashtable?)cc.GetType().InvokeMember("m_domainTable",
-            BindingFlags.NonPublic | BindingFlags.GetField |
-            BindingFlags.Instance, null, cc, new object[] { });
-
-        foreach (var pathList in table?.Values ?? Array.Empty<Hashtable>())
-        {
-            var lstCookieCol = (SortedList?)pathList.GetType().InvokeMember("m_list",
-                BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance, null, pathList,
-                Array.Empty<object>());
-            foreach (CookieCollection colCookies in lstCookieCol?.Values ?? Array.Empty<CookieCollection>())
-            {
-                foreach (Cookie c in colCookies)
-                {
-                    lstCookies.Add(c);
-                }
-            }
-        }
-
-        return lstCookies;
-    }
-
+    
     /// <summary>
     /// 写入cookies到磁盘
     /// </summary>
     /// <param name="file"></param>
     /// <param name="cookieJar"></param>
     /// <returns></returns>
-    public static bool WriteCookiesToDisk(string file, CookieContainer cookieJar)
+    public static bool WriteCookiesToDisk(string file,CookieContainer cookieJar)
     {
-        return WriteObjectToDisk(file, cookieJar);
+        try
+        {
+           var str = CookieJsonSerializer.Serialize(cookieJar);
+           var es = Encryptor.Encryptor.EncryptString(str, EncryptKey);
+           File.WriteAllText(file, es);
+        }
+        catch (Exception e)
+        {
+           LogManager.Error(e);
+           return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -113,68 +97,17 @@ public static class ObjectHelper
     /// <returns></returns>
     public static CookieContainer? ReadCookiesFromDisk(string file)
     {
-        return (CookieContainer?)ReadObjectFromDisk(file);
-    }
-
-    /// <summary>
-    /// 写入序列化对象到磁盘
-    /// </summary>
-    /// <param name="file"></param>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    public static bool WriteObjectToDisk(string file, object obj)
-    {
         try
         {
-            using Stream stream = File.Create(file);
-            Console.PrintLine("Writing object to disk... ");
-
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, obj);
-
-            Console.PrintLine("Done.");
-            return true;
-        }
-        catch (IOException e)
-        {
-            Console.PrintLine("WriteObjectToDisk()发生IO异常: {0}", e);
-            LogManager.Error(e);
-            return false;
+            var es = File.ReadAllText(file);
+            var ds = Encryptor.Encryptor.DecryptString(es, EncryptKey);
+            return CookieJsonSerializer.Deserialize(ds);
         }
         catch (Exception e)
         {
-            Console.PrintLine("WriteObjectToDisk()发生异常: {0}", e);
             LogManager.Error(e);
-            return false;
         }
+        return null;
     }
-
-    /// <summary>
-    /// 从磁盘读取序列化对象
-    /// </summary>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    public static object? ReadObjectFromDisk(string file)
-    {
-        try
-        {
-            using Stream stream = File.Open(file, FileMode.Open);
-            Console.PrintLine("Reading object from disk... ");
-            var formatter = new BinaryFormatter();
-            Console.PrintLine("Done.");
-            return formatter.Deserialize(stream);
-        }
-        catch (IOException e)
-        {
-            Console.PrintLine("ReadObjectFromDisk()发生IO异常: {0}", e);
-            LogManager.Error(e);
-            return null;
-        }
-        catch (Exception e)
-        {
-            Console.PrintLine("ReadObjectFromDisk()发生异常: {0}", e);
-            LogManager.Error(e);
-            return null;
-        }
-    }
+    
 }

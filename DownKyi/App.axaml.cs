@@ -55,7 +55,6 @@ public partial class App : PrismApplication
                 Environment.Exit(0);
             }
         }
-
         AvaloniaXamlLoader.Load(this);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
