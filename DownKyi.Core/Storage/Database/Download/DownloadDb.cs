@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Serialization.Formatters.Binary;
 using DownKyi.Core.Logging;
 using Microsoft.Data.Sqlite;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -153,6 +154,7 @@ public class DownloadDb
     /// </summary>
     /// <param name="sql"></param>
     /// <returns></returns>
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Dictionary<string,object>))]
     private Dictionary<string, object> Query(string sql)
     {
         var objects = new Dictionary<string, object>();
@@ -170,7 +172,9 @@ public class DownloadDb
                     //定义一个格式化器
                     var formatter = new BinaryFormatter();
                     // 反序列化
+#pragma warning disable SYSLIB0011
                     var obj = formatter.Deserialize(stream);
+#pragma warning restore SYSLIB0011
 
                     objects.Add((string)reader["id"], obj);
                 }
