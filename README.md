@@ -28,6 +28,7 @@
   - Windows: 软件运行目录下的Media文件夹
   - macOS: ~/Library/Application Support/DownKyi/Media
   - linux: ~/.config/DownKyi/Media
+- 提示: 如果遇到下载失败的情况,可以关闭科学上网重试
 
 ## 免责申明
 1. 本软件只提供视频解析，不提供任何资源上传、存储到服务器的功能。
