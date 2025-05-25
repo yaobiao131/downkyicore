@@ -44,6 +44,8 @@ internal static class Constant
     // 历史(搜索、下载) (加密)
     public static string Download { get; } = $"{Database}/Download.db";
 
+    public static string DbPath { get; } = $"{Database}/Data.db";
+
     // 配置
     public static string Config { get; } = $"{Root}/Config";
 

@@ -33,6 +33,16 @@ public static class StorageManager
     }
 
     /// <summary>
+    /// 获取历史记录的文件路径
+    /// </summary>
+    /// <returns></returns>
+    public static string GetDbPath()
+    {
+        CreateDirectory(Constant.Database);
+        return Constant.DbPath;
+    }
+
+    /// <summary>
     /// 获取设置的文件路径
     /// </summary>
     /// <returns></returns>

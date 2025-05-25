@@ -59,7 +59,8 @@ internal static class WebClient
     /// <param name="parameters"></param>
     /// <param name="retry"></param>
     /// <returns></returns>
-    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, string>? parameters = null, int retry = 3)
+    public static string RequestWeb(string url, string? referer = null, string method = "GET",
+        Dictionary<string, string>? parameters = null, int retry = 3)
     {
         // 重试次数
         if (retry <= 0)
@@ -135,17 +136,20 @@ internal static class WebClient
             {
                 request.Headers["origin"] = "https://www.bilibili.com";
 
-                var cookies = LoginHelper.GetLoginInfoCookies();
-                request.CookieContainer = cookies ?? new CookieContainer();
+                var cookies = LoginHelper.GetLoginInfoCookiesString();
 
                 if (!string.IsNullOrEmpty(_bvuid3))
                 {
-                    request.CookieContainer.Add(new Cookie("buvid3", _bvuid3, "/", ".bilibili.com"));
+                    cookies += $"; buvid3={_bvuid3}";
                 }
 
                 if (!string.IsNullOrEmpty(_bvuid4))
                 {
-                    request.CookieContainer.Add(new Cookie("buvid4", _bvuid4, "/", ".bilibili.com"));
+                    cookies += $"; buvid4={_bvuid4}";
+                }
+                if (cookies is not "")
+                {
+                    request.Headers.Add("cookie", cookies);
                 }
             }
 
@@ -214,10 +218,10 @@ internal static class WebClient
         if (!url.Contains("getLogin"))
         {
             client.DefaultRequestHeaders.Add("origin", "https://m.bilibili.com");
-            var cookies = LoginHelper.GetLoginInfoCookies();
-            if (cookies != null)
+            var cookies = LoginHelper.GetLoginInfoCookiesString();
+            if (cookies is not "")
             {
-                handler.CookieContainer = cookies;
+                client.DefaultRequestHeaders.Add("cookie", cookies);
             }
         }
 

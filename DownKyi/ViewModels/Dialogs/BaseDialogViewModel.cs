@@ -12,15 +12,15 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
 {
     #region 页面属性申明
 
-    private string _title;
+    private string? _title;
 
-    public string Title
+    public string? Title
     {
         get => _title;
         set => SetProperty(ref _title, value);
     }
 
-    private VectorImage _closeIcon;
+    private VectorImage _closeIcon = null!;
 
     public VectorImage CloseIcon
     {
@@ -114,7 +114,7 @@ public class BaseDialogViewModel : BindableBase, IDialogAware
         RequestClose?.Invoke(dialogResult);
     }
 
-    public event Action<IDialogResult> RequestClose;
+    public event Action<IDialogResult>? RequestClose;
 
     public virtual bool CanCloseDialog()
     {

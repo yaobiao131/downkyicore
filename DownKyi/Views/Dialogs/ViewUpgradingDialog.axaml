@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:customControl="clr-namespace:DownKyi.CustomControl"
+             xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="300"
+             x:Class="DownKyi.Views.Dialogs.ViewUpgradingDialog"
+             x:DataType="vmd:ViewUpgradingDialogViewModel"
+             Width="500" Height="300">
+    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
+        <Grid RowDefinitions="40,*">
+            <Grid
+                Grid.Row="0"
+                Background="{DynamicResource BrushBackgroundGreyTranslucent3}" ColumnDefinitions="*,50,*,50">
+
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="10,0"
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{DynamicResource BrushCaptionForeground}"
+                    Text="{Binding Title}" />
+            </Grid>
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <customControl:Loading Foreground="Gray" Width="50" Height="50" IsActive="True" />
+                <TextBlock TextAlignment="Center" Margin="0,10,0,0" Text="{Binding Message}" />
+                <ProgressBar Value="{Binding Percent}" ShowProgressText="True" Margin="0,10,0,0" />
+                <Button Theme="{StaticResource BtnStyle}" Margin="0,10,0,0"
+                        IsVisible="{Binding RestartVisible}"
+                        Command="{Binding RestartCommand}">
+                    立即重启
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

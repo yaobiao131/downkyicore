@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Net;
-using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using DownKyi.Core.Logging;
+﻿using DownKyi.Core.Logging;
+using System.Text.Json;
+using System.Web;
+using DownKyi.Core.Storage;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.Utils;
@@ -14,85 +13,64 @@ public static class ObjectHelper
     /// </summary>
     /// <param name="url"></param>
     /// <returns></returns>
-    public static CookieContainer ParseCookie(string url)
+    public static List<DownKyiCookie> ParseCookie(string? url)
     {
-        var cookieContainer = new CookieContainer();
+        var cookies = new List<DownKyiCookie>();
+        if (url is null or "") return cookies;
 
-        if (url is null or "")
-        {
-            return cookieContainer;
-        }
+        var uri = new Uri(url);
+        var queryString = uri.Query;
+        var query = HttpUtility.ParseQueryString(queryString);
+        cookies = (from item in query.AllKeys.OfType<string>()
+            let value = query[item]
+            where item is not ("Expires" or "gourl")
+            select new DownKyiCookie(item, value, ".bilibili.com")).ToList();
+        return cookies;
+        // if (url is null or "")
+        // {
+        //     return cookieContainer;
+        // }
+        //
+        // var strList = url.Split('?');
+        // if (strList.Length < 2)
+        // {
+        //     return cookieContainer;
+        // }
+        //
+        // var strList2 = strList[1].Split('&');
+        // if (strList2.Length == 0)
+        // {
+        //     return cookieContainer;
+        // }
+        //
+        // // 获取expires
+        // var expires = strList2.FirstOrDefault(it => it.Contains("Expires"))?.Split('=')[1];
+        // var dateTime = DateTime.Now;
+        // dateTime = dateTime.AddSeconds(int.Parse(expires));
+        //
+        // foreach (var item in strList2)
+        // {
+        //     var strList3 = item.Split('=');
+        //     if (strList3.Length < 2)
+        //     {
+        //         continue;
+        //     }
+        //
+        //     var name = strList3[0];
+        //     var value = strList3[1];
+        //
+        //     // 不需要
+        //     if (name is "Expires" or "gourl")
+        //     {
+        //         continue;
+        //     }
+        //
+        //     // 添加cookie
+        //     cookieContainer.Add(new Cookie(name, value.Replace(",", "%2c"), "/", ".bilibili.com") { Expires = dateTime });
+        //     Console.PrintLine(name + ": " + value + "\t" + cookieContainer.Count);
+        // }
 
-        var strList = url.Split('?');
-        if (strList.Length < 2)
-        {
-            return cookieContainer;
-        }
-
-        var strList2 = strList[1].Split('&');
-        if (strList2.Length == 0)
-        {
-            return cookieContainer;
-        }
-
-        // 获取expires
-        var expires = strList2.FirstOrDefault(it => it.Contains("Expires"))?.Split('=')[1];
-        var dateTime = DateTime.Now;
-        dateTime = dateTime.AddSeconds(int.Parse(expires));
-
-        foreach (var item in strList2)
-        {
-            var strList3 = item.Split('=');
-            if (strList3.Length < 2)
-            {
-                continue;
-            }
-
-            var name = strList3[0];
-            var value = strList3[1];
-
-            // 不需要
-            if (name is "Expires" or "gourl")
-            {
-                continue;
-            }
-
-            // 添加cookie
-            cookieContainer.Add(new Cookie(name, value.Replace(",", "%2c"), "/", ".bilibili.com") { Expires = dateTime });
-            Console.PrintLine(name + ": " + value + "\t" + cookieContainer.Count);
-        }
-
-        return cookieContainer;
-    }
-
-    /// <summary>
-    /// 将CookieContainer中的所有的Cookie读出来
-    /// </summary>
-    /// <param name="cc"></param>
-    /// <returns></returns>
-    public static List<Cookie> GetAllCookies(CookieContainer cc)
-    {
-        var lstCookies = new List<Cookie>();
-
-        var table = (Hashtable?)cc.GetType().InvokeMember("m_domainTable",
-            BindingFlags.NonPublic | BindingFlags.GetField |
-            BindingFlags.Instance, null, cc, new object[] { });
-
-        foreach (var pathList in table?.Values ?? Array.Empty<Hashtable>())
-        {
-            var lstCookieCol = (SortedList?)pathList.GetType().InvokeMember("m_list",
-                BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance, null, pathList,
-                Array.Empty<object>());
-            foreach (CookieCollection colCookies in lstCookieCol?.Values ?? Array.Empty<CookieCollection>())
-            {
-                foreach (Cookie c in colCookies)
-                {
-                    lstCookies.Add(c);
-                }
-            }
-        }
-
-        return lstCookies;
+        // return cookieContainer;
     }
 
     /// <summary>
@@ -101,7 +79,7 @@ public static class ObjectHelper
     /// <param name="file"></param>
     /// <param name="cookieJar"></param>
     /// <returns></returns>
-    public static bool WriteCookiesToDisk(string file, CookieContainer cookieJar)
+    public static bool WriteCookiesToDisk(string file, List<DownKyiCookie> cookieJar)
     {
         return WriteObjectToDisk(file, cookieJar);
     }
@@ -111,9 +89,26 @@ public static class ObjectHelper
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public static CookieContainer? ReadCookiesFromDisk(string file)
+    public static List<DownKyiCookie>? ReadCookiesFromDisk(string file)
     {
-        return (CookieContainer?)ReadObjectFromDisk(file);
+        try
+        {
+            using Stream stream = File.Open(file, FileMode.Open);
+            Console.PrintLine("Reading object from disk... ");
+            return JsonSerializer.Deserialize<List<DownKyiCookie>>(stream);
+        }
+        catch (IOException e)
+        {
+            Console.PrintLine("ReadObjectFromDisk()发生IO异常: {0}", e);
+            LogManager.Error(e);
+            return null;
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("ReadObjectFromDisk()发生异常: {0}", e);
+            LogManager.Error(e);
+            return null;
+        }
     }
 
     /// <summary>
@@ -129,8 +124,7 @@ public static class ObjectHelper
             using Stream stream = File.Create(file);
             Console.PrintLine("Writing object to disk... ");
 
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, obj);
+            JsonSerializer.Serialize(stream, obj);
 
             Console.PrintLine("Done.");
             return true;
@@ -146,35 +140,6 @@ public static class ObjectHelper
             Console.PrintLine("WriteObjectToDisk()发生异常: {0}", e);
             LogManager.Error(e);
             return false;
-        }
-    }
-
-    /// <summary>
-    /// 从磁盘读取序列化对象
-    /// </summary>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    public static object? ReadObjectFromDisk(string file)
-    {
-        try
-        {
-            using Stream stream = File.Open(file, FileMode.Open);
-            Console.PrintLine("Reading object from disk... ");
-            var formatter = new BinaryFormatter();
-            Console.PrintLine("Done.");
-            return formatter.Deserialize(stream);
-        }
-        catch (IOException e)
-        {
-            Console.PrintLine("ReadObjectFromDisk()发生IO异常: {0}", e);
-            LogManager.Error(e);
-            return null;
-        }
-        catch (Exception e)
-        {
-            Console.PrintLine("ReadObjectFromDisk()发生异常: {0}", e);
-            LogManager.Error(e);
-            return null;
         }
     }
 }

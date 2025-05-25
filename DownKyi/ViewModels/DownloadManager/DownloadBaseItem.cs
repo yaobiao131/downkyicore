@@ -54,8 +54,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? 0 : DownloadBase.Order;
             set
             {
-                DownloadBase.Order = value;
-                RaisePropertyChanged("Order");
+                if (DownloadBase != null) DownloadBase.Order = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -65,8 +65,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? "" : DownloadBase.MainTitle;
             set
             {
-                DownloadBase.MainTitle = value;
-                RaisePropertyChanged("MainTitle");
+                if (DownloadBase != null) DownloadBase.MainTitle = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -76,8 +76,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? "" : DownloadBase.Name;
             set
             {
-                DownloadBase.Name = value;
-                RaisePropertyChanged("Name");
+                if (DownloadBase != null) DownloadBase.Name = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -87,8 +87,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? "" : DownloadBase.Duration;
             set
             {
-                DownloadBase.Duration = value;
-                RaisePropertyChanged("Duration");
+                if (DownloadBase != null) DownloadBase.Duration = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -98,8 +98,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? "" : DownloadBase.VideoCodecName;
             set
             {
-                DownloadBase.VideoCodecName = value;
-                RaisePropertyChanged("VideoCodecName");
+                if (DownloadBase != null) DownloadBase.VideoCodecName = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -109,8 +109,8 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? null : DownloadBase.Resolution;
             set
             {
-                DownloadBase.Resolution = value;
-                RaisePropertyChanged("Resolution");
+                if (DownloadBase != null) DownloadBase.Resolution = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -120,19 +120,19 @@ namespace DownKyi.ViewModels.DownloadManager
             get => DownloadBase == null ? null : DownloadBase.AudioCodec;
             set
             {
-                DownloadBase.AudioCodec = value;
-                RaisePropertyChanged("AudioCodec");
+                if (DownloadBase != null) DownloadBase.AudioCodec = value;
+                RaisePropertyChanged();
             }
         }
 
         // 文件大小
-        public string FileSize
+        public string? FileSize
         {
             get => DownloadBase == null ? "" : DownloadBase.FileSize;
             set
             {
-                DownloadBase.FileSize = value;
-                RaisePropertyChanged("FileSize");
+                if (DownloadBase != null) DownloadBase.FileSize = value;
+                RaisePropertyChanged();
             }
         }
     }

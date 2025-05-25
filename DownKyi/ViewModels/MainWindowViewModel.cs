@@ -8,10 +8,13 @@ using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Services;
 using DownKyi.Utils;
+using DownKyi.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
+using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels;
 
@@ -20,6 +23,8 @@ public class MainWindowViewModel : BindableBase
     private readonly IEventAggregator _eventAggregator;
 
     private readonly IRegionManager _regionManager;
+
+    private readonly IDialogService _dialogService;
 
     private const string ContentRegion = nameof(ContentRegion);
 
@@ -57,8 +62,8 @@ public class MainWindowViewModel : BindableBase
     public DelegateCommand ClosingCommand => _closingCommand ??= _closingCommand = new DelegateCommand(ExecuteClosingCommand);
 
     public DelegateCommand<PointerPressedEventArgs> PointerPressedCommand =>
-        new (ExecutePointerPressed);
-    
+        new(ExecutePointerPressed);
+
     private void ExecuteClosingCommand()
     {
         if (_clipboardListener == null) return;
@@ -80,15 +85,17 @@ public class MainWindowViewModel : BindableBase
             }
         }
     }
-    
-    private UserControl? GetCurrentUserControl() =>  _regionManager
+
+    private UserControl? GetCurrentUserControl() => _regionManager
         .Regions[ContentRegion].ActiveViews
         .FirstOrDefault() as UserControl;
 
-    public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator)
+    public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService)
     {
         _eventAggregator = eventAggregator;
         _regionManager = regionManager;
+        _dialogService = dialogService;
+
         #region MyRegion
 
         _eventAggregator.GetEvent<NavigationEvent>().Subscribe(view =>
@@ -124,6 +131,7 @@ public class MainWindowViewModel : BindableBase
 
         LoadedCommand = new DelegateCommand(() =>
         {
+            Upgrade();
             _clipboardListener = new ClipboardListener(App.Current.MainWindow);
             _clipboardListener.Changed += ClipboardListenerOnChanged;
             var param = new NavigationParameters
@@ -131,7 +139,7 @@ public class MainWindowViewModel : BindableBase
                 { "Parent", "" },
                 { "Parameter", "start" }
             };
-            regionManager.RequestNavigate("ContentRegion", ViewIndexViewModel.Tag, param);
+            _regionManager.RequestNavigate("ContentRegion", ViewIndexViewModel.Tag, param);
         });
     }
 
@@ -175,4 +183,9 @@ public class MainWindowViewModel : BindableBase
     }
 
     #endregion
+
+    private void Upgrade()
+    {
+        _dialogService.ShowDialogAsync(ViewUpgradingDialogViewModel.Tag, new DialogParameters(), (result) => { });
+    }
 }

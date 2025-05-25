@@ -1,5 +1,4 @@
-﻿using System.Net;
-using DownKyi.Core.Logging;
+﻿using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
@@ -13,9 +12,6 @@ namespace DownKyi.Core.BiliApi.Login
         // 本地位置
         private static readonly string LocalLoginInfo = StorageManager.GetLogin();
 
-        // 16位密码，ps:密码位数没有限制，可任意设置
-        private static readonly string SecretKey = "EsOat*^y1QR!&0J6";
-
         /// <summary>
         /// 保存登录的cookies到文件
         /// </summary>
@@ -23,15 +19,23 @@ namespace DownKyi.Core.BiliApi.Login
         /// <returns></returns>
         public static bool SaveLoginInfoCookies(string url)
         {
-            var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
-            var cookieContainer = ObjectHelper.ParseCookie(url);
+            var cookies = ObjectHelper.ParseCookie(url);
 
-            var isSucceed = ObjectHelper.WriteCookiesToDisk(tempFile, cookieContainer);
+            return SaveLoginInfoCookies(cookies);
+        }
+
+        /// <summary>
+        /// 保存登录的cookies到文件
+        /// </summary>
+        /// <param name="cookies"></param>
+        /// <returns></returns>
+        public static bool SaveLoginInfoCookies(List<DownKyiCookie> cookies)
+        {
+            var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
+
+            var isSucceed = ObjectHelper.WriteCookiesToDisk(tempFile, cookies);
             if (isSucceed)
             {
-                // 加密密钥，增加机器码
-                var password = SecretKey;
-
                 try
                 {
                     File.Copy(tempFile, LocalLoginInfo, true);
@@ -58,7 +62,7 @@ namespace DownKyi.Core.BiliApi.Login
         /// 获得登录的cookies
         /// </summary>
         /// <returns></returns>
-        public static CookieContainer? GetLoginInfoCookies()
+        public static List<DownKyiCookie>? GetLoginInfoCookies()
         {
             var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
 
@@ -67,9 +71,6 @@ namespace DownKyi.Core.BiliApi.Login
                 try
                 {
                     File.Copy(LocalLoginInfo, tempFile, true);
-                    // 加密密钥，增加机器码
-                    var password = SecretKey;
-                    // Encryptor.DecryptFile(LOCAL_LOGIN_INFO, tempFile, password);
                 }
                 catch (Exception e)
                 {
@@ -104,17 +105,15 @@ namespace DownKyi.Core.BiliApi.Login
         /// <returns></returns>
         public static string GetLoginInfoCookiesString()
         {
-            var cookieContainer = GetLoginInfoCookies();
-            if (cookieContainer == null)
+            var cookies = GetLoginInfoCookies();
+            if (cookies == null)
             {
                 return "";
             }
 
-            var cookies = ObjectHelper.GetAllCookies(cookieContainer);
+            var cookie = string.Join("; ", cookies.Select(item => $"{item.Name}={item.Value}"));
 
-            var cookie = cookies.Aggregate(string.Empty, (current, item) => current + (item + ";"));
-
-            return cookie.TrimEnd(';');
+            return cookie;
         }
 
         /// <summary>

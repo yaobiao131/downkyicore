@@ -21,7 +21,8 @@ public class DbHelper
         _connStr = new SqliteConnectionStringBuilder
         {
             Mode = SqliteOpenMode.ReadWriteCreate,
-            DataSource = dbPath
+            DataSource = dbPath,
+            Pooling = false
         }.ToString();
         if (Database.TryGetValue(_connStr, out var value))
         {
@@ -102,6 +103,7 @@ public class DbHelper
 
         if (!IsOpen()) return;
         _conn.Close();
+        _conn.Dispose();
 
         Database.Remove(_connStr);
     }

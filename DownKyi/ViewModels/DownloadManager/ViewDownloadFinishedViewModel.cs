@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Services;
@@ -141,7 +142,7 @@ namespace DownKyi.ViewModels.DownloadManager
             {
                 await Task.Run(() =>
                 {
-                    var list = DownloadedList.ToList();
+                    var list = Dispatcher.UIThread.Invoke(()=>DownloadedList.ToList());
                     foreach (var item in list)
                     {
                         if (item != null && item.DialogService == null)

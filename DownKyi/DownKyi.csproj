@@ -8,8 +8,16 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
         <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
+        <NoWarn>SYSLIB5005</NoWarn>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>link</TrimMode>
     </PropertyGroup>
 
+    <ItemGroup>
+        <TrimmerRootAssembly Include="mscorlib" />
+        <TrimmerRootDescriptor Include="Linker.xml" />
+    </ItemGroup>
+    
     <ItemGroup>
         <AvaloniaResource Include="Resources\**"/>
     </ItemGroup>
@@ -26,7 +34,9 @@
         <PackageReference Include="Downloader"/>
         <PackageReference Include="Prism.Avalonia"/>
         <PackageReference Include="Prism.DryIoc.Avalonia"/>
+        <PackageReference Include="SqlSugarCoreNoDrive" />
         <PackageReference Include="Xaml.Behaviors"/>
+        <PackageReference Include="System.Formats.Nrbf" />
     </ItemGroup>
 
 
@@ -34,10 +44,9 @@
         <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj"/>
     </ItemGroup>
 
-
     <ItemGroup>
-        <Compile Update="Views\Dialogs\NewVersionAvailableDialog.axaml.cs">
-            <DependentUpon>NewVersionAvailableDialog.axaml</DependentUpon>
-        </Compile>
+        <None Update="Linker.xml">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 </Project>

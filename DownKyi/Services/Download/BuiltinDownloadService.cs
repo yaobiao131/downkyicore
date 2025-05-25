@@ -316,7 +316,10 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         path = path.TrimEnd('/').TrimEnd('\\');
         var requestConfiguration = new RequestConfiguration
         {
-            CookieContainer = LoginHelper.GetLoginInfoCookies(),
+            Headers = new WebHeaderCollection()
+            {
+                { "cookie", LoginHelper.GetLoginInfoCookiesString() }
+            },
             UserAgent = SettingsManager.GetInstance().GetUserAgent(),
             Referer = "https://www.bilibili.com",
         };

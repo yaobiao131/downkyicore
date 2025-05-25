@@ -15,6 +15,7 @@
         <PackageReference Include="Avalonia"/>
         <PackageReference Include="FFMpegCore"/>
         <PackageReference Include="Google.Protobuf"/>
+        <PackageReference Include="Microsoft.Data.Sqlite" />
         <PackageReference Include="Microsoft.Data.Sqlite.Core"/>
         <PackageReference Include="Newtonsoft.Json"/>
         <PackageReference Include="QRCoder"/>

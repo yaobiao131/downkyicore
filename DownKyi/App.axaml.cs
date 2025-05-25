@@ -10,6 +10,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
+using DownKyi.Core.Storage;
+using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Services.Download;
 using DownKyi.Utils;
@@ -29,6 +31,7 @@ using DownKyi.Views.Toolbox;
 using DownKyi.Views.UserSpace;
 using Prism.DryIoc;
 using Prism.Ioc;
+using SqlSugar;
 using ViewSeasonsSeries = DownKyi.Views.ViewSeasonsSeries;
 using ViewSeasonsSeriesViewModel = DownKyi.ViewModels.ViewSeasonsSeriesViewModel;
 
@@ -36,8 +39,8 @@ namespace DownKyi;
 
 public partial class App : PrismApplication
 {
-    public static ObservableCollection<DownloadingItem>? DownloadingList { get; set; }
-    public static ObservableCollection<DownloadedItem>? DownloadedList { get; set; }
+    public static ObservableCollection<DownloadingItem> DownloadingList { get; set; } = new();
+    public static ObservableCollection<DownloadedItem> DownloadedList { get; set; } = new();
     public new static App Current => (App)Application.Current!;
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
     public IClassicDesktopStyleApplicationLifetime? AppLife;
@@ -68,6 +71,38 @@ public partial class App : PrismApplication
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
+        containerRegistry.RegisterSingleton<ISqlSugarClient>(() => new SqlSugarScope(new ConnectionConfig
+            {
+                DbType = DbType.Sqlite,
+                ConnectionString = $"datasource={StorageManager.GetDbPath()}",
+                IsAutoCloseConnection = true,
+            },
+            db =>
+            {
+                db.Aop.OnLogExecuting = (sql, pars) =>
+                {
+                    if (pars != null && pars.Length > 0)
+                    {
+                        string fullSql = sql;
+                        foreach (var param in pars)
+                        {
+                            // 处理参数值的格式
+                            var value = param.Value is string || param.Value is DateTime
+                                ? $"'{param.Value}'"
+                                : param.Value?.ToString() ?? "NULL";
+                            fullSql = fullSql.Replace(param.ParameterName, value);
+                        }
+
+                        Console.WriteLine($"完整SQL: {fullSql}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"SQL: {sql}");
+                    }
+                };
+            })
+        );
+
         containerRegistry.RegisterSingleton<MainWindow>();
         containerRegistry.RegisterSingleton<IDialogService, DialogService>();
         containerRegistry.Register<IDialogWindow, DialogWindow>();
@@ -123,14 +158,16 @@ public partial class App : PrismApplication
         containerRegistry.RegisterDialog<ViewParsingSelector>(ViewParsingSelectorViewModel.Tag);
         containerRegistry.RegisterDialog<ViewAlreadyDownloadedDialog>(ViewAlreadyDownloadedDialogViewModel.Tag);
         containerRegistry.RegisterDialog<NewVersionAvailableDialog>(NewVersionAvailableDialogViewModel.Tag);
+        containerRegistry.RegisterDialog<ViewUpgradingDialog>(ViewUpgradingDialogViewModel.Tag);
     }
 
 
     protected override AvaloniaObject CreateShell()
     {
-        // 初始化数据
-        DownloadingList = new ObservableCollection<DownloadingItem>();
-        DownloadedList = new ObservableCollection<DownloadedItem>();
+        if (!Design.IsDesignMode)
+        {
+            Container.Resolve<ISqlSugarClient>().CodeFirst.InitTables(typeof(DownloadBase), typeof(Downloaded), typeof(Downloading));
+        }
 
         // 下载数据存储服务
         var downloadStorageService = new DownloadStorageService();
