@@ -330,14 +330,26 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// <param name="parameter"></param>
     private void ExecuteVideoSectionsCommand(object parameter)
     {
-        if (parameter is not VideoSection section)
+        if (parameter is not DataGrid grid)
         {
             return;
         }
+        var selectedSection = VideoSections.FirstOrDefault(x => x.IsSelected);
+        if (selectedSection?.VideoPages == null) 
+        {
+            IsSelectAll = false;
+            return; 
+        }
+        
+        var selectedPages = selectedSection.VideoPages
+            .Where(x => x.IsSelected).ToList();
+        foreach (var page in selectedPages)
+        {
+            grid.SelectedItems.Add(page);
+        }
 
-        var isSelectAll = section.VideoPages.All(page => page.IsSelected);
-
-        IsSelectAll = section.VideoPages.Count != 0 && isSelectAll;
+        IsSelectAll = selectedSection.VideoPages.Count > 0 && 
+                      selectedPages.Count == selectedSection.VideoPages.Count;
     }
 
     // 视频page选择事件

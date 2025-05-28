@@ -274,7 +274,7 @@
                         <Interaction.Behaviors>
                             <EventTriggerBehavior EventName="SelectionChanged">
                                 <InvokeCommandAction Command="{Binding VideoSectionsCommand}"
-                                                     CommandParameter="{Binding ElementName=NameVideoSections,Path=SelectedItem}" />
+                                                     CommandParameter="{Binding #NameVideoPages}" />
                             </EventTriggerBehavior>
                             <DataTriggerBehavior Binding="{Binding VideoSections.Count}" Value="0">
                                 <ChangePropertyAction PropertyName="Height" Value="0" />
