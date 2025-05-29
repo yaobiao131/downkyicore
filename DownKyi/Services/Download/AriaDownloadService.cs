@@ -257,7 +257,7 @@ public class AriaDownloadService : DownloadService, IDownloadService
         // 设置aria host
         AriaClient.SetHost();
         // 设置aria listenPort
-        AriaClient.SetListenPort();
+        AriaClient.SetListenPort(SettingsManager.GetInstance().GetAriaListenPort());
 
         // 启动Aria服务器
         StartAriaServer();
