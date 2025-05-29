@@ -3,8 +3,10 @@ using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
 using DownKyi.Utils;
+using Downloader;
 using Prism.Commands;
 using Prism.Services.Dialogs;
+using DownloadStatus = DownKyi.Models.DownloadStatus;
 using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
@@ -25,6 +27,8 @@ namespace DownKyi.ViewModels.DownloadManager
             Delete = ButtonIcon.Instance().Delete;
             Delete.Fill = DictionaryResource.GetColor("ColorPrimary");
         }
+        
+        public DownloadService? DownloadService;
 
         // model数据
         private Downloading _downloading;
