@@ -357,20 +357,20 @@ public abstract class DownloadService
         switch (downloading.Downloading.PlayStreamType)
         {
             case PlayStreamType.Video:
-                downloading.PlayUrl = SettingsManager.GetInstance().GetVideoParseType() switch
+                downloading.PlayUrl ??= SettingsManager.GetInstance().GetVideoParseType() switch
                 {
                     0 => VideoStream.GetVideoPlayUrl(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid),
                     1 => VideoStream.GetVideoPlayUrlWebPage(downloading.DownloadBase.Avid, downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid,
                         downloading.DownloadBase.Page),
-                    _ => null
+                    _ => throw new ArgumentException("Invalid video parse type. Valid values are: 0 (WebAPI) or 1 (WebPage).")
                 };
                 break;
             case PlayStreamType.Bangumi:
-                downloading.PlayUrl = VideoStream.GetBangumiPlayUrl(downloading.DownloadBase.Avid,
+                downloading.PlayUrl ??= VideoStream.GetBangumiPlayUrl(downloading.DownloadBase.Avid,
                     downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid);
                 break;
             case PlayStreamType.Cheese:
-                downloading.PlayUrl = VideoStream.GetCheesePlayUrl(downloading.DownloadBase.Avid,
+                downloading.PlayUrl ??= VideoStream.GetCheesePlayUrl(downloading.DownloadBase.Avid,
                     downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid,
                     downloading.DownloadBase.EpisodeId);
                 break;
