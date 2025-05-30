@@ -571,7 +571,7 @@ public abstract class DownloadService
 
                     
                     if(downloading.DownloadBase.NeedDownloadContent["downloadAudio"] &&
-                     downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                     !downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
                     {
                         //音频分离？
                     }
