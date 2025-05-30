@@ -19,6 +19,7 @@ using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
+using ImTools;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Services.Download;
@@ -114,7 +115,7 @@ public abstract class DownloadService
         return downloadAudio;
     }
 
-    protected PlayUrlDashVideo? BaseDownloadVideo(DownloadingItem downloading)
+    protected VideoPlayUrlBasic? BaseDownloadVideo(DownloadingItem downloading)
     {
         // 更新状态显示
         downloading.DownloadStatusTitle = DictionaryResource.GetString("WhileDownloading");
@@ -125,35 +126,37 @@ public abstract class DownloadService
         // 下载速度
         downloading.SpeedDisplay = string.Empty;
 
-        // 如果没有Dash，返回null
-        if (downloading.PlayUrl == null || downloading.PlayUrl.Dash == null)
+        if (downloading.PlayUrl?.Dash?.Video?.Count > 0)
         {
-            return null;
-        }
-
-        // 如果Video列表没有内容，则返回null
-        if (downloading.PlayUrl.Dash.Video == null)
-        {
-            return null;
-        }
-        else if (downloading.PlayUrl.Dash.Video.Count == 0)
-        {
-            return null;
-        }
-
-        // 根据视频编码匹配
-        PlayUrlDashVideo? downloadVideo = null;
-        foreach (var video in downloading.PlayUrl.Dash.Video)
-        {
-            var codecs = Constant.GetCodecIds().FirstOrDefault(t => t.Id == video.CodecId);
-            if (video.Id == downloading.Resolution.Id && codecs?.Name == downloading.VideoCodecName)
+            foreach (var video in downloading.PlayUrl.Dash.Video)
             {
-                downloadVideo = video;
-                break;
+                var codecs = Constant.GetCodecIds().FirstOrDefault(t => t.Id == video.CodecId);
+                if (video.Id == downloading.Resolution.Id && codecs?.Name == downloading.VideoCodecName)
+                {
+                    return new()
+                    {
+                        BackupUrl = video.BackupUrl,
+                        Codecs = video.Codecs,
+                        Id = video.Id,
+                        BaseUrl = video.BaseUrl
+                    };
+                }
             }
         }
 
-        return downloadVideo;
+        if (downloading?.PlayUrl?.Durl?.Count > 0)
+        {
+            var durl = downloading.PlayUrl.Durl.First();
+            return new()
+            {
+                BackupUrl = durl.BackupUrl,
+                BaseUrl = durl.Url,
+                Codecs = downloading.PlayUrl.VideoCodecid.GetHashCode().ToString(),
+                Id = downloading.DownloadBase.Bvid.GetHashCode()
+            };
+        }
+
+        return null;
     }
 
     protected string BaseDownloadCover(DownloadingItem downloading, string coverUrl, string fileName)
@@ -505,53 +508,76 @@ public abstract class DownloadService
                 Pause(downloading);
 
                 string? audioUid = null;
-                // 如果需要下载音频
-                if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"])
-                {
-                    //audioUid = DownloadAudio(downloading);
-                    for (var i = 0; i < retry; i++)
-                    {
-                        audioUid = DownloadAudio(downloading);
-                        if (audioUid != null && audioUid != nullMark)
-                        {
-                            break;
-                        }
-                    }
-                }
-
-                if (audioUid == nullMark)
-                {
-                    DownloadFailed(downloading);
-                    return;
-                }
-
-                // 暂停
-                Pause(downloading);
 
                 string? videoUid = null;
-                // 如果需要下载视频
-                if (downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                if (downloading.PlayUrl.Dash != null)
                 {
-                    //videoUid = DownloadVideo(downloading);
-                    for (var i = 0; i < retry; i++)
+                    // 如果需要下载音频
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"])
                     {
-                        videoUid = DownloadVideo(downloading);
-                        if (videoUid != null && videoUid != nullMark)
+                        for (var i = 0; i < retry; i++)
                         {
-                            break;
+                            audioUid = DownloadAudio(downloading);
+                            if (audioUid != null && audioUid != nullMark)
+                            {
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (videoUid == nullMark)
+                    if (audioUid == nullMark)
+                    {
+                        DownloadFailed(downloading);
+                        return;
+                    }
+
+                    Pause(downloading);
+
+                  
+                    // 如果需要下载视频
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                    {
+                        //videoUid = DownloadVideo(downloading);
+                        for (var i = 0; i < retry; i++)
+                        {
+                            videoUid = DownloadVideo(downloading);
+                            if (videoUid != null && videoUid != nullMark)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (videoUid == nullMark)
+                    {
+                        DownloadFailed(downloading);
+                        return;
+                    }
+
+                    Pause(downloading);
+                }
+                else if(downloading.PlayUrl.Durl != null)
                 {
-                    DownloadFailed(downloading);
-                    return;
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] ||
+                        downloading.DownloadBase.NeedDownloadContent["downloadVideo"] )
+                    {
+                        videoUid = DownloadVideo(downloading);
+                        if (videoUid == nullMark)
+                        {
+                            DownloadFailed(downloading);
+                            return;
+                        }
+                    }
+
+                    
+                    if(downloading.DownloadBase.NeedDownloadContent["downloadAudio"] &&
+                     downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                    {
+                        //音频分离？
+                    }
+
+                    Pause(downloading);
                 }
-
-                // 暂停
-                Pause(downloading);
-
                 string? outputDanmaku = null;
                 // 如果需要下载弹幕
                 if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])

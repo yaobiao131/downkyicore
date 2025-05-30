@@ -58,6 +58,17 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
         return DownloadVideo(downloading, downloadVideo);
     }
 
+    private string DownloadVideo(DownloadingItem downloading, VideoPlayUrlBasic? downloadVideo)
+    {
+        return DownloadVideo(downloading, new PlayUrlDashVideo
+        {
+            Id = downloadVideo.Id,
+            Codecs = downloadVideo.Codecs,
+            BaseUrl = downloadVideo.BaseUrl,
+            BackupUrl = downloadVideo.BackupUrl
+        });
+    }
+
     /// <summary>
     /// 将下载音频和视频的函数中相同代码抽象出来
     /// </summary>

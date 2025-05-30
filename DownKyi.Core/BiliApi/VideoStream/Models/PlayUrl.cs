@@ -34,6 +34,10 @@ public class PlayUrl : BaseModel
     [JsonProperty("durl")] public List<PlayUrlDurl> Durl { get; set; }
     [JsonProperty("dash")] public PlayUrlDash Dash { get; set; }
 
+    [JsonProperty("quality")] public int Quality { get; set; }
+
+    [JsonProperty("video_codecid")] public int VideoCodecid { get; set; }
+
     [JsonProperty("support_formats")] public List<PlayUrlSupportFormat> SupportFormats { get; set; }
     // high_format
 }
