@@ -297,14 +297,13 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = (page.PlayUrl.Dash != null && item.DownloadBase.Cid == page.Cid && 
-                        item.Resolution.Id == page.VideoQuality.Quality &&
-                        item.AudioCodec.Name == page.AudioQualityFormat &&
-                        item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
-                        ||
-                        (page.PlayUrl.Durl != null && item.DownloadBase.Cid == page.Cid && 
-                        item.Resolution.Id == page.VideoQuality.Quality &&
-                        item.VideoCodecName == page.VideoQuality.SelectedVideoCodec);
+                    bool f = item.DownloadBase.Cid == page.Cid && 
+                             item.Resolution.Id == page.VideoQuality.Quality &&
+                             item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
+                             (
+                                 (page.PlayUrl.Dash != null && item.AudioCodec.Name == page.AudioQualityFormat) ||
+                                 (page.PlayUrl.Dash == null && page.PlayUrl.Durl != null)
+                             );
 
                     if (f)
                     {
@@ -329,14 +328,13 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = (page.PlayUrl.Dash != null && item.DownloadBase.Cid == page.Cid && 
-                        item.Resolution.Id == page.VideoQuality.Quality &&
-                       item.AudioCodec.Name == page.AudioQualityFormat &&
-                       item.VideoCodecName == page.VideoQuality.SelectedVideoCodec)
-                       ||
-                       (page.PlayUrl.Durl != null && item.DownloadBase.Cid == page.Cid && 
-                       item.Resolution.Id == page.VideoQuality.Quality &&
-                       item.VideoCodecName == page.VideoQuality.SelectedVideoCodec);
+                    bool f = item.DownloadBase.Cid == page.Cid && 
+                             item.Resolution.Id == page.VideoQuality.Quality &&
+                             item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
+                             (
+                                 (page.PlayUrl.Dash != null && item.AudioCodec.Name == page.AudioQualityFormat) ||
+                                 (page.PlayUrl.Dash == null && page.PlayUrl.Durl != null)
+                             );
 
                     if (f)
                     {
