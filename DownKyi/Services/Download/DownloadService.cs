@@ -507,11 +507,13 @@ public abstract class DownloadService
                 // 暂停
                 Pause(downloading);
 
-                string? audioUid = null;
+                var isMediaSuccess = true;
 
-                string? videoUid = null;
                 if (downloading.PlayUrl.Dash != null)
                 {
+                    string? audioUid = null;
+
+                    string? videoUid = null;
                     // 如果需要下载音频
                     if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"])
                     {
@@ -555,6 +557,25 @@ public abstract class DownloadService
                     }
 
                     Pause(downloading);
+
+                    // 混流
+                    var outputMedia = string.Empty;
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] ||
+                        downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                    {
+                        outputMedia = MixedFlow(downloading, audioUid, videoUid);
+                    }
+
+                    // 检测音频、视频是否下载成功
+
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] ||
+                        downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                    {
+                        // 只有下载音频不下载视频时才输出aac
+                        // 只要下载视频就输出mp4
+                        // 成功
+                        isMediaSuccess = File.Exists(outputMedia);
+                    }
                 }
                 else if(downloading.PlayUrl.Durl != null)
                 {
@@ -600,14 +621,20 @@ public abstract class DownloadService
                             return;
                         }
 
-                        if(durls.Count > 1)
+                        Pause(downloading);
+
+                        if (durls.Count > 1)
                         {
                             var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
                             FFMpeg.Instance.ConcatVideos(downloadStatus.Values.Select(x => x.Result).ToList(), finalFile, (x) => { });
                         }
+                        else
+                        {
+                           var outputMedia = MixedFlow(downloading, null, downloadStatus.First().Value.Result);
+                           isMediaSuccess = File.Exists(outputMedia);
+                        }
                     }
 
-                    
                     if(downloading.DownloadBase.NeedDownloadContent["downloadAudio"] &&
                      !downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
                     {
@@ -655,13 +682,6 @@ public abstract class DownloadService
                 // 暂停
                 Pause(downloading);
 
-                // 混流
-                var outputMedia = string.Empty;
-                if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] || downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
-                {
-                    outputMedia = MixedFlow(downloading, audioUid, videoUid);
-                }
-
                 // 这里本来只有IsExist，没有pause，不知道怎么处理
                 // 是否存在
                 //isExist = IsExist(downloading);
@@ -669,16 +689,6 @@ public abstract class DownloadService
                 //{
                 //    return;
                 //}
-
-                // 检测音频、视频是否下载成功
-                var isMediaSuccess = true;
-                if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] || downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
-                {
-                    // 只有下载音频不下载视频时才输出aac
-                    // 只要下载视频就输出mp4
-                    // 成功
-                    isMediaSuccess = File.Exists(outputMedia);
-                }
 
                 // 检测弹幕是否下载成功
                 var isDanmakuSuccess = true;
