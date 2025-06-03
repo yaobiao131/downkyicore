@@ -97,11 +97,9 @@ internal static class Utils
                 .Select(x => x.Name).ToList()),
                 SelectedVideoCodec = codeIds.First(x => x.Id == playUrl.VideoCodecid).Name
             };
-            page.VideoQuality = quality;
 
-            var l = new List<VideoQuality>();
-            l.Add(quality);
-            page.VideoQualityList = l;
+            page.VideoQualityList = new List<VideoQuality> { quality };
+            page.VideoQuality = page.VideoQualityList[0];
             page.Duration = Format.FormatDuration(playUrl.Durl.Select(x => x.Length).Sum() / 1000);
             return;
         }
