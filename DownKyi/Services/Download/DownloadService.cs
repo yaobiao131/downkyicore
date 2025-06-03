@@ -494,7 +494,7 @@ public abstract class DownloadService
 
         try
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 // 初始化
                 downloading.DownloadStatusTitle = string.Empty;
@@ -561,11 +561,49 @@ public abstract class DownloadService
                     if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] ||
                         downloading.DownloadBase.NeedDownloadContent["downloadVideo"] )
                     {
-                        videoUid = DownloadVideo(downloading);
-                        if (videoUid == nullMark)
+                        var durls = downloading.PlayUrl.Durl.ToList();
+                        var downloadStatus = durls
+                         .Select((durl, index) => new { Durl = durl, Index = index })
+                         .ToDictionary(x => x.Index, x => new { Durl = x.Durl, Result = string.Empty });
+
+                        for (int i = 0; i < durls.Count; i++)
+                        {
+                            downloading.PlayUrl.Durl = new List<PlayUrlDurl> { durls[i] };
+                            var result = DownloadVideo(downloading);
+                            downloadStatus[i] = new { Durl = durls[i], Result = result ?? nullMark };
+                        }
+
+
+                        int retryCount = 0;
+                        while (retryCount < retry && downloadStatus.Values.Any(x => x.Result == nullMark))
+                        {
+                            var toRetry = downloadStatus
+                                .Where(x => retryCount == 0 || x.Value.Result == nullMark)
+                                .ToList();
+
+                            foreach (var item in toRetry)
+                            {
+                                var originalDurls = downloading.PlayUrl.Durl.ToList();
+                                downloading.PlayUrl.Durl = new List<PlayUrlDurl> { item.Value.Durl };
+                                var result = DownloadVideo(downloading);
+                                downloading.PlayUrl.Durl = originalDurls;
+
+                                downloadStatus[item.Key] = new { item.Value.Durl, Result = result };
+                            }
+                            retryCount++;
+                            await Task.Delay(1000);
+                        }
+               
+                        if(downloadStatus.Values.Any(x => x.Result == nullMark))
                         {
                             DownloadFailed(downloading);
                             return;
+                        }
+
+                        if(durls.Count > 0)
+                        {
+                            var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
+                            FFMpeg.Instance.ConcatVideos(downloadStatus.Values.Select(x => x.Result).ToList(), finalFile, (x) => { });
                         }
                     }
 

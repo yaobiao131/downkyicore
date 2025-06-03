@@ -102,7 +102,7 @@ internal static class Utils
             var l = new List<VideoQuality>();
             l.Add(quality);
             page.VideoQualityList = l;
-            page.Duration = Format.FormatDuration(playUrl.Durl.First().Length / 1000);
+            page.Duration = Format.FormatDuration(playUrl.Durl.Select(x => x.Length).Sum() / 1000);
             return;
         }
     }
