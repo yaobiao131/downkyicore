@@ -617,10 +617,10 @@ public abstract class DownloadService
                             var result = DownloadVideo(downloading);
                             downloadStatus[i] = new { Durl = durls[i], Result = result ?? nullMark };
                         }
-
-
+                        
                         int retryCount = 0;
-                        while (retryCount < retry && downloadStatus.Values.Any(x => x.Result == nullMark))
+                        while (retryCount < retry && downloadStatus.Values
+                                   .Any(x => x.Result == nullMark))
                         {
                             var toRetry = downloadStatus
                                 .Where(x => retryCount == 0 || x.Value.Result == nullMark)
@@ -628,11 +628,8 @@ public abstract class DownloadService
 
                             foreach (var item in toRetry)
                             {
-                                var originalDurls = downloading.PlayUrl.Durl.ToList();
                                 downloading.PlayUrl.Durl = new List<PlayUrlDurl> { item.Value.Durl };
                                 var result = DownloadVideo(downloading);
-                                downloading.PlayUrl.Durl = originalDurls;
-
                                 downloadStatus[item.Key] = new { item.Value.Durl, Result = result };
                             }
                             retryCount++;
