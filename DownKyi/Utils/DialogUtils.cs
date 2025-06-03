@@ -25,7 +25,7 @@ public static class DialogUtils
             SuggestedStartLocation = await provider.TryGetFolderFromPathAsync(new Uri(DefaultDirectory)),
             AllowMultiple = false
         });
-        return folders.Count > 0 ? folders[0].Path.LocalPath : null;
+        return folders.Count > 0 ? folders[0].TryGetLocalPath() : null;
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public static class DialogUtils
         });
 
         // 选择文件
-        return files.Count > 0 ? files[0].Path.LocalPath : null;
+        return files.Count > 0 ? files[0].TryGetLocalPath() : null;
     }
 
     /// <summary>
@@ -67,6 +67,6 @@ public static class DialogUtils
         );
 
         // 选择文件
-        return files.Select(file => file.Path.LocalPath).ToArray();
+        return files.Select(file => file.TryGetLocalPath()).ToArray();
     }
 }
