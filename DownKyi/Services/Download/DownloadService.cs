@@ -600,7 +600,7 @@ public abstract class DownloadService
                             return;
                         }
 
-                        if(durls.Count > 0)
+                        if(durls.Count > 1)
                         {
                             var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
                             FFMpeg.Instance.ConcatVideos(downloadStatus.Values.Select(x => x.Result).ToList(), finalFile, (x) => { });
