@@ -243,7 +243,8 @@ public abstract class DownloadService
 
         return assFile;
     }
-
+    
+ 
     protected List<string> BaseDownloadSubtitle(DownloadingItem downloading)
     {
         // 更新状态显示
@@ -333,6 +334,29 @@ public abstract class DownloadService
 
         return finalFile;
     }
+    
+    
+    private string ConcatVideos(DownloadingItem downloading,List<string> videoUids)
+    {
+        downloading.DownloadStatusTitle = DictionaryResource.GetString("ConcatVideos");
+        downloading.DownloadContent = DictionaryResource.GetString("DownloadingVideo");
+        downloading.DownloadingFileSize = string.Empty;
+        downloading.SpeedDisplay = string.Empty;
+        
+        var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
+        FFMpeg.Instance.ConcatVideos(videoUids,finalFile,(x)=>{});
+        if (File.Exists(finalFile))
+        {
+            var info = new FileInfo(finalFile);
+            downloading.FileSize = Format.FormatFileSize(info.Length);
+        }
+        else
+        {
+            downloading.FileSize = Format.FormatFileSize(0);
+        }
+        return finalFile;
+    }
+
 
     protected void BaseParse(DownloadingItem downloading)
     {
@@ -625,8 +649,10 @@ public abstract class DownloadService
 
                         if (durls.Count > 1)
                         {
-                            var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
-                            FFMpeg.Instance.ConcatVideos(downloadStatus.Values.Select(x => x.Result).ToList(), finalFile, (x) => { });
+                            var output = ConcatVideos(downloading,downloadStatus.Values
+                                .Select(x => x.Result).ToList());
+
+                            isMediaSuccess = File.Exists(output);
                         }
                         else
                         {
@@ -901,7 +927,7 @@ public abstract class DownloadService
 
         workTask = Task.Run(DoWork);
     }
-
+    
     #region 抽象接口函数
 
     public abstract void Parse(DownloadingItem downloading);
