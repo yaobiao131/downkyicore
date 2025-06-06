@@ -51,19 +51,6 @@ internal static class Utils
             }
         }
 
-        if (playUrl.Durl != null)
-        {
-            // 音质
-
-            // 画质
-
-            // 视频编码
-
-            // 时长
-
-            return;
-        }
-
         if (playUrl.Dash != null)
         {
             // 如果video列表或者audio列表没有内容，则返回false
@@ -94,6 +81,26 @@ internal static class Utils
             // 时长
             page.Duration = Format.FormatDuration(playUrl.Dash.Duration);
 
+            return;
+        }
+
+
+        if (playUrl.Durl?.Count > 0)
+        {
+            var codeIds = Constant.GetCodecIds();
+            var qns = Constant.GetResolutions();
+            var quality = new VideoQuality
+            {
+                Quality = playUrl.Quality,
+                QualityFormat = qns.First(x => x.Id == playUrl.Quality).Name,
+                VideoCodecList = new(codeIds.Where(x => x.Id == playUrl.VideoCodecid)
+                .Select(x => x.Name).ToList()),
+                SelectedVideoCodec = codeIds.First(x => x.Id == playUrl.VideoCodecid).Name
+            };
+
+            page.VideoQualityList = new List<VideoQuality> { quality };
+            page.VideoQuality = page.VideoQualityList[0];
+            page.Duration = Format.FormatDuration(playUrl.Durl.Select(x => x.Length).Sum() / 1000);
             return;
         }
     }

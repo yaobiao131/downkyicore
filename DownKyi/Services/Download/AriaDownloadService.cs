@@ -64,6 +64,17 @@ public class AriaDownloadService : DownloadService, IDownloadService
     /// <param name="downloading"></param>
     /// <param name="downloadVideo"></param>
     /// <returns></returns>
+    private string DownloadVideo(DownloadingItem downloading, VideoPlayUrlBasic? downloadVideo)
+    {
+        return DownloadVideo(downloading,new PlayUrlDashVideo
+        {
+            Id = downloadVideo.Id,
+            Codecs = downloadVideo.Codecs,
+            BaseUrl = downloadVideo.BaseUrl,
+            BackupUrl = downloadVideo.BackupUrl
+        } );
+    }
+
     private string DownloadVideo(DownloadingItem downloading, PlayUrlDashVideo? downloadVideo)
     {
         // 如果为空，说明没有匹配到可下载的音频视频

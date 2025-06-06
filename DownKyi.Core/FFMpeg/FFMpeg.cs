@@ -163,4 +163,61 @@ public class FFMpeg
             .NotifyOnError(action.Invoke)
             .ProcessSynchronously(false);
     }
+
+
+    /// <summary>
+    /// 合并多个FLV视频片段为一个完整视频
+    /// </summary>
+    /// <param name="inputFlvs">FLV片段路径列表(按顺序)</param>
+    /// <param name="outputVideo">输出视频路径</param>
+    /// <param name="action">进度回调</param>
+    /// <returns>是否成功</returns>
+    public bool ConcatVideos(List<string> inputFlvs, string outputVideo, Action<string> action)
+    {
+        try
+        {
+            if (inputFlvs == null || inputFlvs.Count == 0)
+            {
+                return false;
+            }
+
+            // 验证所有输入文件都存在
+            foreach (var video in inputFlvs)
+            {
+                if (!File.Exists(video))
+                {
+                    action?.Invoke($"文件不存在: {video}");
+                    return false;
+                }
+            }
+
+            LogManager.Debug(Tag, $"开始合并 {inputFlvs.Count} 个视频到 {outputVideo}");
+
+
+            var listFile = Path.Combine(Path.GetTempPath(), $"flvlist_{DateTime.Now:yyyyMMddHHmmss}.txt");
+            File.WriteAllLines(listFile, inputFlvs.Select(f => $"file '{f.Replace("'", "'\\''")}'"));
+
+            FFMpegArguments
+             .FromFileInput(listFile, false, options => options
+                 .WithCustomArgument("-f concat -safe 0"))
+             .OutputToFile(outputVideo, true, options => options
+                 .WithVideoCodec("libx264")  
+                 .WithAudioCodec("aac")   
+                 .WithCustomArgument("-movflags +faststart")
+                 .WithCustomArgument("-avoid_negative_ts make_zero")
+             )
+             .NotifyOnOutput(action.Invoke)
+             .NotifyOnError(action.Invoke)
+             .ProcessSynchronously(false);
+
+            try { File.Delete(listFile); } catch {  }
+            LogManager.Debug(Tag, "视频合并完成");
+            return true;
+        }
+        catch (Exception ex)
+        {
+            LogManager.Error(Tag, ex);
+            return false;
+        }
+    }
 }
