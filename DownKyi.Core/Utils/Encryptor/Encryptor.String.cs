@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Cryptography;
 using System.Text;
 using DownKyi.Core.Logging;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -13,6 +14,7 @@ public static partial class Encryptor
     /// <param name="encryptString">待加密的字符串</param>
     /// <param name="encryptKey">加密密钥,要求为8位</param>
     /// <returns>加密成功返回加密后的字符串，失败返回源串</returns>
+    [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Convert))]
     public static string EncryptString(string encryptString, string encryptKey)
     {
         try
