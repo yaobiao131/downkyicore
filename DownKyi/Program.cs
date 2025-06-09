@@ -19,5 +19,5 @@ sealed class Program
 #if DEBUG
             .LogToTrace()
 #endif
-            .WithInterFont();
+            ;
 }

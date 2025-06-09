@@ -11,8 +11,8 @@
                 <ResourceInclude Source="avares://DownKyi.Core/BiliApi/Zone/ZoneImages.axaml" />
                 <ResourceInclude Source="avares://DownKyi.Core/BiliApi/BilibiliImages.axaml" />
             </ResourceDictionary.MergedDictionaries>
-            <FontFamily x:Key="DefaultFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,fonts:Inter#Inter,$Default</FontFamily>
-            <FontFamily x:Key="ProgramFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,fonts:Inter#Inter,$Default</FontFamily>
+            <FontFamily x:Key="DefaultFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
+            <FontFamily x:Key="ProgramFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
