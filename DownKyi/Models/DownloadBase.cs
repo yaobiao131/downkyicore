@@ -82,7 +82,7 @@ public class DownloadBase
     public Quality Resolution { get; set; }
 
     // 音频编码
-    [SqlSugar.SugarColumn(ColumnName = "audio_codec", ColumnDescription = "音频编码", IsJson = true)]
+    [SqlSugar.SugarColumn(ColumnName = "audio_codec", ColumnDescription = "音频编码", IsJson = true,IsNullable = true)]
     public Quality AudioCodec { get; set; }
 
     // 文件路径，不包含扩展名，所有内容均以此路径下载
