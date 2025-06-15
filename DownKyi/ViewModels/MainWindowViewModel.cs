@@ -33,14 +33,6 @@ public class MainWindowViewModel : BindableBase
     private bool _messageVisibility;
     private string? _oldMessage;
 
-    private WindowState _winState;
-
-    public WindowState WinState
-    {
-        get => _winState;
-        set => SetProperty(ref _winState, value);
-    }
-
     public bool MessageVisibility
     {
         get => _messageVisibility;
