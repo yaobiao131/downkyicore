@@ -45,19 +45,19 @@ public partial class App : PrismApplication
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
     public IClassicDesktopStyleApplicationLifetime? AppLife;
 
+    private static Mutex _mutex;
     // 下载服务
     private IDownloadService? _downloadService;
 
     public override void Initialize()
     {
-        if (!Design.IsDesignMode)
-        {
-            var mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
-            if (!createdNew)
-            {
-                Environment.Exit(0);
-            }
-        }
+    #if !DEBUG
+              _mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
+                if (!createdNew)
+                {
+                    Environment.Exit(0);
+                }
+    #endif
 
         AvaloniaXamlLoader.Load(this);
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
