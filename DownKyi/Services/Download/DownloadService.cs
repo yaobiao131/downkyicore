@@ -19,7 +19,6 @@ using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using DownKyi.ViewModels.DownloadManager;
-using ImTools;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Services.Download;
@@ -30,16 +29,18 @@ public abstract class DownloadService
 
     // protected TaskbarIcon _notifyIcon;
     protected readonly IDialogService? DialogService;
-    protected ObservableCollection<DownloadingItem> downloadingList;
-    protected ObservableCollection<DownloadedItem> downloadedList;
+    protected readonly ObservableCollection<DownloadingItem> DownloadingList;
+    protected readonly ObservableCollection<DownloadedItem> DownloadedList;
 
-    protected Task workTask;
-    protected CancellationTokenSource tokenSource;
-    protected CancellationToken cancellationToken;
-    protected List<Task> downloadingTasks = new();
+    protected Task? WorkTask;
+    protected CancellationTokenSource? TokenSource;
+    protected CancellationToken? CancellationToken;
+    protected readonly List<Task> DownloadingTasks = new();
 
-    protected readonly int retry = 5;
-    protected readonly string nullMark = "<null>";
+    protected const int Retry = 5;
+    protected const string NullMark = "<null>";
+
+    protected readonly DownloadStorageService DownloadStorageService = (DownloadStorageService)App.Current.Container.Resolve(typeof(DownloadStorageService));
 
     /// <summary>
     /// 初始化
@@ -50,8 +51,8 @@ public abstract class DownloadService
     /// <returns></returns>
     public DownloadService(ObservableCollection<DownloadingItem> downloadingList, ObservableCollection<DownloadedItem> downloadedList, IDialogService? dialogService)
     {
-        this.downloadingList = downloadingList;
-        this.downloadedList = downloadedList;
+        DownloadingList = downloadingList;
+        DownloadedList = downloadedList;
         DialogService = dialogService;
     }
 
@@ -133,7 +134,7 @@ public abstract class DownloadService
                 var codecs = Constant.GetCodecIds().FirstOrDefault(t => t.Id == video.CodecId);
                 if (video.Id == downloading.Resolution.Id && codecs?.Name == downloading.VideoCodecName)
                 {
-                    return new()
+                    return new VideoPlayUrlBasic
                     {
                         BackupUrl = video.BackupUrl,
                         Codecs = video.Codecs,
@@ -147,7 +148,7 @@ public abstract class DownloadService
         if (downloading?.PlayUrl?.Durl?.Count > 0)
         {
             var durl = downloading.PlayUrl.Durl.First();
-            return new()
+            return new VideoPlayUrlBasic
             {
                 BackupUrl = durl.BackupUrl,
                 BaseUrl = durl.Url,
@@ -199,7 +200,7 @@ public abstract class DownloadService
         downloading.SpeedDisplay = string.Empty;
 
         var title = $"{downloading.Name}";
-        var assFile = $"{downloading.DownloadBase.FilePath}.ass";
+        var assFile = $"{downloading.DownloadBase?.FilePath}.ass";
 
         // 记录本次下载的文件
         if (!downloading.Downloading.DownloadFiles.ContainsKey("danmaku"))
@@ -243,8 +244,8 @@ public abstract class DownloadService
 
         return assFile;
     }
-    
- 
+
+
     protected List<string> BaseDownloadSubtitle(DownloadingItem downloading)
     {
         // 更新状态显示
@@ -286,7 +287,7 @@ public abstract class DownloadService
         if (srtFiles.Count > 0)
         {
             var srtFile = $"{downloading.DownloadBase.FilePath}.srt";
-            File.Copy(srtFiles[0], srtFile,true);
+            File.Copy(srtFiles[0], srtFile, true);
             srtFiles.Add(srtFile);
         }
 
@@ -334,17 +335,17 @@ public abstract class DownloadService
 
         return finalFile;
     }
-    
-    
-    private string ConcatVideos(DownloadingItem downloading,List<string> videoUids)
+
+
+    private string ConcatVideos(DownloadingItem downloading, List<string> videoUids)
     {
         downloading.DownloadStatusTitle = DictionaryResource.GetString("ConcatVideos");
         downloading.DownloadContent = DictionaryResource.GetString("DownloadingVideo");
         downloading.DownloadingFileSize = string.Empty;
         downloading.SpeedDisplay = string.Empty;
-        
+
         var finalFile = $"{downloading.DownloadBase.FilePath}.mp4";
-        FFMpeg.Instance.ConcatVideos(videoUids,finalFile,(x)=>{});
+        FFMpeg.Instance.ConcatVideos(videoUids, finalFile, (x) => { });
         if (File.Exists(finalFile))
         {
             var info = new FileInfo(finalFile);
@@ -354,6 +355,7 @@ public abstract class DownloadService
         {
             downloading.FileSize = Format.FormatFileSize(0);
         }
+
         return finalFile;
     }
 
@@ -421,8 +423,8 @@ public abstract class DownloadService
 
             try
             {
-                downloadingTasks.RemoveAll((m) => m.IsCompleted);
-                foreach (var downloading in downloadingList)
+                DownloadingTasks.RemoveAll((m) => m.IsCompleted);
+                foreach (var downloading in DownloadingList)
                 {
                     if (downloading.Downloading.DownloadStatus == DownloadStatus.Downloading)
                     {
@@ -430,7 +432,7 @@ public abstract class DownloadService
                     }
                 }
 
-                foreach (var downloading in downloadingList)
+                foreach (var downloading in DownloadingList)
                 {
                     if (downloadingCount >= maxDownloading)
                     {
@@ -441,7 +443,7 @@ public abstract class DownloadService
                     if (downloading.Downloading.DownloadStatus is not (DownloadStatus.NotStarted or DownloadStatus.WaitForDownload)) continue;
                     //这里需要立刻设置状态，否则如果SingleDownload没有及时执行，会重复创建任务
                     downloading.Downloading.DownloadStatus = DownloadStatus.Downloading;
-                    downloadingTasks.Add(SingleDownload(downloading));
+                    DownloadingTasks.Add(SingleDownload(downloading));
                     downloadingCount++;
                 }
             }
@@ -457,7 +459,7 @@ public abstract class DownloadService
             }
 
             // 判断是否该结束线程，若为true，跳出while循环
-            if (cancellationToken.IsCancellationRequested)
+            if (CancellationToken?.IsCancellationRequested == true)
             {
                 Console.PrintLine($"{Tag}.DoWork() 下载服务结束，跳出while循环");
                 LogManager.Debug($"{Tag}.DoWork()", "下载服务结束");
@@ -465,19 +467,19 @@ public abstract class DownloadService
             }
 
             // 判断下载列表中的视频是否全部下载完成
-            if (lastDownloadingCount > 0 && downloadingList.Count == 0 && downloadedList.Count > 0)
+            if (lastDownloadingCount > 0 && DownloadingList.Count == 0 && DownloadedList.Count > 0)
             {
                 AfterDownload();
             }
 
-            lastDownloadingCount = downloadingList.Count;
+            lastDownloadingCount = DownloadingList.Count;
 
             // 降低CPU占用
             await Task.Delay(500);
         }
 
-        await Task.WhenAny(Task.WhenAll(downloadingTasks), Task.Delay(30000));
-        foreach (var tsk in downloadingTasks.FindAll((m) => !m.IsCompleted))
+        await Task.WhenAny(Task.WhenAll(DownloadingTasks), Task.Delay(30000));
+        foreach (var tsk in DownloadingTasks.FindAll((m) => !m.IsCompleted))
         {
             Console.PrintLine($"{Tag}.DoWork() 任务结束超时");
             LogManager.Debug($"{Tag}.DoWork()", "任务结束超时");
@@ -510,7 +512,7 @@ public abstract class DownloadService
                 LogManager.Debug(Tag, e.Message);
 
                 var alertService = new AlertService(DialogService);
-                var result = await alertService.ShowError($"{path}{DictionaryResource.GetString("DirectoryError")}");
+                await alertService.ShowError($"{path}{DictionaryResource.GetString("DirectoryError")}");
 
                 return;
             }
@@ -541,17 +543,17 @@ public abstract class DownloadService
                     // 如果需要下载音频
                     if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"])
                     {
-                        for (var i = 0; i < retry; i++)
+                        for (var i = 0; i < Retry; i++)
                         {
                             audioUid = DownloadAudio(downloading);
-                            if (audioUid != null && audioUid != nullMark)
+                            if (audioUid != null && audioUid != NullMark)
                             {
                                 break;
                             }
                         }
                     }
 
-                    if (audioUid == nullMark)
+                    if (audioUid == NullMark)
                     {
                         DownloadFailed(downloading);
                         return;
@@ -559,22 +561,22 @@ public abstract class DownloadService
 
                     Pause(downloading);
 
-                  
+
                     // 如果需要下载视频
                     if (downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
                     {
                         //videoUid = DownloadVideo(downloading);
-                        for (var i = 0; i < retry; i++)
+                        for (var i = 0; i < Retry; i++)
                         {
                             videoUid = DownloadVideo(downloading);
-                            if (videoUid != null && videoUid != nullMark)
+                            if (videoUid != null && videoUid != NullMark)
                             {
                                 break;
                             }
                         }
                     }
 
-                    if (videoUid == nullMark)
+                    if (videoUid == NullMark)
                     {
                         DownloadFailed(downloading);
                         return;
@@ -601,29 +603,29 @@ public abstract class DownloadService
                         isMediaSuccess = File.Exists(outputMedia);
                     }
                 }
-                else if(downloading.PlayUrl.Durl != null)
+                else if (downloading.PlayUrl.Durl != null)
                 {
                     if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] ||
-                        downloading.DownloadBase.NeedDownloadContent["downloadVideo"] )
+                        downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
                     {
                         var durls = downloading.PlayUrl.Durl.ToList();
                         var downloadStatus = durls
-                         .Select((durl, index) => new { Durl = durl, Index = index })
-                         .ToDictionary(x => x.Index, x => new { Durl = x.Durl, Result = string.Empty });
+                            .Select((durl, index) => new { Durl = durl, Index = index })
+                            .ToDictionary(x => x.Index, x => new { Durl = x.Durl, Result = string.Empty });
 
                         for (int i = 0; i < durls.Count; i++)
                         {
                             downloading.PlayUrl.Durl = new List<PlayUrlDurl> { durls[i] };
                             var result = DownloadVideo(downloading);
-                            downloadStatus[i] = new { Durl = durls[i], Result = result ?? nullMark };
+                            downloadStatus[i] = new { Durl = durls[i], Result = result ?? NullMark };
                         }
-                        
+
                         int retryCount = 0;
-                        while (retryCount < retry && downloadStatus.Values
-                                   .Any(x => x.Result == nullMark))
+                        while (retryCount < Retry && downloadStatus.Values
+                                   .Any(x => x.Result == NullMark))
                         {
                             var toRetry = downloadStatus
-                                .Where(x => retryCount == 0 || x.Value.Result == nullMark)
+                                .Where(x => retryCount == 0 || x.Value.Result == NullMark)
                                 .ToList();
 
                             foreach (var item in toRetry)
@@ -632,11 +634,12 @@ public abstract class DownloadService
                                 var result = DownloadVideo(downloading);
                                 downloadStatus[item.Key] = new { item.Value.Durl, Result = result };
                             }
+
                             retryCount++;
                             await Task.Delay(1000);
                         }
-               
-                        if(downloadStatus.Values.Any(x => x.Result == nullMark))
+
+                        if (downloadStatus.Values.Any(x => x.Result == NullMark))
                         {
                             DownloadFailed(downloading);
                             return;
@@ -646,26 +649,27 @@ public abstract class DownloadService
 
                         if (durls.Count > 1)
                         {
-                            var output = ConcatVideos(downloading,downloadStatus.Values
+                            var output = ConcatVideos(downloading, downloadStatus.Values
                                 .Select(x => x.Result).ToList());
 
                             isMediaSuccess = File.Exists(output);
                         }
                         else
                         {
-                           var outputMedia = MixedFlow(downloading, null, downloadStatus.First().Value.Result);
-                           isMediaSuccess = File.Exists(outputMedia);
+                            var outputMedia = MixedFlow(downloading, null, downloadStatus.First().Value.Result);
+                            isMediaSuccess = File.Exists(outputMedia);
                         }
                     }
 
-                    if(downloading.DownloadBase.NeedDownloadContent["downloadAudio"] &&
-                     !downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
+                    if (downloading.DownloadBase.NeedDownloadContent["downloadAudio"] &&
+                        !downloading.DownloadBase.NeedDownloadContent["downloadVideo"])
                     {
                         //音频分离？
                     }
 
                     Pause(downloading);
                 }
+
                 string? outputDanmaku = null;
                 // 如果需要下载弹幕
                 if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])
@@ -777,11 +781,12 @@ public abstract class DownloadService
                     Downloaded = downloaded
                 };
 
+                DownloadStorageService.AddDownloaded(downloadedItem);
                 App.PropertyChangeAsync(() =>
                 {
                     // 加入到下载完成list中，并从下载中list去除
-                    downloadedList.Add(downloadedItem);
-                    downloadingList.Remove(downloading);
+                    DownloadedList.Add(downloadedItem);
+                    DownloadingList.Remove(downloading);
 
                     // 下载完成列表排序
                     var finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
@@ -868,25 +873,22 @@ public abstract class DownloadService
     protected async Task BaseEndTask()
     {
         // 结束任务
-        tokenSource.Cancel();
+        TokenSource?.Cancel();
 
-        await workTask;
+        if (WorkTask != null) await WorkTask;
 
         //先简单等待一下
 
         // 下载数据存储服务
-        var downloadStorageService = new DownloadStorageService();
+        var downloadStorageService = (DownloadStorageService)App.Current.Container.Resolve(typeof(DownloadStorageService));
         // 保存数据
-        foreach (var item in downloadingList)
+        foreach (var item in DownloadingList)
         {
             switch (item.Downloading.DownloadStatus)
             {
                 case DownloadStatus.NotStarted:
-                    break;
                 case DownloadStatus.WaitForDownload:
-                    break;
                 case DownloadStatus.PauseStarted:
-                    break;
                 case DownloadStatus.Pause:
                     break;
                 case DownloadStatus.Downloading:
@@ -896,7 +898,6 @@ public abstract class DownloadService
                     break;
                 case DownloadStatus.DownloadSucceed:
                 case DownloadStatus.DownloadFailed:
-                    break;
                 default:
                     break;
             }
@@ -905,11 +906,6 @@ public abstract class DownloadService
 
             downloadStorageService.UpdateDownloading(item);
         }
-
-        foreach (var item in downloadedList)
-        {
-            downloadStorageService.UpdateDownloaded(item);
-        }
     }
 
     /// <summary>
@@ -917,14 +913,14 @@ public abstract class DownloadService
     /// </summary>
     protected void BaseStart()
     {
-        tokenSource = new CancellationTokenSource();
-        cancellationToken = tokenSource.Token;
+        TokenSource = new CancellationTokenSource();
+        CancellationToken = TokenSource.Token;
         // _notifyIcon = new TaskbarIcon();
         // _notifyIcon.IconSource = new BitmapImage(new Uri("pack://application:,,,/Resources/favicon.ico"));
 
-        workTask = Task.Run(DoWork);
+        WorkTask = Task.Run(DoWork);
     }
-    
+
     #region 抽象接口函数
 
     public abstract void Parse(DownloadingItem downloading);

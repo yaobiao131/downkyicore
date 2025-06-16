@@ -2,7 +2,6 @@
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Models;
-using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
 using Prism.Mvvm;
 
@@ -10,18 +9,6 @@ namespace DownKyi.ViewModels.DownloadManager
 {
     public class DownloadBaseItem : BindableBase
     {
-        public IDialogService? DialogService;
-
-        public DownloadBaseItem()
-        {
-            DialogService = null;
-        }
-
-        public DownloadBaseItem(IDialogService? dialogService)
-        {
-            DialogService = dialogService;
-        }
-
         // model数据
         private DownloadBase? _downloadBase;
 
@@ -40,9 +27,9 @@ namespace DownKyi.ViewModels.DownloadManager
         }
 
         // 视频分区image
-        private DrawingImage _zoneImage;
+        private DrawingImage? _zoneImage;
 
-        public DrawingImage ZoneImage
+        public DrawingImage? ZoneImage
         {
             get => _zoneImage;
             set => SetProperty(ref _zoneImage, value);

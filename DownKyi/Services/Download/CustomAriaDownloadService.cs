@@ -176,7 +176,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
             case DownloadResult.FAILED:
             case DownloadResult.ABORT:
             default:
-                return nullMark;
+                return NullMark;
         }
     }
 
@@ -218,7 +218,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
     /// <returns></returns>
     public override string MixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid)
     {
-        if (videoUid == nullMark)
+        if (videoUid == NullMark)
         {
             return null;
         }
@@ -278,7 +278,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
     /// <exception cref="OperationCanceledException"></exception>
     protected override void Pause(DownloadingItem downloading)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken?.ThrowIfCancellationRequested();
 
         downloading.DownloadStatusTitle = DictionaryResource.GetString("Pausing");
         if (downloading.Downloading.DownloadStatus == DownloadStatus.Pause)
@@ -301,7 +301,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
     /// <returns></returns>
     private async Task<bool> IsExist(DownloadingItem downloading)
     {
-        bool isExist = downloadingList.Contains(downloading);
+        bool isExist = DownloadingList.Contains(downloading);
         if (isExist)
         {
             return true;
@@ -408,7 +408,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
         ariaManager.DownloadFinish += AriaDownloadFinish;
         return ariaManager.GetDownloadStatus(downloading.Downloading.Gid, new Action(() =>
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            CancellationToken?.ThrowIfCancellationRequested();
             switch (downloading.Downloading.DownloadStatus)
             {
                 case DownloadStatus.Pause:
@@ -428,7 +428,7 @@ public class CustomAriaDownloadService : DownloadService, IDownloadService
         DownloadingItem video = null;
         try
         {
-            video = downloadingList.FirstOrDefault(it => it.Downloading.Gid == gid);
+            video = DownloadingList.FirstOrDefault(it => it.Downloading.Gid == gid);
         }
         catch (InvalidOperationException e)
         {

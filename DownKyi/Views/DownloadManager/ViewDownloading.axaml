@@ -163,7 +163,8 @@
                                         Grid.Column="1"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        Command="{Binding DeleteCommand}"
+                                        Command="{Binding ElementName=DownloadingList,Path=((vmdm:ViewDownloadingViewModel)DataContext).DeleteCommand}"
+                                        CommandParameter="{Binding}"
                                         Theme="{StaticResource ImageBtnStyle}"
                                         ToolTip.Tip="{DynamicResource DeleteDownload}">
                                         <ContentControl Width="20" Height="20">
@@ -189,6 +190,7 @@
             RowDefinitions="*,1,50"
             IsVisible="{Binding DownloadingList.Count}">
             <ListBox
+                Name="DownloadingList"
                 Grid.Row="0"
                 BorderThickness="0"
                 ItemContainerTheme="{StaticResource DownloadingStyle}"

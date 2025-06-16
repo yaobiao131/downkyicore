@@ -33,6 +33,7 @@ public class AddToDownloadService
     private IInfoService _videoInfoService;
     private VideoInfoView? _videoInfoView;
     private List<VideoSection>? _videoSections;
+    private DownloadStorageService _downloadStorageService = (DownloadStorageService)App.Current.Container.Resolve(typeof(DownloadStorageService));
 
     // 下载内容
     private bool _downloadAudio = true;
@@ -297,7 +298,7 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = item.DownloadBase.Cid == page.Cid && 
+                    bool f = item.DownloadBase.Cid == page.Cid &&
                              item.Resolution.Id == page.VideoQuality.Quality &&
                              item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
                              (
@@ -328,7 +329,7 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = item.DownloadBase.Cid == page.Cid && 
+                    bool f = item.DownloadBase.Cid == page.Cid &&
                              item.Resolution.Id == page.VideoQuality.Quality &&
                              item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
                              (
@@ -344,30 +345,34 @@ public class AddToDownloadService
                         switch (repeatDownloadStrategy)
                         {
                             case RepeatDownloadStrategy.Ask:
+                            {
+                                var result = ButtonResult.Cancel;
+                                await Dispatcher.UIThread.Invoke(async () =>
                                 {
-                                    var result = ButtonResult.Cancel;
-                                    await Dispatcher.UIThread.Invoke(async () =>
-                                    {
-                                        var param = new DialogParameters
+                                    var param = new DialogParameters
                                     {
                                         { "message", $"{item.Name}已下载，是否重新下载" },
                                     };
 
-                                        await dialogService.ShowDialogAsync(ViewAlreadyDownloadedDialogViewModel.Tag, param, buttonResult => { result = buttonResult.Result; });
+                                    await dialogService.ShowDialogAsync(ViewAlreadyDownloadedDialogViewModel.Tag, param, buttonResult => { result = buttonResult.Result; });
+                                });
+
+                                if (result == ButtonResult.OK)
+                                {
+                                    App.PropertyChangeAsync(() =>
+                                    {
+                                        App.DownloadedList.Remove(item);
+                                        _downloadStorageService.RemoveDownloaded(item);
                                     });
-
-                                    if (result == ButtonResult.OK)
-                                    {
-                                        App.PropertyChangeAsync(() => { App.DownloadedList.Remove(item); });
-                                        isDownloaded = false;
-                                    }
-                                    else
-                                    {
-                                        isDownloaded = true;
-                                    }
-
-                                    break;
+                                    isDownloaded = false;
                                 }
+                                else
+                                {
+                                    isDownloaded = true;
+                                }
+
+                                break;
+                            }
                             case RepeatDownloadStrategy.ReDownload:
                                 isDownloaded = false;
                                 break;

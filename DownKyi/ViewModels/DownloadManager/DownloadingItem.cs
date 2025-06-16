@@ -1,23 +1,17 @@
 ﻿using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Images;
 using DownKyi.Models;
-using DownKyi.Services;
 using DownKyi.Utils;
 using Downloader;
 using Prism.Commands;
-using Prism.Services.Dialogs;
 using DownloadStatus = DownKyi.Models.DownloadStatus;
-using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
 {
     public class DownloadingItem : DownloadBaseItem
     {
-        public DownloadingItem() : this(null)
-        {
-        }
 
-        public DownloadingItem(IDialogService? dialogService) : base(dialogService)
+        public DownloadingItem()
         {
             // 暂停继续按钮
             StartOrPause = ButtonIcon.Instance().Pause;
@@ -216,25 +210,6 @@ namespace DownKyi.ViewModels.DownloadManager
                 default:
                     break;
             }
-        }
-
-        // 下载列表删除事件
-        private DelegateCommand? _deleteCommand;
-        public DelegateCommand DeleteCommand => _deleteCommand ??= new DelegateCommand(ExecuteDeleteCommand);
-
-        /// <summary>
-        /// 下载列表删除事件
-        /// </summary>
-        private async void ExecuteDeleteCommand()
-        {
-            var alertService = new AlertService(DialogService);
-            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
-            if (result != ButtonResult.OK)
-            {
-                return;
-            }
-
-            App.DownloadingList?.Remove(this);
         }
 
         #endregion

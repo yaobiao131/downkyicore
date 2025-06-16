@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DownKyi.Core.BiliApi.BiliUtils;
+using DownKyi.Utils.DataAnnotations;
+using FreeSql.DataAnnotations;
 
 namespace DownKyi.Models;
 
-[Serializable]
-[SqlSugar.SugarTable("download_base", TableDescription = "下载项的基础信息")]
+[Table(Name = "download_base")]
+[Description("下载项的基础信息")]
 public class DownloadBase
 {
     public DownloadBase()
@@ -25,75 +28,75 @@ public class DownloadBase
     }
 
     // 此条下载项的id
-    [SqlSugar.SugarColumn(IsPrimaryKey = true, ColumnName = "id")]
+    [Column(IsPrimary = true, Name = "id")]
     public string Id { get; set; }
 
     // 需要下载的内容
-    [SqlSugar.SugarColumn(IsJson = true, ColumnName = "need_download_content")]
+    [Column(Name = "need_download_content"),]
     public Dictionary<string, bool> NeedDownloadContent { get; set; }
 
     // 视频的id
-    [SqlSugar.SugarColumn(ColumnName = "bvid")]
-    public string Bvid { get; set; }
+    [Column(Name = "bvid")] public string Bvid { get; set; }
 
-    [SqlSugar.SugarColumn(ColumnName = "avid")]
-    public long Avid { get; set; }
+    [Column(Name = "avid")] public long Avid { get; set; }
 
-    [SqlSugar.SugarColumn(ColumnName = "cid")]
-    public long Cid { get; set; }
+    [Column(Name = "cid")] public long Cid { get; set; }
 
-    [SqlSugar.SugarColumn(ColumnName = "episode_id")]
-    public long EpisodeId { get; set; }
+    [Column(Name = "episode_id")] public long EpisodeId { get; set; }
 
     // 视频封面的url
-    [SqlSugar.SugarColumn(ColumnName = "cover_url", ColumnDescription = "视频封面的url")]
+    [Column(Name = "cover_url"), Description("视频封面的url")]
     public string CoverUrl { get; set; }
 
     // 视频page的封面的url
-    [SqlSugar.SugarColumn(ColumnName = "page_cover_url", ColumnDescription = "视频page的封面的url")]
+    [Column(Name = "page_cover_url"), Description("视频page的封面的url")]
     public string PageCoverUrl { get; set; }
 
     // 分区id
-    [SqlSugar.SugarColumn(ColumnName = "zone_id", ColumnDescription = "分区id")]
+    [Column(Name = "zone_id"), Description("分区id")]
     public int ZoneId { get; set; }
 
     // 视频序号
-    [SqlSugar.SugarColumn(ColumnName = "order", ColumnDescription = "视频序号")]
+    [Column(Name = "order"), Description("视频序号")]
     public int Order { get; set; }
 
     // 视频主标题
-    [SqlSugar.SugarColumn(ColumnName = "main_title", ColumnDescription = "视频主标题")]
+    [Column(Name = "main_title"), Description("视频主标题")]
     public string MainTitle { get; set; }
 
     // 视频标题
-    [SqlSugar.SugarColumn(ColumnName = "name", ColumnDescription = "视频标题")]
+    [Column(Name = "name"), Description("视频标题")]
     public string Name { get; set; }
 
     // 时长
-    [SqlSugar.SugarColumn(ColumnName = "duration", ColumnDescription = "时长")]
+    [Column(Name = "duration"), Description("时长")]
     public string Duration { get; set; }
 
     // 视频编码名称，AVC、HEVC
-    [SqlSugar.SugarColumn(ColumnName = "video_codec_name", ColumnDescription = "视频编码名称，AVC、HEVC")]
+    [Column(Name = "video_codec_name")]
+    [Description("视频编码名称，AVC、HEVC")]
     public string VideoCodecName { get; set; }
 
     // 视频画质
-    [SqlSugar.SugarColumn(ColumnName = "resolution", ColumnDescription = "视频画质", IsJson = true)]
+    [Column(Name = "resolution"), Description("视频画质"), JsonMap]
     public Quality Resolution { get; set; }
 
     // 音频编码
-    [SqlSugar.SugarColumn(ColumnName = "audio_codec", ColumnDescription = "音频编码", IsJson = true,IsNullable = true)]
+    [Column(Name = "audio_codec", IsNullable = true), Description("音频编码"), JsonMap]
     public Quality AudioCodec { get; set; }
 
     // 文件路径，不包含扩展名，所有内容均以此路径下载
-    [SqlSugar.SugarColumn(ColumnName = "file_path", ColumnDescription = "文件路径，不包含扩展名，所有内容均以此路径下载")]
+    [Column(Name = "file_path"), Description("文件路径，不包含扩展名，所有内容均以此路径下载")]
     public string FilePath { get; set; }
 
     // 文件大小
-    [SqlSugar.SugarColumn(ColumnName = "file_size", ColumnDescription = "文件大小", IsNullable = true)]
+    [Column(Name = "file_size", IsNullable = true), Description("文件大小")]
     public string? FileSize { get; set; }
 
     // 视频分p(默认为1)
-    [SqlSugar.SugarColumn(ColumnName = "page", ColumnDescription = "视频分p(默认为1)")]
+    [Column(Name = "page"), Description("视频分p(默认为1)")]
     public int Page { get; set; } = 1;
+
+    [Navigate(nameof(Id))] public Downloaded? Downloaded { get; set; }
+    [Navigate(nameof(Id))] public Downloading? Downloading { get; set; }
 }

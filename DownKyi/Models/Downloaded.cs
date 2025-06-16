@@ -1,21 +1,19 @@
 ﻿using System;
-using SqlSugar;
+using FreeSql.DataAnnotations;
 
 namespace DownKyi.Models;
 
-[Serializable]
-[SugarTable(TableName = "downloaded")]
+[Table(Name = "downloaded")]
 public class Downloaded
 {
-    [SugarColumn(IsPrimaryKey = true, ColumnName = "id")]
+    [Column(IsPrimary = true, Name = "id")]
     public string Id { get; set; } = null!;
+
     //  下载速度
-    [SugarColumn(ColumnName = "max_speed_display")]
-    public string? MaxSpeedDisplay { get; set; }
+    [Column(Name = "max_speed_display")] public string? MaxSpeedDisplay { get; set; }
 
     // 完成时间戳
-    [SugarColumn(ColumnName = "finished_timestamp")]
-    public long FinishedTimestamp { get; set; }
+    [Column(Name = "finished_timestamp")] public long FinishedTimestamp { get; set; }
 
     public void SetFinishedTimestamp(long finishedTimestamp)
     {
@@ -27,10 +25,7 @@ public class Downloaded
     }
 
     // 完成时间
-    [SugarColumn(ColumnName = "finished_time")]
-    public string FinishedTime { get; set; }
+    [Column(Name = "finished_time")] public string FinishedTime { get; set; }
 
-    [Navigate(NavigateType.OneToOne, nameof(Id))]
-    [SugarColumn(IsIgnore = true)]
-    public DownloadBase DownloadBase { get; set; }
+    [Navigate(nameof(Id))] public DownloadBase? DownloadBase { get; set; }
 }

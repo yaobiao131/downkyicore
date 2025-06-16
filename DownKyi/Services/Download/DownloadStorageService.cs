@@ -2,13 +2,21 @@
 using System.Linq;
 using DownKyi.Models;
 using DownKyi.ViewModels.DownloadManager;
-using SqlSugar;
+using FreeSql;
 
 namespace DownKyi.Services.Download;
 
 public class DownloadStorageService
 {
-    private readonly ISqlSugarClient _sqlSugarClient = (ISqlSugarClient)App.Current.Container.Resolve(typeof(ISqlSugarClient));
+    private readonly IBaseRepository<Downloading> _downloadingRepository;
+    private readonly IBaseRepository<Downloaded> _downloadedRepository;
+
+
+    public DownloadStorageService(IBaseRepository<Downloading> downloadingRepository, IBaseRepository<Downloaded> downloadedRepository)
+    {
+        _downloadingRepository = downloadingRepository;
+        _downloadedRepository = downloadedRepository;
+    }
 
     #region 下载中数据
 
@@ -27,7 +35,7 @@ public class DownloadStorageService
         downloading.Id = downloadingItem.DownloadBase.Id;
         downloading.DownloadBase = downloadingItem.DownloadBase;
 
-        _sqlSugarClient.UpdateNav(downloading, new UpdateNavRootOptions { IsInsertRoot = true }).IncludesAllFirstLayer().ExecuteCommand();
+        _downloadingRepository.InsertOrUpdate(downloading);
     }
 
     /// <summary>
@@ -41,7 +49,7 @@ public class DownloadStorageService
             return;
         }
 
-        _sqlSugarClient.Deleteable<Downloading>(it => it.Id == downloadingItem.Downloading.Id).ExecuteCommand();
+        _downloadingRepository.Delete(it => it.Id == downloadingItem.Downloading.Id);
     }
 
     /// <summary>
@@ -50,7 +58,7 @@ public class DownloadStorageService
     /// <returns></returns>
     public List<DownloadingItem> GetDownloading()
     {
-        var downloadingList = _sqlSugarClient.Queryable<Downloading>().IncludesAllFirstLayer().ToList();
+        var downloadingList = _downloadingRepository.Select.ToList();
 
         return downloadingList.Select(downloading => new DownloadingItem { Downloading = downloading, DownloadBase = downloading.DownloadBase }).ToList();
     }
@@ -69,7 +77,7 @@ public class DownloadStorageService
         var downloading = downloadingItem.Downloading;
         downloading.DownloadBase = downloadingItem.DownloadBase;
 
-        _sqlSugarClient.UpdateNav(downloading).IncludesAllFirstLayer().ExecuteCommand();
+        _downloadingRepository.Update(downloading);
     }
 
     #endregion
@@ -89,9 +97,11 @@ public class DownloadStorageService
 
         var downloaded = downloadedItem.Downloaded;
         downloaded.Id = downloadedItem.DownloadBase.Id;
-        _sqlSugarClient.AsTenant().BeginTran();
-        _sqlSugarClient.Storageable(downloaded).TranLock().ExecuteCommand();
-        _sqlSugarClient.AsTenant().CommitTran();
+        var exists = _downloadedRepository.Select.Any(download => download.Id == downloaded.Id);
+        if (!exists)
+        {
+            _downloadedRepository.Insert(downloaded);
+        }
     }
 
     /// <summary>
@@ -105,7 +115,7 @@ public class DownloadStorageService
             return;
         }
 
-        _sqlSugarClient.DeleteNav<Downloaded>(it => it.Id == downloadedItem.Downloaded.Id).Include(o1 => o1.DownloadBase).ExecuteCommand();
+        _downloadedRepository.Delete(it => it.Id == downloadedItem.Downloaded.Id);
     }
 
     /// <summary>
@@ -114,7 +124,7 @@ public class DownloadStorageService
     /// <returns></returns>
     public List<DownloadedItem> GetDownloaded()
     {
-        var downloadedList = _sqlSugarClient.Queryable<Downloaded>().IncludesAllFirstLayer().ToList();
+        var downloadedList = _downloadedRepository.Select.LeftJoin(downloaded => downloaded.DownloadBase.Id == downloaded.Id).ToList();
 
         return downloadedList.Select(downloaded => new DownloadedItem { Downloaded = downloaded, DownloadBase = downloaded.DownloadBase }).ToList();
     }
@@ -132,7 +142,12 @@ public class DownloadStorageService
 
         var downloaded = downloadedItem.Downloaded;
         downloaded.DownloadBase = downloadedItem.DownloadBase;
-        _sqlSugarClient.UpdateNav(downloaded).IncludesAllFirstLayer().ExecuteCommand();
+        _downloadedRepository.Update(downloaded);
+    }
+
+    public void ClearDownloaded()
+    {
+        _downloadedRepository.DeleteCascadeByDatabase(item => true);
     }
 
     #endregion

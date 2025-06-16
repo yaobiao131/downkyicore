@@ -3,7 +3,6 @@ using Avalonia.Controls.Documents;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Services.Dialogs;
-using SqlSugar;
 using System.Linq;
 using DownKyi.Core.Settings;
 using DownKyi.Models;

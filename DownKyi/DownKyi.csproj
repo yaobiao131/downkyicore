@@ -31,9 +31,11 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics"/>
         <PackageReference Include="Avalonia.Themes.Simple"/>
         <PackageReference Include="Downloader"/>
+        <PackageReference Include="FreeSql" />
+        <PackageReference Include="FreeSql.DbContext" />
+        <PackageReference Include="FreeSql.Provider.SqliteCore" />
         <PackageReference Include="Prism.Avalonia"/>
         <PackageReference Include="Prism.DryIoc.Avalonia"/>
-        <PackageReference Include="SqlSugarCoreNoDrive" />
         <PackageReference Include="Xaml.Behaviors"/>
         <PackageReference Include="System.Formats.Nrbf" />
     </ItemGroup>
@@ -41,11 +43,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DownKyi.Core\DownKyi.Core.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="Linker.xml">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </None>
     </ItemGroup>
 </Project>

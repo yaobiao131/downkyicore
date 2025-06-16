@@ -23,7 +23,7 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #region 页面属性申明
 
-        private ObservableCollection<DownloadingItem> _downloadingList;
+        private ObservableCollection<DownloadingItem> _downloadingList = new();
 
         public ObservableCollection<DownloadingItem> DownloadingList
         {
@@ -38,14 +38,6 @@ namespace DownKyi.ViewModels.DownloadManager
         {
             // 初始化DownloadingList
             DownloadingList = App.DownloadingList;
-            DownloadingList.CollectionChanged += (sender, e) =>
-            {
-                if (e.Action == NotifyCollectionChangedAction.Add)
-                {
-                    SetDialogService();
-                }
-            };
-            SetDialogService();
         }
 
         #region 命令申明
@@ -163,41 +155,31 @@ namespace DownKyi.ViewModels.DownloadManager
                 var list = DownloadingList.ToList();
                 foreach (var item in list)
                 {
-                    App.PropertyChangeAsync(() => { App.DownloadingList?.Remove(item); });
+                    App.PropertyChangeAsync(() => { App.DownloadingList.Remove(item); });
                 }
             });
         }
 
+
+        // 下载列表删除事件
+        private DelegateCommand<DownloadingItem>? _deleteCommand;
+        public DelegateCommand<DownloadingItem> DeleteCommand => _deleteCommand ??= new DelegateCommand<DownloadingItem>(ExecuteDeleteCommand);
+
+        /// <summary>
+        /// 下载列表删除事件
+        /// </summary>
+        private async void ExecuteDeleteCommand(DownloadingItem downloadingItem)
+        {
+            var alertService = new AlertService(DialogService);
+            var result = await alertService.ShowWarning(DictionaryResource.GetString("ConfirmDelete"), 2);
+            if (result != ButtonResult.OK)
+            {
+                return;
+            }
+
+            App.DownloadingList.Remove(downloadingItem);
+        }
+
         #endregion
-
-        private async void SetDialogService()
-        {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    var list = DownloadingList.ToList();
-                    foreach (var item in list)
-                    {
-                        if (item != null && item.DialogService == null)
-                        {
-                            item.DialogService = DialogService;
-                        }
-                    }
-                });
-            }
-            catch (Exception e)
-            {
-                Console.PrintLine("SetDialogService()发生异常: {0}", e);
-                LogManager.Error($"{Tag}.SetDialogService()", e);
-            }
-        }
-
-        public override void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-            base.OnNavigatedFrom(navigationContext);
-
-            SetDialogService();
-        }
     }
 }
