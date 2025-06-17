@@ -216,11 +216,11 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
             
             try
             {
-                _sqlSugarClient.Ado.BeginTran();
                 int batchSize = 200;
                 var downloadedList = new List<Downloaded>();
                 int processedCount = 0;
 
+                _sqlSugarClient.Ado.BeginTran();
                 foreach (var item in validRecords)
                 {
                     try
@@ -284,6 +284,7 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
                                     .Include(o1 => o1.DownloadBase)
                                     .ExecuteCommand();
 
+                              
                                 downloadedList.Clear();
 
                                 // 更新进度
@@ -298,30 +299,25 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
                     }
                     catch (Exception ex)
                     {
-                        SetMessage($"处理记录 {item.Key} 时出错: {ex.Message}");
-
+                       /*忽略*/
                     }
-
-                    _sqlSugarClient.Ado.CommitTran();
-                    SetMessage("迁移完成");
                 }
-
+                _sqlSugarClient.Ado.CommitTran();
+                dbHelper.Dispose();
+                File.Delete(oldDbPath);
+            
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    RestartVisible = true;
+                    SetMessage("下载信息迁移完成");
+                });
             }
             catch (Exception e)
             {
                 _sqlSugarClient.Ado.RollbackTran();
                 SetMessage($"迁移失败: {e.Message}");
             }
-            dbHelper.Dispose();
-            File.Delete(oldDbPath);
-          
-           
             
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                RestartVisible = true;
-                SetMessage("下载信息迁移完成");
-            });
         }
         else
         {
