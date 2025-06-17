@@ -1076,7 +1076,9 @@ public static class AriaClient
         var aria = JsonConvert.DeserializeObject<T>(result);
         return aria;
     }
-
+    
+    
+    private static readonly  HttpClient HttpClient = new ();
     /// <summary>
     /// http请求
     /// </summary>
@@ -1091,52 +1093,30 @@ public static class AriaClient
 
         try
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "POST";
-            request.Timeout = 5 * 1000;
-            request.ContentType = "application/json";
-            byte[] postData = Encoding.UTF8.GetBytes(parameters);
-            request.ContentLength = postData.Length;
-            using (Stream reqStream = request.GetRequestStream())
-            {
-                reqStream.Write(postData, 0, postData.Length);
-                reqStream.Close();
-            }
-
-            string html = string.Empty;
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            {
-                using (Stream stream = response.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                    {
-                        html = reader.ReadToEnd();
-                    }
-                }
-            }
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Content = new StringContent(parameters, Encoding.UTF8, "application/json");
+        
+            var response = HttpClient.Send(request);
+            response.EnsureSuccessStatusCode();
+        
+            using var reader = new StreamReader(response.Content.ReadAsStream(), Encoding.UTF8);
+            return reader.ReadToEnd();
+        }
+        catch (HttpRequestException e) when (e.StatusCode != null)
+        {
+            var response = (HttpResponseMessage)e.Data["Response"];
+            if (response == null) { return null; }
+        
+            using var reader = new StreamReader(response.Content.ReadAsStream(), Encoding.UTF8);
+            var html = reader.ReadToEnd();
+            
             return html;
         }
-        catch (WebException e)
+        catch (HttpRequestException e)
         {
-            //Utils.Debugging.Console.PrintLine("Request()发生Web异常: {0}", e);
-            //LogManager.Error("AriaClient", e);
-
-            //return Request(url, parameters, retry - 1);
-
-            string html = string.Empty;
-            var response = (HttpWebResponse)e.Response;
-            if (response == null) { return null; }
-            using (Stream stream = response.GetResponseStream())
-            {
-                using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    html = reader.ReadToEnd();
-                }
-            }
-
-            //Console.WriteLine($"本次请求使用的参数：{parameters}");
-            //Console.WriteLine($"返回的web数据：{html}");
-            return html;
+            Console.PrintLine("Request()发生HTTP请求异常: {0}", e);
+            LogManager.Error("AriaClient", e);
+            return Request(url, parameters, retry - 1);
         }
         catch (IOException e)
         {
