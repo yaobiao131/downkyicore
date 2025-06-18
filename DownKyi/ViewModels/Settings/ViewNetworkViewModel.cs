@@ -496,12 +496,18 @@ public class ViewNetworkViewModel : ViewModelBase
 
     public DelegateCommand<object> NetworkProxyCommand => _networkProxyCommand ??= new DelegateCommand<object>(ExecuteNetworkProxyCommand);
 
-    private void ExecuteNetworkProxyCommand(object obj)
+    private async void ExecuteNetworkProxyCommand(object obj)
     {
         if (obj is not NetworkProxy networkProxy) return;
         NetworkProxy = networkProxy;
         var isSucceed = SettingsManager.GetInstance().SetNetworkProxy(networkProxy);
         PublishTip(isSucceed);
+        var alertService = new AlertService(DialogService);
+        var result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
+        if (result == ButtonResult.OK)
+        {
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+        }
     }
     
     // builtin的http代理的地址事件
@@ -562,11 +568,12 @@ public class ViewNetworkViewModel : ViewModelBase
     /// <summary>
     /// 是否开启builtin http代理事件
     /// </summary>
-    private void ExecuteIsHttpProxyCommand()
+    private async void ExecuteIsHttpProxyCommand()
     {
         var isHttpProxy = IsHttpProxy ? AllowStatus.Yes : AllowStatus.No;
 
         var isSucceed = SettingsManager.GetInstance().SetIsHttpProxy(isHttpProxy);
+        
         PublishTip(isSucceed);
     }
 

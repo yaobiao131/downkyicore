@@ -19,11 +19,46 @@ internal static class WebClient
     {
         var handler = new HttpClientHandler();
         handler.AutomaticDecompression = DecompressionMethods.All;
+        switch (SettingsManager.GetInstance().GetNetworkProxy())
+        {
+            case NetworkProxy.None:
+                handler.Proxy = null;
+                break;
+            case NetworkProxy.System:
+                handler.Proxy = WebRequest.GetSystemWebProxy();
+                break;
+            case NetworkProxy.Custom:
+            {
+                try
+                {
+                    handler.Proxy = new WebProxy(SettingsManager.GetInstance().GetCustomProxy());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+                break;
+        }
         
         _httpClient = new HttpClient(handler);
         _httpClient.Timeout = TimeSpan.FromSeconds(30);
         _httpClient.DefaultRequestHeaders.Add("User-Agent", SettingsManager.GetInstance().GetUserAgent());
         _httpClient.DefaultRequestHeaders.Add("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7");
+        
+    }
+    
+    private static IWebProxy CreateCustomProxy()
+    {
+        try
+        {
+            var proxyUrl = SettingsManager.GetInstance().GetCustomProxy();
+            return new WebProxy(proxyUrl);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
     }
 
     internal class SpiOrigin
