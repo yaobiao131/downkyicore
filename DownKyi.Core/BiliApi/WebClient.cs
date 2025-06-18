@@ -17,32 +17,40 @@ internal static class WebClient
 
     static WebClient()
     {
-        var handler = new HttpClientHandler();
-        handler.AutomaticDecompression = DecompressionMethods.All;
+        var socketsHandler = new SocketsHttpHandler
+        {
+            PooledConnectionLifetime = TimeSpan.FromMinutes(10), 
+            PooledConnectionIdleTimeout = TimeSpan.FromMinutes(5),
+            AutomaticDecompression = DecompressionMethods.All,
+            ConnectTimeout = TimeSpan.FromSeconds(10) 
+        };
         switch (SettingsManager.GetInstance().GetNetworkProxy())
         {
             case NetworkProxy.None:
-                handler.Proxy = null;
+                socketsHandler.UseProxy = false;
+                socketsHandler.Proxy = null;
                 break;
             case NetworkProxy.System:
-                handler.Proxy = WebRequest.GetSystemWebProxy();
+                socketsHandler.UseProxy = true;
+                socketsHandler.Proxy = WebRequest.GetSystemWebProxy();
                 break;
             case NetworkProxy.Custom:
             {
                 try
                 {
-                    handler.Proxy = new WebProxy(SettingsManager.GetInstance().GetCustomProxy());
+                    socketsHandler.UseProxy = true;
+                    socketsHandler.Proxy = new WebProxy(SettingsManager.GetInstance().GetCustomProxy());
                 }
                 catch (Exception e)
                 {
+                    socketsHandler.UseProxy = true;
                     Console.WriteLine(e);
                 }
             }
                 break;
         }
         
-        _httpClient = new HttpClient(handler);
-        _httpClient.Timeout = TimeSpan.FromSeconds(30);
+        _httpClient = new HttpClient(socketsHandler);
         _httpClient.DefaultRequestHeaders.Add("User-Agent", SettingsManager.GetInstance().GetUserAgent());
         _httpClient.DefaultRequestHeaders.Add("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7");
         
