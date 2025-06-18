@@ -55,19 +55,6 @@ internal static class WebClient
         _httpClient.DefaultRequestHeaders.Add("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7");
         
     }
-    
-    private static IWebProxy CreateCustomProxy()
-    {
-        try
-        {
-            var proxyUrl = SettingsManager.GetInstance().GetCustomProxy();
-            return new WebProxy(proxyUrl);
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
-    }
 
     internal class SpiOrigin
     {
