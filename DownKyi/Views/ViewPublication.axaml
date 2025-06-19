@@ -19,15 +19,15 @@
                             Orientation="Vertical">
                             <Border
                                 Name="nameCover"
-                                Width="225"
-                                Height="126"
+                                Width="185"
+                                Height="115"
                                 HorizontalAlignment="Center"
                                 CornerRadius="5">
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
                                     <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding CoverUrl}"
-                                                asyncImageLoader:ImageBrushLoader.Width="225"
-                                                asyncImageLoader:ImageBrushLoader.Height="126" />
+                                                asyncImageLoader:ImageBrushLoader.Width="185"
+                                                asyncImageLoader:ImageBrushLoader.Height="115" />
                                 </Border.Background>
                                 <Grid Width="190" Height="119">
                                     <Image
