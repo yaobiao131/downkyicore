@@ -19,8 +19,8 @@
                             <Border
                                 Name="NameCover"
                                 Grid.Row="0"
-                                Width="225"
-                                Height="126"
+                                Width="190"
+                                Height="119"
                                 HorizontalAlignment="Center"
                                 CornerRadius="5">
                                 <Interaction.Behaviors>
@@ -40,8 +40,8 @@
                                 <Border.Background>
                                     <!--  长宽比：1.6  -->
                                     <ImageBrush asyncImageLoader:ImageBrushLoader.Source="{Binding Cover}"
-                                                asyncImageLoader:ImageBrushLoader.Width="225"
-                                                asyncImageLoader:ImageBrushLoader.Height="126" />
+                                                asyncImageLoader:ImageBrushLoader.Width="190"
+                                                asyncImageLoader:ImageBrushLoader.Height="119" />
                                 </Border.Background>
                                 <Border
                                     Name="NameInfoPanel"
