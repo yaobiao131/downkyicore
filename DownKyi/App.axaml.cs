@@ -39,6 +39,9 @@ namespace DownKyi;
 
 public partial class App : PrismApplication
 {
+    public const string RepoOwner = "yaobiao131";
+    public const string RepoName = "downkyicore";
+    
     public static ObservableCollection<DownloadingItem> DownloadingList { get; set; } = new();
     public static ObservableCollection<DownloadedItem> DownloadedList { get; set; } = new();
     public new static App Current => (App)Application.Current!;
@@ -218,31 +221,31 @@ public partial class App : PrismApplication
         {
             await Task.Run(() =>
             {
-                if (e.Action == NotifyCollectionChangedAction.Add)
-                {
-                    if (e.NewItems == null) return;
-                    foreach (var item in e.NewItems)
-                    {
-                        if (item is DownloadedItem downloaded)
-                        {
-                            //Console.WriteLine("DownloadedList添加");
-                            downloadStorageService.AddDownloaded(downloaded);
-                        }
-                    }
-                }
-
-                if (e.Action == NotifyCollectionChangedAction.Remove)
-                {
-                    if (e.OldItems == null) return;
-                    foreach (var item in e.OldItems)
-                    {
-                        if (item is DownloadedItem downloaded)
-                        {
-                            //Console.WriteLine("DownloadedList移除");
-                            downloadStorageService.RemoveDownloaded(downloaded);
-                        }
-                    }
-                }
+                // if (e.Action == NotifyCollectionChangedAction.Add)
+                // {
+                //     if (e.NewItems == null) return;
+                //     foreach (var item in e.NewItems)
+                //     {
+                //         if (item is DownloadedItem downloaded)
+                //         {
+                //             //Console.WriteLine("DownloadedList添加");
+                //             downloadStorageService.AddDownloaded(downloaded);
+                //         }
+                //     }
+                // }
+                //
+                // if (e.Action == NotifyCollectionChangedAction.Remove)
+                // {
+                //     if (e.OldItems == null) return;
+                //     foreach (var item in e.OldItems)
+                //     {
+                //         if (item is DownloadedItem downloaded)
+                //         {
+                //             //Console.WriteLine("DownloadedList移除");
+                //             downloadStorageService.RemoveDownloaded(downloaded);
+                //         }
+                //     }
+                // }
             });
         };
 

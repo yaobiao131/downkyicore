@@ -1,67 +1,73 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             Width="400"
-             Height="360"
+             Width="520"
+             Height="400"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              xmlns:vmd="clr-namespace:DownKyi.ViewModels.Dialogs"
              x:DataType="vmd:NewVersionAvailableDialogViewModel"
+             xmlns:local="using:DownKyi.Converter"
              x:Class="DownKyi.Views.Dialogs.NewVersionAvailableDialog">
-    <Border BorderBrush="{DynamicResource BrushWindowBorder}" BorderThickness="1,1,0.6,0.6">
-        <Grid RowDefinitions="40,*">
-            <Grid
-                Grid.Row="0"
-                Background="{DynamicResource BrushBackgroundGreyTranslucent3}"
-                KeyboardNavigation.TabNavigation="None" ColumnDefinitions="*,100,*,50">
-                <TextBlock
-                    Text="{DynamicResource NewVersionTitle}"
-                    FontSize="15"
-                    VerticalAlignment="Center"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Grid.Row="0" />
-                <Button
-                    Grid.Column="4"
-                    Command="{Binding CloseCommand}"
-                    Theme="{StaticResource ImageBtnStyle}">
-                    <Path
-                        Width="{Binding CloseIcon.Width}"
-                        Height="{Binding CloseIcon.Height}"
+    
+    <UserControl.Resources>
+        <local:MarkdownToInlinesConverter x:Key="MarkdownConverter"/>
+    </UserControl.Resources>
+    
+    <Border Background="{DynamicResource BrushBackground}"
+            CornerRadius="8"
+            BorderBrush="{DynamicResource BrushPrimary}"
+            BorderThickness="1">
+        
+        <Grid RowDefinitions="auto,*,auto" Margin="16">
+            <Grid Grid.Row="0" Margin="0 0 0 16">
+                <StackPanel Orientation="Horizontal" 
+                            VerticalAlignment="Center"
+                            Spacing="8">
+                    <PathIcon Data="M12 4V20M20 12H4" 
+                              Width="20"
+                              Height="20"/>
+                    
+                    <TextBlock Text="{DynamicResource NewVersionTitle}"
+                               FontSize="18"
+                               FontWeight="Bold"/>
+                </StackPanel>
+                
+                <Button HorizontalAlignment="Right"
+                        ToolTip.Tip="{DynamicResource Close}"
+                        Theme="{StaticResource ImageBtnStyle}"
+                        Command="{Binding CloseCommand}">
+                    <PathIcon    
                         Data="{Binding CloseIcon.Data}"
-                        Fill="{Binding CloseIcon.Fill}"
-                        Stretch="UniformToFill" />
+                        Width="16"
+                        Height="16"/>
                 </Button>
             </Grid>
-
-            <Grid Grid.Row="1" RowDefinitions="4*,*,15">
-                <ScrollViewer
-                    Grid.Row="0"
-                    VerticalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding Messages}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Margin="15,5,0,0" TextWrapping="Wrap">
-                                    <TextBlock.Inlines>
-                                        <Run Text="{Binding Text}"
-
-                                             FontWeight="{Binding FontWeight}"
-                                             FontSize="{Binding FontSize}" />
-                                    </TextBlock.Inlines>
-                                </TextBlock>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <Button
-                    Grid.Row="1"
-                    Width="90"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Command="{Binding AllowCommand}"
-                    Content="{DynamicResource ActionUpdate}"
-                    FontSize="12"
-                    Theme="{StaticResource BtnStyle}" />
-            </Grid>
+            
+            <ScrollViewer Grid.Row="1"
+                          VerticalScrollBarVisibility="Auto"
+                          Padding="0 8">
+                <TextBlock Margin="15,0,0,0"
+                    Inlines="{Binding MarkdownText,
+                 Converter={StaticResource MarkdownConverter}}"
+                           TextWrapping="Wrap"/>
+            </ScrollViewer>
+            
+    
+            <StackPanel Grid.Row="2" 
+                        Orientation="Horizontal" 
+                        HorizontalAlignment="Right"
+                        Spacing="12"
+                        Margin="0 16 0 0">
+                
+                <Button Content="{DynamicResource SkipCurrentVersion}"
+                        IsVisible="{Binding EnableSkipVersionOnLaunch}"
+                        Command="{Binding SkipCurrentVersionCommand}"
+                        MinWidth="100"/>
+                
+                <Button Content="{DynamicResource ActionUpdate}"
+                        Command="{Binding AllowCommand}"
+                        MinWidth="100"/>
+            </StackPanel>
         </Grid>
     </Border>
 </UserControl>
