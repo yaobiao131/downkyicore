@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using DownKyi.Commands;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Models;
@@ -104,46 +108,35 @@ public class ViewAboutViewModel : ViewModelBase
     }
 
     // 检查更新事件
-    private DelegateCommand? _checkUpdateCommand;
+    private ICommand? _checkUpdateCommand;
 
-    public DelegateCommand CheckUpdateCommand => _checkUpdateCommand ??= new DelegateCommand(ExecuteCheckUpdateCommand);
+    public ICommand CheckUpdateCommand => _checkUpdateCommand ??= new AsyncDelegateCommand(ExecuteCheckUpdateCommand);
 
-    private bool _isCheckVersion = false;
+
     /// <summary>
     /// 检查更新事件
     /// </summary>
-    private async void ExecuteCheckUpdateCommand()
+    /// <param name="parameter"></param>
+    private async Task ExecuteCheckUpdateCommand(object obj,CancellationToken token)
     {
-        if (_isCheckVersion) return;
-        _isCheckVersion = true;
-        var (version, body) = await new VersionCheckerService().GetLatestVersion();
-        if(version is null)
+        var service = new VersionCheckerService(App.RepoOwner, App.RepoName,_isReceiveBetaVersion);
+        var  release = await service.GetLatestReleaseAsync();
+        if(GitHubRelease.IsNullOrEmpty(release))
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
-            _isCheckVersion = false;
             return;
         }
-        #if DEBUG
-        var versionString = AppVersion.Replace("-debug", string.Empty);
-        #else
-          var versionString = AppVersion;
-        #endif
-        var currVersion = Version.Parse(versionString);
-        if(currVersion < version)
+        
+        if(service.IsNewVersionAvailable(release.TagName))
         {
-            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new DialogParameters { { "body", body } }, result =>
-            {
-                if(result.Result == ButtonResult.OK)
-                {
-                    PlatformHelper.Open("https://github.com/yaobiao131/downkyicore/releases/latest", EventAggregator);
-                }
-            })!;
+            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
+                DialogParameters { { "release", release } })!;
         }
         else
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("已是最新版~");
         }
-        _isCheckVersion = false;
+       
     }
 
     // 意见反馈事件

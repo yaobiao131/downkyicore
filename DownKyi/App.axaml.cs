@@ -39,6 +39,9 @@ namespace DownKyi;
 
 public partial class App : PrismApplication
 {
+    public const string RepoOwner = "yaobiao131";
+    public const string RepoName = "downkyicore";
+    
     public static ObservableCollection<DownloadingItem> DownloadingList { get; set; } = new();
     public static ObservableCollection<DownloadedItem> DownloadedList { get; set; } = new();
     public new static App Current => (App)Application.Current!;
@@ -230,7 +233,7 @@ public partial class App : PrismApplication
                         }
                     }
                 }
-
+                
                 if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
                     if (e.OldItems == null) return;

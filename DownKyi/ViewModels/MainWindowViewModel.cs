@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
+using DownKyi.Models;
 using DownKyi.Services;
 using DownKyi.Utils;
 using DownKyi.ViewModels.Dialogs;
@@ -124,6 +126,7 @@ public class MainWindowViewModel : BindableBase
         LoadedCommand = new DelegateCommand(() =>
         {
             Upgrade();
+            CheckForUpdates();
             _clipboardListener = new ClipboardListener(App.Current.MainWindow);
             _clipboardListener.Changed += ClipboardListenerOnChanged;
             var param = new NavigationParameters
@@ -179,5 +182,26 @@ public class MainWindowViewModel : BindableBase
     private void Upgrade()
     {
         _dialogService.ShowDialogAsync(ViewUpgradingDialogViewModel.Tag, new DialogParameters(), (result) => { });
+    }
+    
+    private async void CheckForUpdates()
+    {
+        try
+        {
+            var isAutoUpdate = SettingsManager.GetInstance().GetAutoUpdateWhenLaunch() != AllowStatus.Yes;
+            if(isAutoUpdate) return;
+            var service = new VersionCheckerService(App.RepoOwner,App.RepoName,
+                SettingsManager.GetInstance().GetIsReceiveBetaVersion() == AllowStatus.Yes);
+            var release = await service.GetLatestReleaseAsync(SettingsManager.GetInstance().GetSkipVersionOnLaunch());
+            if (release != null && service.IsNewVersionAvailable(release.TagName))
+            {
+                await _dialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
+                    DialogParameters { { "release", release },{"enableSkipVersion",true} })!;
+            }
+        }
+        catch (Exception ex)
+        {
+            /**/
+        }
     }
 }

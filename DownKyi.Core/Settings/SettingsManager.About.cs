@@ -63,4 +63,25 @@ public partial class SettingsManager
         _appSettings.About.AutoUpdateWhenLaunch = autoUpdateWhenLaunch;
         return SetSettings();
     }
+
+    public bool SetSkipVersionOnLaunch(string skipVersionOnLaunch)
+    {
+        if (Version.TryParse(skipVersionOnLaunch,out var _))
+        {
+            _appSettings.About.SkipVersionOnLaunch = skipVersionOnLaunch;
+            return SetSettings();
+        }
+
+        return false;
+    }
+
+    public string GetSkipVersionOnLaunch()
+    {
+        if (Version.TryParse(_appSettings.About.SkipVersionOnLaunch,out var _))
+        {
+            return _appSettings.About.SkipVersionOnLaunch;
+        }
+        return string.Empty;
+    }
+    
 }
