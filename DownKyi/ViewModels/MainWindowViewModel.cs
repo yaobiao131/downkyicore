@@ -190,9 +190,10 @@ public class MainWindowViewModel : BindableBase
         {
             var isAutoUpdate = SettingsManager.GetInstance().GetAutoUpdateWhenLaunch() != AllowStatus.Yes;
             if(isAutoUpdate) return;
-            var service = new VersionCheckerService(App.RepoOwner,App.RepoName);
+            var service = new VersionCheckerService(App.RepoOwner,App.RepoName,
+                SettingsManager.GetInstance().GetIsReceiveBetaVersion() == AllowStatus.Yes);
             var release = await service.GetLatestReleaseAsync(SettingsManager.GetInstance().GetSkipVersionOnLaunch());
-            if (release != null && service.IsNewVersionAvailable(new AppInfo().VersionName, release.TagName))
+            if (release != null && service.IsNewVersionAvailable(release.TagName))
             {
                 await _dialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
                     DialogParameters { { "release", release },{"enableSkipVersion",true} })!;
