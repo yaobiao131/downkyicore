@@ -15,6 +15,7 @@ using DownKyi.Models;
 using Prism.Commands;
 using Prism.Services.Dialogs;
 using SqlSugar;
+using Exception = System.Exception;
 
 namespace DownKyi.ViewModels.Dialogs;
 
@@ -89,6 +90,7 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
     {
         Task.Run(() => { Upgrade1_0_20To1_0_21(); });
     }
+    
 
     private void Upgrade1_0_20To1_0_21()
     {
@@ -135,43 +137,48 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
         {
             noMigrate = true;
         }
-
-
-#if DEBUG
-        var oldDbPath = StorageManager.GetDownload().Replace(".db", "_debug.db");
-#else
+        
         var oldDbPath = StorageManager.GetDownload();
-#endif
-
         if (File.Exists(oldDbPath))
         {
             SetMessage("正在迁移下载信息");
-#if DEBUG
-            var dbHelper = new DbHelper(oldDbPath);
-#else
-            var dbHelper = new DbHelper(oldDbPath, "bdb8eb69-3698-4af9-b722-9312d0fba623");
-#endif
-            var objects = new Dictionary<string, object>();
-            dbHelper.ExecuteQuery("select * from downloaded", reader =>
+
+            var dbHelper = new SqliteDatabase(oldDbPath, "bdb8eb69-3698-4af9-b722-9312d0fba623");
+            var validRecords = new Dictionary<string, DownloadedWithData>();
+            var totalCount = 0;
+            dbHelper.ExecuteQuery(@"SELECT d.id, d.data as downloaded_data, db.data as download_base_data
+                                  FROM downloaded d
+                                  JOIN download_base db ON d.id = db.id",reader =>
             {
                 while (reader.Read())
                 {
                     try
                     {
                         // 读取字节数组
-                        var array = (byte[])reader["data"];
+                        var array = (byte[])reader["downloaded_data"];
                         // 定义一个流
                         using var stream = new MemoryStream(array);
                         // 反序列化
                         var record = NrbfDecoder.DecodeClassRecord(stream);
                         if (!record.TypeNameMatches(typeof(Downloaded))) continue;
-                        var obj = new Downloaded
+                        
+                        var downloadedObj = new Downloaded
                         {
                             MaxSpeedDisplay = record.GetString($"<{nameof(Downloaded.MaxSpeedDisplay)}>k__BackingField"),
                             FinishedTime = record.GetString($"<{nameof(Downloaded.FinishedTime)}>k__BackingField") ?? "",
                             FinishedTimestamp = record.GetInt64($"<{nameof(Downloaded.FinishedTimestamp)}>k__BackingField")
                         };
-                        objects.Add((string)reader["id"], obj);
+                       
+                        
+                        validRecords.Add(
+                            (string)reader["id"], 
+                            new DownloadedWithData 
+                            { 
+                                Downloaded = downloadedObj,
+                                DownloadBaseData = (byte[])reader["download_base_data"]
+                            });
+                        
+                        totalCount++;
                     }
                     catch (Exception e)
                     {
@@ -206,32 +213,33 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
                 return quality;
             });
             var i = 0;
-            var downloadedList = new List<Downloaded>();
-            foreach (var item in objects)
+            
+            try
             {
-                if (item.Value is Downloaded downloaded)
+                int batchSize = 200;
+                var downloadedList = new List<Downloaded>();
+                int processedCount = 0;
+
+                _sqlSugarClient.Ado.BeginTran();
+                foreach (var item in validRecords)
                 {
-                    dbHelper.ExecuteQuery($"select * from download_base where id = '{item.Key}'", reader =>
+                    try
                     {
-                        while (reader.Read())
+                        using var stream = new MemoryStream(item.Value.DownloadBaseData);
+                        var record = NrbfDecoder.DecodeClassRecord(stream);
+                        if (record.TypeNameMatches(typeof(DownloadBase)))
                         {
-                            var array = (byte[])reader["data"];
-                            // 定义一个流
-                            using var stream = new MemoryStream(array);
-                            var record = NrbfDecoder.DecodeClassRecord(stream);
-                            if (!record.TypeNameMatches(typeof(DownloadBase))) continue;
-                            var needDownloadContentRecord = record.GetClassRecord($"<{nameof(DownloadBase.NeedDownloadContent)}>k__BackingField");
-                            var needDownloadContent = new Dictionary<string, bool>();
-                            if (needDownloadContentRecord != null)
-                            {
-                                needDownloadContent = readNeedDownloadContent(needDownloadContentRecord);
-                            }
+                            var needDownloadContentRecord =
+                                record.GetClassRecord($"<{nameof(DownloadBase.NeedDownloadContent)}>k__BackingField");
+                            var needDownloadContent = needDownloadContentRecord != null
+                                ? readNeedDownloadContent(needDownloadContentRecord)
+                                : new Dictionary<string, bool>();
 
                             var download = new Downloaded
                             {
-                                MaxSpeedDisplay = downloaded.MaxSpeedDisplay,
-                                FinishedTime = downloaded.FinishedTime,
-                                FinishedTimestamp = downloaded.FinishedTimestamp,
+                                MaxSpeedDisplay = item.Value.Downloaded.MaxSpeedDisplay,
+                                FinishedTime = item.Value.Downloaded.FinishedTime,
+                                FinishedTimestamp = item.Value.Downloaded.FinishedTimestamp,
                                 DownloadBase = new DownloadBase
                                 {
                                     NeedDownloadContent = needDownloadContent,
@@ -239,48 +247,77 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
                                     Avid = record.GetInt64($"<{nameof(DownloadBase.Avid)}>k__BackingField"),
                                     Cid = record.GetInt64($"<{nameof(DownloadBase.Cid)}>k__BackingField"),
                                     EpisodeId = record.GetInt64($"<{nameof(DownloadBase.EpisodeId)}>k__BackingField"),
-                                    CoverUrl = record.GetString($"<{nameof(DownloadBase.CoverUrl)}>k__BackingField") ?? "",
-                                    PageCoverUrl = record.GetString($"<{nameof(DownloadBase.PageCoverUrl)}>k__BackingField") ?? "",
+                                    CoverUrl = record.GetString($"<{nameof(DownloadBase.CoverUrl)}>k__BackingField") ??
+                                               "",
+                                    PageCoverUrl =
+                                        record.GetString($"<{nameof(DownloadBase.PageCoverUrl)}>k__BackingField") ?? "",
                                     ZoneId = record.GetInt32($"<{nameof(DownloadBase.ZoneId)}>k__BackingField"),
                                     Order = record.GetInt32($"<{nameof(DownloadBase.Order)}>k__BackingField"),
-                                    MainTitle = record.GetString($"<{nameof(DownloadBase.MainTitle)}>k__BackingField") ?? "",
+                                    MainTitle =
+                                        record.GetString($"<{nameof(DownloadBase.MainTitle)}>k__BackingField") ?? "",
                                     Name = record.GetString($"<{nameof(DownloadBase.Name)}>k__BackingField") ?? "",
-                                    Duration = record.GetString($"<{nameof(DownloadBase.Duration)}>k__BackingField") ?? "",
-                                    VideoCodecName = record.GetString($"<{nameof(DownloadBase.VideoCodecName)}>k__BackingField") ?? "",
-                                    Resolution = readQuality(record.GetClassRecord($"<{nameof(DownloadBase.Resolution)}>k__BackingField")),
-                                    AudioCodec = readQuality(record.GetClassRecord($"<{nameof(DownloadBase.AudioCodec)}>k__BackingField")),
-                                    FilePath = record.GetString($"<{nameof(DownloadBase.FilePath)}>k__BackingField") ?? "",
-                                    FileSize = record.GetString($"<{nameof(DownloadBase.FileSize)}>k__BackingField") ?? "",
+                                    Duration = record.GetString($"<{nameof(DownloadBase.Duration)}>k__BackingField") ??
+                                               "",
+                                    VideoCodecName =
+                                        record.GetString($"<{nameof(DownloadBase.VideoCodecName)}>k__BackingField") ??
+                                        "",
+                                    Resolution =
+                                        readQuality(
+                                            record.GetClassRecord(
+                                                $"<{nameof(DownloadBase.Resolution)}>k__BackingField")),
+                                    AudioCodec =
+                                        readQuality(
+                                            record.GetClassRecord(
+                                                $"<{nameof(DownloadBase.AudioCodec)}>k__BackingField")),
+                                    FilePath = record.GetString($"<{nameof(DownloadBase.FilePath)}>k__BackingField") ??
+                                               "",
+                                    FileSize = record.GetString($"<{nameof(DownloadBase.FileSize)}>k__BackingField") ??
+                                               "",
                                     Page = record.GetInt32($"<{nameof(DownloadBase.Page)}>k__BackingField")
                                 }
                             };
                             downloadedList.Add(download);
-                            i++;
-                            // 分批插入数据库，避免一次性插入过多数据导致性能问题，最后一批可能小于100条
-                            if (i % 200 == 0 || i == objects.Count)
+                            processedCount++;
+                            if (processedCount % batchSize == 0 || processedCount == totalCount)
                             {
-                                _sqlSugarClient.InsertNav(downloadedList).Include(o1 => o1.DownloadBase).ExecuteCommand();
+                                _sqlSugarClient.InsertNav(downloadedList)
+                                    .Include(o1 => o1.DownloadBase)
+                                    .ExecuteCommand();
+
+                              
                                 downloadedList.Clear();
-                                var percent = i / (double)objects.Count * 100;
-                                var percentStr = $"{i}/{objects.Count}";
+
+                                // 更新进度
+                                var percent = processedCount / (double)totalCount * 100;
                                 Dispatcher.UIThread.Invoke(() =>
                                 {
                                     Percent = percent;
-                                    SetMessage($"正在迁移下载信息({percentStr})");
+                                    SetMessage($"正在迁移下载信息({processedCount}/{totalCount})");
                                 });
                             }
                         }
-                    });
+                    }
+                    catch (Exception ex)
+                    {
+                       /*忽略*/
+                    }
                 }
+                _sqlSugarClient.Ado.CommitTran();
+                dbHelper.Dispose();
+                File.Delete(oldDbPath);
+            
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    RestartVisible = true;
+                    SetMessage("下载信息迁移完成");
+                });
             }
-
-            dbHelper.Close();
-            File.Delete(oldDbPath);
-            Dispatcher.UIThread.Invoke(() =>
+            catch (Exception e)
             {
-                RestartVisible = true;
-                SetMessage("下载信息迁移完成");
-            });
+                _sqlSugarClient.Ado.RollbackTran();
+                SetMessage($"迁移失败: {e.Message}");
+            }
+            
         }
         else
         {
@@ -292,4 +329,11 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
             Dispatcher.UIThread.Invoke(() => RaiseRequestClose(new DialogResult()));
         }
     }
+    
+    private class DownloadedWithData
+    {
+        public Downloaded Downloaded { get; set; }
+        public byte[] DownloadBaseData { get; set; }
+    }
+
 }
