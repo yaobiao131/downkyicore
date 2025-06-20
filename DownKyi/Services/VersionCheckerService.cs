@@ -22,7 +22,7 @@ namespace DownKyi.Services
         }
 
      
-        public async Task<GitHubRelease?> GetLatestReleaseAsync(string? ignoreVersion = null)
+        public async Task<GitHubRelease?> GetLatestReleaseAsync(string? excludedVersion  = null)
         {
             using var client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", "downkyi");
@@ -34,41 +34,20 @@ namespace DownKyi.Services
                 {
                     var releasesUrl = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases";
                     var releasesJson = await client.GetStringAsync(releasesUrl);
-
                     var releases = JsonConvert.DeserializeObject<GitHubRelease[]>(releasesJson);
-                    if (string.IsNullOrEmpty(ignoreVersion))
-                    {
-                        return releases?.First();
-                    }
-                    else
-                    {
-                        if (releases != null && 
-                            releases.Any() && 
-                            (releases.First().TagName.TrimStart('v') != ignoreVersion))
-                        {
-                            return releases.First();
-                        }
-                    }
-                
+            
+                    return string.IsNullOrEmpty(excludedVersion) 
+                        ? releases?.FirstOrDefault() 
+                        : releases?.FirstOrDefault(r => r.TagName.TrimStart('v') != excludedVersion);
                 }
                 else
                 {
                     var latestReleaseUrl = $"https://api.github.com/repos/{_repoOwner}/{_repoName}/releases/latest";
                     var latestReleaseJson = await client.GetStringAsync(latestReleaseUrl);
                     var release = JsonConvert.DeserializeObject<GitHubRelease>(latestReleaseJson);
-
-                    if (string.IsNullOrEmpty(ignoreVersion))
-                    {
-                        return release;
-                    }
-                    else
-                    {
-                        if (release != null &&
-                            release.TagName.TrimStart('v') != ignoreVersion)
-                        {
-                            return release;
-                        }
-                    }
+            
+                    return string.IsNullOrEmpty(excludedVersion) || 
+                           release?.TagName.TrimStart('v') != excludedVersion ? release : null;
                 }
 #pragma warning restore IL2026
             }
@@ -83,9 +62,13 @@ namespace DownKyi.Services
       
 
 
-        public bool IsNewVersionAvailable(string currentVersion, string latestVersion)
+        public bool IsNewVersionAvailable(string latestVersion)
         {
-            var current = new Version(currentVersion.TrimStart('v'));
+            string v = new AppInfo().VersionName;
+#if DEBUG
+            v = v.Replace("-debug", string.Empty);
+#endif
+            var current = new Version(v.TrimStart('v'));
             var latest = new Version(latestVersion.TrimStart('v'));
             return latest > current;
         }

@@ -127,14 +127,7 @@ public class ViewAboutViewModel : ViewModelBase
             return;
         }
         
-        
-        #if DEBUG
-        var versionString = AppVersion.Replace("-debug", string.Empty);
-        #else
-          var versionString = AppVersion;
-        #endif
-        
-        if(service.IsNewVersionAvailable(versionString, release.TagName))
+        if(service.IsNewVersionAvailable(release.TagName))
         {
             await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
                 DialogParameters { { "release", release } })!;
