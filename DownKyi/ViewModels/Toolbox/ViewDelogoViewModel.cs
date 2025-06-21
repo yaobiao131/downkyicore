@@ -1,12 +1,30 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Shapes;
+using Avalonia.Media;
+using Avalonia.Media.Imaging;
 using Avalonia.VisualTree;
+using DownKyi.Commands;
+using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.FFMpeg;
+using DownKyi.Core.Storage;
 using DownKyi.Events;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
+using Bitmap = Avalonia.Media.Imaging.Bitmap;
+using Path = System.IO.Path;
+
 
 namespace DownKyi.ViewModels.Toolbox;
 
@@ -16,6 +34,15 @@ public class ViewDelogoViewModel : ViewModelBase
 
     // 是否正在执行去水印任务
     private bool _isDelogo = false;
+
+    private IImage _source;
+
+
+    public IImage Source
+    {
+        get => _source;
+        set => SetProperty(ref _source, value);
+    }
 
     #region 页面属性申明
 
@@ -32,7 +59,11 @@ public class ViewDelogoViewModel : ViewModelBase
     public int LogoWidth
     {
         get => _logoWidth;
-        set => SetProperty(ref _logoWidth, value);
+        set
+        {
+            WatermarkArea = new Rect(_watermarkArea.X, _watermarkArea.Y, value, _watermarkArea.Height );
+            SetProperty(ref _logoWidth, value);
+        }
     }
 
     private int _logoHeight;
@@ -40,7 +71,11 @@ public class ViewDelogoViewModel : ViewModelBase
     public int LogoHeight
     {
         get => _logoHeight;
-        set => SetProperty(ref _logoHeight, value);
+        set
+        {
+            WatermarkArea = new Rect(_watermarkArea.X, _watermarkArea.Y, _watermarkArea.Width,value );
+            SetProperty(ref _logoHeight, value);
+        }
     }
 
     private int _logoX;
@@ -48,7 +83,11 @@ public class ViewDelogoViewModel : ViewModelBase
     public int LogoX
     {
         get => _logoX;
-        set => SetProperty(ref _logoX, value);
+        set
+        {
+            WatermarkArea = new Rect(value, _watermarkArea.Y, _watermarkArea.Width,_watermarkArea.Height );
+            SetProperty(ref _logoX, value);
+        }
     }
 
     private int _logoY;
@@ -56,7 +95,11 @@ public class ViewDelogoViewModel : ViewModelBase
     public int LogoY
     {
         get => _logoY;
-        set => SetProperty(ref _logoY, value);
+        set
+        {
+            WatermarkArea = new Rect( _watermarkArea.X, value, _watermarkArea.Width,_watermarkArea.Height );
+            SetProperty(ref _logoY, value);
+        }
     }
 
     private string _status;
@@ -67,6 +110,38 @@ public class ViewDelogoViewModel : ViewModelBase
         set => SetProperty(ref _status, value);
     }
 
+    private bool _updatingWatermarkArea;
+    
+    private Rect _watermarkArea;
+
+    public Rect WatermarkArea
+    {
+        get => _watermarkArea;
+        set
+        {
+            if (_updatingWatermarkArea) return;
+            _updatingWatermarkArea = true;
+            LogoHeight = (int)Math.Round(value.Height);
+            LogoWidth = (int)Math.Round(value.Width);
+            LogoX = (int)Math.Round(value.X);
+            LogoY = (int)Math.Round(value.Y);
+            SetProperty(ref _watermarkArea, value);
+            _updatingWatermarkArea = false;
+        }
+    }
+
+
+    public List<SolidColorBrush> AvailableColors { get; }
+    
+    
+    private SolidColorBrush _selectedColor;
+
+    public SolidColorBrush SelectedColor
+    {
+        get => _selectedColor;
+        set => SetProperty(ref _selectedColor, value);
+    }
+
     #endregion
 
     public ViewDelogoViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
@@ -74,34 +149,51 @@ public class ViewDelogoViewModel : ViewModelBase
         #region 属性初始化
 
         VideoPath = string.Empty;
-
-        LogoWidth = 0;
-        LogoHeight = 0;
-        LogoX = 0;
-        LogoY = 0;
-
+        
+        
+        AvailableColors =  new (){
+            new SolidColorBrush(Colors.Red),
+            new SolidColorBrush(Colors.Green),
+            new SolidColorBrush(Colors.Blue),
+            new SolidColorBrush(Colors.White),
+            new SolidColorBrush(Colors.Black),
+            new SolidColorBrush(Colors.Gray),
+            new SolidColorBrush(Colors.Fuchsia),
+        };
+        SelectedColor = AvailableColors[0];
+        WatermarkArea = new Rect(20,20,100,100);
         #endregion
     }
 
     #region 命令申明
 
     // 选择视频事件
-    private DelegateCommand? _selectVideoCommand;
+    private AsyncDelegateCommand? _selectVideoCommand;
 
-    public DelegateCommand SelectVideoCommand => _selectVideoCommand ??= new DelegateCommand(ExecuteSelectVideoCommand);
+    public AsyncDelegateCommand SelectVideoCommand => _selectVideoCommand ??= new AsyncDelegateCommand(ExecuteSelectVideoCommand);
 
     /// <summary>
     /// 选择视频事件
     /// </summary>
-    private async void ExecuteSelectVideoCommand()
+    private async Task ExecuteSelectVideoCommand(object obj, CancellationToken token)
     {
         if (_isDelogo)
         {
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
-
         VideoPath = await DialogUtils.SelectVideoFile();
+        if (!string.IsNullOrEmpty(VideoPath))
+        {
+            try
+            {
+                Source = new Bitmap(await FFMpeg.Instance.ExtractVideoFrame(VideoPath, TimeSpan.FromSeconds(1)));
+            }
+            catch (Exception e)
+            {
+                /**/
+            }
+        }
     }
 
     // 去水印事件
@@ -158,7 +250,15 @@ public class ViewDelogoViewModel : ViewModelBase
         {
             // 执行去水印程序
             _isDelogo = true;
-            FFMpeg.Instance.Delogo(VideoPath, newFileName, LogoX, LogoY, LogoWidth, LogoHeight, output => { Status += output + "\n"; });
+            FFMpeg.Instance.Delogo
+            (
+                VideoPath, 
+                newFileName,
+                _logoX,
+                _logoY, 
+                _logoWidth,
+                _logoHeight, 
+                output => { Status += output + "\n"; });
             _isDelogo = false;
         });
     }
@@ -179,8 +279,18 @@ public class ViewDelogoViewModel : ViewModelBase
             return;
         }
 
-        // TextBox滚动到底部
-        output.GetVisualDescendants().OfType<ScrollViewer>().FirstOrDefault()?.ScrollToEnd();
+        var presenter = output.GetVisualDescendants()
+            .OfType<TextPresenter>()
+            .FirstOrDefault();
+
+        if (presenter == null)
+            return;
+        
+        int lineCount = presenter.TextLayout?.TextLines?.Count ?? 0;
+        if (lineCount > 0)
+        {
+            output.ScrollToLine(lineCount - 1);
+        }
     }
 
     #endregion

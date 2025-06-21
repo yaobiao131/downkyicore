@@ -3,6 +3,7 @@ using DownKyi.Core.Settings;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Helpers;
+using FFMpegCore.Pipes;
 
 namespace DownKyi.Core.FFMpeg;
 
@@ -50,7 +51,6 @@ public class FFMpeg
                 options => options.WithCustomArgument("-strict -2").WithVideoCodec("copy").WithAudioCodec("copy").ForceFormat("mp4")
             );
         }
-
         if (video == null || !File.Exists(video))
         {
             if (SettingsManager.GetInstance().GetIsTranscodingAacToMp3() == AllowStatus.Yes)
@@ -151,7 +151,7 @@ public class FFMpeg
     /// <param name="action">输出信息</param>
     public void ExtractVideo(string video, string destVideo, Action<string> action)
     {
-        FFMpegArguments.FromFileInput(video)
+         FFMpegArguments.FromFileInput(video)
             .OutputToFile(
                 destVideo,
                 true,
@@ -164,6 +164,22 @@ public class FFMpeg
             .ProcessSynchronously(false);
     }
 
+    
+    public async Task<MemoryStream> ExtractVideoFrame(string inputPath,TimeSpan timestamp)
+    {
+        var ms = new MemoryStream();
+        await FFMpegArguments
+            .FromFileInput(inputPath, false, options => options.Seek(timestamp))
+            .OutputToPipe(new StreamPipeSink(ms), options => options
+                .WithFrameOutputCount(1)
+                .ForceFormat("image2")
+                .WithVideoCodec("mjpeg")
+            )
+            .NotifyOnError(x => Console.WriteLine(x))
+            .ProcessAsynchronously(false);
+        ms.Position = 0;
+        return ms;
+    }
 
     /// <summary>
     /// 合并多个FLV视频片段为一个完整视频
