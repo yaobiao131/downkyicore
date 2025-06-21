@@ -4,9 +4,11 @@
              x:Class="DownKyi.Views.Toolbox.ViewDelogo"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
-             x:DataType="vm:ViewDelogoViewModel">
-    <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled">
-        <Grid Margin="50,0" RowDefinitions="168,*">
+             x:DataType="vm:ViewDelogoViewModel"
+             xmlns:local="clr-namespace:DownKyi.Views.Toolbox"
+             xmlns:customControl="clr-namespace:DownKyi.CustomControl">
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="50,0" RowDefinitions="Auto,Auto,400,400">
             <StackPanel Grid.Row="0" Orientation="Vertical">
                 <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
                     <TextBlock
@@ -35,59 +37,105 @@
                         Content="{DynamicResource SelectVideo}"
                         Theme="{StaticResource BtnBorderStyle}" />
                 </StackPanel>
-
-                <Grid Margin="0,20,0,0" VerticalAlignment="Center" ColumnDefinitions="400,*">
-                    <StackPanel Grid.Column="0" Orientation="Vertical">
-                        <TextBlock Margin="0,0,0,10" Text="{DynamicResource LogoSizeAndLocation}" />
-
-                        <StackPanel
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Top"
-                            Orientation="Horizontal">
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoWidth}" />
-                            <TextBox
-                                Width="50"
-                                Margin="0,0,20,0"
-                                VerticalContentAlignment="Center"
-                                Text="{Binding LogoWidth, Mode=TwoWay}" />
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoHeight}" />
-                            <TextBox
-                                Width="50"
-                                Margin="0,0,20,0"
-                                VerticalContentAlignment="Center"
-                                Text="{Binding LogoHeight, Mode=TwoWay}" />
-
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoX}" />
-                            <TextBox
-                                Width="50"
-                                Margin="0,0,20,0"
-                                VerticalContentAlignment="Center"
-                                Text="{Binding LogoX, Mode=TwoWay}" />
-                            <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoY}" />
-                            <TextBox
-                                Width="50"
-                                Margin="0,0,20,0"
-                                VerticalContentAlignment="Center"
-                                Text="{Binding LogoY, Mode=TwoWay}" />
-                        </StackPanel>
-                    </StackPanel>
-                    <Button
-                        Grid.Column="1"
-                        Width="90"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Bottom"
-                        Command="{Binding DelogoCommand}"
-                        Content="{DynamicResource Delogo}"
-                        Theme="{StaticResource BtnBorderStyle}" />
-                </Grid>
-
             </StackPanel>
+            
+            <Grid Grid.Row="1" 
+                  RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="400,*"
+                  Margin="0,20,0,0">
+                
+                <StackPanel Grid.Row="0" 
+                            Grid.Column="0" 
+                            Orientation="Vertical">
+                    <TextBlock Margin="0,0,0,10" Text="{DynamicResource LogoSizeAndLocation}" />
+                    
+                    <StackPanel
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Orientation="Horizontal">
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoWidth}" />
+                        <TextBox
+                            Width="50"
+                            Margin="0,0,20,0"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding LogoWidth, Mode=TwoWay}" />
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoHeight}" />
+                        <TextBox
+                            Width="50"
+                            Margin="0,0,20,0"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding LogoHeight, Mode=TwoWay}" />
 
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoX}" />
+                        <TextBox
+                            Width="50"
+                            Margin="0,0,20,0"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding LogoX, Mode=TwoWay}" />
+                        <TextBlock VerticalAlignment="Center" Text="{DynamicResource LogoY}" />
+                        <TextBox
+                            Width="50"
+                            Margin="0,0,20,0"
+                            VerticalContentAlignment="Center"
+                            Text="{Binding LogoY, Mode=TwoWay}" />
+                    </StackPanel>
+                </StackPanel>
+                
+              <StackPanel Grid.Row="1" 
+                          Margin="0,20,0,0"
+                          Grid.Column="0"
+                          Spacing="5"
+                          Orientation="Horizontal">
+                  <TextBlock Text="边框色：" VerticalAlignment="Center"/>
+                  <ComboBox VerticalAlignment="Center" 
+                            Height="25"
+                            Width="100"
+                            ItemsSource="{Binding AvailableColors}"
+                            SelectedItem="{Binding SelectedColor,Mode=TwoWay}">
+                      <ComboBox.ItemTemplate>
+                          <DataTemplate>
+                              <Border
+                                  Height="20"
+                                  Width="100"
+                                  Background="{Binding}">
+                              </Border>
+                          </DataTemplate>
+                      </ComboBox.ItemTemplate>
+                  </ComboBox>
+              </StackPanel>
+                
+                <Button
+                    Grid.Row="0" 
+                    Grid.Column="1"
+                    Width="90"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Command="{Binding DelogoCommand}"
+                    Content="{DynamicResource Delogo}"
+                    Theme="{StaticResource BtnBorderStyle}" />
+            </Grid>
+            
+            <Border
+                Margin="0,10,0,0"
+                Grid.Row="2"
+                BorderBrush="Gray" 
+                Background="#FF1E1E1E"
+                BorderThickness="1">
+                <customControl:VideoFramePreview
+                    EdgeThreshold="5"
+                    Source="{Binding Source}" 
+                    WatermarkRect="{Binding WatermarkArea, Mode=TwoWay}"
+                    WatermarkBrush="{Binding SelectedColor}"
+                    WatermarkThickness="2"
+                    IsWatermarkInteractive="True"/>
+            </Border>
+            
             <Grid
-                Grid.Row="1"
+                Grid.Row="3"
                 Margin="0,20"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch" RowDefinitions="20,*">
+                VerticalAlignment="Stretch" 
+                RowDefinitions="20,*">
                 <TextBlock
                     Grid.Row="0"
                     VerticalAlignment="Bottom"
@@ -104,7 +152,7 @@
                     <Interaction.Behaviors>
                         <EventTriggerBehavior EventName="TextChanged">
                             <InvokeCommandAction Command="{Binding StatusCommand}"
-                                                 CommandParameter="{Binding $self}" />
+                                                 CommandParameter="{Binding #NameStatus}" />
                         </EventTriggerBehavior>
                     </Interaction.Behaviors>
                 </TextBox>

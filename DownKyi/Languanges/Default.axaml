@@ -302,7 +302,7 @@
     <system:String x:Key="LogoX">X：</system:String>
     <system:String x:Key="LogoY">Y：</system:String>
     <system:String x:Key="TipWaitTaskFinished">请等待当前任务完成！</system:String>
-    <system:String x:Key="TipNoSelectedVideo">没有选择视频！</system:String>
+    <system:String x:Key="TipNoSeletedVideo">没有选择视频！</system:String>
     <system:String x:Key="TipInputRightLogoWidth">请输入正确的宽度（正整数）！</system:String>
     <system:String x:Key="TipInputRightLogoHeight">请输入正确的高度（正整数）！</system:String>
     <system:String x:Key="TipInputRightLogoX">请输入正确的X（正整数）！</system:String>

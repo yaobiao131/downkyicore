@@ -1,8 +1,10 @@
-﻿using DownKyi.Core.Logging;
+﻿using Avalonia.Media.Imaging;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Helpers;
+using FFMpegCore.Pipes;
 
 namespace DownKyi.Core.FFMpeg;
 
@@ -17,7 +19,7 @@ public class FFMpeg
 
     private FFMpeg()
     {
-        GlobalFFOptions.Configure(new FFOptions { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
+        //GlobalFFOptions.Configure(new FFOptions { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
         FFMpegHelper.VerifyFFMpegExists(GlobalFFOptions.Current);
     }
 
@@ -50,7 +52,6 @@ public class FFMpeg
                 options => options.WithCustomArgument("-strict -2").WithVideoCodec("copy").WithAudioCodec("copy").ForceFormat("mp4")
             );
         }
-
         if (video == null || !File.Exists(video))
         {
             if (SettingsManager.GetInstance().GetIsTranscodingAacToMp3() == AllowStatus.Yes)
@@ -151,7 +152,7 @@ public class FFMpeg
     /// <param name="action">输出信息</param>
     public void ExtractVideo(string video, string destVideo, Action<string> action)
     {
-        FFMpegArguments.FromFileInput(video)
+         FFMpegArguments.FromFileInput(video)
             .OutputToFile(
                 destVideo,
                 true,
@@ -164,6 +165,18 @@ public class FFMpeg
             .ProcessSynchronously(false);
     }
 
+    
+    public async Task ExtractVideoFrame(string inputPath,string outputImagePath,TimeSpan timestamp)
+    {
+       await  FFMpegArguments
+            .FromFileInput(inputPath, false,options => options.Seek(timestamp))
+            .OutputToFile(outputImagePath, overwrite: true, options => options
+                .WithFrameOutputCount(1)
+                .WithVideoCodec("mjpeg") 
+               )
+            .NotifyOnError(x => Console.WriteLine(x))
+            .ProcessAsynchronously(false);
+    }
 
     /// <summary>
     /// 合并多个FLV视频片段为一个完整视频
