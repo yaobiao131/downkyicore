@@ -1,10 +1,8 @@
-﻿using Avalonia.Media.Imaging;
-using DownKyi.Core.Logging;
+﻿using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Helpers;
-using FFMpegCore.Pipes;
 
 namespace DownKyi.Core.FFMpeg;
 
@@ -19,7 +17,7 @@ public class FFMpeg
 
     private FFMpeg()
     {
-        //GlobalFFOptions.Configure(new FFOptions { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
+        GlobalFFOptions.Configure(new FFOptions { BinaryFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ffmpeg") });
         FFMpegHelper.VerifyFFMpegExists(GlobalFFOptions.Current);
     }
 
