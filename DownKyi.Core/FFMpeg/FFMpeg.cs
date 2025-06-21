@@ -3,6 +3,7 @@ using DownKyi.Core.Settings;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using FFMpegCore.Helpers;
+using FFMpegCore.Pipes;
 
 namespace DownKyi.Core.FFMpeg;
 
@@ -164,16 +165,20 @@ public class FFMpeg
     }
 
     
-    public async Task ExtractVideoFrame(string inputPath,string outputImagePath,TimeSpan timestamp)
+    public async Task<MemoryStream> ExtractVideoFrame(string inputPath,TimeSpan timestamp)
     {
-       await  FFMpegArguments
-            .FromFileInput(inputPath, false,options => options.Seek(timestamp))
-            .OutputToFile(outputImagePath, overwrite: true, options => options
+        var ms = new MemoryStream();
+        await FFMpegArguments
+            .FromFileInput(inputPath, false, options => options.Seek(timestamp))
+            .OutputToPipe(new StreamPipeSink(ms), options => options
                 .WithFrameOutputCount(1)
-                .WithVideoCodec("mjpeg") 
-               )
+                .ForceFormat("image2")
+                .WithVideoCodec("mjpeg")
+            )
             .NotifyOnError(x => Console.WriteLine(x))
             .ProcessAsynchronously(false);
+        ms.Position = 0;
+        return ms;
     }
 
     /// <summary>

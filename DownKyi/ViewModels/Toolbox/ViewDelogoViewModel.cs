@@ -182,15 +182,16 @@ public class ViewDelogoViewModel : ViewModelBase
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
-
-        VideoPath = await DialogUtils.SelectVideoFile();
+        
         if (!string.IsNullOrEmpty(VideoPath))
         {
-            string output = Path.Combine(Path.GetTempPath(), "preview.png");
-            await FFMpeg.Instance.ExtractVideoFrame(VideoPath ,output,TimeSpan.FromSeconds(1));
-            if (File.Exists(output))
+            try
             {
-                Source = new Bitmap(output);
+                Source = new Bitmap(await FFMpeg.Instance.ExtractVideoFrame(VideoPath, TimeSpan.FromSeconds(1)));
+            }
+            catch (Exception e)
+            {
+                /**/
             }
         }
     }
