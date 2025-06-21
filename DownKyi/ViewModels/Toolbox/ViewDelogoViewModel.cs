@@ -182,7 +182,7 @@ public class ViewDelogoViewModel : ViewModelBase
             EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("TipWaitTaskFinished"));
             return;
         }
-        
+        VideoPath = await DialogUtils.SelectVideoFile();
         if (!string.IsNullOrEmpty(VideoPath))
         {
             try
