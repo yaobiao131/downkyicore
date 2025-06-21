@@ -164,11 +164,11 @@ public partial class App : PrismApplication
 
     protected override AvaloniaObject CreateShell()
     {
-        if (!Design.IsDesignMode)
+        if (Design.IsDesignMode)
         {
-            Container.Resolve<IFreeSql>().CodeFirst.SyncStructure(typeof(DownloadBase), typeof(Downloaded), typeof(Downloading));
+            return Container.Resolve<MainWindow>();
         }
-
+        Container.Resolve<IFreeSql>().CodeFirst.SyncStructure(typeof(DownloadBase), typeof(Downloaded), typeof(Downloading));
         // 下载数据存储服务
         var downloadStorageService = Container.Resolve<DownloadStorageService>();
 
@@ -212,40 +212,6 @@ public partial class App : PrismApplication
                 }
             });
         };
-
-        // 下载完成列表发生变化时执行的任务
-        // DownloadedList.CollectionChanged += async (sender, e) =>
-        // {
-        //     await Task.Run(() =>
-        //     {
-        //         if (e.Action == NotifyCollectionChangedAction.Add)
-        //         {
-        //             if (e.NewItems == null) return;
-        //             foreach (var item in e.NewItems)
-        //             {
-        //                 if (item is DownloadedItem downloaded)
-        //                 {
-        //                     //Console.WriteLine("DownloadedList添加");
-        //                     downloadStorageService.AddDownloaded(downloaded);
-        //                 }
-        //             }
-        //         }
-        //
-        //         if (e.Action == NotifyCollectionChangedAction.Remove)
-        //         {
-        //             if (e.OldItems == null) return;
-        //             foreach (var item in e.OldItems)
-        //             {
-        //                 if (item is DownloadedItem downloaded)
-        //                 {
-        //                     //Console.WriteLine("DownloadedList移除");
-        //                     downloadStorageService.RemoveDownloaded(downloaded);
-        //                 }
-        //             }
-        //         }
-        //     });
-        // };
-
         // 启动下载服务
         var download = SettingsManager.GetInstance().GetDownloader();
         switch (download)
@@ -263,12 +229,7 @@ public partial class App : PrismApplication
                 break;
         }
 
-        // 防止设计器启动aria2导致端口占用
-        if (!Design.IsDesignMode)
-        {
-            _downloadService?.Start();
-        }
-
+        _downloadService?.Start();
         return Container.Resolve<MainWindow>();
     }
 
