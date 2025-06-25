@@ -49,7 +49,7 @@ public class DownloadStorageService
             return;
         }
 
-        _downloadingRepository.Delete(it => it.Id == downloadingItem.Downloading.Id);
+        _downloadingRepository.DeleteCascadeByDatabase(it => it.Id == downloadingItem.Downloading.Id);
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class DownloadStorageService
     /// <returns></returns>
     public List<DownloadingItem> GetDownloading()
     {
-        var downloadingList = _downloadingRepository.Select.ToList();
+        var downloadingList = _downloadingRepository.Select.LeftJoin(downloading => downloading.DownloadBase.Id == downloading.Id).ToList();
 
         return downloadingList.Select(downloading => new DownloadingItem { Downloading = downloading, DownloadBase = downloading.DownloadBase }).ToList();
     }
