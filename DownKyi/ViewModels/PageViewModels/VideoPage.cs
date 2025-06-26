@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.VideoStream.Models;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -18,6 +21,8 @@ public class VideoPage : BindableBase
     public VideoOwner Owner { get; set; }
     public string PublishTime { get; set; }
 
+    public DateTime OriginalPublishTime { get; set; }
+    
     public string FirstFrame { get; set; }
 
     public int Page { get; set; }
@@ -91,6 +96,9 @@ public class VideoPage : BindableBase
         get => videoQuality;
         set => SetProperty(ref videoQuality, value);
     }
+    
+    [JsonIgnore] 
+    public Lazy<List<string>?> LazyTags { get; set; }
 
     #region
 

@@ -26,6 +26,9 @@ namespace DownKyi.ViewModels.DownloadManager
 
         // model数据
         private Downloading _downloading;
+        
+        
+        public MovieMetadata? Metadata { get; set; } 
 
         public Downloading Downloading
         {

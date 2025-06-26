@@ -1,4 +1,5 @@
-﻿using Avalonia.Media.Imaging;
+﻿using System;
+using System.Collections.Generic;
 using Prism.Mvvm;
 
 namespace DownKyi.ViewModels.PageViewModels;
@@ -17,6 +18,8 @@ public class VideoInfoView : BindableBase
     public int TypeId { get; set; }
 
     private string _title;
+    
+    public float? Score { get; set; }
 
     public string Title
     {
@@ -119,4 +122,5 @@ public class VideoInfoView : BindableBase
         get => _upHeader;
         set => SetProperty(ref _upHeader, value);
     }
+    
 }

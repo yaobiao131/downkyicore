@@ -1,4 +1,5 @@
-﻿using DownKyi.Core.BiliApi.Sign;
+﻿using DownKyi.Core.BiliApi.Models.Json;
+using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.BiliApi.Video.Models;
 using DownKyi.Core.Logging;
 using Newtonsoft.Json;
@@ -108,5 +109,26 @@ public static class VideoInfo
             return null;
         }
     }
+    
+    public static List<BiliTagInfo>? GetBiliTagInfo(string bvid,long? cid = null)
+    {
+        const string referer = "https://www.bilibili.com";
+        string cidStr = cid.HasValue ? $"&cid={cid}" : "";
+        string api = $"https://api.bilibili.com/x/web-interface/view/detail/tag?bvid={bvid}{cidStr}";
+        var response = WebClient.RequestWeb(api, referer);
+
+        try
+        {
+            var rs = JsonConvert.DeserializeObject<TagResult>(response);
+            return rs?.Data;
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("GetBiliTagInfo()发生异常: {0}", e);
+            LogManager.Error("GetBiliTagInfo()", e);
+            return null;
+        }
+    }
+
 
 }

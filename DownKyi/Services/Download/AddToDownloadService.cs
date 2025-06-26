@@ -529,7 +529,6 @@ public class AddToDownloadService
                         PageCoverUrl = page.FirstFrame,
                         ZoneId = zoneId,
                         FilePath = filePath,
-
                         Order = page.Order,
                         MainTitle = _videoInfoView.Title,
                         Name = page.Name,
@@ -559,6 +558,12 @@ public class AddToDownloadService
                         PlayUrl = page.PlayUrl,
                     };
 
+                    if (SettingsManager.GetInstance().GetVideoContent()
+                        .GenerateMovieMetadata && _downloadVideo)
+                    {
+                        downloadingItem.Metadata = BuildMovieMetadata(page);
+                    }
+
                     App.DownloadingList.Add(downloadingItem);
                     Thread.Sleep(10);
                 });
@@ -567,5 +572,33 @@ public class AddToDownloadService
         }
 
         return i;
+    }
+
+    private MovieMetadata BuildMovieMetadata(VideoPage page)
+    {
+        var metadata = new MovieMetadata
+        {
+            Title = page.Name,
+            Plot = _videoInfoView.Description,
+            Year = page.OriginalPublishTime.Year.ToString(),
+            Premiered = page.OriginalPublishTime.ToString("yyyy-MM-dd"),
+            BilibiliId = new UniqueId("bilibili", page.Bvid),
+            Actors = new List<Actor> { new(page.Owner.Name, page.Owner.Mid.ToString()) },
+            Genres = _videoInfoView.VideoZone?.Split(">")?.ToList() ?? new(),
+            Tags = page.LazyTags?.Value ?? new (),
+            Ratings = _videoInfoView.Score != null ?
+                new()
+                {
+                    new()
+                    {
+                        IsDefault = true,
+                        Max = 10,
+                        Name = "bilibili",
+                        Value = _videoInfoView.Score.Value
+                    }
+                }
+                : new ()
+        };
+        return metadata;
     }
 }

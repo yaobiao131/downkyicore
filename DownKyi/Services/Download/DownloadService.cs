@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.VideoStream.Models;
@@ -293,6 +295,27 @@ public abstract class DownloadService
 
         return srtFiles;
     }
+
+
+    protected void GenerateNfoFile(DownloadingItem downloading)
+    {
+        if(downloading.Metadata == null) return;
+        var serializer = new XmlSerializer(typeof(MovieMetadata));
+        var settings = new XmlWriterSettings { Indent = true };
+        try
+        {
+            string filePath = $"{downloading.DownloadBase.FilePath}.nfo";
+            using var writer = XmlWriter.Create(filePath, settings);
+#pragma warning disable IL2026
+            serializer.Serialize(writer, downloading.Metadata);
+#pragma warning restore IL2026
+        }
+        catch (Exception e)
+        {
+            /**/
+        }
+    }
+    
 
     protected string BaseMixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid)
     {
@@ -669,7 +692,15 @@ public abstract class DownloadService
 
                     Pause(downloading);
                 }
-
+                
+                
+                //nfo
+                if (SettingsManager.GetInstance()
+                    .GetVideoContent().GenerateMovieMetadata)
+                {
+                     GenerateNfoFile(downloading);
+                }
+                
                 string? outputDanmaku = null;
                 // 如果需要下载弹幕
                 if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])
