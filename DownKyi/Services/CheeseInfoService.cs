@@ -106,7 +106,7 @@ public class CheeseInfoService : IInfoService
             var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
             var dateTime = startTime.AddSeconds(episode.ReleaseDate);
             page.PublishTime = dateTime.ToString(timeFormat);
-
+            page.OriginalPublishTime = dateTime;
             pages.Add(page);
         }
 

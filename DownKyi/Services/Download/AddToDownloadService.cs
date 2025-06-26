@@ -580,8 +580,8 @@ public class AddToDownloadService
         {
             Title = page.Name,
             Plot = _videoInfoView.Description,
-            Year = page.PublishTime.Split('.')[0],
-            Premiered = page.PublishTime.Replace('.', '-'),
+            Year = page.OriginalPublishTime.Year.ToString(),
+            Premiered = page.OriginalPublishTime.ToString("yyyy-MM-dd"),
             BilibiliId = new UniqueId("bilibili", page.Bvid),
             Actors = new List<Actor> { new(page.Owner.Name, page.Owner.Mid.ToString()) },
             Genres = _videoInfoView.VideoZone?.Split(">")?.ToList() ?? new(),

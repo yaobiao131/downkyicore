@@ -118,6 +118,7 @@ public class VideoInfoService : IInfoService
             // 视频发布时间
             var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
             var dateTime = startTime.AddSeconds(_videoView.Pubdate);
+            videoPage.OriginalPublishTime = dateTime;
             videoPage.PublishTime = dateTime.ToString(timeFormat);
 
             videoPages.Add(videoPage);
@@ -218,6 +219,7 @@ public class VideoInfoService : IInfoService
                 Owner = _videoView.Owner,
                 Page = p.Page,
                 PublishTime = dateTime.ToString(timeFormat),
+                OriginalPublishTime = dateTime,
                 LazyTags = new Lazy<List<string>?>(() =>
                 {
                     return VideoInfo.GetBiliTagInfo(episode.Bvid, p.Cid)
@@ -253,6 +255,7 @@ public class VideoInfoService : IInfoService
         };
         var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
         page.PublishTime = dateTime.ToString(timeFormat);
+        page.OriginalPublishTime = dateTime;
         return page;
     }
 

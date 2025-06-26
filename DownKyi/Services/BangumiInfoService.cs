@@ -139,7 +139,7 @@ public class BangumiInfoService : IInfoService
             var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
             var dateTime = startTime.AddSeconds(episode.PubTime);
             page.PublishTime = dateTime.ToString(timeFormat);
-
+            page.OriginalPublishTime = dateTime;
             pages.Add(page);
         }
 
@@ -232,8 +232,8 @@ public class BangumiInfoService : IInfoService
                 // 视频发布时间
                 var startTime = TimeZoneInfo.ConvertTimeFromUtc(new DateTime(1970, 1, 1), TimeZoneInfo.Local); // 当地时区
                 var dateTime = startTime.AddSeconds(episode.PubTime);
+                page.OriginalPublishTime = dateTime;
                 page.PublishTime = dateTime.ToString(timeFormat);
-
                 pages.Add(page);
             }
 

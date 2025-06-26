@@ -21,6 +21,8 @@ public class VideoPage : BindableBase
     public VideoOwner Owner { get; set; }
     public string PublishTime { get; set; }
 
+    public DateTime OriginalPublishTime { get; set; }
+    
     public string FirstFrame { get; set; }
 
     public int Page { get; set; }
