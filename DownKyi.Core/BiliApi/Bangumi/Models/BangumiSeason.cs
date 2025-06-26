@@ -38,7 +38,12 @@ public class BangumiSeason : BaseModel
     [JsonProperty("positive")] public BangumiPositive Positive { get; set; }
 
     // publish
-    // rating
+   
+    [JsonProperty("rating")] public BangumiRating? Rating { get; set; }
+    
+    
+    [JsonProperty("styles")] public string[] Styles { get; set; }
+    
     // record
     // rights
     [JsonProperty("season_id")] public long SeasonId { get; set; }

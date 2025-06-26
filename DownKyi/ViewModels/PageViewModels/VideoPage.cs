@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using DownKyi.Core.BiliApi.Models;
 using DownKyi.Core.BiliApi.VideoStream.Models;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -91,6 +94,9 @@ public class VideoPage : BindableBase
         get => videoQuality;
         set => SetProperty(ref videoQuality, value);
     }
+    
+    [JsonIgnore] 
+    public Lazy<List<string>?> LazyTags { get; set; }
 
     #region
 

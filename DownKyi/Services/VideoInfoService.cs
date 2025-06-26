@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Threading;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Models;
@@ -8,7 +9,6 @@ using DownKyi.Core.BiliApi.Video.Models;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.Zone;
 using DownKyi.Core.Settings;
-using DownKyi.Core.Storage;
 using DownKyi.Core.Utils;
 using DownKyi.ViewModels.PageViewModels;
 using VideoPage = DownKyi.ViewModels.PageViewModels.VideoPage;
@@ -92,7 +92,13 @@ public class VideoInfoService : IInfoService
                 Order = order,
                 Name = name,
                 Duration = "N/A",
-                Page = page.Page
+                Page = page.Page,
+                LazyTags = new Lazy<List<string>?>(() =>
+                {
+                    return VideoInfo.GetBiliTagInfo(_videoView.Bvid, page.Cid)
+                        ?.Select(x => x.TagName)
+                        .ToList();
+                })
             };
 
             // UP主信息
@@ -211,7 +217,13 @@ public class VideoInfoService : IInfoService
                 Duration = "N/A",
                 Owner = _videoView.Owner,
                 Page = p.Page,
-                PublishTime = dateTime.ToString(timeFormat)
+                PublishTime = dateTime.ToString(timeFormat),
+                LazyTags = new Lazy<List<string>?>(() =>
+                {
+                    return VideoInfo.GetBiliTagInfo(episode.Bvid, p.Cid)
+                        ?.Select(x => x.TagName)
+                        .ToList();
+                })
             });
         }
 
@@ -231,7 +243,13 @@ public class VideoInfoService : IInfoService
             Name = episode.Title,
             Duration = "N/A",
             Owner = _videoView?.Owner ?? new VideoOwner { Name = "", Face = "", Mid = -1 },
-            Page = episode.Page.Page
+            Page = episode.Page.Page,
+            LazyTags = new Lazy<List<string>?>(() =>
+            {
+                return VideoInfo.GetBiliTagInfo(episode.Bvid, episode.Cid)
+                    ?.Select(x => x.TagName)
+                    .ToList();
+            })
         };
         var dateTime = startTime.AddSeconds(episode.Arc.Ctime);
         page.PublishTime = dateTime.ToString(timeFormat);

@@ -7,4 +7,6 @@ public class VideoContentSettings
     public bool DownloadDanmaku { get; set; } = true;
     public bool DownloadSubtitle { get; set; } = true;
     public bool DownloadCover { get; set; } = true;
+
+    public bool GenerateMovieMetadata { get; set; } = false;
 }
