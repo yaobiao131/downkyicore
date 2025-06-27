@@ -21,7 +21,9 @@ public partial class SettingsManager
 
     public bool SettingWindowSettings(WindowSettings windowSettings)
     {
-        _appSettings.WindowSettings = windowSettings;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.WindowSettings,
+            windowSettings,
+            v => _appSettings.WindowSettings = v);
     }
 }

@@ -366,12 +366,12 @@ public class ViewVideoViewModel : ViewModelBase
         // 文件命名格式
         var fileNameParts = SettingsManager.GetInstance().GetFileNameParts();
         SelectedFileName.Clear();
-        foreach (var item in fileNameParts)
+        SelectedFileName.AddRange(fileNameParts.Select(x => new DisplayFileNamePart()
         {
-            var display = DisplayFileNamePart(item);
-            SelectedFileName.Add(new DisplayFileNamePart { Id = item, Title = display });
-        }
-
+            Id = x,
+            Title = DisplayFileNamePart(x),
+        }));
+       
         // 文件命名中的时间格式
         SelectedFileNamePartTimeFormat = SettingsManager.GetInstance().GetFileNamePartTimeFormat();
 

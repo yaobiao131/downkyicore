@@ -9,6 +9,16 @@ namespace DownKyi.Core.Settings;
 
 public partial class SettingsManager
 {
+    private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter)
+    {
+        if (!EqualityComparer<T>.Default.Equals(currentValue, newValue))
+        {
+            setter(newValue);
+            return SetSettings();
+        }
+        return true;
+    }
+    
     private static SettingsManager? _instance;
 
     private static readonly object _settingsLock = new object();
@@ -98,17 +108,7 @@ public partial class SettingsManager
             try
             {
                 var json = JsonConvert.SerializeObject(_appSettings);
-
-                string tempFile = Path.GetTempFileName();
-                File.WriteAllText(tempFile, json, Encoding.UTF8);
-                if (!File.Exists(_settingsName))
-                {
-                    File.Move(tempFile, _settingsName);
-                }
-                else
-                {
-                    File.Replace(tempFile, _settingsName, null);
-                }
+                File.WriteAllText(_settingsName, json, Encoding.UTF8);
                 return true;
             }
             catch (Exception e)

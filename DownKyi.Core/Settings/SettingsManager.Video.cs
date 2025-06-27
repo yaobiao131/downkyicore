@@ -82,8 +82,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoCodecs(int videoCodecs)
     {
-        _appSettings.Video.VideoCodecs = videoCodecs;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.VideoCodecs,
+            videoCodecs,
+            v => _appSettings.Video.VideoCodecs = v);
     }
 
     /// <summary>
@@ -110,8 +112,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetQuality(int quality)
     {
-        _appSettings.Video.Quality = quality;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.Quality,
+            quality,
+            v => _appSettings.Video.Quality = v);
     }
 
     /// <summary>
@@ -138,8 +142,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAudioQuality(int quality)
     {
-        _appSettings.Video.AudioQuality = quality;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.AudioQuality,
+            quality,
+            v => _appSettings.Video.AudioQuality = v);
     }
     
     /// <summary>
@@ -166,8 +172,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoParseType(int videoParseType)
     {
-        _appSettings.Video.VideoParseType = videoParseType;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.VideoParseType,
+            videoParseType,
+            v => _appSettings.Video.VideoParseType = v);
     }
 
     /// <summary>
@@ -194,8 +202,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsTranscodingFlvToMp4(AllowStatus isTranscodingFlvToMp4)
     {
-        _appSettings.Video.IsTranscodingFlvToMp4 = isTranscodingFlvToMp4;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.IsTranscodingFlvToMp4,
+            isTranscodingFlvToMp4,
+            v => _appSettings.Video.IsTranscodingFlvToMp4 = v);
     }
     
     /// <summary>
@@ -222,8 +232,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsTranscodingAacToMp3(AllowStatus isTranscodingAacToMp3)
     {
-        _appSettings.Video.IsTranscodingAacToMp3 = isTranscodingAacToMp3;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.IsTranscodingAacToMp3,
+            isTranscodingAacToMp3,
+            v => _appSettings.Video.IsTranscodingAacToMp3 = v);
     }
 
     /// <summary>
@@ -250,8 +262,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetSaveVideoRootPath(string path)
     {
-        _appSettings.Video.SaveVideoRootPath = path;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.SaveVideoRootPath,
+            path,
+            v => _appSettings.Video.SaveVideoRootPath = v);
     }
 
     /// <summary>
@@ -278,8 +292,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetHistoryVideoRootPaths(List<string> historyPaths)
     {
-        _appSettings.Video.HistoryVideoRootPaths = historyPaths;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.HistoryVideoRootPaths,
+            historyPaths,
+            v => _appSettings.Video.HistoryVideoRootPaths = v);
     }
 
     /// <summary>
@@ -306,8 +322,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsUseSaveVideoRootPath(AllowStatus isUseSaveVideoRootPath)
     {
-        _appSettings.Video.IsUseSaveVideoRootPath = isUseSaveVideoRootPath;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.IsUseSaveVideoRootPath,
+            isUseSaveVideoRootPath,
+            v => _appSettings.Video.IsUseSaveVideoRootPath = v);
     }
 
     /// <summary>
@@ -334,8 +352,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetVideoContent(VideoContentSettings videoContent)
     {
-        _appSettings.Video.VideoContent = videoContent;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.VideoContent,
+            videoContent,
+            v => _appSettings.Video.VideoContent = v);
     }
 
     /// <summary>
@@ -362,8 +382,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetFileNameParts(List<FileNamePart> fileNameParts)
     {
-        _appSettings.Video.FileNameParts = fileNameParts;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.FileNameParts,
+            fileNameParts,
+            v => _appSettings.Video.FileNameParts = v);
     }
 
     /// <summary>
@@ -391,8 +413,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetFileNamePartTimeFormat(string fileNamePartTimeFormat)
     {
-        _appSettings.Video.FileNamePartTimeFormat = fileNamePartTimeFormat;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.FileNamePartTimeFormat,
+            fileNamePartTimeFormat,
+            v => _appSettings.Video.FileNamePartTimeFormat = v);
     }
 
     /// <summary>
@@ -419,7 +443,9 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetOrderFormat(OrderFormat orderFormat)
     {
-        _appSettings.Video.OrderFormat = orderFormat;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Video.OrderFormat,
+            orderFormat,
+            v => _appSettings.Video.OrderFormat = v);
     }
 }
