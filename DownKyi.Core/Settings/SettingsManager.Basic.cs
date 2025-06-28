@@ -41,8 +41,10 @@ public partial class SettingsManager
 
     public bool SetThemeMode(ThemeMode themeMode)
     {
-        _appSettings.Basic.ThemeMode = themeMode;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.ThemeMode,
+            themeMode,
+            v => _appSettings.Basic.ThemeMode = v);
     }
 
     /// <summary>
@@ -69,8 +71,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAfterDownloadOperation(AfterDownloadOperation afterDownload)
     {
-        _appSettings.Basic.AfterDownload = afterDownload;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.AfterDownload,
+            afterDownload,
+            v => _appSettings.Basic.AfterDownload = v);
     }
 
     /// <summary>
@@ -97,8 +101,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsListenClipboard(AllowStatus isListen)
     {
-        _appSettings.Basic.IsListenClipboard = isListen;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.IsListenClipboard,
+            isListen,
+            v => _appSettings.Basic.IsListenClipboard = v);
     }
 
     /// <summary>
@@ -125,8 +131,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsAutoParseVideo(AllowStatus isAuto)
     {
-        _appSettings.Basic.IsAutoParseVideo = isAuto;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.IsAutoParseVideo,
+            isAuto,
+            v => _appSettings.Basic.IsAutoParseVideo = v);
     }
 
     /// <summary>
@@ -153,8 +161,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetParseScope(ParseScope parseScope)
     {
-        _appSettings.Basic.ParseScope = parseScope;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.ParseScope,
+            parseScope,
+            v => _appSettings.Basic.ParseScope = v);
     }
 
     /// <summary>
@@ -181,8 +191,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsAutoDownloadAll(AllowStatus isAutoDownloadAll)
     {
-        _appSettings.Basic.IsAutoDownloadAll = isAutoDownloadAll;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.IsAutoDownloadAll,
+            isAutoDownloadAll,
+            v => _appSettings.Basic.IsAutoDownloadAll = v);
     }
 
     /// <summary>
@@ -209,8 +221,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetDownloadFinishedSort(DownloadFinishedSort finishedSort)
     {
-        _appSettings.Basic.DownloadFinishedSort = finishedSort;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.DownloadFinishedSort,
+            finishedSort,
+            v => _appSettings.Basic.DownloadFinishedSort = v);
     }
 
     /// <summary>
@@ -237,8 +251,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetRepeatDownloadStrategy(RepeatDownloadStrategy repeatDownloadStrategy)
     {
-        _appSettings.Basic.RepeatDownloadStrategy = repeatDownloadStrategy;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.RepeatDownloadStrategy,
+            repeatDownloadStrategy,
+            v => _appSettings.Basic.RepeatDownloadStrategy = v);
     }
 
     /// <summary>
@@ -266,7 +282,9 @@ public partial class SettingsManager
     /// <exception cref="NotImplementedException"></exception>
     public bool IsRepeatFileAutoAddNumberSuffix(bool repeatFileAutoAddNumberSuffix)
     {
-        _appSettings.Basic.RepeatFileAutoAddNumberSuffix = repeatFileAutoAddNumberSuffix;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.Basic.RepeatFileAutoAddNumberSuffix,
+            repeatFileAutoAddNumberSuffix,
+            v => _appSettings.Basic.RepeatFileAutoAddNumberSuffix = v);
     }
 }

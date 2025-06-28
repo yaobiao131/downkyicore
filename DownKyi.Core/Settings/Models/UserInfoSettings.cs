@@ -1,6 +1,6 @@
 ﻿namespace DownKyi.Core.Settings.Models;
 
-public class UserInfoSettings
+public class UserInfoSettings : IEquatable<UserInfoSettings>
 {
     public long Mid { get; set; }
     public string Name { get; set; }
@@ -9,4 +9,27 @@ public class UserInfoSettings
 
     public string ImgKey { get; set; }
     public string SubKey { get; set; }
+    
+    public override int GetHashCode()
+    {
+        return GetHashCode(this);
+    }
+
+    public int GetHashCode(UserInfoSettings obj)
+    {
+        return HashCode.Combine(obj.Mid, obj.Name, obj.IsLogin, obj.IsVip, obj.ImgKey, obj.SubKey);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj);
+    }
+
+    public bool Equals(UserInfoSettings? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Mid == other.Mid && Name == other.Name && IsLogin == other.IsLogin &&
+               IsVip == other.IsVip && ImgKey == other.ImgKey && SubKey == other.SubKey;
+    }
 }

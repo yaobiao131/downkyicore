@@ -32,8 +32,10 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetIsReceiveBetaVersion(AllowStatus isReceiveBetaVersion)
     {
-        _appSettings.About.IsReceiveBetaVersion = isReceiveBetaVersion;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.About.IsReceiveBetaVersion,
+            isReceiveBetaVersion,
+            v => _appSettings.About.IsReceiveBetaVersion = v);
     }
 
     /// <summary>
@@ -60,16 +62,20 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetAutoUpdateWhenLaunch(AllowStatus autoUpdateWhenLaunch)
     {
-        _appSettings.About.AutoUpdateWhenLaunch = autoUpdateWhenLaunch;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.About.AutoUpdateWhenLaunch,
+            autoUpdateWhenLaunch,
+            v => _appSettings.About.AutoUpdateWhenLaunch = v);
     }
 
     public bool SetSkipVersionOnLaunch(string skipVersionOnLaunch)
     {
         if (Version.TryParse(skipVersionOnLaunch,out var _))
         {
-            _appSettings.About.SkipVersionOnLaunch = skipVersionOnLaunch;
-            return SetSettings();
+            return SetProperty(
+                _appSettings.About.SkipVersionOnLaunch,
+                skipVersionOnLaunch,
+                v => _appSettings.About.SkipVersionOnLaunch = v);
         }
 
         return false;

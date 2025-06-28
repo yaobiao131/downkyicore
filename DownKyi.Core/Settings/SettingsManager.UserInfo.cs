@@ -37,7 +37,9 @@ public partial class SettingsManager
     /// <returns></returns>
     public bool SetUserInfo(UserInfoSettings userInfo)
     {
-        _appSettings.UserInfo = userInfo;
-        return SetSettings();
+        return SetProperty(
+            _appSettings.UserInfo,
+            userInfo,
+            v => _appSettings.UserInfo = v);
     }
 }

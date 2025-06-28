@@ -1,34 +1,38 @@
 ﻿using System.Text;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings.Models;
-using DownKyi.Core.Storage;
+using DownKyi.Core.Utils.Encryptor;
 using Newtonsoft.Json;
 using Console = DownKyi.Core.Utils.Debugging.Console;
-
-#if DEBUG
-#else
-using DownKyi.Core.Utils.Encryptor;
-#endif
 
 namespace DownKyi.Core.Settings;
 
 public partial class SettingsManager
 {
+    private bool SetProperty<T>(T currentValue, T newValue, Action<T> setter)
+    {
+        if (!EqualityComparer<T>.Default.Equals(currentValue, newValue))
+        {
+            setter(newValue);
+            return SetSettings();
+        }
+        return true;
+    }
+    
     private static SettingsManager? _instance;
 
+    private static readonly object _settingsLock = new object();
     // 内存中保存一份配置
     private AppSettings _appSettings;
-
-#if DEBUG
+    
+    
+    
     // 设置的配置文件
-    private readonly string _settingsName = StorageManager.GetSettings() + "_debug.json";
-#else
-        // 设置的配置文件
-        private readonly string _settingsName = Storage.StorageManager.GetSettings();
+    private readonly string _settingsName = Storage.StorageManager.GetSettings();
+    
+    // 密钥
+    private readonly string password = "YO1J$4#p";
 
-        // 密钥
-        private readonly string password = "YO1J$4#p";
-#endif
 
     /// <summary>
     /// 获取SettingsManager实例
@@ -60,34 +64,37 @@ public partial class SettingsManager
 
         try
         {
-            //FileStream fileStream = new FileStream(settingsName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            //StreamReader streamReader = new StreamReader(fileStream, System.Text.Encoding.UTF8);
-            //string jsonWordTemplate = streamReader.ReadToEnd();
-            //streamReader.Close();
-            //fileStream.Close();
-            var jsonWordTemplate = string.Empty;
-            using (var stream = new FileStream(_settingsName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+            var jsonWordTemplate = File.ReadAllText(_settingsName, Encoding.UTF8);
+            try
             {
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
+                return JsonConvert.DeserializeObject<AppSettings>(jsonWordTemplate);
+            }
+            catch (Exception e)
+            {
+                try
                 {
-                    jsonWordTemplate = reader.ReadToEnd();
+                    string decryptedJson = Encryptor.DecryptString(jsonWordTemplate, password);
+                    var settings = JsonConvert.DeserializeObject<AppSettings>(decryptedJson);
+                    if (settings != null)
+                    {
+                        _appSettings = settings;
+                        SetSettings();
+                        return settings;
+                    }
+                }
+                catch (Exception decryptEx)
+                {
+                    Console.PrintLine("配置文件解密失败: {0}", decryptEx.Message);
+                    LogManager.Error("SettingsManager", decryptEx);
                 }
             }
-
-#if DEBUG
-#else
-                // 解密字符串
-                jsonWordTemplate = Encryptor.DecryptString(jsonWordTemplate, password);
-#endif
-
-            return JsonConvert.DeserializeObject<AppSettings>(jsonWordTemplate);
         }
         catch (Exception e)
         {
             Console.PrintLine("GetSettings()发生异常: {0}", e);
             LogManager.Error("SettingsManager", e);
-            return new AppSettings();
         }
+        return new AppSettings();
     }
 
     /// <summary>
@@ -96,24 +103,20 @@ public partial class SettingsManager
     /// <returns></returns>
     private bool SetSettings()
     {
-        try
+        lock (_settingsLock)
         {
-            var json = JsonConvert.SerializeObject(_appSettings);
-
-#if DEBUG
-#else
-                // 加密字符串
-                json = Encryptor.EncryptString(json, password);
-#endif
-
-            File.WriteAllText(_settingsName, json);
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.PrintLine("SetSettings()发生异常: {0}", e);
-            LogManager.Error("SettingsManager", e);
-            return false;
+            try
+            {
+                var json = JsonConvert.SerializeObject(_appSettings);
+                File.WriteAllText(_settingsName, json, Encoding.UTF8);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.PrintLine("SetSettings()发生异常: {0}", e);
+                LogManager.Error("SettingsManager", e);
+                return false;
+            }
         }
     }
 }
