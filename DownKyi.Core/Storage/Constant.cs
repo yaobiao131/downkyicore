@@ -33,37 +33,37 @@ internal static class Constant
     // private static string Root { get; } = AppDomain.CurrentDomain.BaseDirectory;
 
     // Aria
-    public static string Aria { get; } = $"{Root}/Aria";
+    public static string Aria { get; } = Path.Combine(Root, "Aria");
 
     // 日志
-    public static string Logs { get; } = $"{Root}/Logs";
+    public static string Logs { get; } = Path.Combine(Root, "Logs");
 
     // 数据库
-    public static string Database { get; } = $"{Root}/Storage";
+    public static string Database { get; } = Path.Combine(Root, "Storage");
 
     // 历史(搜索、下载) (加密)
-    public static string Download { get; } = $"{Database}/Download.db";
+    public static string Download { get; } = Path.Combine(Database, "Download.db");
 
-    public static string DbPath { get; } = $"{Database}/Data.db";
+    public static string DbPath { get; } = Path.Combine(Database, "Data.db");
 
     // 配置
-    public static string Config { get; } = $"{Root}/Config";
+    public static string Config { get; } = Path.Combine(Root, "Config");
 
     // 设置
-    public static string Settings { get; } = $"{Config}/Settings";
+    public static string Settings { get; } = Path.Combine(Config, "Settings");
 
     // 登录cookies
-    public static string Login { get; } = $"{Config}/Login";
+    public static string Login { get; } = Path.Combine(Config, "Login");
 
     // Bilibili
-    private static string Bilibili { get; } = $"{Root}/Bilibili";
+    private static string Bilibili { get; } = Path.Combine(Root, "Bilibili");
 
     // 弹幕
-    public static string Danmaku { get; } = $"{Bilibili}/Danmakus";
+    public static string Danmaku { get; } = Path.Combine(Bilibili, "Danmakus");
 
     // 下载
-    public static string Media { get; } = $"{Root}/Media";
+    public static string Media { get; } = Path.Combine(Root, "Media");
 
     // 缓存
-    public static string Cache { get; } = $"{Root}/Cache";
+    public static string Cache { get; } = Path.Combine(Root, "Cache");
 }
