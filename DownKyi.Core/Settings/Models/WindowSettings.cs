@@ -6,4 +6,15 @@ public class WindowSettings
     public double Height { get; set; } = 750; // 默认高度
     public double X { get; set; } = double.NaN; // 默认位置未设置
     public double Y { get; set; } = double.NaN; // 默认位置未设置
+
+    public WindowSettings Clone()
+    {
+        return new WindowSettings
+        {
+            Width = Width,
+            Height = Height,
+            X = X,
+            Y = Y
+        };
+    }
 }

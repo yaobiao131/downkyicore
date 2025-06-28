@@ -7,12 +7,12 @@ namespace DownKyi.Views;
 
 public partial class MainWindow : Window
 {
-    private readonly WindowSettings _windowSettings;
+    private WindowSettings _windowSettings;
 
     public MainWindow()
     {
         InitializeComponent();
-        _windowSettings = SettingsManager.GetInstance().GetWindowSettings();
+        _windowSettings = SettingsManager.GetInstance().GetWindowSettings().Clone();
         ApplyWindowSettings();
     }
 
