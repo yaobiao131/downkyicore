@@ -62,7 +62,7 @@ namespace DownKyi.Core.BiliApi.Login
         /// 获得登录的cookies
         /// </summary>
         /// <returns></returns>
-        public static List<DownKyiCookie>? GetLoginInfoCookies()
+        public static List<DownKyiCookie> GetLoginInfoCookies()
         {
             var tempFile = LocalLoginInfo + "-" + Guid.NewGuid().ToString("N");
 
@@ -81,12 +81,12 @@ namespace DownKyi.Core.BiliApi.Login
                         File.Delete(tempFile);
                     }
 
-                    return null;
+                    return new List<DownKyiCookie>();
                 }
             }
             else
             {
-                return null;
+                return new List<DownKyiCookie>();
             }
 
             var cookies = ObjectHelper.ReadCookiesFromDisk(tempFile);
@@ -96,7 +96,7 @@ namespace DownKyi.Core.BiliApi.Login
                 File.Delete(tempFile);
             }
 
-            return cookies;
+            return cookies ?? new List<DownKyiCookie>();
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace DownKyi.Core.BiliApi.Login
         public static string GetLoginInfoCookiesString()
         {
             var cookies = GetLoginInfoCookies();
-            if (cookies == null)
+            if (cookies.Count == 0)
             {
                 return "";
             }

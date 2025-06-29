@@ -1,11 +1,10 @@
-﻿using System.IO.Compression;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
+using DownKyi.Core.Storage;
 
 namespace DownKyi.Core.BiliApi;
 
@@ -19,10 +18,10 @@ internal static class WebClient
     {
         var socketsHandler = new SocketsHttpHandler
         {
-            PooledConnectionLifetime = TimeSpan.FromMinutes(10), 
+            PooledConnectionLifetime = TimeSpan.FromMinutes(10),
             PooledConnectionIdleTimeout = TimeSpan.FromMinutes(5),
             AutomaticDecompression = DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(10) 
+            ConnectTimeout = TimeSpan.FromSeconds(10)
         };
         switch (SettingsManager.GetInstance().GetNetworkProxy())
         {
@@ -49,11 +48,10 @@ internal static class WebClient
             }
                 break;
         }
-        
+
         _httpClient = new HttpClient(socketsHandler);
         _httpClient.DefaultRequestHeaders.Add("User-Agent", SettingsManager.GetInstance().GetUserAgent());
         _httpClient.DefaultRequestHeaders.Add("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7");
-        
     }
 
     internal class SpiOrigin
@@ -78,8 +76,7 @@ internal static class WebClient
         _bvuid4 = spi?.Data?.Bvuid4;
     }
 
-    public static string RequestWeb(string url, string? referer = null, string method = "GET",
-        Dictionary<string, string>? parameters = null, int retry = 3)
+    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, string>? parameters = null, int retry = 3)
     {
         if (retry <= 0)
         {
@@ -104,21 +101,21 @@ internal static class WebClient
             {
                 request.Headers.Add("origin", "https://www.bilibili.com");
 
-                var cookies = LoginHelper.GetLoginInfoCookiesString();
+                var cookies = LoginHelper.GetLoginInfoCookies();
 
                 if (!string.IsNullOrEmpty(_bvuid3))
                 {
-                    cookies += $"; buvid3={_bvuid3}";
+                    cookies.Add(new DownKyiCookie("buvid3", _bvuid3));
                 }
 
                 if (!string.IsNullOrEmpty(_bvuid4))
                 {
-                    cookies += $"; buvid4={_bvuid4}";
+                    cookies.Add(new DownKyiCookie("buvid4", _bvuid4));
                 }
 
-                if (cookies is not "")
+                if (cookies.Count > 0)
                 {
-                    request.Headers.Add("cookie", cookies);
+                    request.Headers.Add("cookie", string.Join("; ", cookies.Select(item => $"{item.Name}={item.Value}")));
                 }
             }
 
@@ -135,7 +132,7 @@ internal static class WebClient
 
             var response = _httpClient.Send(request);
             response.EnsureSuccessStatusCode();
-            
+
             using var reader = new StreamReader(response.Content.ReadAsStream());
             return reader.ReadToEnd();
         }
