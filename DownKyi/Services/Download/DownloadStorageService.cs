@@ -115,7 +115,7 @@ public class DownloadStorageService
             return;
         }
 
-        _downloadedRepository.Delete(it => it.Id == downloadedItem.Downloaded.Id);
+        _downloadedRepository.DeleteCascadeByDatabase(it => it.Id == downloadedItem.Downloaded.Id);
     }
 
     /// <summary>
