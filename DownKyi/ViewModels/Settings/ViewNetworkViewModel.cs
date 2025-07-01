@@ -535,12 +535,19 @@ public class ViewNetworkViewModel : ViewModelBase
     /// builtin同时下载数事件
     /// </summary>
     /// <param name="parameter"></param>
-    private void ExecuteMaxCurrentDownloadsCommand(object parameter)
+    private async void ExecuteMaxCurrentDownloadsCommand(object? parameter)
     {
         // SelectedMaxCurrentDownload = (int)parameter;
-
+        if(parameter == null) return;
         var isSucceed = SettingsManager.GetInstance().SetMaxCurrentDownloads(SelectedMaxCurrentDownload);
         PublishTip(isSucceed);
+        
+        var alertService = new AlertService(DialogService);
+        var result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
+        if (result == ButtonResult.OK)
+        {
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+        }
     }
 
     // builtin最大线程数事件
@@ -695,13 +702,19 @@ public class ViewNetworkViewModel : ViewModelBase
     /// Aria同时下载数事件
     /// </summary>
     /// <param name="parameter"></param>
-    private void ExecuteAriaMaxConcurrentDownloadsCommand(object? parameter)
+    private async void ExecuteAriaMaxConcurrentDownloadsCommand(object? parameter)
     {
         if (parameter == null) return;
         SelectedAriaMaxConcurrentDownload = (int)parameter;
 
         var isSucceed = SettingsManager.GetInstance().SetMaxCurrentDownloads(SelectedAriaMaxConcurrentDownload);
         PublishTip(isSucceed);
+        var alertService = new AlertService(DialogService);
+        var result = await alertService.ShowInfo(DictionaryResource.GetString("ConfirmReboot"));
+        if (result == ButtonResult.OK)
+        {
+            (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.Shutdown();
+        }
     }
 
     // Aria最大线程数事件
