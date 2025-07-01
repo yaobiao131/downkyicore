@@ -34,22 +34,33 @@ public class DownloadStorageService
         var downloading = downloadingItem.Downloading;
         downloading.Id = downloadingItem.DownloadBase.Id;
         downloading.DownloadBase = downloadingItem.DownloadBase;
-
-        _downloadingRepository.InsertOrUpdate(downloading);
+        var exists = _downloadingRepository.Select.Any(download => download.Id == downloading.Id);
+        if (!exists)
+        {
+            _downloadingRepository.Insert(downloading);
+        }
     }
 
     /// <summary>
     /// 删除下载中数据
     /// </summary>
     /// <param name="downloadingItem"></param>
-    public void RemoveDownloading(DownloadingItem? downloadingItem)
+    /// <param name="cascadeRemove">级联删除、手动删除下载中项时需要</param>
+    public void RemoveDownloading(DownloadingItem? downloadingItem, bool cascadeRemove = false)
     {
         if (downloadingItem?.DownloadBase == null)
         {
             return;
         }
 
-        _downloadingRepository.DeleteCascadeByDatabase(it => it.Id == downloadingItem.Downloading.Id);
+        if (cascadeRemove)
+        {
+            _downloadingRepository.DeleteCascadeByDatabase(it => it.Id == downloadingItem.Downloading.Id);
+        }
+        else
+        {
+            _downloadingRepository.Delete(it => it.Id == downloadingItem.DownloadBase.Id);
+        }
     }
 
     /// <summary>

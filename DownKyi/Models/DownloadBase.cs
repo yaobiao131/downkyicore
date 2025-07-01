@@ -32,7 +32,7 @@ public class DownloadBase
     public string Id { get; set; }
 
     // 需要下载的内容
-    [Column(Name = "need_download_content"),]
+    [Column(Name = "need_download_content"), JsonMap]
     public Dictionary<string, bool> NeedDownloadContent { get; set; }
 
     // 视频的id
@@ -73,8 +73,7 @@ public class DownloadBase
     public string Duration { get; set; }
 
     // 视频编码名称，AVC、HEVC
-    [Column(Name = "video_codec_name")]
-    [Description("视频编码名称，AVC、HEVC")]
+    [Column(Name = "video_codec_name"), Description("视频编码名称，AVC、HEVC")]
     public string VideoCodecName { get; set; }
 
     // 视频画质

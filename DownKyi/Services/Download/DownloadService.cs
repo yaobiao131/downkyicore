@@ -299,7 +299,7 @@ public abstract class DownloadService
 
     protected void GenerateNfoFile(DownloadingItem downloading)
     {
-        if(downloading.Metadata == null) return;
+        if (downloading.Metadata == null) return;
         var serializer = new XmlSerializer(typeof(MovieMetadata));
         var settings = new XmlWriterSettings { Indent = true };
         try
@@ -315,7 +315,7 @@ public abstract class DownloadService
             /**/
         }
     }
-    
+
 
     protected string BaseMixedFlow(DownloadingItem downloading, string? audioUid, string? videoUid)
     {
@@ -692,15 +692,15 @@ public abstract class DownloadService
 
                     Pause(downloading);
                 }
-                
-                
+
+
                 //nfo
                 if (SettingsManager.GetInstance()
                     .GetVideoContent().GenerateMovieMetadata)
                 {
-                     GenerateNfoFile(downloading);
+                    GenerateNfoFile(downloading);
                 }
-                
+
                 string? outputDanmaku = null;
                 // 如果需要下载弹幕
                 if (downloading.DownloadBase.NeedDownloadContent["downloadDanmaku"])
@@ -812,6 +812,7 @@ public abstract class DownloadService
                     Downloaded = downloaded
                 };
 
+                DownloadStorageService.RemoveDownloading(downloading);
                 DownloadStorageService.AddDownloaded(downloadedItem);
                 App.PropertyChangeAsync(() =>
                 {

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Utils.DataAnnotations;
@@ -6,7 +5,7 @@ using FreeSql.DataAnnotations;
 
 namespace DownKyi.Models;
 
-[Serializable]
+[Table(Name = "downloading")]
 public class Downloading
 {
     [Column(IsPrimary = true, Name = "id")]

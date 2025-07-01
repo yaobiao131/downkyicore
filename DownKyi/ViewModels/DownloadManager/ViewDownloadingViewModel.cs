@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using DownKyi.Core.Logging;
 using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.Services;
+using DownKyi.Services.Download;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
-using Prism.Regions;
 using Prism.Services.Dialogs;
-using Console = DownKyi.Core.Utils.Debugging.Console;
 using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
 
 namespace DownKyi.ViewModels.DownloadManager
@@ -20,6 +16,8 @@ namespace DownKyi.ViewModels.DownloadManager
     public class ViewDownloadingViewModel : ViewModelBase
     {
         public const string Tag = "PageDownloadManagerDownloading";
+
+        private readonly DownloadStorageService _downloadStorageService;
 
         #region 页面属性申明
 
@@ -33,9 +31,10 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #endregion
 
-        public ViewDownloadingViewModel(IEventAggregator eventAggregator, IDialogService dialogService) : base(
+        public ViewDownloadingViewModel(IEventAggregator eventAggregator, IDialogService dialogService, DownloadStorageService downloadStorageService) : base(
             eventAggregator, dialogService)
         {
+            _downloadStorageService = downloadStorageService;
             // 初始化DownloadingList
             DownloadingList = App.DownloadingList;
         }
@@ -155,7 +154,11 @@ namespace DownKyi.ViewModels.DownloadManager
                 var list = DownloadingList.ToList();
                 foreach (var item in list)
                 {
-                    App.PropertyChangeAsync(() => { App.DownloadingList.Remove(item); });
+                    App.PropertyChangeAsync(() =>
+                    {
+                        App.DownloadingList.Remove(item);
+                        _downloadStorageService.RemoveDownloading(item, true);
+                    });
                 }
             });
         }
@@ -177,6 +180,7 @@ namespace DownKyi.ViewModels.DownloadManager
                 return;
             }
 
+            _downloadStorageService.RemoveDownloading(downloadingItem, true);
             App.DownloadingList.Remove(downloadingItem);
         }
 
