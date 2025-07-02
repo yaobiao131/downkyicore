@@ -151,37 +151,33 @@ internal static class WebClient
     }
 
     public static void DownloadFile(string url, string destFile, string? referer = null)
+    { 
+        using var fs = File.Create(destFile);
+        using var stream = RequestStream(url, referer);
+        stream?.CopyTo(fs);
+    }
+
+    public static Stream? RequestStream(string url, string? referer = null,
+        string method = "GET")
     {
-        try
+        var request = new HttpRequestMessage(new HttpMethod(method), url);
+        
+        if (referer != null)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, url);
-
-            if (referer != null)
-            {
-                request.Headers.Referrer = new Uri(referer);
-            }
-
-            if (!url.Contains("getLogin"))
-            {
-                request.Headers.Add("origin", "https://m.bilibili.com");
-                var cookies = LoginHelper.GetLoginInfoCookiesString();
-                if (cookies is not "")
-                {
-                    request.Headers.Add("cookie", cookies);
-                }
-            }
-
-            var response = _httpClient.Send(request);
-            response.EnsureSuccessStatusCode();
-
-            using var fs = File.Create(destFile);
-            response.Content.ReadAsStream().CopyTo(fs);
+            request.Headers.Referrer = new Uri(referer);
         }
-        catch (Exception e)
+        if (!url.Contains("getLogin"))
         {
-            Console.WriteLine("DownloadFile()发生异常: {0}", e);
-            LogManager.Error(e);
-            throw;
+            request.Headers.Add("origin", "https://m.bilibili.com");
+            var cookies = LoginHelper.GetLoginInfoCookiesString();
+            if (cookies is not "")
+            {
+                request.Headers.Add("cookie", cookies);
+            }
         }
+        
+        var response = _httpClient.Send(request);
+        response.EnsureSuccessStatusCode();
+        return response.Content.ReadAsStream();
     }
 }
