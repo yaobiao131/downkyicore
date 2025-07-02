@@ -18,28 +18,11 @@ public static class DanmakuProtobuf
     {
         var url = $"https://api.bilibili.com/x/v2/dm/web/seg.so?type=1&oid={cid}&pid={avid}&segment_index={segmentIndex}";
         const string referer = "https://www.bilibili.com";
-
-        var directory = Path.Combine(StorageManager.GetDanmaku(), $"{cid}");
-        var filePath = Path.Combine(directory, $"{segmentIndex}.proto");
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
-
-        try
-        {
-            WebClient.DownloadFile(url, filePath, referer);
-        }
-        catch (Exception e)
-        {
-            Console.PrintLine("GetDanmakuProto()发生异常: {0}", e);
-            //Logging.LogManager.Error(e);
-        }
-
+        
         var danmakuList = new List<BiliDanmaku>();
         try
         {
-            using var input = File.OpenRead(filePath);
+            using var input =  WebClient.RequestStream(url,referer);
             var danmakus = DmSegMobileReply.Parser.ParseFrom(input);
             if (danmakus?.Elems == null)
             {
