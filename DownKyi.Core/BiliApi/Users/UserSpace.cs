@@ -1,6 +1,7 @@
 ﻿using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.Logging;
+using DownKyi.Core.Storage;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Console = DownKyi.Core.Utils.Debugging.Console;
@@ -126,6 +127,14 @@ public static class UserSpace
             { "tid", tid },
             { "keyword", keyword },
         };
+        if (!File.Exists(StorageManager.GetLogin()))
+        {
+            parameters.Add("dm_img_str", "V2ViR0wgMS");
+            parameters.Add("dm_img_list", "[]");
+            parameters.Add("dm_cover_img_str", "QU5HTEUgKE5WSURJQSwgTlZJRElBIEdlRm9yY2UgR1RYIDk4MCBEaXJlY3QzRDExIHZzXzVfMCBwc181XzApLCBvciBzaW1pbGFyR29vZ2xlIEluYy4gKE5WSURJQS");
+            parameters.Add("dm_img_inter", "{\"ds\":[],\"wh\":[0,0,0],\"of\":[0,0,0]}");
+        }
+
         var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
         var url = $"https://api.bilibili.com/x/space/wbi/arc/search?{query}";
         const string referer = "https://www.bilibili.com";
@@ -253,7 +262,7 @@ public static class UserSpace
     public static SpaceSeasonsSeries? GetSeasonsSeries(long mid, int pageNum, int pageSize)
     {
         // https://api.bilibili.com/x/polymer/space/seasons_series_list?mid=49246269&page_num=1&page_size=18
-        var url = $"https://api.bilibili.com/x/polymer/space/seasons_series_list?mid={mid}&page_num={pageNum}&page_size={pageSize}";
+        var url = $"https://api.bilibili.com/x/polymer/web-space/seasons_series_list?mid={mid}&page_num={pageNum}&page_size={pageSize}";
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
 
