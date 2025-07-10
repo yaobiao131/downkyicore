@@ -278,19 +278,12 @@ public class ViewDelogoViewModel : ViewModelBase
         {
             return;
         }
-
-        var presenter = output.GetVisualDescendants()
-            .OfType<TextPresenter>()
+        
+        var scrollViewer = output.GetVisualDescendants()
+            .OfType<ScrollViewer>()
             .FirstOrDefault();
 
-        if (presenter == null)
-            return;
-        
-        int lineCount = presenter.TextLayout?.TextLines?.Count ?? 0;
-        if (lineCount > 0)
-        {
-            output.ScrollToLine(lineCount - 1);
-        }
+        scrollViewer?.ScrollToEnd();
     }
 
     #endregion
