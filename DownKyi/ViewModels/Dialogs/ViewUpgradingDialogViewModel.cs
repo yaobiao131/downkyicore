@@ -90,6 +90,7 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
         Task.Run(() => { Upgrade1_0_20To1_0_21(); });
     }
 
+#pragma warning disable SYSLIB5005
     private void Upgrade1_0_20To1_0_21()
     {
         var noMigrate = false;
@@ -311,6 +312,7 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
             Dispatcher.UIThread.Invoke(() => RaiseRequestClose(new DialogResult()));
         }
     }
+#pragma warning restore SYSLIB5005
 
     private class DownloadedWithData
     {
