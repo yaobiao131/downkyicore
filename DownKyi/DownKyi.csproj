@@ -8,20 +8,11 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
         <ApplicationIcon>Resources\favicon.ico</ApplicationIcon>
-        <NoWarn>SYSLIB5005</NoWarn>
-        <PublishTrimmed>true</PublishTrimmed>
-        <TrimMode>link</TrimMode>
     </PropertyGroup>
-
-    <ItemGroup>
-        <TrimmerRootAssembly Include="mscorlib" />
-        <TrimmerRootDescriptor Include="Linker.xml" />
-    </ItemGroup>
     
     <ItemGroup>
         <AvaloniaResource Include="Resources\**"/>
     </ItemGroup>
-
 
     <ItemGroup>
         <PackageReference Include="Avalonia"/>
