@@ -13,6 +13,7 @@ public class BangumiEpisode : BaseModel
     // badge_type
     [JsonProperty("bvid")] public string Bvid { get; set; }
     [JsonProperty("cid")] public long Cid { get; set; }
+    [JsonProperty("ep_id")] public long EpisodeId { get; set; }
     [JsonProperty("cover")] public string Cover { get; set; }
     [JsonProperty("dimension")] public Dimension Dimension { get; set; }
     [JsonProperty("duration")] public long Duration { get; set; }

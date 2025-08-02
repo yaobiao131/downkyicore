@@ -418,8 +418,7 @@ public abstract class DownloadService
                 };
                 break;
             case PlayStreamType.Bangumi:
-                downloading.PlayUrl ??= VideoStream.GetBangumiPlayUrl(downloading.DownloadBase.Avid,
-                    downloading.DownloadBase.Bvid, downloading.DownloadBase.Cid);
+                downloading.PlayUrl ??= VideoStream.GetBangumiPlayUrl(downloading.DownloadBase.EpisodeId);
                 break;
             case PlayStreamType.Cheese:
                 downloading.PlayUrl ??= VideoStream.GetCheesePlayUrl(downloading.DownloadBase.Avid,

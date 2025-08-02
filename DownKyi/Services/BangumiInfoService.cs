@@ -105,7 +105,7 @@ public class BangumiInfoService : IInfoService
                 Avid = episode.Aid,
                 Bvid = episode.Bvid,
                 Cid = episode.Cid,
-                EpisodeId = -1,
+                EpisodeId = episode.EpisodeId,
                 FirstFrame = episode.Cover,
                 Order = order,
                 Name = name,
@@ -199,7 +199,7 @@ public class BangumiInfoService : IInfoService
                     Avid = episode.Aid,
                     Bvid = episode.Bvid,
                     Cid = episode.Cid,
-                    EpisodeId = -1,
+                    EpisodeId = episode.EpisodeId,
                     FirstFrame = episode.Cover,
                     Order = order,
                     Name = name,
@@ -255,7 +255,7 @@ public class BangumiInfoService : IInfoService
     /// <param name="page"></param>
     public void GetVideoStream(VideoPage page)
     {
-        var playUrl = VideoStream.GetBangumiPlayUrl(page.Avid, page.Bvid, page.Cid);
+        var playUrl = VideoStream.GetBangumiPlayUrl(page.EpisodeId);
         Dispatcher.UIThread.Invoke(() => Utils.VideoPageInfo(playUrl, page));
     }
     

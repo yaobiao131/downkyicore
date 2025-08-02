@@ -84,7 +84,7 @@ public class ViewBiliHelperViewModel : ViewModelBase
             return;
         }
 
-        await Task.Run(() => { Bvid = BvId.Av2Bv((ulong)avid); });
+        await Task.Run(() => { Bvid = BvId.Av2Bv(avid); });
     }
 
     // 输入bvid事件
