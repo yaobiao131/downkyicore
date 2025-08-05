@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DownKyi.Core.Settings;
 using DownKyi.Models;
 using Newtonsoft.Json;
 

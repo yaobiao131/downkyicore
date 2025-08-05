@@ -585,10 +585,10 @@ public class AddToDownloadService
             Premiered = page.OriginalPublishTime.ToString("yyyy-MM-dd"),
             BilibiliId = new UniqueId("bilibili", page.Bvid),
             Actors = new List<Actor> { new(page.Owner.Name, page.Owner.Mid.ToString()) },
-            Genres = _videoInfoView.VideoZone?.Split(">")?.ToList() ?? new(),
-            Tags = page.LazyTags?.Value ?? new(),
+            Genres = _videoInfoView.VideoZone?.Split(">")?.ToList() ?? new List<string>(),
+            Tags = page.LazyTags?.Value ?? new List<string>(),
             Ratings = _videoInfoView.Score != null
-                ? new()
+                ? new List<Rating>
                 {
                     new()
                     {
@@ -598,7 +598,7 @@ public class AddToDownloadService
                         Value = _videoInfoView.Score.Value
                     }
                 }
-                : new()
+                : new List<Rating>()
         };
         return metadata;
     }

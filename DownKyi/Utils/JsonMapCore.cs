@@ -14,7 +14,7 @@ namespace DownKyi.Utils;
 
 public static class SystemTextJsonHelper
 {
-    private static readonly MethodInfo _deserializeMethodInfo =
+    private static readonly MethodInfo DeserializeMethodInfo =
         typeof(JsonSerializer).GetMethods(BindingFlags.Public | BindingFlags.Static)
             .First(m => m.Name == "Deserialize"
                         && m.IsGenericMethod
@@ -24,7 +24,7 @@ public static class SystemTextJsonHelper
     public static object? Deserialize(string json, Type type, JsonSerializerOptions options)
     {
         // 创建泛型方法
-        var genericMethod = _deserializeMethodInfo.MakeGenericMethod(type);
+        var genericMethod = DeserializeMethodInfo.MakeGenericMethod(type);
         return genericMethod.Invoke(null, new object[] { json, options });
     }
 
@@ -36,7 +36,7 @@ public static class SystemTextJsonHelper
 
 public static class FreeSqlJsonMapCoreExtensions
 {
-    private static int _isAoped = 0;
+    private static int _isAoped;
     private static readonly ConcurrentDictionary<Type, bool> DicTypes = new();
 
     private static readonly MethodInfo? MethodJsonConvertDeserializeObject =

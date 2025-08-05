@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using DownKyi.Core.Settings;
 
 namespace DownKyi.Core.BiliApi.Sign;

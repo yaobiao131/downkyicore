@@ -1,7 +1,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+#if !DEBUG
 using System.Threading;
+#endif
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -45,8 +47,9 @@ public partial class App : PrismApplication
     public new static App Current => (App)Application.Current!;
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
     public IClassicDesktopStyleApplicationLifetime? AppLife;
-
+#if !DEBUG
     private static Mutex _mutex;
+#endif
 
     // 下载服务
     private IDownloadService? _downloadService;
@@ -54,11 +57,11 @@ public partial class App : PrismApplication
     public override void Initialize()
     {
 #if !DEBUG
-              _mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
-                if (!createdNew)
-                {
-                    Environment.Exit(0);
-                }
+        _mutex = new Mutex(true, "Global\\DownKyi", out var createdNew);
+        if (!createdNew)
+        {
+            Environment.Exit(0);
+        }
 #endif
 
         AvaloniaXamlLoader.Load(this);
