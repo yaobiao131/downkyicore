@@ -1,0 +1,18 @@
+name: "🚀 Feature Request"
+description: "提议一个新功能"
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    attributes:
+      label: "功能描述"
+      description: "详细描述你希望添加的功能。"
+    validations:
+      required: true
+      
+  - type: textarea
+    attributes:
+      label: "为什么需要这个功能？"
+      description: "解释这个功能如何改善项目。"
+    validations:
+      required: true

@@ -1,0 +1,89 @@
+name: "🐛 Bug Report"
+description: "报告 downkyiCore 的功能异常或错误"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **⚠️ 提交前必读：**
+        1. 已尝试下方"常见问题自查"中的解决方案
+        2. 已用关键词搜索 Issues（如`解析失败`、`下载错误`）
+        3. 确保提供完整的环境信息
+
+  - type: dropdown
+    id: searched
+    attributes:
+      label: "🔎 是否已搜索类似问题？"
+      description: "请确认已搜索现有 Issues"
+      options:
+        - "是，未找到相同问题"
+        - "否，但我需要帮助"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue_info
+    attributes:
+      label: "🚨 问题详情与复现方式"
+      description: "请清晰描述问题及如何复现（包含具体操作步骤）"
+      placeholder: |
+        ### 问题现象
+        解析 BV 号 `BV1tJ411C76i` 添加到下载,卡在了视频下载中
+
+        ### 复现步骤
+        2. 粘贴 BV 号 `BV1tJ411C76i` 点击解析按钮,
+        
+        ### 预期结果
+        应正常下载视频
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: "📂 环境信息（必填）"
+      description: "请提供以下信息"
+      placeholder: |
+        - downkyiCore 版本：`1.0.20`
+        - 操作系统：`Windows 11`
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: "⚠️ 已尝试的解决方案"
+      options:
+        - label: "更新至最新版本"
+        - label: "检查网络连接（尝试切换网络环境）:cite[2]:cite[6]"
+        - label: "更改解析模式（API/网页解析）:cite[4]"
+        - label: "更换下载器（Aria2/内建下载器）"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "📎 补充信息"
+      description: "日志、截图或视频链接（非必填但建议提供）"
+      placeholder: |
+        - 错误日志：`（如有报错请粘贴）`
+        - 视频示例：
+          * 无法解析：`BVyyyy`
+        - 截图：（可描述异常现象）
+
+  - type: markdown
+    attributes:
+      value: |
+        ### 常见问题速查
+        🔧 **二维码相关问题**  
+        → 检查网络环境是否通畅  
+        
+        🔧 **解析/下载问题**  
+        → 切换内建下载器 | 检查存储路径权限  
+        
+        🔧 **高码率视频问题**  
+        → 使用API解析模式:cite[4] | 确认大会员权限  
+
+        > 💡 多数网络问题可通过切换热点解决:cite[2]
