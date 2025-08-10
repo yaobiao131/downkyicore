@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
 using DownKyi.Models;
@@ -65,6 +66,17 @@ public partial class App : PrismApplication
 #endif
 
         AvaloniaXamlLoader.Load(this);
+        Dispatcher.UIThread.UnhandledException += (_, e) =>
+        {
+            LogManager.Error("[Program crash]",e.Exception);
+        };
+        
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            var exception = e.ExceptionObject as Exception;
+            LogManager.Error("[Program crash]",exception!);
+        };
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Exit += OnExit!;
