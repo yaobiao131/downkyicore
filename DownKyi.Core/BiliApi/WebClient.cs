@@ -8,7 +8,7 @@ using DownKyi.Core.Storage;
 
 namespace DownKyi.Core.BiliApi;
 
-internal static class WebClient
+public static class WebClient
 {
     private static readonly HttpClient HttpClient;
     private static string? _bvuid3 = string.Empty;
