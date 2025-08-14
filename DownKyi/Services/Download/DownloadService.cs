@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using DownKyi.Core.BiliApi;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.VideoStream.Models;
@@ -176,7 +177,7 @@ public abstract class DownloadService
         try
         {
             if (coverUrl == null) return null;
-            StorageUtils.DownloadImage(coverUrl, fileName);
+            WebClient.DownloadFile(coverUrl, fileName);
 
             // 记录本次下载的文件
             downloading.Downloading.DownloadFiles.TryAdd(coverUrl, fileName);
