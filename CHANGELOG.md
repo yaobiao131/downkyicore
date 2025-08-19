@@ -1,5 +1,19 @@
 # 更新日志
 
+## [1.0.22] - 2025-08-19
+
+### Bug Fixes
+
+- 还原番剧解析代码 #354
+
+### Miscellaneous Tasks
+
+- 优化ci构建，使trimmed正确移除程序集
+
+### Refactor
+
+- 消除对WebClient程序集的依赖 (#350)
+
 ## [1.0.21] - 2025-08-10
 
 ### Bug Fixes
