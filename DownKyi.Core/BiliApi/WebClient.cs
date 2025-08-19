@@ -8,7 +8,7 @@ using DownKyi.Core.Storage;
 
 namespace DownKyi.Core.BiliApi;
 
-internal static class WebClient
+public static class WebClient
 {
     private static readonly HttpClient HttpClient;
     private static string? _bvuid3 = string.Empty;
@@ -31,7 +31,7 @@ internal static class WebClient
                 break;
             case NetworkProxy.System:
                 socketsHandler.UseProxy = true;
-                socketsHandler.Proxy = WebRequest.GetSystemWebProxy();
+                socketsHandler.Proxy = HttpClient.DefaultProxy;
                 break;
             case NetworkProxy.Custom:
             {
@@ -42,10 +42,11 @@ internal static class WebClient
                 }
                 catch (Exception e)
                 {
-                    socketsHandler.UseProxy = true;
+                    socketsHandler.UseProxy = false;
+                    socketsHandler.Proxy = null;
                     Console.WriteLine(e);
                 }
-            }
+            } 
                 break;
         }
 
