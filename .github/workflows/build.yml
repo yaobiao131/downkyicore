@@ -51,7 +51,7 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet --version 1.7.1
+          dotnet tool install -g KuiperZone.PupNet --version 1.8.0
       - name: Get Deps
         run: |
           .\ffmpeg.ps1 ${{ matrix.cpu }}
@@ -140,9 +140,9 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet --version 1.7.1
-          sudo apt update
-          sudo apt install libfuse2
+          dotnet tool install -g KuiperZone.PupNet --version 1.8.0
+          sudo apt-get update
+          sudo apt-get install libfuse2
       - name: Get Deps
         run: |
           chmod +x ffmpeg.sh
@@ -208,7 +208,7 @@ jobs:
       - name: Build ${{ matrix.cpu }}
         run: |
           dotnet restore
-          dotnet publish --self-contained -r osx-${{ matrix.cpu }} -c Release -p:DebugType=None -p:DebugSymbols=false
+          dotnet publish DownKyi/DownKyi.csproj --self-contained -r osx-${{ matrix.cpu }} -c Release -p:DebugType=None -p:DebugSymbols=false
       - name: Package app
         run: |
           chmod +x package.sh
