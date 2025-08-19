@@ -255,7 +255,7 @@ public class BangumiInfoService : IInfoService
     /// <param name="page"></param>
     public void GetVideoStream(VideoPage page)
     {
-        var playUrl = VideoStream.GetBangumiPlayUrl(page.EpisodeId);
+        var playUrl = VideoStream.GetBangumiPlayUrl(page.Avid, page.Bvid, page.Cid);
         Dispatcher.UIThread.Invoke(() => Utils.VideoPageInfo(playUrl, page));
     }
     

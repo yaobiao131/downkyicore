@@ -1,10 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.BiliApi.Models.Json;
 using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.BiliApi.VideoStream.Models;
 using DownKyi.Core.Logging;
-using DownKyi.Core.Storage;
 using Newtonsoft.Json;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
@@ -184,78 +182,24 @@ public static class VideoStream
     // /// <param name="cid"></param>
     // /// <param name="quality"></param>
     // /// <returns></returns>
-    // public static PlayUrl GetBangumiPlayUrl(long avid, string bvid, long cid, int quality = 125)
-    // {
-    //     var baseUrl = $"https://api.bilibili.com/pgc/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
-    //     string url;
-    //     if (bvid != null)
-    //     {
-    //         url = $"{baseUrl}&bvid={bvid}";
-    //     }
-    //     else if (avid > -1)
-    //     {
-    //         url = $"{baseUrl}&aid={avid}";
-    //     }
-    //     else
-    //     {
-    //         return null;
-    //     }
-    //
-    //     return GetPlayUrl(url);
-    // }
-
-    /// <summary>
-    /// 获取番剧的视频流
-    /// </summary>
-    /// <param name="episodeId"></param>
-    /// <param name="quality"></param>
-    /// <returns></returns>
-    public static PlayUrl? GetBangumiPlayUrl(long episodeId, int quality = 125)
+    public static PlayUrl? GetBangumiPlayUrl(long avid, string bvid, long cid, int quality = 125)
     {
-        string? csrfToken = null;
-        if (File.Exists(StorageManager.GetLogin()))
+        var baseUrl = $"https://api.bilibili.com/pgc/player/web/playurl?cid={cid}&qn={quality}&fourk=1&fnver=0&fnval=4048";
+        string url;
+        if (bvid != null)
         {
-            csrfToken = LoginHelper.GetLoginInfoCookies().First(cookie => cookie.Name == "bili_jct").Value;
+            url = $"{baseUrl}&bvid={bvid}";
+        }
+        else if (avid > -1)
+        {
+            url = $"{baseUrl}&aid={avid}";
+        }
+        else
+        {
+            return null;
         }
 
-        var url = "https://api.bilibili.com/ogv/player/playview";
-        if (csrfToken != null) url += $"?csrf={csrfToken}";
-        var parameters = new Dictionary<string, object?>
-        {
-            { "scene", "normal" },
-            {
-                "video_index", new Dictionary<string, object?>
-                {
-                    { "bvid", null },
-                    { "cid", null },
-                    { "ogv_season_id", null },
-                    { "ogv_episode_id", episodeId },
-                }
-            },
-            {
-                "video_param", new Dictionary<string, object>
-                {
-                    { "qn", quality }
-                }
-            },
-            {
-                "player_param", new Dictionary<string, object>
-                {
-                    { "fnver", 0 },
-                    { "fnval", 4048 },
-                    { "drm_tech_type", 2 },
-                }
-            },
-            {
-                "exp_info", new Dictionary<string, object>
-                {
-                    { "ogv_half_pay", true }
-                }
-            }
-        };
-
-
-        return GetPlayUrlBangumi(url, parameters);
+        return GetPlayUrl(url);
     }
 
     /// <summary>
@@ -375,27 +319,5 @@ public static class VideoStream
             LogManager.Error("GetPlayUrlPc()", e);
             return null;
         }
-    }
-
-    private static PlayUrl? GetPlayUrlBangumi(string url, Dictionary<string, object?> parameters)
-    {
-        const string referer = "https://www.bilibili.com";
-        var response = WebClient.RequestWeb(url, referer, "POST", parameters, json: true);
-        var playViewOrigin = JsonConvert.DeserializeObject<PlayViewOrigin>(response);
-        var playViewOriginData = playViewOrigin?.Data;
-        if (playViewOriginData == null)
-        {
-            Console.PrintLine("GetPlayUrlBangumi()返回数据为空");
-            LogManager.Error("GetPlayUrlBangumi()", new Exception("返回数据为空"));
-            return null;
-        }
-
-        var notLoginPlugin = playViewOriginData.Plugins.Find(plugin => plugin.Name == "NoLoginDrmLimitPanel");
-        if (notLoginPlugin != null)
-        {
-            throw new Exception("当前视频需要登录才能观看，请先登录B站账号。");
-        }
-
-        return playViewOriginData.VideoInfo;
     }
 }
