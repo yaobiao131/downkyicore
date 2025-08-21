@@ -1,5 +1,6 @@
 using System;
-using System.Diagnostics;
+using Avalonia.Controls;
+using DownKyi.Core.Logging;
 using DownKyi.Events;
 using Prism.Events;
 
@@ -11,22 +12,26 @@ public static class PlatformHelper
     /// 打开文件夹
     /// </summary>
     /// <param name="folder">路径</param>
-    public static void OpenFolder(string folder)
+    /// <param name="eventAggregator"></param>
+    public static void OpenFolder(string folder, IEventAggregator? eventAggregator = null)
     {
-        if (OperatingSystem.IsWindows())
+        var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
+        if (topLevel == null)
         {
-            Process.Start("explorer.exe", $"{folder}");
+            LogManager.Error(nameof(PlatformHelper), "无法获取顶层窗口，无法打开文件夹");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("无法获取顶层窗口，无法打开文件夹");
+            return;
         }
 
-        if (OperatingSystem.IsMacOS())
+        var openFolder = topLevel.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder)).Result;
+        if (openFolder == null)
         {
-            Process.Start("open", $"\"{folder}\"");
+            LogManager.Error(nameof(PlatformHelper), "无法获取文件夹路径");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("无法获取文件夹路径");
+            return;
         }
 
-        if (OperatingSystem.IsLinux())
-        {
-            Process.Start("xdg-open", $"\"{folder}\"");
-        }
+        _ = topLevel.Launcher.LaunchFileAsync(openFolder).Result;
     }
 
     /// <summary>
@@ -36,26 +41,35 @@ public static class PlatformHelper
     /// <param name="eventAggregator"></param>
     public static void Open(string filename, IEventAggregator? eventAggregator = null)
     {
-        try
+        var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
+        if (topLevel == null)
         {
-            if (OperatingSystem.IsWindows())
-            {
-                Process.Start("explorer.exe", filename);
-            }
-
-            if (OperatingSystem.IsMacOS())
-            {
-                Process.Start("open", $"\"{filename}\"");
-            }
-
-            if (OperatingSystem.IsLinux())
-            {
-                Process.Start("xdg-open", $"\"{filename}\"");
-            }
+            LogManager.Error(nameof(PlatformHelper), "无法获取顶层窗口，无法打开文件");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("无法获取顶层窗口，无法打开文件");
+            return;
         }
-        catch (Exception)
+
+        var openFolder = topLevel.StorageProvider.TryGetFileFromPathAsync(new Uri(filename)).Result;
+        if (openFolder == null)
         {
-            eventAggregator?.GetEvent<MessageEvent>().Publish("没有可以打开网址的默认程序");
+            LogManager.Error(nameof(PlatformHelper), "无法获取文件路径");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("无法获取文件路径");
+            return;
         }
+
+        _ = topLevel.Launcher.LaunchFileAsync(openFolder).Result;
+    }
+
+    public static void OpenUrl(string url, IEventAggregator? eventAggregator = null)
+    {
+        var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
+        if (topLevel == null)
+        {
+            LogManager.Error(nameof(PlatformHelper), "无法获取顶层窗口");
+            eventAggregator?.GetEvent<MessageEvent>().Publish("无法获取顶层窗口");
+            return;
+        }
+
+        _ = topLevel.Launcher.LaunchUriAsync(new Uri(url)).Result;
     }
 }

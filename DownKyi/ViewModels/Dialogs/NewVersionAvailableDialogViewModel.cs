@@ -24,7 +24,7 @@ namespace DownKyi.ViewModels.Dialogs
         private void ExecuteAllowCommand()
         {
             const ButtonResult result = ButtonResult.OK;
-            PlatformHelper.Open($"https://github.com/{App.RepoOwner}/{App.RepoName}/releases/tag/{TagName}");
+            PlatformHelper.OpenUrl($"https://github.com/{App.RepoOwner}/{App.RepoName}/releases/tag/{TagName}");
             RaiseRequestClose(new DialogResult(result));
         }
 

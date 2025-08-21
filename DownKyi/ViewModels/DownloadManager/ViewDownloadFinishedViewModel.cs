@@ -200,7 +200,7 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
             var videoPath = $"{downloadedItem.DownloadBase.FilePath}{suffix}";
             var fileInfo = new FileInfo(videoPath);
             if (!File.Exists(fileInfo.FullName) || fileInfo.DirectoryName == null) continue;
-            PlatformHelper.OpenFolder(fileInfo.DirectoryName);
+            PlatformHelper.OpenFolder(fileInfo.DirectoryName, EventAggregator);
             return;
         }
 
