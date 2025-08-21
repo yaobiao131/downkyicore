@@ -178,19 +178,11 @@ public class ViewUpgradingDialogViewModel : BaseDialogViewModel
                 dbHelper?.Dispose();
                 if (attemptCount == 1)
                 {
-#if DEBUG
-                    dbHelper = new SqliteDatabase(oldDbPath);
-#else
                     dbHelper = new SqliteDatabase(oldDbPath, "bdb8eb69-3698-4af9-b722-9312d0fba623");
-#endif
                 }
                 else
                 {
-#if DEBUG
-                    dbHelper = new SqliteDatabase(oldDbPath, "bdb8eb69-3698-4af9-b722-9312d0fba623");
-#else
                     dbHelper = new SqliteDatabase(oldDbPath);
-#endif
                     await SetImportantMessage("尝试备用连接方式");
                 }
 
