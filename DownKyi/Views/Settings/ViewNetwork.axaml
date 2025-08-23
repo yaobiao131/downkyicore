@@ -29,7 +29,7 @@
                 Foreground="{DynamicResource BrushTextDark}"
                 IsChecked="{Binding UseSsl, Mode=TwoWay}" />
 
-             <HeaderedContentControl
+            <HeaderedContentControl
                 Margin="0,20,0,0"
                 Padding="10,5"
                 HorizontalAlignment="Left"
@@ -76,36 +76,36 @@
                                 Width="220"
                                 VerticalContentAlignment="Center"
                                 Text="{Binding CustomNetworkProxy}">
-                                <Interaction.Behaviors>
-                                    <ExecuteCommandOnKeyDownBehavior
-                                        Key="Enter"
+                                <TextBox.KeyBindings>
+                                    <KeyBinding
                                         Command="{Binding CustomNetworkProxyCommand}"
-                                        CommandParameter="{Binding ElementName=CustomNetworkProxy, Path=Text}" />
-                                </Interaction.Behaviors>
+                                        CommandParameter="{Binding #CustomNetworkProxy.Text}"
+                                        Gesture="Enter" />
+                                </TextBox.KeyBindings>
                             </TextBox>
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </HeaderedContentControl>
-            
-            
+
+
             <TextBlock
                 Margin="0,20,0,0"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
                 Text="{DynamicResource UserAgent}" />
-            
+
             <TextBox
                 Name="NameUserAgent"
                 Margin="0,10,0,0"
                 HorizontalAlignment="Stretch"
                 Text="{Binding UserAgent}">
-                <Interaction.Behaviors>
-                    <ExecuteCommandOnKeyDownBehavior
-                        Key="Enter"
+                <TextBox.KeyBindings>
+                    <KeyBinding
                         Command="{Binding UserAgentCommand}"
-                        CommandParameter="{Binding ElementName=NameUserAgent, Path=Text}" />
-                </Interaction.Behaviors>
+                        CommandParameter="{Binding #NameUserAgent.Text}"
+                        Gesture="Enter" />
+                </TextBox.KeyBindings>
             </TextBox>
 
             <StackPanel Margin="0,20,0,0" Orientation="Vertical">
@@ -219,12 +219,12 @@
                             Width="200"
                             VerticalContentAlignment="Center"
                             Text="{Binding HttpProxy}">
-                            <Interaction.Behaviors>
-                                <ExecuteCommandOnKeyDownBehavior
-                                    Key="Enter"
+                            <TextBox.KeyBindings>
+                                <KeyBinding
                                     Command="{Binding HttpProxyCommand}"
-                                    CommandParameter="{Binding ElementName=NameHttpProxy, Path=Text}" />
-                            </Interaction.Behaviors>
+                                    CommandParameter="{Binding #NameHttpProxy.Text}"
+                                    Gesture="Enter" />
+                            </TextBox.KeyBindings>
                         </TextBox>
                     </StackPanel>
                     <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
@@ -238,12 +238,12 @@
                             Width="100"
                             VerticalContentAlignment="Center"
                             Text="{Binding HttpProxyPort}">
-                            <Interaction.Behaviors>
-                                <ExecuteCommandOnKeyDownBehavior
-                                    Key="Enter"
+                            <TextBox.KeyBindings>
+                                <KeyBinding
                                     Command="{Binding HttpProxyPortCommand}"
-                                    CommandParameter="{Binding ElementName=NameHttpProxyPort, Path=Text}" />
-                            </Interaction.Behaviors>
+                                    CommandParameter="{Binding #NameHttpProxyPort.Text}"
+                                    Gesture="Enter" />
+                            </TextBox.KeyBindings>
                         </TextBox>
                     </StackPanel>
                 </StackPanel>
@@ -265,12 +265,12 @@
                         Width="100"
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaListenPort}">
-                        <Interaction.Behaviors>
-                            <ExecuteCommandOnKeyDownBehavior
-                                Key="Enter"
+                        <TextBox.KeyBindings>
+                            <KeyBinding
                                 Command="{Binding AriaListenPortCommand}"
-                                CommandParameter="{Binding ElementName=NameAriaListenPort, Path=Text}" />
-                        </Interaction.Behaviors>
+                                CommandParameter="{Binding #NameAriaListenPort.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
                     </TextBox>
                 </StackPanel>
 
@@ -363,12 +363,12 @@
                                 VerticalContentAlignment="Center"
                                 Text="{Binding AriaMaxOverallDownloadLimit}"
                                 ToolTip.Tip="{DynamicResource PressEnterToApplySettingTip}">
-                                <Interaction.Behaviors>
-                                    <ExecuteCommandOnKeyDownBehavior
-                                        Key="Enter"
+                                <TextBox.KeyBindings>
+                                    <KeyBinding
                                         Command="{Binding AriaMaxOverallDownloadLimitCommand}"
-                                        CommandParameter="{Binding ElementName=NameAriaMaxOverallDownloadLimit, Path=Text}" />
-                                </Interaction.Behaviors>
+                                        CommandParameter="{Binding #NameAriaMaxOverallDownloadLimit.Text}"
+                                        Gesture="Enter" />
+                                </TextBox.KeyBindings>
                             </TextBox>
                         </StackPanel>
                         <StackPanel Margin="0,10,0,5" Orientation="Horizontal">
@@ -384,12 +384,12 @@
                                 VerticalContentAlignment="Center"
                                 Text="{Binding AriaMaxDownloadLimit}"
                                 ToolTip.Tip="{DynamicResource PressEnterToApplySettingTip}">
-                                <Interaction.Behaviors>
-                                    <ExecuteCommandOnKeyDownBehavior
-                                        Key="Enter"
+                                <TextBox.KeyBindings>
+                                    <KeyBinding
                                         Command="{Binding AriaMaxDownloadLimitCommand}"
-                                        CommandParameter="{Binding ElementName=NameAriaMaxDownloadLimit, Path=Text}" />
-                                </Interaction.Behaviors>
+                                        CommandParameter="{Binding #NameAriaMaxDownloadLimit.Text}"
+                                        Gesture="Enter" />
+                                </TextBox.KeyBindings>
                             </TextBox>
                         </StackPanel>
                     </StackPanel>
@@ -438,12 +438,12 @@
                             Width="200"
                             VerticalContentAlignment="Center"
                             Text="{Binding AriaHttpProxy}">
-                            <Interaction.Behaviors>
-                                <ExecuteCommandOnKeyDownBehavior
-                                    Key="Enter"
+                            <TextBox.KeyBindings>
+                                <KeyBinding
                                     Command="{Binding AriaHttpProxyCommand}"
-                                    CommandParameter="{Binding ElementName=NameAriaHttpProxy, Path=Text}" />
-                            </Interaction.Behaviors>
+                                    CommandParameter="{Binding #NameAriaHttpProxy.Text}"
+                                    Gesture="Enter" />
+                            </TextBox.KeyBindings>
                         </TextBox>
                     </StackPanel>
                     <StackPanel Margin="30,0,0,0" Orientation="Horizontal">
@@ -457,12 +457,12 @@
                             Width="100"
                             VerticalContentAlignment="Center"
                             Text="{Binding AriaHttpProxyPort}">
-                            <Interaction.Behaviors>
-                                <ExecuteCommandOnKeyDownBehavior
-                                    Key="Enter"
+                            <TextBox.KeyBindings>
+                                <KeyBinding
                                     Command="{Binding AriaHttpProxyPortCommand}"
-                                    CommandParameter="{Binding ElementName=NameAriaHttpProxyPort, Path=Text}" />
-                            </Interaction.Behaviors>
+                                    CommandParameter="{Binding #NameAriaHttpProxyPort.Text}"
+                                    Gesture="Enter" />
+                            </TextBox.KeyBindings>
                         </TextBox>
                     </StackPanel>
                 </StackPanel>
@@ -506,12 +506,12 @@
                         Width="300"
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaHost}">
-                        <Interaction.Behaviors>
-                            <ExecuteCommandOnKeyDownBehavior
-                                Key="Enter"
+                        <TextBox.KeyBindings>
+                            <KeyBinding
                                 Command="{Binding AriaHostCommand}"
-                                CommandParameter="{Binding ElementName=NameAriaHost, Path=Text}" />
-                        </Interaction.Behaviors>
+                                CommandParameter="{Binding #NameAriaHost.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
                     </TextBox>
                 </StackPanel>
                 <StackPanel
@@ -529,12 +529,12 @@
                         Width="100"
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaListenPort}">
-                        <Interaction.Behaviors>
-                            <ExecuteCommandOnKeyDownBehavior
-                                Key="Enter"
+                        <TextBox.KeyBindings>
+                            <KeyBinding
                                 Command="{Binding AriaListenPortCommand}"
-                                CommandParameter="{Binding ElementName=NameAriaPort, Path=Text}" />
-                        </Interaction.Behaviors>
+                                CommandParameter="{Binding #NameAriaPort.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
                     </TextBox>
                 </StackPanel>
                 <StackPanel
@@ -552,12 +552,12 @@
                         Width="100"
                         VerticalContentAlignment="Center"
                         Text="{Binding AriaToken}">
-                        <Interaction.Behaviors>
-                            <ExecuteCommandOnKeyDownBehavior
-                                Key="Enter"
+                        <TextBox.KeyBindings>
+                            <KeyBinding
                                 Command="{Binding AriaTokenCommand}"
-                                CommandParameter="{Binding ElementName=NameAriaToken, Path=Text}" />
-                        </Interaction.Behaviors>
+                                CommandParameter="{Binding #NameAriaToken.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
                     </TextBox>
                 </StackPanel>
             </StackPanel>

@@ -7,7 +7,7 @@
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              x:DataType="vm:ViewVideoDetailViewModel">
-    
+
     <UserControl.Resources>
         <ControlTheme TargetType="TextBlock" x:Key="DataGridCellTextBlockTheme">
             <Setter Property="Margin" Value="{DynamicResource DataGridTextColumnCellTextBlockMargin}" />
@@ -44,11 +44,9 @@
                     BorderThickness="0"
                     FontSize="12"
                     Text="{Binding InputText,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior
-                            Key="Enter"
-                            Command="{Binding InputCommand}" />
-                    </Interaction.Behaviors>
+                    <TextBox.KeyBindings>
+                        <KeyBinding Command="{Binding InputCommand}" Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
             </Border>
 
@@ -312,34 +310,34 @@
                             <Setter Property="Padding" Value="4" />
                             <Setter Property="Background" Value="Transparent"></Setter>
                             <Setter Property="Template">
-                                    <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
-                                        <Border 
-                                            x:Name="HeaderBorder"
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}">
-                                                <Grid ColumnDefinitions="*,Auto">
-                                                       <Grid
-                                                           Margin="{TemplateBinding Padding}"
-                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                           ColumnDefinitions="*,Auto">
-                                                           <ContentPresenter
-                                                               x:Name="HeaderContent"
-                                                               Content="{TemplateBinding Content}"
-                                                               ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                               RecognizesAccessKey="True" />
-                                
-                                                           <Path Grid.Column="1" Name="SortIcon"
-                                                                 Width="8"
-                                                                 Margin="4,0,0,0"
-                                                                 HorizontalAlignment="Left"
-                                                                 VerticalAlignment="Center"
-                                                                 Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z "
-                                                                 Fill="{TemplateBinding Foreground}"
-                                                                 IsVisible="False"
-                                                                 Stretch="Uniform" />
-                                                       </Grid>
-                    
+                                <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                    <Border
+                                        x:Name="HeaderBorder"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <Grid
+                                                Margin="{TemplateBinding Padding}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                ColumnDefinitions="*,Auto">
+                                                <ContentPresenter
+                                                    x:Name="HeaderContent"
+                                                    Content="{TemplateBinding Content}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                    RecognizesAccessKey="True" />
+
+                                                <Path Grid.Column="1" Name="SortIcon"
+                                                      Width="8"
+                                                      Margin="4,0,0,0"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Center"
+                                                      Data="F1 M -5.215,6.099L 5.215,6.099L 0,0L -5.215,6.099 Z "
+                                                      Fill="{TemplateBinding Foreground}"
+                                                      IsVisible="False"
+                                                      Stretch="Uniform" />
+                                            </Grid>
+
                                             <Canvas Grid.Column="1">
                                                 <Thumb x:Name="PART_HeaderGripper">
                                                     <Thumb.Theme>
@@ -354,7 +352,7 @@
                                                                 <Setter.Value>
                                                                     <ControlTemplate TargetType="{x:Type Thumb}">
                                                                         <Border Padding="{TemplateBinding Padding}"
-                                                                            Background="Transparent">
+                                                                                Background="Transparent">
                                                                             <Rectangle
                                                                                 Width="1"
                                                                                 HorizontalAlignment="Center"
@@ -368,15 +366,15 @@
                                                 </Thumb>
                                             </Canvas>
                                         </Grid>
-                                        </Border>
-                                    
-                                    </ControlTemplate>
+                                    </Border>
+
+                                </ControlTemplate>
                             </Setter>
-                            
+
                             <Style Selector="^:sortascending /template/ Path#SortIcon">
                                 <Setter Property="IsVisible" Value="True" />
                             </Style>
-                    
+
                             <Style Selector="^:sortdescending /template/ Path#SortIcon">
                                 <Setter Property="IsVisible" Value="True" />
                                 <Setter Property="RenderTransform">
@@ -455,29 +453,29 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
-                    
+
                     <DataGrid.RowTheme>
-                        <ControlTheme TargetType="DataGridRow" 
+                        <ControlTheme TargetType="DataGridRow"
                                       BasedOn="{StaticResource {x:Type DataGridRow}}">
                             <Style Selector="^ /template/ Rectangle#BackgroundRectangle">
                                 <Setter Property="IsVisible" Value="False" />
                                 <Setter Property="Fill" Value="{DynamicResource BrushDataGridHighlight}" />
                             </Style>
-                            
+
                             <Style Selector="^:pointerover /template/ Rectangle#BackgroundRectangle">
                                 <Setter Property="IsVisible" Value="True" />
                                 <Setter Property="Opacity" Value="0.3" />
                             </Style>
-                            
+
                             <Style Selector="^:selected /template/ Rectangle#BackgroundRectangle">
-                                <Setter Property="IsVisible" Value="True" />    
+                                <Setter Property="IsVisible" Value="True" />
                                 <Setter Property="Opacity" Value="1" />
                             </Style>
-                            
+
                         </ControlTheme>
                     </DataGrid.RowTheme>
-                    
-                  
+
+
                 </DataGrid>
 
                 <Grid Grid.Row="3"
@@ -507,11 +505,9 @@
                         Watermark="{DynamicResource SearchVideoByName}"
                         Text="{Binding Path=InputSearchText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                         TextWrapping="Wrap">
-                        <Interaction.Behaviors>
-                            <ExecuteCommandOnKeyDownBehavior
-                                Key="Enter"
-                                Command="{Binding InputSearchCommand}" />
-                        </Interaction.Behaviors>
+                        <TextBox.KeyBindings>
+                            <KeyBinding Command="{Binding InputSearchCommand}" Gesture="Enter" />
+                        </TextBox.KeyBindings>
                     </TextBox>
                     <Button
                         Grid.Column="4"

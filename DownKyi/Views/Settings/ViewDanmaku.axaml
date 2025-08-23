@@ -58,12 +58,12 @@
                     Width="95"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenWidth, Mode=TwoWay}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior
-                            Key="Enter"
+                    <TextBox.KeyBindings>
+                        <KeyBinding
                             Command="{Binding ScreenWidthCommand}"
-                            CommandParameter="{Binding ElementName=NameScreenWidth, Path=Text}" />
-                    </Interaction.Behaviors>
+                            CommandParameter="{Binding #NameScreenWidth.Text}"
+                            Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
                 <TextBlock
                     Margin="5,0"
@@ -76,12 +76,12 @@
                     Width="95"
                     VerticalContentAlignment="Center"
                     Text="{Binding ScreenHeight, Mode=TwoWay}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior
-                            Key="Enter"
+                    <TextBox.KeyBindings>
+                        <KeyBinding
                             Command="{Binding ScreenHeightCommand}"
-                            CommandParameter="{Binding ElementName=NameScreenHeight, Path=Text}" />
-                    </Interaction.Behaviors>
+                            CommandParameter="{Binding #NameScreenHeight.Text}"
+                            Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
@@ -100,7 +100,7 @@
                         <EventTriggerBehavior EventName="SelectionChanged">
                             <InvokeCommandAction
                                 Command="{Binding FontSelectCommand}"
-                                CommandParameter="{Binding ElementName=NameFonts, Path=SelectedValue}" />
+                                CommandParameter="{Binding #NameFonts.SelectedValue}" />
                         </EventTriggerBehavior>
                     </Interaction.Behaviors>
 
@@ -119,12 +119,12 @@
                     Width="200"
                     VerticalContentAlignment="Center"
                     Text="{Binding FontSize}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior
-                            Key="Enter"
+                    <TextBox.KeyBindings>
+                        <KeyBinding
                             Command="{Binding FontSizeCommand}"
-                            CommandParameter="{Binding ElementName=NameFontSize, Path=Text}" />
-                    </Interaction.Behaviors>
+                            CommandParameter="{Binding #NameFontSize.Text}"
+                            Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
             </StackPanel>
             <StackPanel
@@ -140,12 +140,12 @@
                     Width="200"
                     VerticalContentAlignment="Center"
                     Text="{Binding LineCount}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior
-                            Key="Enter"
+                    <TextBox.KeyBindings>
+                        <KeyBinding
                             Command="{Binding LineCountCommand}"
-                            CommandParameter="{Binding ElementName=NameLineCount, Path=Text}" />
-                    </Interaction.Behaviors>
+                            CommandParameter="{Binding #NameLineCount.Text}"
+                            Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
             </StackPanel>
             <StackPanel Margin="0,20,0,0" Orientation="Horizontal">

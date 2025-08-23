@@ -79,9 +79,9 @@
                     FontSize="16"
                     Watermark="{DynamicResource IndexHintText}"
                     Text="{Binding InputText,Mode=TwoWay}">
-                    <Interaction.Behaviors>
-                        <ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
-                    </Interaction.Behaviors>
+                    <TextBox.KeyBindings>
+                        <KeyBinding Command="{Binding InputCommand}" Gesture="Enter" />
+                    </TextBox.KeyBindings>
                 </TextBox>
             </Border>
             <Button

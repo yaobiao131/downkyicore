@@ -166,17 +166,17 @@
                         FontSize="12" />
                 </StackPanel>
             </StackPanel>
-            
+
             <StackPanel
                 Margin="0,20,0,0"
-                Orientation="Horizontal" >
+                Orientation="Horizontal">
                 <CheckBox
                     Command="{Binding GenerateMovieMetadataCommand }"
                     IsChecked="{Binding GenerateMovieMetadata}"
                     Content="{DynamicResource GenerateVideoMetadata}"
                     FontSize="12"
                     ToolTip.Tip="nfo"
-                    Foreground="{DynamicResource BrushTextDark}"/>
+                    Foreground="{DynamicResource BrushTextDark}" />
             </StackPanel>
 
             <HeaderedContentControl
@@ -186,7 +186,7 @@
                 Foreground="{DynamicResource BrushTextDark}"
                 CornerRadius="10"
                 FontSize="12">
-                    <StackPanel Margin="10" Orientation="Horizontal">
+                <StackPanel Margin="10" Orientation="Horizontal">
                     <CheckBox
                         Margin="0,0,0,0"
                         Command="{Binding DownloadAllCommand}"
@@ -225,7 +225,7 @@
                         IsChecked="{Binding DownloadCover, Mode=TwoWay}" />
                 </StackPanel>
             </HeaderedContentControl>
-            
+
             <HeaderedContentControl
                 Header="{DynamicResource FileNameParts}"
                 Background="LightGray"
@@ -295,12 +295,8 @@
                     <Grid
                         Grid.Row="2"
                         Grid.Column="1"
-                        Margin="0,20,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
+                        Margin="0,20,0,0"
+                        ColumnDefinitions="*,*,*">
                         <StackPanel
                             Grid.Column="0"
                             HorizontalAlignment="Left"
