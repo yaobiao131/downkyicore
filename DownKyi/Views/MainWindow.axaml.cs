@@ -33,6 +33,7 @@ public partial class MainWindow : Window
     protected override void OnClosing(WindowClosingEventArgs e)
     {
         base.OnClosing(e);
+        if (Design.IsDesignMode) return;
         if (WindowState == WindowState.Normal)
         {
             _windowSettings.Width = Width;
