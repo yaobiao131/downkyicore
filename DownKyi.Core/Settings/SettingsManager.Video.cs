@@ -16,7 +16,7 @@ public partial class SettingsManager
     private const int AudioQuality = 30280;
 
     // 设置首选视频解析方式
-    private const int VideoParseType = 1;
+    private const int VideoParseType = 0;
 
     // 是否下载flv视频后转码为mp4
     private const AllowStatus IsTranscodingFlvToMp4 = AllowStatus.Yes;
