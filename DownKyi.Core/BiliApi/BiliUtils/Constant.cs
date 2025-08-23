@@ -45,7 +45,7 @@ public static class Constant
         // 使用深复制，
         // 保证外部修改list后，
         // 不会影响其他调用处
-        return new List<Quality>(Resolutions);
+        return Resolutions.Select(resolution => resolution.Clone()).ToList();
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public static class Constant
         // 使用深复制，
         // 保证外部修改list后，
         // 不会影响其他调用处
-        return new List<Quality>(CodecIds);
+        return CodecIds.Select(codecId => codecId.Clone()).ToList();
     }
 
     /// <summary>
@@ -69,6 +69,6 @@ public static class Constant
         // 使用深复制，
         // 保证外部修改list后，
         // 不会影响其他调用处
-        return new List<Quality>(Qualities);
+        return Qualities.Select(quality => quality.Clone()).ToList();
     }
 }
