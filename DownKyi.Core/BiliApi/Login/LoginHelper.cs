@@ -1,4 +1,5 @@
-﻿using DownKyi.Core.Logging;
+﻿using System.Web;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
@@ -89,7 +90,11 @@ namespace DownKyi.Core.BiliApi.Login
                 return new List<DownKyiCookie>();
             }
 
-            var cookies = ObjectHelper.ReadCookiesFromDisk(tempFile);
+            var cookies = ObjectHelper.ReadCookiesFromDisk(tempFile)?.Select(cookie =>
+            {
+                cookie.Value = HttpUtility.UrlEncode(cookie.Value);
+                return cookie;
+            }).ToList();
 
             if (File.Exists(tempFile))
             {

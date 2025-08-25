@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Web;
 using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
@@ -46,7 +47,7 @@ public static class WebClient
                     socketsHandler.Proxy = null;
                     Console.WriteLine(e);
                 }
-            } 
+            }
                 break;
         }
 
@@ -106,12 +107,12 @@ public static class WebClient
 
                 if (!string.IsNullOrEmpty(_bvuid3))
                 {
-                    cookies.Add(new DownKyiCookie("buvid3", _bvuid3));
+                    cookies.Add(new DownKyiCookie("buvid3", HttpUtility.UrlEncode(_bvuid3)));
                 }
 
                 if (!string.IsNullOrEmpty(_bvuid4))
                 {
-                    cookies.Add(new DownKyiCookie("buvid4", _bvuid4));
+                    cookies.Add(new DownKyiCookie("buvid4", HttpUtility.UrlEncode(_bvuid4)));
                 }
 
                 if (cookies.Count > 0)
