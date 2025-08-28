@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace DownKyi.Core.Danmaku2Ass;
+namespace DownKyi.Core.Danmaku;
 
 internal static class Utils
 {

@@ -1,4 +1,4 @@
-﻿namespace DownKyi.Core.Danmaku2Ass;
+﻿namespace DownKyi.Core.Danmaku;
 
 public class Danmaku
 {

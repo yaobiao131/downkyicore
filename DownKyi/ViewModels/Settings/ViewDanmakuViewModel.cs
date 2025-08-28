@@ -106,7 +106,22 @@ public class ViewDanmakuViewModel : ViewModelBase
         get => _async;
         set => SetProperty(ref _async, value);
     }
-
+    
+    private bool _isAssFormat = true;
+    private bool _isXmlFormat;
+    
+    public bool IsAssFormat
+    {
+        get => _isAssFormat;
+        set => SetProperty(ref _isAssFormat, value);
+    }
+    
+    public bool IsXmlFormat
+    {
+        get => _isXmlFormat;
+        set => SetProperty(ref _isXmlFormat, value);
+    }
+    
     #endregion
 
     public ViewDanmakuViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
@@ -170,10 +185,25 @@ public class ViewDanmakuViewModel : ViewModelBase
         var layoutAlgorithm = SettingsManager.GetInstance().GetDanmakuLayoutAlgorithm();
         SetLayoutAlgorithm(layoutAlgorithm);
 
+        var outputFormat = SettingsManager.GetInstance().GetDanmakuOutputFormat();
+        IsAssFormat = outputFormat == DanmakuFormat.Ass;
+        IsXmlFormat = outputFormat == DanmakuFormat.Xml;
         _isOnNavigatedTo = false;
     }
 
     #region 命令申明
+
+   
+    public DelegateCommand<string> FormatSelectCommand => new (OnFormatSelected);
+
+    private void OnFormatSelected(string format)
+    {
+        IsAssFormat = format == "Ass";
+        IsXmlFormat = format == "Xml";
+        var isSucceed = SettingsManager.GetInstance().SetDanmakuOutputFormat(IsAssFormat ? DanmakuFormat.Ass : DanmakuFormat.Xml);
+        PublishTip(isSucceed);
+    }
+
 
     // 屏蔽顶部弹幕事件
     private DelegateCommand _topFilterCommand;
