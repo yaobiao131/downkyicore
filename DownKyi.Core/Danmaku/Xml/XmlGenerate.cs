@@ -12,12 +12,8 @@ public class XmlGenerate
         try
         {
             var biliDanmakus = DanmakuProtobuf
-                .GetAllDanmakuProto(avid, cid).AsParallel()
-                .WithExecutionMode(ParallelExecutionMode.ForceParallelism)
-                .WithDegreeOfParallelism(Environment.ProcessorCount)
-                .OrderBy(x => x.Progress)
-                .ToList();;
-            
+                .GetAllDanmakuProto(avid, cid);
+            biliDanmakus.Sort((x, y) => x.Progress.CompareTo(y.Progress));
             var xmlDocument = CreateXmlDocument(avid, cid, biliDanmakus);
             SaveXmlFile(xmlDocument, savePath);
         }
