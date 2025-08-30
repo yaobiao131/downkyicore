@@ -39,6 +39,14 @@
             <Setter Property="BoxShadow" Value="{DynamicResource ShadowActionButton}" />
             <Setter Property="CornerRadius" Value="16" />
         </Style>
+        
+        
+        <Style Selector="Path.actionButtonIcon">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
+            <Setter Property="Fill" Value="{DynamicResource BrushIconGradient}"/>
+        </Style>
 
         <Style Selector="Border.actionButton:pointerover">
             <Setter Property="Background" Value="{DynamicResource BrushActionButtonPointeroverBackground}" />
@@ -127,9 +135,9 @@
                                     Margin="0,0,20,0">
                                 <Path
                                     VerticalAlignment="Center"
-                                    Width="{Binding GeneralSearch.Width,Mode=OneTime}"
-                                    Height="{Binding GeneralSearch.Height,Mode=OneTime}"
-                                    Data="{Binding GeneralSearch.Data,Mode=OneTime}"
+                                    Width="24"
+                                    Height="24"
+                                    Data="{StaticResource Icon.SearchBtn}"
                                     Stretch="UniformToFill" />
                             </Button>
                         </Grid>
@@ -148,11 +156,8 @@
                                     Spacing="15"
                                     HorizontalAlignment="Center">
                                     <Path
-                                        Width="{Binding Settings.Width,Mode=OneTime}"
-                                        Height="{Binding Settings.Height,Mode=OneTime}"
-                                        Data="{Binding Settings.Data,Mode=OneTime}"
-                                        Stretch="UniformToFill"
-                                        Fill="{DynamicResource BrushIconGradient}">
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.Settings}">
                                     </Path>
                                     <TextBlock
                                         Foreground="{DynamicResource BrushTextDark}"
@@ -172,11 +177,8 @@
                                     Spacing="15"
                                     HorizontalAlignment="Center">
                                     <Path
-                                        Width="{Binding DownloadManager.Width,Mode=OneTime}"
-                                        Height="{Binding DownloadManager.Height,Mode=OneTime}"
-                                        Data="{Binding DownloadManager.Data,Mode=OneTime}"
-                                        Stretch="UniformToFill"
-                                        Fill="{DynamicResource BrushIconGradient}">
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.DownloadManage}">
                                     </Path>
                                     <TextBlock Foreground="{DynamicResource BrushTextDark}"
                                                Text="{DynamicResource DownloadManager}"
@@ -194,14 +196,10 @@
                             <Border Grid.Column="2" Classes="actionButton">
                                 <StackPanel
                                     Spacing="15"
-
                                     HorizontalAlignment="Center">
                                     <Path
-                                        Width="{Binding Toolbox.Width,Mode=OneTime}"
-                                        Height="{Binding Toolbox.Height,Mode=OneTime}"
-                                        Stretch="UniformToFill"
-                                        Fill="{DynamicResource BrushIconGradient}"
-                                        Data="{Binding Toolbox.Data,Mode=OneTime}">
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.Toolbox}">
                                     </Path>
                                     <TextBlock Foreground="{DynamicResource BrushTextDark}"
                                                Text="{DynamicResource Toolbox}"
