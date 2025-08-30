@@ -196,11 +196,11 @@
 
                                     HorizontalAlignment="Center">
                                     <Path
-                                        Width="{Binding Toolbox.Width}"
-                                        Height="{Binding Toolbox.Height}"
+                                        Width="{Binding Toolbox.Width,Mode=OneTime}"
+                                        Height="{Binding Toolbox.Height,Mode=OneTime}"
                                         Stretch="UniformToFill"
                                         Fill="{DynamicResource BrushIconGradient}"
-                                        Data="{Binding Toolbox.Data}">
+                                        Data="{Binding Toolbox.Data,Mode=OneTime}">
                                     </Path>
                                     <TextBlock Foreground="{DynamicResource BrushTextDark}"
                                                Text="{DynamicResource Toolbox}"
