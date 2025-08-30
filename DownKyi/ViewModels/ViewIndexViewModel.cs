@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -10,13 +9,11 @@ using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
 using DownKyi.Events;
-using DownKyi.Images;
 using DownKyi.Services;
 using DownKyi.Utils;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Regions;
-using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.ViewModels;
 
@@ -25,7 +22,6 @@ public class ViewIndexViewModel : ViewModelBase
     public const string Tag = "PageIndex";
 
     private bool _isReadyForUserInfo;
-    
 
     private string? _userName;
 
@@ -44,14 +40,6 @@ public class ViewIndexViewModel : ViewModelBase
     }
 
 
-    private VectorImage _textLogo = new();
-
-    public VectorImage TextLogo
-    {
-        get => _textLogo;
-        set => SetProperty(ref _textLogo, value);
-    }
-
     private string _inputText = string.Empty;
 
     public string InputText
@@ -60,59 +48,9 @@ public class ViewIndexViewModel : ViewModelBase
         set => SetProperty(ref _inputText, value);
     }
 
-    private VectorImage _generalSearch = new();
-
-    public VectorImage GeneralSearch
-    {
-        get => _generalSearch;
-        set => SetProperty(ref _generalSearch, value);
-    }
-
-    private VectorImage _settings = new();
-
-    public VectorImage Settings
-    {
-        get => _settings;
-        set => SetProperty(ref _settings, value);
-    }
-
-    private VectorImage _downloadManager = new();
-
-    public VectorImage DownloadManager
-    {
-        get => _downloadManager;
-        set => SetProperty(ref _downloadManager, value);
-    }
-
-    private VectorImage _toolbox = new();
-
-    public VectorImage Toolbox
-    {
-        get => _toolbox;
-        set => SetProperty(ref _toolbox, value);
-    }
-
 
     public ViewIndexViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
     {
-        _isReadyForUserInfo = true;
-        Header = "avares://DownKyi/Resources/default_header.jpg";
-
-        TextLogo = LogoIcon.Instance().TextLogo;
-        TextLogo.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-        GeneralSearch = ButtonIcon.Instance().GeneralSearch;
-        GeneralSearch.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-        Settings = ButtonIcon.Instance().Settings;
-        Settings.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-        DownloadManager = ButtonIcon.Instance().DownloadManage;
-        DownloadManager.Fill = DictionaryResource.GetColor("ColorPrimary");
-
-        Toolbox = ButtonIcon.Instance().Toolbox;
-        Toolbox.Fill = DictionaryResource.GetColor("ColorPrimary");
-
         UpdateUserInfo();
     }
 
@@ -144,6 +82,7 @@ public class ViewIndexViewModel : ViewModelBase
                 EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoadingUserInfo"));
                 return;
             }
+
             NavigateToView.NavigationView(EventAggregator, ViewLoginViewModel.Tag, Tag, null);
         }
         else
@@ -173,7 +112,8 @@ public class ViewIndexViewModel : ViewModelBase
     // 进入下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 
-    public DelegateCommand DownloadManagerCommand => _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
+    public DelegateCommand DownloadManagerCommand =>
+        _downloadManagerCommand ??= new DelegateCommand(ExecuteDownloadManagerCommand);
 
     /// <summary>
     /// 进入下载管理页面
@@ -261,58 +201,49 @@ public class ViewIndexViewModel : ViewModelBase
     /// </summary>
     private async void UpdateUserInfo(bool isBackgroud = false)
     {
-        try
+        if (isBackgroud)
         {
-            if (isBackgroud)
-            {
-                // 获取用户信息
-                await GetUserInfo();
-                return;
-            }
-
-            _isReadyForUserInfo = false;
-
             // 获取用户信息
-            var userInfo = await GetUserInfo();
-
-            // 检查本地是否存在login文件，没有则说明未登录
-            if (!File.Exists(StorageManager.GetLogin()))
-            {
-                _isReadyForUserInfo = true;
-                Header = "avares://DownKyi/Resources/default_header.jpg";
-                UserName = null;
-                return;
-            }
-
-            _isReadyForUserInfo = true;
-
-            if (userInfo != null)
-            {
-                Header = userInfo.Face ?? "avares://DownKyi/Resources/default_header.jpg";
-
-                UserName = userInfo.Name;
-            }
-            else
-            {
-                Header = "avares://DownKyi/Resources/default_header.jpg";
-                UserName = null;
-            }
+            await GetUserInfo();
+            return;
         }
-        catch (Exception e)
+
+        _isReadyForUserInfo = false;
+
+        // 获取用户信息
+        var userInfo = await GetUserInfo();
+        if (userInfo is null)
         {
-            Console.PrintLine("UpdateUserInfo()发生异常: {0}", e);
-            LogManager.Error(Tag, e);
+            EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoadUserInfoFailed"));
+        }
+        
+        // 检查本地是否存在login文件，没有则说明未登录
+        if (!File.Exists(StorageManager.GetLogin()))
+        {
+            _isReadyForUserInfo = true;
+            Header = "avares://DownKyi/Resources/default_header.jpg";
+            UserName = null;
+            return;
+        }
+
+        _isReadyForUserInfo = true;
+
+        if (userInfo != null)
+        {
+            Header = userInfo.Face ?? "avares://DownKyi/Resources/default_header.jpg";
+
+            UserName = userInfo.Name;
+        }
+        else
+        {
+            Header = "avares://DownKyi/Resources/default_header.jpg";
+            UserName = null;
         }
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);
-
-        DownloadManager = ButtonIcon.Instance().DownloadManage;
-        DownloadManager.Height = 27;
-        DownloadManager.Width = 32;
-        DownloadManager.Fill = DictionaryResource.GetColor("ColorPrimary");
 
         // 根据传入参数不同执行不同任务
         var parameter = navigationContext.Parameters.GetValue<string>("Parameter");

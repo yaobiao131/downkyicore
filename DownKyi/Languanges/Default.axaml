@@ -21,6 +21,7 @@
     <system:String x:Key="DownloadManager">下载管理</system:String>
     <system:String x:Key="Toolbox">工具箱</system:String>
     <system:String x:Key="LoadingUserInfo">用户信息加载中...</system:String>
+    <system:String x:Key="LoadUserInfoFailed">用户信息加载失败，尝试重新登录</system:String>
 
     <!--  Login  -->
     <system:String x:Key="ScanToLogin">扫描二维码登录</system:String>
