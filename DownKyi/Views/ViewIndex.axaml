@@ -9,9 +9,8 @@
              d:DesignWidth="800"
              d:DesignHeight="600"
              x:Class="DownKyi.Views.ViewIndex">
-    
-   
-    
+
+
     <UserControl.Styles>
         <Style Selector="Border.mainContent">
             <Setter Property="Background" Value="{DynamicResource BrushMainContentBackground}" />
@@ -28,36 +27,43 @@
             <Setter Property="Padding" Value="20,15" />
             <Setter Property="BoxShadow" Value="{DynamicResource ShadowSearchBox}" />
         </Style>
-        
-       
+
 
         <Style Selector="Border.actionButton">
-            <Setter Property="Background" Value="{DynamicResource BrushActionButtonBackground}"/>
-            <Setter Property="Cursor" Value="Hand"></Setter>
+            <Setter Property="Background" Value="{DynamicResource BrushActionButtonBackground}" />
+            <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Width" Value="180" />
-            <Setter Property="Padding" Value="20,30"></Setter>
-            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Padding" Value="20,30" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="BorderBrush" Value="{DynamicResource BrushActionButtonBorder}" />
             <Setter Property="BoxShadow" Value="{DynamicResource ShadowActionButton}" />
-            <Setter Property="CornerRadius" Value="16"></Setter>
+            <Setter Property="CornerRadius" Value="16" />
         </Style>
-        
+
         <Style Selector="Border.actionButton:pointerover">
-            <Setter Property="Background" Value="{DynamicResource BrushActionButtonPointeroverBackground}"/>
-            <Setter Property="RenderTransform" Value="translateY(-5px)"/>
+            <Setter Property="Background" Value="{DynamicResource BrushActionButtonPointeroverBackground}" />
+            <Setter Property="RenderTransform" Value="translateY(-5px)" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <TransformOperationsTransition 
+                    <TransformOperationsTransition
                         Easing="ElasticEaseInOut"
-                        Property="RenderTransform" Duration="0:0:0.3"/>
+                        Property="RenderTransform" Duration="0:0:0.3" />
                 </Transitions>
             </Setter>
         </Style>
-        
+
+        <Style Selector="Button.searchBtn > Path">
+            <Setter Property="Fill" Value="{DynamicResource BrushSubtitleText}" />
+        </Style>
+
+        <Style Selector="Button.searchBtn:pointerover > Path">
+            <Setter Property="Fill" Value="{DynamicResource ColorTextGradientStart}" />
+        </Style>
+
     </UserControl.Styles>
 
     <UserControl.Background>
-        <DynamicResource ResourceKey="BrushBackgroundGradient"/>
+        <DynamicResource ResourceKey="BrushBackgroundGradient" />
     </UserControl.Background>
 
     <Grid ColumnDefinitions="20,*,20" Margin="20" MaxWidth="1200">
@@ -88,11 +94,11 @@
                             <TextBlock Text="Downkyi" FontSize="56" FontWeight="Bold"
                                        HorizontalAlignment="Center">
                                 <TextBlock.Foreground>
-                                    <DynamicResource ResourceKey="BrushTextGradient"/>
+                                    <DynamicResource ResourceKey="BrushTextGradient" />
                                 </TextBlock.Foreground>
                             </TextBlock>
                             <TextBlock Text="{DynamicResource EasyVideoDownload}" FontSize="20"
-                                      
+
                                        Opacity="0.7" HorizontalAlignment="Center" Margin="0,10,0,0" />
                         </StackPanel>
 
@@ -106,23 +112,23 @@
                                     BorderThickness="0"
                                     FontSize="20"
                                     Text="{Binding InputText,Mode=TwoWay}"
-                                    Watermark="{DynamicResource IndexHintText}" >
-                                    
+                                    Watermark="{DynamicResource IndexHintText}">
+
                                     <Interaction.Behaviors>
                                         <ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
                                     </Interaction.Behaviors>
                                 </TextBox>
-                            </Border>   
+                            </Border>
                             <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Classes="searchBtn"
                                     Command="{Binding InputCommand}"
                                     Theme="{StaticResource ImageBtnStyle}"
                                     Margin="0,0,20,0">
                                 <Path
                                     VerticalAlignment="Center"
-                                    Width="24"
-                                    Height="24"
-                                    Data="{Binding GeneralSearch.Data}"
-                                    Fill="{DynamicResource BrushSubtitleText}"
+                                    Width="{Binding GeneralSearch.Width,Mode=OneTime}"
+                                    Height="{Binding GeneralSearch.Height,Mode=OneTime}"
+                                    Data="{Binding GeneralSearch.Data,Mode=OneTime}"
                                     Stretch="UniformToFill" />
                             </Button>
                         </Grid>
@@ -135,23 +141,22 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Column="0" 
+                            <Border Grid.Column="0"
                                     Classes="actionButton">
                                 <StackPanel
-                                    VerticalAlignment="Center"
+                                    Spacing="15"
                                     HorizontalAlignment="Center">
-                                    <Viewbox
-                                        Margin="0,0,0,13"
-                                        Width="35.2" Height="36">
-                                        <Path
-                                            Fill="{DynamicResource BrushIconGradient}"
-                                            Data="M195.1 9.5C198.1-5.3 211.2-16 226.4-16l59.8 0c15.2 0 28.3 10.7 31.3 25.5L332 79.5c14.1 6 27.3 13.7 39.3 22.8l67.8-22.5c14.4-4.8 30.2 1.2 37.8 14.4l29.9 51.8c7.6 13.2 4.9 29.8-6.5 39.9L447 233.3c.9 7.4 1.3 15 1.3 22.7s-.5 15.3-1.3 22.7l53.4 47.5c11.4 10.1 14 26.8 6.5 39.9l-29.9 51.8c-7.6 13.1-23.4 19.2-37.8 14.4l-67.8-22.5c-12.1 9.1-25.3 16.7-39.3 22.8l-14.4 69.9c-3.1 14.9-16.2 25.5-31.3 25.5l-59.8 0c-15.2 0-28.3-10.7-31.3-25.5l-14.4-69.9c-14.1-6-27.2-13.7-39.3-22.8L73.5 432.3c-14.4 4.8-30.2-1.2-37.8-14.4L5.8 366.1c-7.6-13.2-4.9-29.8 6.5-39.9l53.4-47.5c-.9-7.4-1.3-15-1.3-22.7s.5-15.3 1.3-22.7L12.3 185.8c-11.4-10.1-14-26.8-6.5-39.9L35.7 94.1c7.6-13.2 23.4-19.2 37.8-14.4l67.8 22.5c12.1-9.1 25.3-16.7 39.3-22.8L195.1 9.5zM256.3 336a80 80 0 1 0 -.6-160 80 80 0 1 0 .6 160z">
-                                        </Path>
-                                    </Viewbox>
-                                    <TextBlock 
-                                        Foreground="{DynamicResource BrushTextDark}" 
-                                        Text="{DynamicResource Settings}" 
-                                        FontSize="18" 
+                                    <Path
+                                        Width="{Binding Settings.Width,Mode=OneTime}"
+                                        Height="{Binding Settings.Height,Mode=OneTime}"
+                                        Data="{Binding Settings.Data,Mode=OneTime}"
+                                        Stretch="UniformToFill"
+                                        Fill="{DynamicResource BrushIconGradient}">
+                                    </Path>
+                                    <TextBlock
+                                        Foreground="{DynamicResource BrushTextDark}"
+                                        Text="{DynamicResource Settings}"
+                                        FontSize="18"
                                         FontWeight="Medium" />
                                 </StackPanel>
                                 <Interaction.Behaviors>
@@ -162,23 +167,22 @@
                             </Border>
 
                             <Border Grid.Column="1" Classes="actionButton">
-                                <StackPanel 
-                                    VerticalAlignment="Center"
+                                <StackPanel
+                                    Spacing="15"
                                     HorizontalAlignment="Center">
-                                    <Viewbox
-                                        Margin="0,0,0,13"
-                                        Width="35.2" Height="36">
-                                        <Path
-                                            Fill="{DynamicResource BrushIconGradient}"
-                                            Data="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z">
-                                        </Path>
-                                    </Viewbox>
+                                    <Path
+                                        Width="{Binding DownloadManager.Width,Mode=OneTime}"
+                                        Height="{Binding DownloadManager.Height,Mode=OneTime}"
+                                        Data="{Binding DownloadManager.Data,Mode=OneTime}"
+                                        Stretch="UniformToFill"
+                                        Fill="{DynamicResource BrushIconGradient}">
+                                    </Path>
                                     <TextBlock Foreground="{DynamicResource BrushTextDark}"
-                                               Text="{DynamicResource DownloadManager}" 
-                                               FontSize="18" 
+                                               Text="{DynamicResource DownloadManager}"
+                                               FontSize="18"
                                                FontWeight="Medium" />
                                 </StackPanel>
-                                
+
                                 <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="PointerReleased">
                                         <InvokeCommandAction Command="{Binding DownloadManagerCommand}" />
@@ -187,22 +191,23 @@
                             </Border>
 
                             <Border Grid.Column="2" Classes="actionButton">
-                                <StackPanel 
-                                    VerticalAlignment="Center"
+                                <StackPanel
+                                    Spacing="15"
+
                                     HorizontalAlignment="Center">
-                                    <Viewbox Margin="0,0,0,13"
-                                             Width="35.2" Height="36">
-                                        <Path
-                                            Fill="{DynamicResource BrushIconGradient}"
-                                            Data="M240 120L240 160L400 160L400 120C400 115.6 396.4 112 392 112L248 112C243.6 112 240 115.6 240 120zM192 160L192 120C192 89.1 217.1 64 248 64L392 64C422.9 64 448 89.1 448 120L448 160L476.1 160C488.8 160 501 165.1 510 174.1L561.9 226C570.9 235 576 247.2 576 259.9L576 336L440 336L440 320C440 306.7 429.3 296 416 296C402.7 296 392 306.7 392 320L392 336L248 336L248 320C248 306.7 237.3 296 224 296C210.7 296 200 306.7 200 320L200 336L64 336L64 259.9C64 247.2 69.1 235 78.1 226L130 174.1C139 165.1 151.2 160 163.9 160L192 160zM64 480L64 384L200 384L200 400C200 413.3 210.7 424 224 424C237.3 424 248 413.3 248 400L248 384L392 384L392 400C392 413.3 402.7 424 416 424C429.3 424 440 413.3 440 400L440 384L576 384L576 480C576 515.3 547.3 544 512 544L128 544C92.7 544 64 515.3 64 480z">
-                                        </Path>
-                                    </Viewbox>
-                                    <TextBlock Foreground="{DynamicResource BrushTextDark}" 
+                                    <Path
+                                        Width="{Binding Toolbox.Width}"
+                                        Height="{Binding Toolbox.Height}"
+                                        Stretch="UniformToFill"
+                                        Fill="{DynamicResource BrushIconGradient}"
+                                        Data="{Binding Toolbox.Data}">
+                                    </Path>
+                                    <TextBlock Foreground="{DynamicResource BrushTextDark}"
                                                Text="{DynamicResource Toolbox}"
                                                FontSize="18"
                                                FontWeight="Medium" />
                                 </StackPanel>
-                                
+
                                 <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="PointerReleased">
                                         <InvokeCommandAction Command="{Binding ToolboxCommand}" />
@@ -213,6 +218,7 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
+
         </Panel>
     </Grid>
 </UserControl>
