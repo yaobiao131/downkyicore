@@ -100,6 +100,7 @@
                         <Grid Margin="0,0,0,40">
                             <Border Classes="searchBox" Name="SearchTextBox">
                                 <TextBox
+                                    Margin="0,0,25,0"
                                     Foreground="{DynamicResource BrushWhiteText}"
                                     Background="Transparent"
                                     BorderThickness="0"
@@ -113,6 +114,7 @@
                                 </TextBox>
                             </Border>   
                             <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Command="{Binding InputCommand}"
                                     Theme="{StaticResource ImageBtnStyle}"
                                     Margin="0,0,20,0">
                                 <Path
