@@ -9,6 +9,7 @@ using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Settings.Models;
 using DownKyi.Core.Storage;
+using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.Services;
 using DownKyi.Utils;
@@ -23,13 +24,8 @@ public class ViewIndexViewModel : ViewModelBase
 {
     public const string Tag = "PageIndex";
 
-    private bool _loginPanelVisibility;
-
-    public bool LoginPanelVisibility
-    {
-        get => _loginPanelVisibility;
-        set => SetProperty(ref _loginPanelVisibility, value);
-    }
+    private bool _isReadyForUserInfo;
+    
 
     private string? _userName;
 
@@ -99,7 +95,7 @@ public class ViewIndexViewModel : ViewModelBase
 
     public ViewIndexViewModel(IEventAggregator eventAggregator) : base(eventAggregator)
     {
-        _loginPanelVisibility = true;
+        _isReadyForUserInfo = true;
         Header = "avares://DownKyi/Resources/default_header.jpg";
 
         TextLogo = LogoIcon.Instance().TextLogo;
@@ -143,6 +139,11 @@ public class ViewIndexViewModel : ViewModelBase
     {
         if (UserName is null or "")
         {
+            if (!_isReadyForUserInfo)
+            {
+                EventAggregator.GetEvent<MessageEvent>().Publish(DictionaryResource.GetString("LoadingUserInfo"));
+                return;
+            }
             NavigateToView.NavigationView(EventAggregator, ViewLoginViewModel.Tag, Tag, null);
         }
         else
@@ -269,7 +270,7 @@ public class ViewIndexViewModel : ViewModelBase
                 return;
             }
 
-            LoginPanelVisibility = false;
+            _isReadyForUserInfo = false;
 
             // 获取用户信息
             var userInfo = await GetUserInfo();
@@ -277,13 +278,13 @@ public class ViewIndexViewModel : ViewModelBase
             // 检查本地是否存在login文件，没有则说明未登录
             if (!File.Exists(StorageManager.GetLogin()))
             {
-                LoginPanelVisibility = true;
+                _isReadyForUserInfo = true;
                 Header = "avares://DownKyi/Resources/default_header.jpg";
                 UserName = null;
                 return;
             }
 
-            LoginPanelVisibility = true;
+            _isReadyForUserInfo = true;
 
             if (userInfo != null)
             {

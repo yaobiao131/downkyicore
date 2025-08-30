@@ -69,7 +69,8 @@
     <Grid ColumnDefinitions="20,*,20" Margin="20" MaxWidth="1200">
         <Panel Grid.Column="1" Margin="0,40,0,0">
             <StackPanel>
-                <StackPanel HorizontalAlignment="Right" Margin="0,0,0,40">
+                <StackPanel HorizontalAlignment="Right" 
+                            Margin="0,0,0,40">
                     <Button CornerRadius="25"
                             Width="50" Height="50"
                             Command="{Binding LoginCommand}">
