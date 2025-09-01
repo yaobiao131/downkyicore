@@ -1,217 +1,223 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
              prism:ViewModelLocator.AutoWireViewModel="True"
              x:DataType="vm:ViewIndexViewModel"
+             d:DesignWidth="800"
+             d:DesignHeight="600"
              x:Class="DownKyi.Views.ViewIndex">
-    <Grid RowDefinitions="60,200,100,230,*,50">
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,*,20">
-            <Grid Grid.Column="1"
-                  HorizontalAlignment="Right"
-                  VerticalAlignment="Bottom"
-                  Cursor="Hand"
-                  IsVisible="{Binding LoginPanelVisibility}" ColumnDefinitions="*,*">
-                <Interaction.Behaviors>
-                    <EventTriggerBehavior EventName="PointerReleased">
-                        <InvokeCommandAction Command="{Binding LoginCommand}" />
-                    </EventTriggerBehavior>
-                </Interaction.Behaviors>
-                <Image
-                    Grid.Column="0"
-                    Width="36"
-                    Height="36"
-                    asyncImageLoader:ImageLoader.Source="{Binding Header}">
-                    <Image.Clip>
-                        <!--  设置图像如何显示  -->
-                        <EllipseGeometry
-                            Center="18,18"
-                            RadiusX="18"
-                            RadiusY="18" />
-                    </Image.Clip>
-                </Image>
-                <Ellipse
-                    Grid.Column="0"
-                    Width="38"
-                    Height="38"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Stroke="{DynamicResource BrushImageBorder}"
-                    StrokeThickness="2" />
-                <TextBlock
-                    Grid.Column="1"
-                    Margin="5,0,0,0"
-                    VerticalAlignment="Center"
-                    FontSize="14"
-                    Foreground="{DynamicResource BrushPrimary}"
-                    Text="{DynamicResource Login}"
-                    IsVisible="{Binding UserName,Converter={x:Static StringConverters.IsNullOrEmpty}}" />
-            </Grid>
-        </Grid>
 
-        <ContentControl
-            Grid.Row="1"
-            Margin="0,30,0,0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom">
-            <Path
-                Width="{Binding TextLogo.Width}"
-                Height="{Binding TextLogo.Height}"
-                Data="{Binding TextLogo.Data}"
-                Fill="{Binding TextLogo.Fill}"
-                Stretch="UniformToFill" />
-        </ContentControl>
-        <Grid Grid.Row="2" ColumnDefinitions="150*,600*,150*">
-            <Border
-                Grid.Column="1"
-                Height="40"
-                BorderBrush="{DynamicResource BrushPrimary}"
-                BorderThickness="2"
-                CornerRadius="20">
-                <TextBox
-                    x:Name="NameInputUrl"
-                    Height="35"
-                    Margin="20,0,40,0"
-                    VerticalContentAlignment="Center"
-                    BorderThickness="0"
-                    FontSize="16"
-                    Watermark="{DynamicResource IndexHintText}"
-                    Text="{Binding InputText,Mode=TwoWay}">
-                    <TextBox.KeyBindings>
-                        <KeyBinding Command="{Binding InputCommand}" Gesture="Enter" />
-                    </TextBox.KeyBindings>
-                </TextBox>
-            </Border>
-            <Button
-                Grid.Column="1"
-                Width="20"
-                Height="20"
-                Margin="0,0,15,0"
-                Command="{Binding InputCommand}"
-                HorizontalAlignment="Right"
-                Theme="{StaticResource ImageBtnStyle}">
-                <Path
-                    Width="{Binding GeneralSearch.Width}"
-                    Height="{Binding GeneralSearch.Height}"
-                    Data="{Binding GeneralSearch.Data}"
-                    Fill="{Binding GeneralSearch.Fill}"
-                    Stretch="UniformToFill" />
-            </Button>
+    <UserControl.Styles>
+        <Style Selector="Border.mainContent">
+            <Setter Property="Background" Value="{DynamicResource BrushMainContentBackground}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BoxShadow" Value="{DynamicResource ShadowMain}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushMainContentBorder}" />
+        </Style>
 
-        </Grid>
+        <Style Selector="Border.searchBox">
+            <Setter Property="Background" Value="{DynamicResource BrushSearchBoxBackground}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushSearchBoxBorder}" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="20,15" />
+            <Setter Property="BoxShadow" Value="{DynamicResource ShadowSearchBox}" />
+        </Style>
 
-        <Grid Grid.Row="3" ColumnDefinitions="150*,650*,150*">
 
-            <Grid Grid.Column="1" RowDefinitions="*,*" ColumnDefinitions="*,*,*">
+        <Style Selector="Border.actionButton">
+            <Setter Property="Background" Value="{DynamicResource BrushActionButtonBackground}" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Width" Value="180" />
+            <Setter Property="Padding" Value="20,30" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BrushActionButtonBorder}" />
+            <Setter Property="BoxShadow" Value="{DynamicResource ShadowActionButton}" />
+            <Setter Property="CornerRadius" Value="16" />
+        </Style>
+        
+        
+        <Style Selector="Path.actionButtonIcon">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Stretch" Value="UniformToFill"/>
+            <Setter Property="Fill" Value="{DynamicResource BrushIconGradient}"/>
+        </Style>
 
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Cursor="Hand"
-                    Orientation="Vertical">
-                    <Interaction.Behaviors>
-                        <EventTriggerBehavior EventName="PointerReleased">
-                            <InvokeCommandAction Command="{Binding SettingsCommand}" />
-                        </EventTriggerBehavior>
-                    </Interaction.Behaviors>
-                    <Border
-                        Width="64"
-                        Height="64"
-                        Margin="0,0,0,5"
-                        Background="{DynamicResource BrushImageBackground}"
-                        CornerRadius="32">
-                        <ContentControl
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                Width="{Binding Settings.Width}"
-                                Height="{Binding Settings.Height}"
-                                Data="{Binding Settings.Data}"
-                                Fill="{Binding Settings.Fill}"
-                                Stretch="UniformToFill" />
-                        </ContentControl>
-                    </Border>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource BrushPrimary}"
-                        Text="{DynamicResource Settings}" />
+        <Style Selector="Border.actionButton:pointerover">
+            <Setter Property="Background" Value="{DynamicResource BrushActionButtonPointeroverBackground}" />
+            <Setter Property="RenderTransform" Value="translateY(-5px)" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition
+                        Easing="ElasticEaseInOut"
+                        Property="RenderTransform" Duration="0:0:0.3" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="Button.searchBtn > Path">
+            <Setter Property="Fill" Value="{DynamicResource BrushSubtitleText}" />
+        </Style>
+
+        <Style Selector="Button.searchBtn:pointerover > Path">
+            <Setter Property="Fill" Value="{DynamicResource ColorTextGradientStart}" />
+        </Style>
+
+    </UserControl.Styles>
+
+    <UserControl.Background>
+        <DynamicResource ResourceKey="BrushBackgroundGradient" />
+    </UserControl.Background>
+
+    <Grid ColumnDefinitions="20,*,20" Margin="20" MaxWidth="1200">
+        <Panel Grid.Column="1" Margin="0,40,0,0">
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Right" 
+                            Margin="0,0,0,40">
+                    <Button CornerRadius="25"
+                            Width="50" Height="50"
+                            Command="{Binding LoginCommand}">
+                        <Image
+                            Width="50" Height="50"
+                            asyncImageLoader:ImageLoader.Source="{Binding Header}">
+                            <Image.Clip>
+                                <EllipseGeometry
+                                    Center="25,25"
+                                    RadiusX="25"
+                                    RadiusY="25" />
+                            </Image.Clip>
+                        </Image>
+                    </Button>
                 </StackPanel>
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Cursor="Hand"
-                    Orientation="Vertical">
-                    <Interaction.Behaviors>
-                        <EventTriggerBehavior EventName="PointerReleased">
-                            <InvokeCommandAction Command="{Binding DownloadManagerCommand}" />
-                        </EventTriggerBehavior>
-                    </Interaction.Behaviors>
-                    <Border
-                        Width="64"
-                        Height="64"
-                        Margin="0,0,0,5"
-                        Background="{DynamicResource BrushImageBackground}"
-                        CornerRadius="32">
-                        <ContentControl
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                Width="{Binding DownloadManager.Width}"
-                                Height="{Binding DownloadManager.Height}"
-                                Data="{Binding DownloadManager.Data}"
-                                Fill="{Binding DownloadManager.Fill}"
-                                Stretch="UniformToFill" />
-                        </ContentControl>
-                    </Border>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource BrushPrimary}"
-                        Text="{DynamicResource DownloadManager}" />
-                </StackPanel>
-                <StackPanel
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Cursor="Hand"
-                    Orientation="Vertical">
-                    <Interaction.Behaviors>
-                        <EventTriggerBehavior EventName="PointerReleased">
-                            <InvokeCommandAction Command="{Binding ToolboxCommand}" />
-                        </EventTriggerBehavior>
-                    </Interaction.Behaviors>
-                    <Border
-                        Width="64"
-                        Height="64"
-                        Margin="0,0,0,5"
-                        Background="{DynamicResource BrushImageBackground}"
-                        CornerRadius="32">
-                        <ContentControl
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-                            <Path
-                                Width="{Binding Toolbox.Width}"
-                                Height="{Binding Toolbox.Height}"
-                                Data="{Binding Toolbox.Data}"
-                                Fill="{Binding Toolbox.Fill}"
-                                Stretch="UniformToFill" />
-                        </ContentControl>
-                    </Border>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        FontSize="14"
-                        Foreground="{DynamicResource BrushPrimary}"
-                        Text="{DynamicResource Toolbox}" />
-                </StackPanel>
-            </Grid>
-        </Grid>
+
+                <!-- 主内容区 -->
+                <Border CornerRadius="24" Padding="40" MaxWidth="800" Classes="mainContent">
+                    <StackPanel>
+                        <!-- Logo区域 -->
+                        <StackPanel HorizontalAlignment="Center" Margin="0,0,0,40">
+                            <TextBlock Text="Downkyi" FontSize="56" FontWeight="Bold"
+                                       HorizontalAlignment="Center">
+                                <TextBlock.Foreground>
+                                    <DynamicResource ResourceKey="BrushTextGradient" />
+                                </TextBlock.Foreground>
+                            </TextBlock>
+                            <TextBlock Text="{DynamicResource EasyVideoDownload}" FontSize="20"
+
+                                       Opacity="0.7" HorizontalAlignment="Center" Margin="0,10,0,0" />
+                        </StackPanel>
+
+                        <!-- 搜索框 -->
+                        <Grid Margin="0,0,0,40">
+                            <Border Classes="searchBox" Name="SearchTextBox">
+                                <TextBox
+                                    Margin="0,0,25,0"
+                                    Foreground="{DynamicResource BrushWhiteText}"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    FontSize="20"
+                                    Text="{Binding InputText,Mode=TwoWay}"
+                                    Watermark="{DynamicResource IndexHintText}">
+
+                                    <Interaction.Behaviors>
+                                        <ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding InputCommand}" />
+                                    </Interaction.Behaviors>
+                                </TextBox>
+                            </Border>
+                            <Button HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Classes="searchBtn"
+                                    Command="{Binding InputCommand}"
+                                    Theme="{StaticResource ImageBtnStyle}"
+                                    Margin="0,0,20,0">
+                                <Path
+                                    VerticalAlignment="Center"
+                                    Width="24"
+                                    Height="24"
+                                    Data="{StaticResource Icon.SearchBtn}"
+                                    Stretch="UniformToFill" />
+                            </Button>
+                        </Grid>
+
+                        <!-- 功能按钮 -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0"
+                                    Classes="actionButton">
+                                <StackPanel
+                                    Spacing="15"
+                                    HorizontalAlignment="Center">
+                                    <Path
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.Settings}">
+                                    </Path>
+                                    <TextBlock
+                                        Foreground="{DynamicResource BrushTextDark}"
+                                        Text="{DynamicResource Settings}"
+                                        FontSize="18"
+                                        FontWeight="Medium" />
+                                </StackPanel>
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="PointerReleased">
+                                        <InvokeCommandAction Command="{Binding SettingsCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </Border>
+
+                            <Border Grid.Column="1" Classes="actionButton">
+                                <StackPanel
+                                    Spacing="15"
+                                    HorizontalAlignment="Center">
+                                    <Path
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.DownloadManage}">
+                                    </Path>
+                                    <TextBlock Foreground="{DynamicResource BrushTextDark}"
+                                               Text="{DynamicResource DownloadManager}"
+                                               FontSize="18"
+                                               FontWeight="Medium" />
+                                </StackPanel>
+
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="PointerReleased">
+                                        <InvokeCommandAction Command="{Binding DownloadManagerCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </Border>
+
+                            <Border Grid.Column="2" Classes="actionButton">
+                                <StackPanel
+                                    Spacing="15"
+                                    HorizontalAlignment="Center">
+                                    <Path
+                                        Classes="actionButtonIcon"
+                                        Data="{StaticResource Icon.Toolbox}">
+                                    </Path>
+                                    <TextBlock Foreground="{DynamicResource BrushTextDark}"
+                                               Text="{DynamicResource Toolbox}"
+                                               FontSize="18"
+                                               FontWeight="Medium" />
+                                </StackPanel>
+
+                                <Interaction.Behaviors>
+                                    <EventTriggerBehavior EventName="PointerReleased">
+                                        <InvokeCommandAction Command="{Binding ToolboxCommand}" />
+                                    </EventTriggerBehavior>
+                                </Interaction.Behaviors>
+                            </Border>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+        </Panel>
     </Grid>
 </UserControl>

@@ -14,6 +14,7 @@
         <ResourceInclude Source="/Themes/Styles/StyleRadio.axaml" />
         <ResourceInclude Source="/Themes/Styles/NormalIcon.axaml" />
         <ResourceInclude Source="/Themes/Styles/NavigationIcon.axaml" />
+        <ResourceInclude Source="/Themes/Styles/Icons.axaml"/>
     </ResourceDictionary.MergedDictionaries>
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
