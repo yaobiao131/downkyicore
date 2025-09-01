@@ -58,5 +58,44 @@
     <Color x:Key="ColorPublication">#FF02B5DA</Color>
     
     <Color x:Key="ColorDataGridHighlight">#80D0E8</Color>
+    
+    <Color x:Key="ColorBackgroundStart">#f8f9ff</Color>
+    <Color x:Key="ColorBackgroundCenter">#f0f2ff</Color>
+    <Color x:Key="ColorBackgroundEnd">#e8ecff</Color>
+    
+  
+    <!-- 文本渐变颜色-->
+    <Color x:Key="ColorTextGradientStart">#4a5fff</Color>
+    <Color x:Key="ColorTextGradientMiddle">#4ad5d5</Color>
+    <Color x:Key="ColorTextGradientEnd">#ff4ac2</Color>
+    
+    <!-- 按钮渐变颜色-->
+    <Color x:Key="ColorButtonGradientStart">#334a5fff</Color>
+    <Color x:Key="ColorButtonGradientEnd">#334ad5d5</Color>
+    
+    <!-- 图标渐变颜色-->
+    <Color x:Key="ColorIconGradientStart">#4a5fff</Color>
+    <Color x:Key="ColorIconGradientEnd">#4ad5d5</Color>
+    
+    <!-- 边框和背景颜色-->
+    <Color x:Key="ColorMainContentBackground">#0DFFFFFF</Color>
+    <Color x:Key="ColorMainContentBorder">#1A000000</Color>
+    
+    <Color x:Key="ColorSearchBoxBackground">#14000000</Color>
+    <Color x:Key="ColorSearchBoxBorder">#1A000000</Color>
+    
+    <Color x:Key="ColorActionButtonBorder">#19000000</Color>
+    
+    <!-- 文本颜色-->
+    <Color x:Key="ColorSubtitleText">#FF606060</Color>
+    <Color x:Key="ColorWhiteText">#1a1c2d</Color>
+    
+    <!-- 阴影颜色-->
+    <Color x:Key="ColorShadow">#0000001a</Color>
+    
+    <!--首页-->
+    <BoxShadows x:Key="ShadowMain">0 8 32 #33000000</BoxShadows>
+    <BoxShadows x:Key="ShadowSearchBox">0 4 20 #33000000</BoxShadows>
+    <BoxShadows x:Key="ShadowActionButton">0 4 15 #33000000</BoxShadows>
 
 </ResourceDictionary>

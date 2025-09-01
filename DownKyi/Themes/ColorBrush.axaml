@@ -58,5 +58,52 @@
     <SolidColorBrush x:Key="BrushPublication" Color="{DynamicResource ColorPublication}" />
     
     <SolidColorBrush x:Key="BrushDataGridHighlight" Color="{DynamicResource ColorDataGridHighlight}" />
+    
+    
+    
+     <!-- 背景渐变 -->
+    <LinearGradientBrush x:Key="BrushBackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource ColorBackgroundStart}" />
+        <GradientStop Offset="0.5" Color="{DynamicResource ColorBackgroundCenter}" />
+        <GradientStop Offset="1" Color="{DynamicResource ColorBackgroundEnd}" />
+    </LinearGradientBrush>
+    
+    <!-- 文本渐变 -->
+    <LinearGradientBrush x:Key="BrushTextGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Offset="0" Color="{DynamicResource ColorTextGradientStart}" />
+        <GradientStop Offset="0.5" Color="{DynamicResource ColorTextGradientMiddle}" />
+        <GradientStop Offset="1" Color="{DynamicResource ColorTextGradientEnd}" />
+    </LinearGradientBrush>
+    
+    <!-- 按钮渐变 -->
+    <LinearGradientBrush x:Key="BrushActionButtonBackground" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="{DynamicResource ColorButtonGradientStart}" Offset="0" />
+        <GradientStop Color="{DynamicResource ColorButtonGradientEnd}" Offset="1" />
+    </LinearGradientBrush>
+    
+    <LinearGradientBrush x:Key="BrushActionButtonPointeroverBackground" StartPoint="0%,0%" EndPoint="80%,100%">
+        <GradientStop Color="#406A7EFF" Offset="0.0" />
+        <GradientStop Color="#407AEFEF" Offset="1.0" />
+    </LinearGradientBrush>
+    
+    <!-- 图标渐变 -->
+    <LinearGradientBrush x:Key="BrushIconGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="{DynamicResource ColorIconGradientStart}" Offset="0" />
+        <GradientStop Color="{DynamicResource ColorIconGradientEnd}" Offset="1" />
+    </LinearGradientBrush>
+    
+    
+    <SolidColorBrush x:Key="BrushMainContentBackground" Color="{DynamicResource ColorMainContentBackground}" />
+    <SolidColorBrush x:Key="BrushMainContentBorder" Color="{DynamicResource ColorMainContentBorder}" />
+    
+    <SolidColorBrush x:Key="BrushSearchBoxBackground" Color="{DynamicResource ColorSearchBoxBackground}" />
+    <SolidColorBrush x:Key="BrushSearchBoxBorder" Color="{DynamicResource ColorSearchBoxBorder}" />
+    
+    <SolidColorBrush x:Key="BrushActionButtonBorder" Color="{DynamicResource ColorActionButtonBorder}" />
+    
+    <SolidColorBrush x:Key="BrushSubtitleText" Color="{DynamicResource ColorSubtitleText}" />
+    <SolidColorBrush x:Key="BrushWhiteText" Color="{DynamicResource ColorWhiteText}" />
+    
+    
 
 </ResourceDictionary>

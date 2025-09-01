@@ -14,11 +14,14 @@
 
     <!--  Index  -->
     <system:String x:Key="Login">登录</system:String>
+    <system:String x:Key="EasyVideoDownload">轻松下载B站视频内容</system:String>
     <system:String x:Key="IndexHintText">请输入B站网址链接或av、BV号等……</system:String>
     <system:String x:Key="IndexHintTextSimple">请输入B站视频播放地址……</system:String>
     <system:String x:Key="Settings">设置</system:String>
     <system:String x:Key="DownloadManager">下载管理</system:String>
     <system:String x:Key="Toolbox">工具箱</system:String>
+    <system:String x:Key="LoadingUserInfo">用户信息加载中...</system:String>
+    <system:String x:Key="LoadUserInfoFailed">用户信息加载失败，尝试重新登录</system:String>
 
     <!--  Login  -->
     <system:String x:Key="ScanToLogin">扫描二维码登录</system:String>
