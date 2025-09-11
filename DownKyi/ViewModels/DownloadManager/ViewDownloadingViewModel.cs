@@ -51,7 +51,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         private void ExecutePauseAllDownloadingCommand()
         {
-            foreach (var downloading in _downloadingList)
+            foreach (var downloading in _downloadingList.ToList())
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
@@ -93,7 +93,7 @@ namespace DownKyi.ViewModels.DownloadManager
         /// </summary>
         private void ExecuteContinueAllDownloadingCommand()
         {
-            foreach (var downloading in _downloadingList)
+            foreach (var downloading in _downloadingList.ToList())
             {
                 switch (downloading.Downloading.DownloadStatus)
                 {
