@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -291,7 +290,7 @@ public class AddToDownloadService
                 var isDownloading = false;
 
 
-                foreach (var item in App.DownloadingList)
+                foreach (var item in App.DownloadingList.ToList())
                 {
                     if (item.DownloadBase == null)
                     {
