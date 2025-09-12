@@ -21,6 +21,7 @@ using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
+using DownKyi.ViewModels;
 using DownKyi.ViewModels.DownloadManager;
 using Console = DownKyi.Core.Utils.Debugging.Console;
 
@@ -32,8 +33,8 @@ public abstract class DownloadService
 
     // protected TaskbarIcon _notifyIcon;
     protected readonly IDialogService? DialogService;
-    protected readonly ObservableCollection<DownloadingItem> DownloadingList;
-    protected readonly ObservableCollection<DownloadedItem> DownloadedList;
+    protected readonly ImmutableObservableCollection<DownloadingItem> DownloadingList;
+    protected readonly ImmutableObservableCollection<DownloadedItem> DownloadedList;
 
     protected Task? WorkTask;
     protected CancellationTokenSource? TokenSource;
@@ -52,7 +53,7 @@ public abstract class DownloadService
     /// <param name="downloadedList"></param>
     /// <param name="dialogService"></param>
     /// <returns></returns>
-    public DownloadService(ObservableCollection<DownloadingItem> downloadingList, ObservableCollection<DownloadedItem> downloadedList, IDialogService? dialogService)
+    public DownloadService(ImmutableObservableCollection<DownloadingItem> downloadingList, ImmutableObservableCollection<DownloadedItem> downloadedList, IDialogService? dialogService)
     {
         DownloadingList = downloadingList;
         DownloadedList = downloadedList;

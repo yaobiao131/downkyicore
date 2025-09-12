@@ -21,9 +21,9 @@ namespace DownKyi.ViewModels.DownloadManager
 
         #region 页面属性申明
 
-        private ObservableCollection<DownloadingItem> _downloadingList = new();
+        private ImmutableObservableCollection<DownloadingItem> _downloadingList = new();
 
-        public ObservableCollection<DownloadingItem> DownloadingList
+        public ImmutableObservableCollection<DownloadingItem> DownloadingList
         {
             get => _downloadingList;
             set => SetProperty(ref _downloadingList, value);

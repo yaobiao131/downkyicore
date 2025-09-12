@@ -13,6 +13,7 @@ using DownKyi.Core.Utils;
 using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
+using DownKyi.ViewModels;
 using DownKyi.ViewModels.DownloadManager;
 using Downloader;
 using Microsoft.Extensions.Logging;
@@ -24,8 +25,8 @@ namespace DownKyi.Services.Download;
 
 public class BuiltinDownloadService : DownloadService, IDownloadService
 {
-    public BuiltinDownloadService(ObservableCollection<DownloadingItem> downloadingList,
-        ObservableCollection<DownloadedItem> downloadedList,
+    public BuiltinDownloadService(ImmutableObservableCollection<DownloadingItem> downloadingList,
+        ImmutableObservableCollection<DownloadedItem> downloadedList,
         IDialogService? dialogService
     ) : base(downloadingList, downloadedList, dialogService)
     {

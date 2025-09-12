@@ -23,9 +23,9 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private ObservableCollection<DownloadedItem> _downloadedList = new();
+    private ImmutableObservableCollection<DownloadedItem> _downloadedList = new();
 
-    public ObservableCollection<DownloadedItem> DownloadedList
+    public ImmutableObservableCollection<DownloadedItem> DownloadedList
     {
         get => _downloadedList;
         set => SetProperty(ref _downloadedList, value);

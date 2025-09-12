@@ -17,6 +17,7 @@ using DownKyi.Images;
 using DownKyi.Models;
 using DownKyi.PrismExtension.Dialog;
 using DownKyi.Utils;
+using DownKyi.ViewModels;
 using DownKyi.ViewModels.DownloadManager;
 
 namespace DownKyi.Services.Download;
@@ -24,8 +25,8 @@ namespace DownKyi.Services.Download;
 public class AriaDownloadService : DownloadService, IDownloadService
 {
     public AriaDownloadService(
-        ObservableCollection<DownloadingItem> downloadingList,
-        ObservableCollection<DownloadedItem> downloadedList,
+        ImmutableObservableCollection<DownloadingItem> downloadingList,
+        ImmutableObservableCollection<DownloadedItem> downloadedList,
         IDialogService? dialogService) :
         base(downloadingList, downloadedList, dialogService)
     {

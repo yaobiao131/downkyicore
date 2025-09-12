@@ -43,8 +43,8 @@ public partial class App : PrismApplication
     public const string RepoOwner = "yaobiao131";
     public const string RepoName = "downkyicore";
 
-    public static ObservableCollection<DownloadingItem> DownloadingList { get; set; } = new();
-    public static ObservableCollection<DownloadedItem> DownloadedList { get; set; } = new();
+    public static ImmutableObservableCollection<DownloadingItem> DownloadingList { get; set; } = new();
+    public static ImmutableObservableCollection<DownloadedItem> DownloadedList { get; set; } = new();
     public new static App Current => (App)Application.Current!;
     public new MainWindow MainWindow => Container.Resolve<MainWindow>();
     public IClassicDesktopStyleApplicationLifetime? AppLife;
