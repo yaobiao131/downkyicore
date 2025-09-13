@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -258,14 +257,11 @@ public class ViewMyHistoryViewModel : ViewModelBase
 
     private long _nextViewAt = 0;
 
-    public async Task ExecuteLoadMoreCommand(object obj,CancellationToken token)
+    private async Task ExecuteLoadMoreCommand()
     {
         if(NoDataVisibility) return;
         LoadingVisibility = true;
-        var result = await Task<HistoryData>.Run(() =>
-        {
-            return History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage);
-        });
+        var result = await Task.Run(() => History.GetHistory(_nextMax, _nextViewAt, VideoNumberInPage));
         if (result?.List?.Count > 0)
         {
             Medias.AddRange(result.List.Select(x => Convert(x,EventAggregator))
