@@ -20,6 +20,11 @@ public class AsyncDelegateCommand<T> : ICommand
     
     public bool CanExecute(object? parameter)
     {
+        if (parameter is null && typeof(T) == typeof(object))
+        {
+            return !_isExecuting && (_canExecute?.Invoke(default!) ?? true);
+        }
+        
         if (parameter is not T typedParameter)
         {
             return false;
@@ -29,11 +34,28 @@ public class AsyncDelegateCommand<T> : ICommand
 
     public async void Execute(object? parameter)
     {
+        if (parameter is null && typeof(T) == typeof(object))
+        {
+            _isExecuting = true;
+            RaiseCanExecuteChanged();
+
+            try
+            {
+                await _execute(default!);
+            }
+            finally
+            {
+                _isExecuting = false;
+                RaiseCanExecuteChanged();
+            }
+            return;
+        }
+        
         if (parameter is not T typedParameter)
         {
             return;
         }
-
+        
         _isExecuting = true;
         RaiseCanExecuteChanged();
 
