@@ -1,10 +1,10 @@
 <Project ToolsVersion="15.0">
   <ItemGroup>
-    <PackageVersion Include="Avalonia" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Controls.DataGrid" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Desktop" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.0" />
-    <PackageVersion Include="Avalonia.Themes.Simple" Version="11.3.0" />
+    <PackageVersion Include="Avalonia" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Controls.DataGrid" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.6" />
+    <PackageVersion Include="Avalonia.Themes.Simple" Version="11.3.6" />
     <PackageVersion Include="FreeSql" Version="3.5.212" />
     <PackageVersion Include="FreeSql.DbContext" Version="3.5.212" />
     <PackageVersion Include="FreeSql.Provider.SqliteCore" Version="3.5.212" />
