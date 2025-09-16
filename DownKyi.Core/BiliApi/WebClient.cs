@@ -22,7 +22,7 @@ public static class WebClient
             PooledConnectionLifetime = TimeSpan.FromMinutes(10),
             PooledConnectionIdleTimeout = TimeSpan.FromMinutes(5),
             AutomaticDecompression = DecompressionMethods.All,
-            ConnectTimeout = TimeSpan.FromSeconds(10)
+            ConnectTimeout = TimeSpan.FromSeconds(3)
         };
         switch (SettingsManager.GetInstance().GetNetworkProxy())
         {
@@ -47,7 +47,7 @@ public static class WebClient
                     socketsHandler.Proxy = null;
                     Console.WriteLine(e);
                 }
-            }
+            } 
                 break;
         }
 
@@ -78,7 +78,7 @@ public static class WebClient
         _bvuid4 = spi?.Data?.Bvuid4;
     }
 
-    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 3, bool json = false)
+    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 2, bool json = false)
     {
         if (retry <= 0)
         {
