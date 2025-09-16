@@ -86,6 +86,8 @@ public class DownloadStorageService
         }
 
         var downloading = downloadingItem.Downloading;
+        downloading.DownloadedFiles = new List<string>(downloading.DownloadedFiles);
+        downloading.DownloadFiles = new Dictionary<string, string>(downloading.DownloadFiles);
         downloading.DownloadBase = downloadingItem.DownloadBase;
 
         _downloadingRepository.Update(downloading);
