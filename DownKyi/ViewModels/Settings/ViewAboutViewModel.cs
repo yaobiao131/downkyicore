@@ -116,18 +116,17 @@ public class ViewAboutViewModel : ViewModelBase
     /// <summary>
     /// 检查更新事件
     /// </summary>
-    /// <param name="parameter"></param>
-    private async Task ExecuteCheckUpdateCommand(object obj,CancellationToken token)
+    private async Task ExecuteCheckUpdateCommand()
     {
         var service = new VersionCheckerService(App.RepoOwner, App.RepoName,_isReceiveBetaVersion);
-        var  release = await service.GetLatestReleaseAsync();
+        var release = await service.GetLatestReleaseAsync();
         if(GitHubRelease.IsNullOrEmpty(release))
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
             return;
         }
         
-        if(service.IsNewVersionAvailable(release.TagName))
+        if(service.IsNewVersionAvailable(release!.TagName))
         {
             await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
                 DialogParameters { { "release", release } })!;

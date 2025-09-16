@@ -175,7 +175,7 @@ public class ViewDelogoViewModel : ViewModelBase
     /// <summary>
     /// 选择视频事件
     /// </summary>
-    private async Task ExecuteSelectVideoCommand(object obj, CancellationToken token)
+    private async Task ExecuteSelectVideoCommand()
     {
         if (_isDelogo)
         {
