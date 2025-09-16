@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace DownKyi.Core.Danmaku2Ass;
+﻿namespace DownKyi.Core.Danmaku.Ass;
 
 /// <summary>
 /// 显示方式

@@ -11,7 +11,8 @@ using DownKyi.Core.BiliApi;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.VideoStream;
 using DownKyi.Core.BiliApi.VideoStream.Models;
-using DownKyi.Core.Danmaku2Ass;
+using DownKyi.Core.Danmaku.Ass;
+using DownKyi.Core.Danmaku.Xml;
 using DownKyi.Core.FFMpeg;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
@@ -202,50 +203,55 @@ public abstract class DownloadService
         // 下载速度
         downloading.SpeedDisplay = string.Empty;
 
+        var format = SettingsManager.GetInstance().GetDanmakuOutputFormat();
+        var fileName = downloading.DownloadBase?.FilePath;
         var title = $"{downloading.Name}";
-        var assFile = $"{downloading.DownloadBase?.FilePath}.ass";
+      
+        if (format == DanmakuFormat.Ass)
+        {
+            var assFile = $"{fileName}.ass";
+            if (!downloading.Downloading.DownloadFiles.ContainsKey("danmaku"))
+            {
+                downloading.Downloading.DownloadFiles.Add("danmaku", assFile);
+            }
+            var screenWidth = SettingsManager.GetInstance().GetDanmakuScreenWidth();
+            var screenHeight = SettingsManager.GetInstance().GetDanmakuScreenHeight();
+            
+            // 字幕配置
+            var subtitleConfig = new Config
+            {
+                Title = title,
+                ScreenWidth = screenWidth,
+                ScreenHeight = screenHeight,
+                FontName = SettingsManager.GetInstance().GetDanmakuFontName(),
+                BaseFontSize = SettingsManager.GetInstance().GetDanmakuFontSize(),
+                LineCount = SettingsManager.GetInstance().GetDanmakuLineCount(),
+                LayoutAlgorithm =
+                    SettingsManager.GetInstance().GetDanmakuLayoutAlgorithm().ToString("G").ToLower(), // async/sync
+                TuneDuration = 0,
+                DropOffset = 0,
+                BottomMargin = 0,
+                CustomOffset = 0
+            };
 
-        // 记录本次下载的文件
+            Core.Danmaku.Ass.Bilibili.GetInstance()
+                .SetTopFilter(SettingsManager.GetInstance().GetDanmakuTopFilter() == AllowStatus.Yes)
+                .SetBottomFilter(SettingsManager.GetInstance().GetDanmakuBottomFilter() == AllowStatus.Yes)
+                .SetScrollFilter(SettingsManager.GetInstance().GetDanmakuScrollFilter() == AllowStatus.Yes)
+                .Create(downloading.DownloadBase.Avid, downloading.DownloadBase.Cid, subtitleConfig, assFile);
+
+            return assFile;
+        }
+        
+        var xmlFile = $"{fileName}.xml";
         if (!downloading.Downloading.DownloadFiles.ContainsKey("danmaku"))
         {
-            downloading.Downloading.DownloadFiles.Add("danmaku", assFile);
+            downloading.Downloading.DownloadFiles.Add("danmaku", xmlFile);
         }
 
-        var screenWidth = SettingsManager.GetInstance().GetDanmakuScreenWidth();
-        var screenHeight = SettingsManager.GetInstance().GetDanmakuScreenHeight();
-        //if (SettingsManager.GetInstance().IsCustomDanmakuResolution() != AllowStatus.YES)
-        //{
-        //    if (downloadingEntity.Width > 0 && downloadingEntity.Height > 0)
-        //    {
-        //        screenWidth = downloadingEntity.Width;
-        //        screenHeight = downloadingEntity.Height;
-        //    }
-        //}
-
-        // 字幕配置
-        var subtitleConfig = new Config
-        {
-            Title = title,
-            ScreenWidth = screenWidth,
-            ScreenHeight = screenHeight,
-            FontName = SettingsManager.GetInstance().GetDanmakuFontName(),
-            BaseFontSize = SettingsManager.GetInstance().GetDanmakuFontSize(),
-            LineCount = SettingsManager.GetInstance().GetDanmakuLineCount(),
-            LayoutAlgorithm =
-                SettingsManager.GetInstance().GetDanmakuLayoutAlgorithm().ToString("G").ToLower(), // async/sync
-            TuneDuration = 0,
-            DropOffset = 0,
-            BottomMargin = 0,
-            CustomOffset = 0
-        };
-
-        Core.Danmaku2Ass.Bilibili.GetInstance()
-            .SetTopFilter(SettingsManager.GetInstance().GetDanmakuTopFilter() == AllowStatus.Yes)
-            .SetBottomFilter(SettingsManager.GetInstance().GetDanmakuBottomFilter() == AllowStatus.Yes)
-            .SetScrollFilter(SettingsManager.GetInstance().GetDanmakuScrollFilter() == AllowStatus.Yes)
-            .Create(downloading.DownloadBase.Avid, downloading.DownloadBase.Cid, subtitleConfig, assFile);
-
-        return assFile;
+        var xmlGenerator = new XmlGenerate();
+        return xmlGenerator.GenerateFromDanmakuList(downloading.DownloadBase.Avid,
+            downloading.DownloadBase.Cid, xmlFile);
     }
 
 

@@ -15,4 +15,5 @@ public class DanmakuSettings
     public int DanmakuFontSize { get; set; } = -1;
     public int DanmakuLineCount { get; set; } = -1;
     public DanmakuLayoutAlgorithm DanmakuLayoutAlgorithm { get; set; } = DanmakuLayoutAlgorithm.None;
+    public DanmakuFormat OutputFormat { get; set; }
 }

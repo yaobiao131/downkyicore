@@ -1,4 +1,4 @@
-﻿namespace DownKyi.Core.Danmaku2Ass;
+﻿namespace DownKyi.Core.Danmaku.Ass;
 
 /// <summary>
 /// 字幕工程类

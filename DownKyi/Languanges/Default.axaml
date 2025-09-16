@@ -278,6 +278,15 @@
     <system:String x:Key="ThirdPartyVersion">版本</system:String>
     <system:String x:Key="ThirdPartyLicense">许可证</system:String>
     <system:String x:Key="Disclaimer">免责申明</system:String>
+    <system:String x:Key="AssFormat">ASS格式</system:String>
+    <system:String x:Key="AssFormatTip">ASS格式支持弹幕过滤和样式自定义</system:String>
+    <system:String x:Key="XmlFormat">Xml格式</system:String>
+    <system:String x:Key="XmlFormatTip">XML格式保留原始B站弹幕数据，不会进行任何过滤处理</system:String>
+    <system:String x:Key="XmlFormatDescription">Xml格式说明：</system:String>
+    <system:String x:Key="XmlFormatDescriptionContent1">1. 保留B站原始弹幕数据，不进行任何过滤</system:String>
+    <system:String x:Key="XmlFormatDescriptionContent2">2. 不支持弹幕样式自定义</system:String>
+    
+    
     <system:String x:Key="Disclaimer1">1. 本软件只提供视频解析，不提供任何资源上传、存储到服务器的功能。</system:String>
     <system:String x:Key="Disclaimer2">2. 本软件仅解析来自B站的内容，不会对解析到的音视频进行二次编码，部分视频会进行有限的格式转换、拼接等操作。</system:String>
     <system:String x:Key="Disclaimer3">3. 本软件解析得到的所有内容均来自B站UP主上传、分享，其版权均归原作者所有。内容提供者、上传者（UP主）应对其提供、上传的内容承担全部责任。</system:String>

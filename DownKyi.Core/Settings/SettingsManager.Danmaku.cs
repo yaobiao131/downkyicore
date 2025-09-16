@@ -13,6 +13,8 @@ public partial class SettingsManager
 
     // 是否自定义分辨率
     private const AllowStatus IsCustomDanmakuResolution = AllowStatus.No;
+    
+    private const DanmakuFormat DefaultDanmakuFormat = DanmakuFormat.Ass;
 
     // 分辨率-宽
     private const int DanmakuScreenWidth = 1920;
@@ -32,6 +34,7 @@ public partial class SettingsManager
     // 弹幕布局算法
     private const DanmakuLayoutAlgorithm DanmakuLayoutAlgorithm = Settings.DanmakuLayoutAlgorithm.Sync;
 
+    
 
     /// <summary>
     /// 获取是否屏蔽顶部弹幕
@@ -61,6 +64,26 @@ public partial class SettingsManager
             _appSettings.Danmaku.DanmakuTopFilter,
             danmakuFilter,
             v => _appSettings.Danmaku.DanmakuTopFilter = v);
+    }
+
+    public bool SetDanmakuOutputFormat(DanmakuFormat format)
+    {
+        return SetProperty(
+            _appSettings.Danmaku.OutputFormat,
+            format,
+            v => _appSettings.Danmaku.OutputFormat = v);
+    }
+    
+    
+    public DanmakuFormat GetDanmakuOutputFormat()
+    {
+        _appSettings = GetSettings();
+        if (_appSettings.Danmaku.OutputFormat == DanmakuFormat.None)
+        {
+            SetDanmakuOutputFormat(DefaultDanmakuFormat);
+            return _appSettings.Danmaku.OutputFormat;
+        }
+        return _appSettings.Danmaku.OutputFormat;
     }
 
     /// <summary>

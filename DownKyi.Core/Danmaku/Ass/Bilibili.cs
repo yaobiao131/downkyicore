@@ -1,6 +1,6 @@
 ﻿using DownKyi.Core.BiliApi.Danmaku;
 
-namespace DownKyi.Core.Danmaku2Ass;
+namespace DownKyi.Core.Danmaku.Ass;
 
 public class Bilibili
 {

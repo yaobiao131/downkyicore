@@ -14,169 +14,236 @@
                     Text="{DynamicResource SettingDanmaku}" />
             </StackPanel>
 
+            <!-- 弹幕格式选择 -->
             <HeaderedContentControl
-                Background="LightGray"
                 Margin="0,20,0,0"
                 Padding="20,5"
                 HorizontalAlignment="Left"
                 FontSize="12"
                 Foreground="{DynamicResource BrushTextDark}"
-                Header="{DynamicResource FilterType}">
+                Header="{DynamicResource DanmakuFormat}">
                 <StackPanel Margin="10" Orientation="Horizontal">
-                    <CheckBox
-                        Margin="0,0,0,0"
-                        Command="{Binding TopFilterCommand}"
-                        Content="{DynamicResource TopFilter}"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding TopFilter, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="40,0,0,0"
-                        Command="{Binding BottomFilterCommand}"
-                        Content="{DynamicResource BottomFilter}"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding BottomFilter, Mode=TwoWay}" />
-                    <CheckBox
-                        Margin="40,0,0,0"
-                        Command="{Binding ScrollFilterCommand}"
-                        Content="{DynamicResource ScrollFilter}"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        IsChecked="{Binding ScrollFilter, Mode=TwoWay}" />
+                    <RadioButton
+                        Margin="0,0,20,0"
+                        Content="{DynamicResource AssFormat}"
+                        GroupName="DanmakuFormat"
+                        IsChecked="{Binding IsAssFormat, Mode=TwoWay}">
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="Checked">
+                                <InvokeCommandAction Command="{Binding FormatSelectCommand}" CommandParameter="Ass" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
+                        <ToolTip.Tip>
+                            <TextBlock Text="{DynamicResource AssFormatTip}" TextWrapping="Wrap" Width="200"/>
+                        </ToolTip.Tip>
+                    </RadioButton>
+                    <RadioButton
+                        Content="{DynamicResource XmlFormat}"
+                        GroupName="DanmakuFormat"
+                        IsChecked="{Binding IsXmlFormat, Mode=TwoWay}">
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="Checked">
+                                <InvokeCommandAction Command="{Binding FormatSelectCommand}" CommandParameter="Xml" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
+                        <ToolTip.Tip>
+                            <TextBlock Text="{DynamicResource XmlFormatTip}" TextWrapping="Wrap" Width="200"/>
+                        </ToolTip.Tip>
+                    </RadioButton>
                 </StackPanel>
             </HeaderedContentControl>
 
+            <!-- 格式提示信息 -->
+            <Border
+                Margin="0,10,0,0"
+                Padding="15,10"
+                Background="{DynamicResource BrushInfoBackground}"
+                CornerRadius="5"
+                IsVisible="{Binding IsXmlFormat}">
+                <StackPanel Orientation="Vertical" Spacing="5">
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushInfoText}"
+                        Text="{DynamicResource  XmlFormatDescription}"
+                        FontWeight="Bold"/>
+                    <TextBlock
+                        FontSize="11"
+                        Foreground="{DynamicResource BrushInfoText}"
+                        Text="{DynamicResource XmlFormatDescriptionContent1}"
+                        
+                        TextWrapping="Wrap"/>
+                    <TextBlock
+                        FontSize="11"
+                        Foreground="{DynamicResource BrushInfoText}"
+                        Text="{DynamicResource XmlFormatDescriptionContent2}"
+                        TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
 
-            <StackPanel
-                Margin="0,20,0,0"
-                Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="{DynamicResource Resolution}" />
-                <TextBox
-                    Name="NameScreenWidth"
-                    Width="95"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding ScreenWidth, Mode=TwoWay}">
-                    <TextBox.KeyBindings>
-                        <KeyBinding
-                            Command="{Binding ScreenWidthCommand}"
-                            CommandParameter="{Binding #NameScreenWidth.Text}"
-                            Gesture="Enter" />
-                    </TextBox.KeyBindings>
-                </TextBox>
-                <TextBlock
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="×" />
-                <TextBox
-                    Name="NameScreenHeight"
-                    Width="95"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding ScreenHeight, Mode=TwoWay}">
-                    <TextBox.KeyBindings>
-                        <KeyBinding
-                            Command="{Binding ScreenHeightCommand}"
-                            CommandParameter="{Binding #NameScreenHeight.Text}"
-                            Gesture="Enter" />
-                    </TextBox.KeyBindings>
-                </TextBox>
-            </StackPanel>
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="{DynamicResource FontName}" />
-                <ComboBox
-                    Name="NameFonts"
-                    Width="200"
-                    VerticalContentAlignment="Center"
-                    ItemsSource="{Binding Fonts}"
-                    SelectedValue="{Binding SelectedFont}">
-                    <Interaction.Behaviors>
-                        <EventTriggerBehavior EventName="SelectionChanged">
-                            <InvokeCommandAction
-                                Command="{Binding FontSelectCommand}"
-                                CommandParameter="{Binding #NameFonts.SelectedValue}" />
-                        </EventTriggerBehavior>
-                    </Interaction.Behaviors>
+            <!-- ASS格式配置区域（仅在ASS格式时显示） -->
+            <StackPanel IsVisible="{Binding IsAssFormat}" Orientation="Vertical">
 
-                </ComboBox>
-            </StackPanel>
-            <StackPanel
-                Margin="0,20,0,0"
-                Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="{DynamicResource FontSize}" />
-                <TextBox
-                    x:Name="NameFontSize"
-                    Width="200"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding FontSize}">
-                    <TextBox.KeyBindings>
-                        <KeyBinding
-                            Command="{Binding FontSizeCommand}"
-                            CommandParameter="{Binding #NameFontSize.Text}"
-                            Gesture="Enter" />
-                    </TextBox.KeyBindings>
-                </TextBox>
-            </StackPanel>
-            <StackPanel
-                Margin="0,20,0,0"
-                Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="{DynamicResource LineCount}" />
-                <TextBox
-                    Name="NameLineCount"
-                    Width="200"
-                    VerticalContentAlignment="Center"
-                    Text="{Binding LineCount}">
-                    <TextBox.KeyBindings>
-                        <KeyBinding
-                            Command="{Binding LineCountCommand}"
-                            CommandParameter="{Binding #NameLineCount.Text}"
-                            Gesture="Enter" />
-                    </TextBox.KeyBindings>
-                </TextBox>
-            </StackPanel>
-            <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
-                <TextBlock
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    Text="{DynamicResource LayoutAlgorithm}" />
-                <CheckBox
+                <HeaderedContentControl
+                    Background="LightGray"
+                    Margin="0,20,0,0"
+                    Padding="20,5"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{Binding LayoutAlgorithmCommand}"
-                    CommandParameter="Sync"
-                    Content="{DynamicResource LayoutAlgorithmSync}"
                     FontSize="12"
                     Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding Sync, Mode=TwoWay}" />
-                <CheckBox
-                    Margin="20,0,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Command="{Binding LayoutAlgorithmCommand}"
-                    CommandParameter="Async"
-                    Content="{DynamicResource LayoutAlgorithmAsync}"
-                    FontSize="12"
-                    Foreground="{DynamicResource BrushTextDark}"
-                    IsChecked="{Binding Async, Mode=TwoWay}" />
+                    Header="{DynamicResource FilterType}">
+                    <StackPanel Margin="10" Orientation="Horizontal">
+                        <CheckBox
+                            Margin="0,0,0,0"
+                            Command="{Binding TopFilterCommand}"
+                            Content="{DynamicResource TopFilter}"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            IsChecked="{Binding TopFilter, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="40,0,0,0"
+                            Command="{Binding BottomFilterCommand}"
+                            Content="{DynamicResource BottomFilter}"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            IsChecked="{Binding BottomFilter, Mode=TwoWay}" />
+                        <CheckBox
+                            Margin="40,0,0,0"
+                            Command="{Binding ScrollFilterCommand}"
+                            Content="{DynamicResource ScrollFilter}"
+                            Foreground="{DynamicResource BrushTextDark}"
+                            IsChecked="{Binding ScrollFilter, Mode=TwoWay}" />
+                    </StackPanel>
+                </HeaderedContentControl>
+
+                <StackPanel
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource Resolution}" />
+                    <TextBox
+                        Name="NameScreenWidth"
+                        Width="95"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding ScreenWidth, Mode=TwoWay}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding
+                                Command="{Binding ScreenWidthCommand}"
+                                CommandParameter="{Binding #NameScreenWidth.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="×" />
+                    <TextBox
+                        Name="NameScreenHeight"
+                        Width="95"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding ScreenHeight, Mode=TwoWay}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding
+                                Command="{Binding ScreenHeightCommand}"
+                                CommandParameter="{Binding #NameScreenHeight.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource FontName}" />
+                    <ComboBox
+                        Name="NameFonts"
+                        Width="200"
+                        VerticalContentAlignment="Center"
+                        ItemsSource="{Binding Fonts}"
+                        SelectedValue="{Binding SelectedFont}">
+                        <Interaction.Behaviors>
+                            <EventTriggerBehavior EventName="SelectionChanged">
+                                <InvokeCommandAction
+                                    Command="{Binding FontSelectCommand}"
+                                    CommandParameter="{Binding #NameFonts.SelectedValue}" />
+                            </EventTriggerBehavior>
+                        </Interaction.Behaviors>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource FontSize}" />
+                    <TextBox
+                        x:Name="NameFontSize"
+                        Width="200"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding FontSize}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding
+                                Command="{Binding FontSizeCommand}"
+                                CommandParameter="{Binding #NameFontSize.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel
+                    Margin="0,20,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource LineCount}" />
+                    <TextBox
+                        Name="NameLineCount"
+                        Width="200"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding LineCount}">
+                        <TextBox.KeyBindings>
+                            <KeyBinding
+                                Command="{Binding LineCountCommand}"
+                                CommandParameter="{Binding #NameLineCount.Text}"
+                                Gesture="Enter" />
+                        </TextBox.KeyBindings>
+                    </TextBox>
+                </StackPanel>
+                <StackPanel Margin="0,20,0,0" Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        Text="{DynamicResource LayoutAlgorithm}" />
+                    <CheckBox
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding LayoutAlgorithmCommand}"
+                        CommandParameter="Sync"
+                        Content="{DynamicResource LayoutAlgorithmSync}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding Sync, Mode=TwoWay}" />
+                    <CheckBox
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Command="{Binding LayoutAlgorithmCommand}"
+                        CommandParameter="Async"
+                        Content="{DynamicResource LayoutAlgorithmAsync}"
+                        FontSize="12"
+                        Foreground="{DynamicResource BrushTextDark}"
+                        IsChecked="{Binding Async, Mode=TwoWay}" />
+                </StackPanel>
             </StackPanel>
 
             <StackPanel Margin="10" />
         </StackPanel>
-
     </ScrollViewer>
 </UserControl>
