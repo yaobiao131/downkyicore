@@ -95,16 +95,16 @@ public class ViewAboutViewModel : ViewModelBase
     #region 命令申明
 
     // 访问主页事件
-    private DelegateCommand? _appNameCommand;
+    private AsyncDelegateCommand? _appNameCommand;
 
-    public DelegateCommand AppNameCommand => _appNameCommand ??= new DelegateCommand(ExecuteAppNameCommand);
+    public AsyncDelegateCommand AppNameCommand => _appNameCommand ??= new AsyncDelegateCommand(ExecuteAppNameCommand);
 
     /// <summary>
     /// 访问主页事件
     /// </summary>
-    private void ExecuteAppNameCommand()
+    private async Task ExecuteAppNameCommand()
     {
-        PlatformHelper.OpenUrl("https://github.com/yaobiao131/downkyicore/releases", EventAggregator);
+        await PlatformHelper.OpenUrl("https://github.com/yaobiao131/downkyicore/releases", EventAggregator);
     }
 
     // 检查更新事件
@@ -118,37 +118,36 @@ public class ViewAboutViewModel : ViewModelBase
     /// </summary>
     private async Task ExecuteCheckUpdateCommand()
     {
-        var service = new VersionCheckerService(App.RepoOwner, App.RepoName,_isReceiveBetaVersion);
+        var service = new VersionCheckerService(App.RepoOwner, App.RepoName, _isReceiveBetaVersion);
         var release = await service.GetLatestReleaseAsync();
-        if(GitHubRelease.IsNullOrEmpty(release))
+        if (GitHubRelease.IsNullOrEmpty(release))
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("检查失败，请稍后重试~");
             return;
         }
-        
-        if(service.IsNewVersionAvailable(release!.TagName))
+
+        if (service.IsNewVersionAvailable(release!.TagName))
         {
-            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new 
+            await DialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new
                 DialogParameters { { "release", release } })!;
         }
         else
         {
             EventAggregator.GetEvent<MessageEvent>().Publish("已是最新版~");
         }
-       
     }
 
     // 意见反馈事件
-    private DelegateCommand? _feedbackCommand;
+    private AsyncDelegateCommand? _feedbackCommand;
 
-    public DelegateCommand FeedbackCommand => _feedbackCommand ??= new DelegateCommand(ExecuteFeedbackCommand);
+    public AsyncDelegateCommand FeedbackCommand => _feedbackCommand ??= new AsyncDelegateCommand(ExecuteFeedbackCommand);
 
     /// <summary>
     /// 意见反馈事件
     /// </summary>
-    private void ExecuteFeedbackCommand()
+    private async Task ExecuteFeedbackCommand()
     {
-        PlatformHelper.OpenUrl("https://github.com/yaobiao131/downkyicore/issues", EventAggregator);
+        await PlatformHelper.OpenUrl("https://github.com/yaobiao131/downkyicore/issues", EventAggregator);
     }
 
     // 是否接收测试版更新事件
@@ -183,111 +182,98 @@ public class ViewAboutViewModel : ViewModelBase
         PublishTip(isSucceed);
     }
 
-    // Brotli.NET许可证查看事件
-    private DelegateCommand _brotliLicenseCommand;
-
-    public DelegateCommand BrotliLicenseCommand => _brotliLicenseCommand ??= new DelegateCommand(ExecuteBrotliLicenseCommand);
-
-    /// <summary>
-    /// Brotli.NET许可证查看事件
-    /// </summary>
-    private void ExecuteBrotliLicenseCommand()
-    {
-        PlatformHelper.OpenUrl("https://licenses.nuget.org/MIT");
-    }
-
     // Google.Protobuf许可证查看事件
-    private DelegateCommand _protobufLicenseCommand;
+    private AsyncDelegateCommand? _protobufLicenseCommand;
 
-    public DelegateCommand ProtobufLicenseCommand => _protobufLicenseCommand ??= new DelegateCommand(ExecuteProtobufLicenseCommand);
+    public AsyncDelegateCommand ProtobufLicenseCommand => _protobufLicenseCommand ??= new AsyncDelegateCommand(ExecuteProtobufLicenseCommand);
 
     /// <summary>
     /// Google.Protobuf许可证查看事件
     /// </summary>
-    private void ExecuteProtobufLicenseCommand()
+    private async Task ExecuteProtobufLicenseCommand()
     {
-        PlatformHelper.OpenUrl("https://github.com/protocolbuffers/protobuf/blob/master/LICENSE");
+        await PlatformHelper.OpenUrl("https://github.com/protocolbuffers/protobuf/blob/master/LICENSE");
     }
 
     // Newtonsoft.Json许可证查看事件
-    private DelegateCommand _newtonsoftLicenseCommand;
+    private AsyncDelegateCommand? _newtonsoftLicenseCommand;
 
-    public DelegateCommand NewtonsoftLicenseCommand => _newtonsoftLicenseCommand ??= new DelegateCommand(ExecuteNewtonsoftLicenseCommand);
+    public AsyncDelegateCommand NewtonsoftLicenseCommand => _newtonsoftLicenseCommand ??= new AsyncDelegateCommand(ExecuteNewtonsoftLicenseCommand);
 
     /// <summary>
     /// Newtonsoft.Json许可证查看事件
     /// </summary>
-    private void ExecuteNewtonsoftLicenseCommand()
+    private async Task ExecuteNewtonsoftLicenseCommand()
     {
-        PlatformHelper.OpenUrl("https://licenses.nuget.org/MIT");
+        await PlatformHelper.OpenUrl("https://licenses.nuget.org/MIT");
     }
 
     // Prism.DryIoc许可证查看事件
-    private DelegateCommand _prismLicenseCommand;
+    private AsyncDelegateCommand? _prismLicenseCommand;
 
-    public DelegateCommand PrismLicenseCommand => _prismLicenseCommand ??= new DelegateCommand(ExecutePrismLicenseCommand);
+    public AsyncDelegateCommand PrismLicenseCommand => _prismLicenseCommand ??= new AsyncDelegateCommand(ExecutePrismLicenseCommand);
 
     /// <summary>
     /// Prism.DryIoc许可证查看事件
     /// </summary>
-    private void ExecutePrismLicenseCommand()
+    private async Task ExecutePrismLicenseCommand()
     {
-        PlatformHelper.OpenUrl("https://www.nuget.org/packages/Prism.DryIoc/8.1.97/license");
+        await PlatformHelper.OpenUrl("https://www.nuget.org/packages/Prism.DryIoc/8.1.97/license");
     }
 
     // QRCoder许可证查看事件
-    private DelegateCommand _qRCoderLicenseCommand;
+    private AsyncDelegateCommand? _qRCoderLicenseCommand;
 
-    public DelegateCommand QRCoderLicenseCommand => _qRCoderLicenseCommand ??= new DelegateCommand(ExecuteQRCoderLicenseCommand);
+    public AsyncDelegateCommand QRCoderLicenseCommand => _qRCoderLicenseCommand ??= new AsyncDelegateCommand(ExecuteQRCoderLicenseCommand);
 
     /// <summary>
     /// QRCoder许可证查看事件
     /// </summary>
-    private void ExecuteQRCoderLicenseCommand()
+    private async Task ExecuteQRCoderLicenseCommand()
     {
-        PlatformHelper.OpenUrl("https://licenses.nuget.org/MIT");
+        await PlatformHelper.OpenUrl("https://licenses.nuget.org/MIT");
     }
 
     // System.Data.SQLite.Core许可证查看事件
-    private DelegateCommand _sQLiteLicenseCommand;
+    private AsyncDelegateCommand? _sQLiteLicenseCommand;
 
-    public DelegateCommand SQLiteLicenseCommand => _sQLiteLicenseCommand ??= new DelegateCommand(ExecuteSQLiteLicenseCommand);
+    public AsyncDelegateCommand SQLiteLicenseCommand => _sQLiteLicenseCommand ??= new AsyncDelegateCommand(ExecuteSQLiteLicenseCommand);
 
     /// <summary>
     /// System.Data.SQLite.Core许可证查看事件
     /// </summary>
-    private void ExecuteSQLiteLicenseCommand()
+    private async Task ExecuteSQLiteLicenseCommand()
     {
-        PlatformHelper.OpenUrl("https://www.sqlite.org/copyright.html");
+        await PlatformHelper.OpenUrl("https://www.sqlite.org/copyright.html");
     }
 
     // Aria2c许可证查看事件
-    private DelegateCommand _ariaLicenseCommand;
+    private AsyncDelegateCommand? _ariaLicenseCommand;
 
-    public DelegateCommand AriaLicenseCommand => _ariaLicenseCommand ??= new DelegateCommand(ExecuteAriaLicenseCommand);
+    public AsyncDelegateCommand AriaLicenseCommand => _ariaLicenseCommand ??= new AsyncDelegateCommand(ExecuteAriaLicenseCommand);
 
     /// <summary>
     /// Aria2c许可证查看事件
     /// </summary>
-    private void ExecuteAriaLicenseCommand()
+    private async Task ExecuteAriaLicenseCommand()
     {
-        PlatformHelper.Open("aria2_COPYING.txt");
+        await PlatformHelper.Open("aria2_COPYING.txt");
     }
 
     // FFmpeg许可证查看事件
-    private DelegateCommand _fFmpegLicenseCommand;
+    private AsyncDelegateCommand? _fFmpegLicenseCommand;
 
-    public DelegateCommand FFmpegLicenseCommand => _fFmpegLicenseCommand ??= new DelegateCommand(ExecuteFFmpegLicenseCommand);
+    public AsyncDelegateCommand FFmpegLicenseCommand => _fFmpegLicenseCommand ??= new AsyncDelegateCommand(ExecuteFFmpegLicenseCommand);
 
     /// <summary>
     /// FFmpeg许可证查看事件
     /// </summary>
-    private void ExecuteFFmpegLicenseCommand()
+    private async Task ExecuteFFmpegLicenseCommand()
     {
-        PlatformHelper.Open("FFmpeg_LICENSE.txt");
+        await PlatformHelper.Open("FFmpeg_LICENSE.txt");
     }
 
-#endregion
+    #endregion
 
     /// <summary>
     /// 发送需要显示的tip

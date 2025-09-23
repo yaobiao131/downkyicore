@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using DownKyi.Commands;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
 using DownKyi.Services;
@@ -138,15 +140,15 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
     }
 
     // 打开视频事件
-    private DelegateCommand<DownloadedItem>? _openVideoCommand;
-    public DelegateCommand<DownloadedItem> OpenVideoCommand => _openVideoCommand ??= new DelegateCommand<DownloadedItem>(ExecuteOpenVideoCommand);
+    private AsyncDelegateCommand<DownloadedItem>? _openVideoCommand;
+    public AsyncDelegateCommand<DownloadedItem> OpenVideoCommand => _openVideoCommand ??= new AsyncDelegateCommand<DownloadedItem>(ExecuteOpenVideoCommand);
 
     /// <summary>
     /// 打开视频事件
     /// </summary>
-    private void ExecuteOpenVideoCommand(DownloadedItem downloadedItem)
+    private async Task ExecuteOpenVideoCommand(DownloadedItem? downloadedItem)
     {
-        if (downloadedItem.DownloadBase == null)
+        if (downloadedItem?.DownloadBase == null)
         {
             return;
         }
@@ -155,7 +157,7 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
         var fileInfo = new FileInfo(videoPath);
         if (File.Exists(fileInfo.FullName))
         {
-            PlatformHelper.Open(fileInfo.FullName);
+            await PlatformHelper.Open(fileInfo.FullName);
         }
         else
         {
@@ -165,9 +167,9 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
     }
 
     // 打开文件夹事件
-    private DelegateCommand<DownloadedItem>? _openFolderCommand;
+    private AsyncDelegateCommand<DownloadedItem>? _openFolderCommand;
 
-    public DelegateCommand<DownloadedItem> OpenFolderCommand => _openFolderCommand ??= new DelegateCommand<DownloadedItem>(ExecuteOpenFolderCommand);
+    public AsyncDelegateCommand<DownloadedItem> OpenFolderCommand => _openFolderCommand ??= new AsyncDelegateCommand<DownloadedItem>(ExecuteOpenFolderCommand);
 
 
     private static readonly IReadOnlyDictionary<string, string[]> FileSuffixMap = new Dictionary<string, string[]>
@@ -182,9 +184,9 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
     /// <summary>
     /// 打开文件夹事件
     /// </summary>
-    private void ExecuteOpenFolderCommand(DownloadedItem downloadedItem)
+    private async Task ExecuteOpenFolderCommand(DownloadedItem? downloadedItem)
     {
-        if (downloadedItem.DownloadBase == null)
+        if (downloadedItem?.DownloadBase == null)
         {
             return;
         }
@@ -200,7 +202,7 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
             var videoPath = $"{downloadedItem.DownloadBase.FilePath}{suffix}";
             var fileInfo = new FileInfo(videoPath);
             if (!File.Exists(fileInfo.FullName) || fileInfo.DirectoryName == null) continue;
-            PlatformHelper.OpenFolder(fileInfo.DirectoryName, EventAggregator);
+            await PlatformHelper.OpenFolder(fileInfo.DirectoryName, EventAggregator);
             return;
         }
 

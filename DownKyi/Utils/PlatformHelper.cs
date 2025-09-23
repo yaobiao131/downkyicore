@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using DownKyi.Core.Logging;
 using DownKyi.Events;
@@ -13,7 +14,7 @@ public static class PlatformHelper
     /// </summary>
     /// <param name="folder">路径</param>
     /// <param name="eventAggregator"></param>
-    public static void OpenFolder(string folder, IEventAggregator? eventAggregator = null)
+    public static async Task OpenFolder(string folder, IEventAggregator? eventAggregator = null)
     {
         var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
         if (topLevel == null)
@@ -23,7 +24,7 @@ public static class PlatformHelper
             return;
         }
 
-        var openFolder = topLevel.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder)).Result;
+        var openFolder = await topLevel.StorageProvider.TryGetFolderFromPathAsync(new Uri(folder));
         if (openFolder == null)
         {
             LogManager.Error(nameof(PlatformHelper), "无法获取文件夹路径");
@@ -31,7 +32,7 @@ public static class PlatformHelper
             return;
         }
 
-        _ = topLevel.Launcher.LaunchFileAsync(openFolder).Result;
+        _ = await topLevel.Launcher.LaunchFileAsync(openFolder);
     }
 
     /// <summary>
@@ -39,7 +40,7 @@ public static class PlatformHelper
     /// </summary>
     /// <param name="filename">文件名</param>
     /// <param name="eventAggregator"></param>
-    public static void Open(string filename, IEventAggregator? eventAggregator = null)
+    public static async Task Open(string filename, IEventAggregator? eventAggregator = null)
     {
         var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
         if (topLevel == null)
@@ -49,7 +50,7 @@ public static class PlatformHelper
             return;
         }
 
-        var openFolder = topLevel.StorageProvider.TryGetFileFromPathAsync(new Uri(filename)).Result;
+        var openFolder = await topLevel.StorageProvider.TryGetFileFromPathAsync(new Uri(filename));
         if (openFolder == null)
         {
             LogManager.Error(nameof(PlatformHelper), "无法获取文件路径");
@@ -57,10 +58,10 @@ public static class PlatformHelper
             return;
         }
 
-        _ = topLevel.Launcher.LaunchFileAsync(openFolder).Result;
+        _ = await topLevel.Launcher.LaunchFileAsync(openFolder);
     }
 
-    public static void OpenUrl(string url, IEventAggregator? eventAggregator = null)
+    public static async Task OpenUrl(string url, IEventAggregator? eventAggregator = null)
     {
         var topLevel = TopLevel.GetTopLevel(App.Current.MainWindow);
         if (topLevel == null)
@@ -70,6 +71,6 @@ public static class PlatformHelper
             return;
         }
 
-        _ = topLevel.Launcher.LaunchUriAsync(new Uri(url)).Result;
+        _ = await topLevel.Launcher.LaunchUriAsync(new Uri(url));
     }
 }
