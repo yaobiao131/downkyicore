@@ -1,5 +1,30 @@
 # 更新日志
 
+## [1.0.23] - 2025-09-23
+
+### Bug Fixes
+
+- 修复在linux存在的异步Result死锁问题
+- 修复downloaded_files更新问题，避免重复下载 (#387)
+- 修复直接枚举会被修改的集合引发的异常 (#381)
+- 修复cookie urlencode导致的课程无法下载 #361
+- 增加design判断修复design会修改窗口位置
+- 修复深拷贝代码导致的意外无法解析hires和杜比音质 #355
+- 修改默认解析方式为api
+- 优化打开文件和url的操作，使用avalonia提供的方法
+- 优化数据迁移流程，增加连接尝试和错误处理 (#359)
+
+### Miscellaneous Tasks
+
+- Avalonia更新至11.3.6 (#389)
+- 调整api请求超时时间以及重试次数 (#385)
+
+### Refactor
+
+- 实现ImmutableObservableCollection解决枚举时集合修改问题 (#384)
+- 修改异步命令创建参数 (#388)
+- 使用avalonia的keybindings
+
 ## [1.0.22] - 2025-08-19
 
 ### Bug Fixes
