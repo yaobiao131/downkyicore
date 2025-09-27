@@ -289,7 +289,7 @@ public static class UserSpace
     public static SpaceSeasonsDetail? GetSeasonsDetail(long mid, long seasonId, int pageNum, int pageSize)
     {
         // https://api.bilibili.com/x/polymer/space/seasons_archives_list?mid=23947287&season_id=665&sort_reverse=false&page_num=1&page_size=30
-        var url = $"https://api.bilibili.com/x/polymer/space/seasons_archives_list?mid={mid}&season_id={seasonId}&page_num={pageNum}&page_size={pageSize}&sort_reverse=false";
+        var url = $"https://api.bilibili.com/x/polymer/web-space/seasons_archives_list?mid={mid}&season_id={seasonId}&page_num={pageNum}&page_size={pageSize}&sort_reverse=false";
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
 
