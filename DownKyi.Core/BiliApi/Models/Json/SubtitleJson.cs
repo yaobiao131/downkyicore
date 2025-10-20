@@ -36,24 +36,9 @@ public class SubtitleJson : BaseModel
     /// <returns></returns>
     private static string Second2hms(float seconds)
     {
-        if (seconds < 0)
-        {
-            return "00:00:00,000";
-        }
-
-        int i = (int)Math.Floor(seconds / 1.0);
-        int dec = (int)(Math.Round(seconds % 1.0f, 2) * 100);
-        if (dec >= 100)
-        {
-            dec = 99;
-        }
-
-        int min = (int)Math.Floor(i / 60.0);
-        int second = (int)(i % 60.0f);
-
-        int hour = (int)Math.Floor(min / 60.0);
-        min = (int)Math.Floor(min % 60.0f);
-
-        return $"{hour:D2}:{min:D2}:{second:D2},{dec:D3}";
+        if (seconds < 0) return "00:00:00,000";
+    
+        var span = TimeSpan.FromSeconds(seconds);
+        return $"{(int)span.TotalHours:D2}:{span.Minutes:D2}:{span.Seconds:D2},{span.Milliseconds:D3}";
     }
 }
