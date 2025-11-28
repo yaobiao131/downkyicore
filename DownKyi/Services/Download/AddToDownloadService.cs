@@ -298,15 +298,16 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = item.DownloadBase.Cid == page.Cid &&
-                             item.Resolution.Id == page.VideoQuality.Quality &&
-                             item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
-                             (
-                                 (page.PlayUrl.Dash != null && item.AudioCodec.Name == page.AudioQualityFormat) ||
-                                 (page.PlayUrl.Dash == null && page.PlayUrl.Durl != null)
-                             );
+                    bool isSameVideo = item.DownloadBase.Cid == page.Cid &&
+                                       item.Resolution.Id == page.VideoQuality.Quality &&
+                                       item.VideoCodecName == page.VideoQuality.SelectedVideoCodec;
+                    
+                    if (page.PlayUrl.Dash != null)
+                    {
+                        isSameVideo = isSameVideo && item.AudioCodec.Name == page.AudioQualityFormat;
+                    }
 
-                    if (f)
+                    if (isSameVideo)
                     {
                         eventAggregator.GetEvent<MessageEvent>()
                             .Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloading")}");
@@ -329,15 +330,16 @@ public class AddToDownloadService
                         continue;
                     }
 
-                    bool f = item.DownloadBase.Cid == page.Cid &&
-                             item.Resolution.Id == page.VideoQuality.Quality &&
-                             item.VideoCodecName == page.VideoQuality.SelectedVideoCodec &&
-                             (
-                                 (page.PlayUrl.Dash != null && item.AudioCodec.Name == page.AudioQualityFormat) ||
-                                 (page.PlayUrl.Dash == null && page.PlayUrl.Durl != null)
-                             );
+                    bool isSameVideo = item.DownloadBase.Cid == page.Cid &&
+                                       item.Resolution.Id == page.VideoQuality.Quality &&
+                                       item.VideoCodecName == page.VideoQuality.SelectedVideoCodec;
+                    
+                    if (page.PlayUrl.Dash != null)
+                    {
+                        isSameVideo = isSameVideo && item.AudioCodec.Name == page.AudioQualityFormat;
+                    }
 
-                    if (f)
+                    if (isSameVideo)
                     {
                         // eventAggregator.GetEvent<MessageEvent>().Publish($"{page.Name}{DictionaryResource.GetString("TipAlreadyToAddDownloaded")}");
                         // isDownloaded = true;
@@ -574,6 +576,7 @@ public class AddToDownloadService
 
         return i;
     }
+    
 
     private MovieMetadata BuildMovieMetadata(VideoPage page)
     {
