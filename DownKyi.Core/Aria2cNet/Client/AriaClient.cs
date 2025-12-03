@@ -15,7 +15,7 @@ public static class AriaClient
     private static readonly string JSONRPC = "2.0";
     private const string LOCAL_HOST = "http://localhost";
     private const string TOKEN = "downkyi";
-    private const int LISTEN_PORT = 6800;
+    private const int LISTEN_PORT = 35076;
     private static string host = LOCAL_HOST;
     private static string token = TOKEN;
     private static int listenPort = LISTEN_PORT;

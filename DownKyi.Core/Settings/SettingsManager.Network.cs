@@ -40,7 +40,7 @@ namespace DownKyi.Core.Settings
         private const string AriaHost = "http://localhost";
 
         // Aria服务器端口号
-        private const int AriaListenPort = 6800;
+        private const int AriaListenPort = 35076;
 
         // Aria日志等级
         private const AriaConfigLogLevel AriaLogLevel = AriaConfigLogLevel.INFO;
