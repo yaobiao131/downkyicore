@@ -713,6 +713,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
                     IsSelected = true,
                     VideoPages = pages
                 });
+
+                // 自动定位到合集中对应的视频位置
+                AutoLocateAndSelectVideoPosition();
             });
         }
         else
@@ -724,6 +727,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
             {
                 VideoSections.AddRange(videoSections);
                 CaCheVideoSections.AddRange(videoSectionsData);
+
+                // 自动定位到合集中对应的视频位置
+                AutoLocateAndSelectVideoPosition();
             });
         }
     }
@@ -736,6 +742,45 @@ public class ViewVideoDetailViewModel : ViewModelBase
     private void ParseVideo(IInfoService videoInfoService, VideoPage videoPage)
     {
         videoInfoService.GetVideoStream(videoPage);
+    }
+
+    /// <summary>
+    /// 自动定位到合集中对应的视频位置
+    /// </summary>
+    private VideoPage selectedVideoPage;
+    public VideoPage SelectedVideoPage
+    {
+        get => selectedVideoPage;
+        set => SetProperty(ref selectedVideoPage, value);
+    }
+
+    private void AutoLocateAndSelectVideoPosition()
+    {
+        
+        long avid = ParseEntrance.GetAvId(_input);
+        string bvid = ParseEntrance.GetBvId(_input);
+
+        // 确保在UI线程上更新属性
+        App.PropertyChangeAsync(() =>
+        {
+            // 遍历所有视频页面，找到对应的位置
+            foreach (var section in VideoSections)
+            {
+                section.IsSelected = true;
+                foreach (var page in section.VideoPages)
+                {
+                    
+                    if (page.Avid == avid || page.Bvid == bvid)
+                    {
+                        // 选中对应的视频页面
+                        page.IsSelected = true;
+                        // 设置SelectedVideoPage以触发DataGrid的SelectedItem变化和滚动操作
+                        SelectedVideoPage = page;
+                        return;
+                    }
+                }
+            }
+        });
     }
 
     /// <summary>
