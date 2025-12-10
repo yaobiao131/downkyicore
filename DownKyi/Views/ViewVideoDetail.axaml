@@ -301,7 +301,8 @@
                     CanUserResizeColumns="True"
                     IsReadOnly="True"
                     ItemsSource="{ReflectionBinding ElementName=NameVideoSections, Path=SelectedItem.VideoPages, Mode=TwoWay}"
-                    SelectionMode="Extended">
+                    SelectionMode="Extended"
+                    SelectedItem="{Binding SelectedVideoPage, Mode=TwoWay}">
                     <DataGrid.ColumnHeaderTheme>
                         <ControlTheme TargetType="{x:Type DataGridColumnHeader}">
                             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -390,6 +391,7 @@
                             <InvokeCommandAction Command="{Binding VideoPagesCommand}"
                                                  CommandParameter="{Binding ElementName=NameVideoPages, Path=SelectedItems}" />
                         </EventTriggerBehavior>
+                        <behavior:ScrollIntoViewBehavior />
                     </Interaction.Behaviors>
                     <DataGrid.Columns>
                         <DataGridTextColumn
