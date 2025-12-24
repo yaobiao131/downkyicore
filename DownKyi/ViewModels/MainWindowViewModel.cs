@@ -125,6 +125,10 @@ public class MainWindowViewModel : BindableBase
 
         LoadedCommand = new DelegateCommand(() =>
         {
+            if (Design.IsDesignMode)
+            {
+               return;
+            }
             Upgrade();
             CheckForUpdates();
             _clipboardListener = new ClipboardListener(App.Current.MainWindow);
