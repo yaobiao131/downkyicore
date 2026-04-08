@@ -68,6 +68,35 @@ jobs:
           pupnet DownKyi.pupnet.trimmed.conf --app-version ${{ steps.version.outputs.content }} --kind ${{ matrix.kind }} -r win-${{ matrix.cpu }} -y
           mv output/DownKyi-${{ steps.version.outputs.content }}-1.win-${{ matrix.cpu }}.${{ matrix.kind }} output/DownKyi-${{ steps.version.outputs.content }}-1.win-${{ matrix.cpu }}-trimmed.${{ matrix.kind }}
         working-directory: ./script/pupnet
+      - name: Remove debug files from trimmed package
+        if: ${{ matrix.trimmed == true }}
+        shell: pwsh
+        run: |
+          $packageName = "DownKyi-${{ steps.version.outputs.content }}-1.win-${{ matrix.cpu }}-trimmed.${{ matrix.kind }}"
+          $extractPath = "temp_extract"
+          $debugFiles = @(
+            "createdump.exe",
+            "dbgshim.dll",
+            "mscordbi.dll",
+            "clretwrc.dll",
+            "mscorrc.dll",
+            "Microsoft.DiaSymReader.Native.amd64.dll"
+          )
+          
+          New-Item -ItemType Directory -Force -Path $extractPath
+          Expand-Archive -Path "output/$packageName" -DestinationPath $extractPath -Force
+          
+          foreach ($file in $debugFiles) {
+            Get-ChildItem -Path $extractPath -Recurse -Filter $file | ForEach-Object {
+              Write-Host "Removing: $($_.FullName)"
+              Remove-Item $_.FullName -Force
+            }
+          }
+          
+          Remove-Item "output/$packageName" -Force
+          Compress-Archive -Path "$extractPath\*" -DestinationPath "output/$packageName" -Force
+          Remove-Item $extractPath -Recurse -Force
+        working-directory: ./script/pupnet
       - name: Upload build artifacts ${{ matrix.kind }}
         uses: actions/upload-artifact@v4
         if: ${{ matrix.trimmed == false }}
