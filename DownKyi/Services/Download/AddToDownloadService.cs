@@ -419,7 +419,7 @@ public class AddToDownloadService
                 var sectionName = string.Empty;
                 if (_videoSections.Count > 1)
                 {
-                    sectionName = section.Title;
+                    sectionName = Format.SanitizeForAvalonia(section.Title);
                 }
 
                 // 文件路径
@@ -532,8 +532,8 @@ public class AddToDownloadService
                         ZoneId = zoneId,
                         FilePath = filePath,
                         Order = page.Order,
-                        MainTitle = _videoInfoView.Title,
-                        Name = page.Name,
+                        MainTitle = Format.SanitizeForAvalonia(_videoInfoView.Title),
+                        Name = Format.SanitizeForAvalonia(page.Name),
                         Duration = page.Duration,
                         VideoCodecName = page.VideoQuality.SelectedVideoCodec,
                         Resolution = new Quality { Name = page.VideoQuality.QualityFormat, Id = page.VideoQuality.Quality },
@@ -582,8 +582,8 @@ public class AddToDownloadService
     {
         var metadata = new MovieMetadata
         {
-            Title = page.Name,
-            Plot = _videoInfoView.Description,
+            Title = Format.SanitizeForAvalonia(page.Name),
+            Plot = Format.SanitizeForAvalonia(_videoInfoView.Description),
             Year = page.OriginalPublishTime.Year.ToString(),
             Premiered = page.OriginalPublishTime.ToString("yyyy-MM-dd"),
             BilibiliId = new UniqueId("bilibili", page.Bvid),

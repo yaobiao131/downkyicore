@@ -108,7 +108,7 @@ public class BangumiInfoService : IInfoService
                 EpisodeId = episode.EpisodeId,
                 FirstFrame = episode.Cover,
                 Order = order,
-                Name = name,
+                Name = Format.SanitizeForAvalonia(name),
                 Duration = "N/A",
                 LazyTags = new Lazy<List<string>>(_bangumiSeason.Styles?.ToList())
             };
@@ -202,7 +202,7 @@ public class BangumiInfoService : IInfoService
                     EpisodeId = episode.EpisodeId,
                     FirstFrame = episode.Cover,
                     Order = order,
-                    Name = name,
+                    Name = Format.SanitizeForAvalonia(name),
                     Duration = "N/A",
                     LazyTags = new Lazy<List<string>>(_bangumiSeason.Styles?.ToList())
                 };
@@ -292,7 +292,7 @@ public class BangumiInfoService : IInfoService
         {
             videoInfoView.CoverUrl = coverUrl;
 
-            videoInfoView.Title = _bangumiSeason.Title;
+            videoInfoView.Title = Format.SanitizeForAvalonia(_bangumiSeason.Title);
 
             // 分区id
             videoInfoView.TypeId = BangumiType.TypeId[_bangumiSeason.Type];

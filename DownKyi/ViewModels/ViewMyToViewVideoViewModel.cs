@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DownKyi.Core.BiliApi.History;
 using DownKyi.Core.BiliApi.VideoStream;
+using DownKyi.Core.Utils;
 using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.PrismExtension.Dialog;
@@ -348,7 +349,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
                         Bvid = toView.Bvid,
                         UpMid = upMid,
                         Cover = coverUrl,
-                        Title = toView.Title,
+                        Title = Format.SanitizeForAvalonia(toView.Title),
                         UpName = upName,
                         UpHeader = toView.Owner?.Face ?? ""
                     };

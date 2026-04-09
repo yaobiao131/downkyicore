@@ -11,8 +11,8 @@
                 <ResourceInclude Source="avares://DownKyi.Core/BiliApi/Zone/ZoneImages.axaml" />
                 <ResourceInclude Source="avares://DownKyi.Core/BiliApi/BilibiliImages.axaml" />
             </ResourceDictionary.MergedDictionaries>
-            <FontFamily x:Key="DefaultFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
-            <FontFamily x:Key="ProgramFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
+            <FontFamily x:Key="DefaultFont">Segoe UI Emoji,Segoe UI,Microsoft YaHei,微软雅黑,PingFang SC,苹方-简,$Default</FontFamily>
+            <FontFamily x:Key="ProgramFont">Segoe UI Emoji,Segoe UI,Microsoft YaHei,微软雅黑,PingFang SC,苹方-简,$Default</FontFamily>
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>
@@ -24,6 +24,9 @@
         </Style>
         <Style Selector="TemplatedControl">
             <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
         </Style>
         <Style Selector="HeaderedContentControl">
             <Setter Property="Template">

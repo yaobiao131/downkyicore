@@ -8,6 +8,7 @@ using Avalonia.Media.Imaging;
 using DownKyi.Core.BiliApi.BiliUtils;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.BiliApi.VideoStream;
+using DownKyi.Core.Utils;
 using DownKyi.Core.Storage;
 using DownKyi.CustomControl;
 using DownKyi.Events;
@@ -478,7 +479,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                     {
                         MediaId = bangumiFollow.MediaId,
                         SeasonId = bangumiFollow.SeasonId,
-                        Title = bangumiFollow.Title,
+                        Title = Format.SanitizeForAvalonia(bangumiFollow.Title),
                         SeasonTypeName = bangumiFollow.SeasonTypeName,
                         Area = area,
                         Badge = bangumiFollow.Badge,
