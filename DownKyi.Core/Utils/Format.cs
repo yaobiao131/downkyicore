@@ -166,52 +166,6 @@ public static class Format
                 continue;
             }
 
-            // 跳过表情符号 (Emoji)
-            // 0x1F600-0x1F64F: 表情符号
-            // 0x1F300-0x1F5FF: 杂项符号和象形文字
-            // 0x1F680-0x1F6FF: 交通和地图符号
-            // 0x1F700-0x1F77F: 炼金术符号
-            // 0x1F780-0x1F7FF: 几何图形扩展
-            // 0x1F800-0x1F8FF: 补充箭头
-            // 0x1F900-0x1F9FF: 补充符号和象形文字
-            // 0x1FA00-0x1FA6F: 象棋符号、符号扩展
-            // 0x1FA70-0x1FAFF: 符号和象形文字扩展-A
-            // 0x2600-0x26FF: 杂项符号
-            // 0x2700-0x27BF: 装饰符号
-            if ((c >= 0x1F600 && c <= 0x1F64F) ||
-                (c >= 0x1F300 && c <= 0x1F5FF) ||
-                (c >= 0x1F680 && c <= 0x1F6FF) ||
-                (c >= 0x1F700 && c <= 0x1F77F) ||
-                (c >= 0x1F780 && c <= 0x1F7FF) ||
-                (c >= 0x1F800 && c <= 0x1F8FF) ||
-                (c >= 0x1F900 && c <= 0x1F9FF) ||
-                (c >= 0x1FA00 && c <= 0x1FA6F) ||
-                (c >= 0x1FA70 && c <= 0x1FAFF) ||
-                (c >= 0x2600 && c <= 0x26FF) ||
-                (c >= 0x2700 && c <= 0x27BF))
-            {
-                continue;
-            }
-
-            // 跳过数学运算符和特殊符号
-            // 0x2200-0x22FF: 数学运算符
-            // 0x2300-0x23FF: 杂项技术符号
-            // 0x2B00-0x2BFF: 杂项符号和箭头
-            // 0x3000-0x303F: CJK 符号和标点
-            if ((c >= 0x2200 && c <= 0x22FF) ||
-                (c >= 0x2300 && c <= 0x23FF) ||
-                (c >= 0x2B00 && c <= 0x2BFF))
-            {
-                continue;
-            }
-
-            // 跳过特殊标点符号
-            // 0x30FB: 中点・ (KATAKANA MIDDLE DOT)
-            if (c == 0x30FB)
-            {
-                continue;
-            }
-
             result.Append(c);
         }
 
