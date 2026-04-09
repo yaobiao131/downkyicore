@@ -135,7 +135,6 @@ public static class Format
 
     /// <summary>
     /// 清理可能导致 Avalonia UI 崩溃的特殊 Unicode 字符
-    /// 包括表情符号、零宽度字符、数学符号等
     /// </summary>
     /// <param name="text">原始文本</param>
     /// <returns>清理后的文本</returns>
