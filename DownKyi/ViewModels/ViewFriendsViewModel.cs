@@ -86,7 +86,8 @@ namespace DownKyi.ViewModels
             {
                 ViewName = ParentView,
                 ParentViewName = null,
-                Parameter = null
+                Parameter = null,
+                IsBackNavigation = true
             };
             EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
         }

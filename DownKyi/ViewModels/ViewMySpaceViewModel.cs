@@ -339,7 +339,9 @@ public class ViewMySpaceViewModel : ViewModelBase
         {
             ViewName = ParentView,
             ParentViewName = null,
-            Parameter = null
+            Parameter = null,
+            Title = UserName,
+            IsBackNavigation = true
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

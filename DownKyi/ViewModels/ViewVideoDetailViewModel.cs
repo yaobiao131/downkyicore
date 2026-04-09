@@ -159,7 +159,9 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             ViewName = ParentView,
             ParentViewName = null,
-            Parameter = null
+            Parameter = null,
+            Title = VideoInfoView?.Title,
+            IsBackNavigation = true
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
@@ -317,7 +319,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private void ExecuteUpperCommand()
     {
-        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid, VideoInfoView.UpName);
     }
 
     // 视频章节选择事件
