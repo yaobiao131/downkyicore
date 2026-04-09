@@ -517,7 +517,7 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
                         Bvid = video.Bvid,
                         Cover = coverUrl ?? "avares://DownKyi/Resources/video-placeholder.png",
                         Duration = Format.FormatDuration3(video.Duration),
-                        Title = video.Title,
+                        Title = Format.SanitizeForAvalonia(video.Title),
                         PlayNumber = play,
                         CreateTime = ctime
                     };

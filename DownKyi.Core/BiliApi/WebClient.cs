@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
 using DownKyi.Core.BiliApi.Login;
+using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
@@ -78,7 +79,7 @@ public static class WebClient
         _bvuid4 = spi?.Data?.Bvuid4;
     }
 
-    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 2, bool json = false)
+    public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 2, bool json = false, bool isRetryAfterKeyRefresh = false)
     {
         if (retry <= 0)
         {
@@ -103,7 +104,9 @@ public static class WebClient
             {
                 request.Headers.Add("origin", "https://www.bilibili.com");
 
-                var cookies = LoginHelper.GetLoginInfoCookies();
+                // 创建Cookie列表的副本以避免修改全局集合，并清理已有的相关键
+                var cookies = LoginHelper.GetLoginInfoCookies().ToList();
+                cookies.RemoveAll(c => c.Name == "buvid3" || c.Name == "buvid4");
 
                 if (!string.IsNullOrEmpty(_bvuid3))
                 {
@@ -140,22 +143,33 @@ public static class WebClient
             }
 
             var response = HttpClient.Send(request);
-            response.EnsureSuccessStatusCode();
 
+            // 读取响应内容，无论状态码如何
             using var reader = new StreamReader(response.Content.ReadAsStream());
-            return reader.ReadToEnd();
+            var content = reader.ReadToEnd();
+
+            // 如果不是成功状态码，记录错误并返回空字符串
+            // 让调用方通过检查返回值是否为空来判断是否成功
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("RequestWeb()收到非成功状态码: {0}, 响应内容: {1}", response.StatusCode, content.Substring(0, Math.Min(content.Length, 200)));
+                LogManager.Info("WebClient", $"Received non-success status code: {response.StatusCode}, URL: {url}");
+                return string.Empty;
+            }
+
+            return content;
         }
         catch (HttpRequestException e)
         {
             Console.WriteLine("RequestWeb()发生HTTP请求异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(url, referer, method, parameters, retry - 1);
+            return RequestWeb(url, referer, method, parameters, retry - 1, json, isRetryAfterKeyRefresh);
         }
         catch (Exception e)
         {
             Console.WriteLine("RequestWeb()发生其他异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(url, referer, method, parameters, retry - 1);
+            return RequestWeb(url, referer, method, parameters, retry - 1, json, isRetryAfterKeyRefresh);
         }
     }
 

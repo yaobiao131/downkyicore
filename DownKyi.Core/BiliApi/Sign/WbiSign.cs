@@ -1,11 +1,70 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using DownKyi.Core.BiliApi.Users;
+using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
+using DownKyi.Core.Settings.Models;
+using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.Core.BiliApi.Sign;
 
 public static class WbiSign
 {
+    private static readonly object LockObj = new();
+    private static DateTime _lastRefreshTime = DateTime.MinValue;
+    private static readonly TimeSpan KeyRefreshInterval = TimeSpan.FromHours(1); // 1小时刷新一次密钥
+
+    /// <summary>
+    /// 刷新 WBI 密钥
+    /// </summary>
+    public static void RefreshKeys()
+    {
+        lock (LockObj)
+        {
+            try
+            {
+                var userInfo = UserInfo.GetUserInfoForNavigation();
+                if (userInfo != null)
+                {
+                    SettingsManager.GetInstance().SetUserInfo(new UserInfoSettings
+                    {
+                        Mid = userInfo.Mid,
+                        Name = userInfo.Name,
+                        IsLogin = userInfo.IsLogin,
+                        IsVip = userInfo.VipStatus == 1,
+                        ImgKey = userInfo.Wbi.ImgUrl.Split('/').ToList().Last().Split('.')[0],
+                        SubKey = userInfo.Wbi.SubUrl.Split('/').ToList().Last().Split('.')[0],
+                    });
+                    _lastRefreshTime = DateTime.Now;
+                    Console.PrintLine("WBI keys refreshed successfully");
+                    LogManager.Info("WbiSign", "WBI keys refreshed successfully");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.PrintLine("Failed to refresh WBI keys: {0}", e);
+                LogManager.Error("WbiSign", e);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 检查密钥是否需要刷新
+    /// </summary>
+    public static void EnsureKeysValid()
+    {
+        lock (LockObj)
+        {
+            var userInfo = SettingsManager.GetInstance().GetUserInfo();
+            // 如果密钥为空或已过期，则刷新
+            if (string.IsNullOrEmpty(userInfo.ImgKey) ||
+                string.IsNullOrEmpty(userInfo.SubKey) ||
+                DateTime.Now - _lastRefreshTime > KeyRefreshInterval)
+            {
+                RefreshKeys();
+            }
+        }
+    }
     /// <summary>
     /// 打乱重排实时口令
     /// </summary>
@@ -93,6 +152,9 @@ public static class WbiSign
 
     private static Tuple<string, string> GetKey()
     {
+        // 确保密钥有效
+        EnsureKeysValid();
+
         var user = SettingsManager.GetInstance().GetUserInfo();
 
         return new Tuple<string, string>(user.ImgKey, user.SubKey);

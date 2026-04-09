@@ -16,8 +16,9 @@ public static class VideoStream
     /// <param name="avid"></param>
     /// <param name="bvid"></param>
     /// <param name="cid"></param>
+    /// <param name="retryWithFreshKey">是否使用刷新后的密钥重试</param>
     /// <returns></returns>
-    public static PlayerV2? PlayerV2(long avid, string? bvid, long cid)
+    public static PlayerV2? PlayerV2(long avid, string? bvid, long cid, bool retryWithFreshKey = false)
     {
         var parameters = new Dictionary<string, object?>();
 
@@ -40,6 +41,15 @@ public static class VideoStream
         var url = $"https://api.bilibili.com/x/player/wbi/v2?{query}";
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
+
+        // 如果返回空且未尝试过刷新密钥，则刷新密钥后重试
+        if (string.IsNullOrEmpty(response) && !retryWithFreshKey)
+        {
+            Console.PrintLine("PlayerV2()返回空，尝试刷新WBI密钥后重试");
+            LogManager.Info("VideoStream", "PlayerV2() returned empty, retrying with fresh WBI keys");
+            WbiSign.RefreshKeys();
+            return PlayerV2(avid, bvid, cid, true);
+        }
 
         try
         {
@@ -115,8 +125,9 @@ public static class VideoStream
     /// <param name="bvid"></param>
     /// <param name="cid"></param>
     /// <param name="quality"></param>
+    /// <param name="retryWithFreshKey">是否使用刷新后的密钥重试</param>
     /// <returns></returns>
-    public static PlayUrl? GetVideoPlayUrl(long avid, string bvid, long cid, int quality = 125)
+    public static PlayUrl? GetVideoPlayUrl(long avid, string bvid, long cid, int quality = 125, bool retryWithFreshKey = false)
     {
         var parameters = new Dictionary<string, object?>
         {
@@ -143,7 +154,18 @@ public static class VideoStream
         var query = WbiSign.ParametersToQuery(WbiSign.EncodeWbi(parameters));
         var url = $"https://api.bilibili.com/x/player/wbi/playurl?{query}";
 
-        return GetPlayUrl(url);
+        var result = GetPlayUrl(url);
+
+        // 如果返回空且未尝试过刷新密钥，则刷新密钥后重试
+        if (result == null && !retryWithFreshKey)
+        {
+            Console.PrintLine("GetVideoPlayUrl()返回空，尝试刷新WBI密钥后重试");
+            LogManager.Info("VideoStream", "GetVideoPlayUrl() returned empty, retrying with fresh WBI keys");
+            WbiSign.RefreshKeys();
+            return GetVideoPlayUrl(avid, bvid, cid, quality, true);
+        }
+
+        return result;
     }
 
     /// <summary>

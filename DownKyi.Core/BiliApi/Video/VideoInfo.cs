@@ -14,8 +14,9 @@ public static class VideoInfo
     /// </summary>
     /// <param name="bvid"></param>
     /// <param name="aid"></param>
+    /// <param name="retryWithFreshKey">是否使用刷新后的密钥重试</param>
     /// <returns></returns>
-    public static VideoView? VideoViewInfo(string? bvid = null, long aid = -1)
+    public static VideoView? VideoViewInfo(string? bvid = null, long aid = -1, bool retryWithFreshKey = false)
     {
         // https://api.bilibili.com/x/web-interface/view/detail?bvid=BV1Sg411F7cb&aid=969147110&need_operation_card=1&web_rm_repeat=1&need_elec=1&out_referer=https%3A%2F%2Fspace.bilibili.com%2F42018135%2Ffavlist%3Ffid%3D94341835
 
@@ -36,6 +37,15 @@ public static class VideoInfo
         var url = $"https://api.bilibili.com/x/web-interface/wbi/view?{query}";
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
+
+        // 如果返回空且未尝试过刷新密钥，则刷新密钥后重试
+        if (string.IsNullOrEmpty(response) && !retryWithFreshKey)
+        {
+            Console.PrintLine("VideoViewInfo()返回空，尝试刷新WBI密钥后重试");
+            LogManager.Info("VideoInfo", "VideoViewInfo() returned empty, retrying with fresh WBI keys");
+            WbiSign.RefreshKeys();
+            return VideoViewInfo(bvid, aid, true);
+        }
 
         try
         {
