@@ -3,6 +3,7 @@
         xmlns:vm="using:DownKyi.ViewModels"
         xmlns:models="using:DownKyi.Models"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:ca="using:DownKyi.CustomAction"
         x:Class="DownKyi.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         prism:ViewModelLocator.AutoWireViewModel="True"
@@ -79,6 +80,9 @@
                          Background="Transparent"
                          BorderThickness="0"
                          Padding="4,2,4,0">
+                    <Interaction.Behaviors>
+                        <ca:DragTabBehavior />
+                    </Interaction.Behaviors>
                     <ListBox.Styles>
                         <Style Selector="ListBoxItem">
                             <Setter Property="Padding" Value="0" />
