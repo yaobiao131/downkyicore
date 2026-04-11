@@ -176,7 +176,8 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
             ViewName = ParentView,
             ParentViewName = null,
             Parameter = null,
-            IsBackNavigation = true
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

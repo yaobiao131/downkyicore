@@ -29,4 +29,9 @@ public class NavigationParam
     /// 是否是返回导航（返回时不应创建新Tab，而是切换到已有Tab）
     /// </summary>
     public bool IsBackNavigation { get; set; }
+
+    /// <summary>
+    /// 返回导航时用于精确匹配目标Tab的稳定标识
+    /// </summary>
+    public string? NavigationKey { get; set; }
 }

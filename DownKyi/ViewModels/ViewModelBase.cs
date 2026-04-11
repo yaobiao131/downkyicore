@@ -13,6 +13,7 @@ public class ViewModelBase : BindableBase, INavigationAware
     protected IDialogService? DialogService;
     protected IRegionNavigationJournal? Journal;
     protected string ParentView = string.Empty;
+    protected string ParentNavigationKey = string.Empty;
 
     public ViewModelBase(IEventAggregator eventAggregator)
     {
@@ -33,11 +34,25 @@ public class ViewModelBase : BindableBase, INavigationAware
         {
             ParentView = viewName;
         }
+
+        var parentKey = navigationContext.Parameters.GetValue<string>("ParentNavigationKey");
+        if (parentKey != null)
+        {
+            ParentNavigationKey = parentKey;
+        }
     }
     
     protected internal virtual void ExecuteBackSpace()
     {
-      
+        var parameter = new Events.NavigationParam
+        {
+            ViewName = ParentView,
+            ParentViewName = null,
+            Parameter = null,
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
+        };
+        EventAggregator.GetEvent<Events.NavigationEvent>().Publish(parameter);
     }
 
     public bool IsNavigationTarget(NavigationContext navigationContext)

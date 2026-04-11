@@ -12,6 +12,7 @@ public class TabItemModel : BindableBase
     private NavigationParameters _parameters = new();
     private bool _canClose = true;
     private bool _isHome;
+    private string? _navigationKey;
 
    
     public string Id
@@ -48,5 +49,11 @@ public class TabItemModel : BindableBase
     {
         get => _isHome;
         set => SetProperty(ref _isHome, value);
+    }
+    
+    public string? NavigationKey
+    {
+        get => _navigationKey;
+        set => SetProperty(ref _navigationKey, value);
     }
 }

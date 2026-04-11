@@ -161,7 +161,8 @@ public class ViewVideoDetailViewModel : ViewModelBase
             ParentViewName = null,
             Parameter = null,
             Title = VideoInfoView?.Title,
-            IsBackNavigation = true
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

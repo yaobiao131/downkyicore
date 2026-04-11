@@ -229,7 +229,8 @@ public class ViewMyFavoritesViewModel : ViewModelBase
             ViewName = ParentView,
             ParentViewName = null,
             Parameter = null,
-            IsBackNavigation = true
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

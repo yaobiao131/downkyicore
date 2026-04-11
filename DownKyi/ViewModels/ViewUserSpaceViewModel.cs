@@ -221,7 +221,9 @@ public class ViewUserSpaceViewModel : ViewModelBase
             ViewName = ParentView,
             ParentViewName = null,
             Parameter = null,
-            Title = UserName
+            Title = UserName,
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

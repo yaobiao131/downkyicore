@@ -166,7 +166,6 @@ public class MainWindowViewModel : BindableBase
     }
 
     
-    private readonly Dictionary<string, TabItemModel> _tabIdToModel = new();
     private int _tabIdCounter = 0;
     
     private void OnNavigationRequest(NavigationParam view)
@@ -177,19 +176,41 @@ public class MainWindowViewModel : BindableBase
             { "Parameter", view.Parameter }
         };
 
+        if (!string.IsNullOrEmpty(view.NavigationKey))
+        {
+            param.Add("NavigationKey", view.NavigationKey);
+        }
+
         var title = string.IsNullOrEmpty(view.Title) ? GetDefaultTitle(view.ViewName) : view.Title;
 
         Dispatcher.UIThread.InvokeAsync(() =>
         {
             if (view.IsBackNavigation)
             {
-                // 查找是否已有目标ViewName的Tab
-                var existingTab = Tabs.FirstOrDefault(t => t.ViewName == view.ViewName);
-                if (existingTab != null)
+                if (!string.IsNullOrEmpty(view.NavigationKey))
                 {
-                    SelectedTab = existingTab;
+                    var existingTab = Tabs.FirstOrDefault(t => t.NavigationKey == view.NavigationKey);
+                    if (existingTab != null)
+                    {
+                        SelectedTab = existingTab;
+                        return;
+                    }
+                }
+
+                var fallbackTab = Tabs.FirstOrDefault(t =>
+                    t.ViewName == view.ViewName &&
+                    Equals(t.Parameters.FirstOrDefault(kvp => kvp.Key == "Parameter").Value, view.Parameter));
+                if (fallbackTab != null)
+                {
+                    SelectedTab = fallbackTab;
                     return;
                 }
+            }
+
+            // 将当前选中Tab的NavigationKey作为ParentNavigationKey传给新Tab
+            if (SelectedTab != null && !string.IsNullOrEmpty(SelectedTab.NavigationKey))
+            {
+                param.Add("ParentNavigationKey", SelectedTab.NavigationKey);
             }
 
             OpenNewTab(view.ViewName, title, param);
@@ -211,7 +232,7 @@ public class MainWindowViewModel : BindableBase
             "PageMyFavorites" => "我的收藏",
             "PageMyHistory" => "历史记录",
             "PageMyBangumiFollow" => "追番",
-            "PageMyToViewVideo" => "稍后再看",
+            "PageMyToView" => "稍后再看",
             "PageFriends" => "关注",
             "PagePublication" => "投稿",
             "PageSeasonsSeries" => "合集",
@@ -227,6 +248,12 @@ public class MainWindowViewModel : BindableBase
         if (string.IsNullOrEmpty(viewName)) return;
 
         var tabId = $"tab_{_tabIdCounter++}";
+        var navigationKey = parameters.GetValue<string>("NavigationKey");
+        if (string.IsNullOrEmpty(navigationKey))
+        {
+            navigationKey = $"{viewName}_{tabId}";
+        }
+
         var tab = new TabItemModel
         {
             Id = tabId,
@@ -234,14 +261,11 @@ public class MainWindowViewModel : BindableBase
             ViewName = viewName,
             Parameters = parameters,
             CanClose = !isHome,
-            IsHome = isHome
+            IsHome = isHome,
+            NavigationKey = navigationKey
         };
 
-        _tabIdToModel[tabId] = tab;
         Tabs.Add(tab);
-
-        // 导航到对应视图
-        _regionManager.RequestNavigate(ContentRegion, viewName, parameters);
         SelectedTab = tab;
     }
 
@@ -270,7 +294,7 @@ public class MainWindowViewModel : BindableBase
         if (SelectedTab == tab)
         {
             // 优先切换到左侧标签，如果没有则切换到右侧
-            var newIndex = index > 0 ? index - 1 : (index < Tabs.Count - 1 ? index : -1);
+            var newIndex = index > 0 ? index - 1 : (index < Tabs.Count - 1 ? index + 1 : -1);
             if (newIndex >= 0)
             {
                 SelectedTab = Tabs[newIndex];
@@ -278,7 +302,6 @@ public class MainWindowViewModel : BindableBase
         }
 
         Tabs.RemoveAt(index);
-        _tabIdToModel.Remove(tab.Id);
 
         if (Tabs.Count == 0)
         {
@@ -299,7 +322,6 @@ public class MainWindowViewModel : BindableBase
         foreach (var t in tabsToClose)
         {
             Tabs.Remove(t);
-            _tabIdToModel.Remove(t.Id);
         }
 
         SelectedTab = tab;
@@ -313,10 +335,15 @@ public class MainWindowViewModel : BindableBase
         if (index < 0 || index >= Tabs.Count - 1) return;
 
         var tabsToClose = Tabs.Skip(index + 1).Where(t => t.CanClose).ToList();
+        var selectedRemoved = tabsToClose.Contains(SelectedTab);
         foreach (var t in tabsToClose)
         {
             Tabs.Remove(t);
-            _tabIdToModel.Remove(t.Id);
+        }
+
+        if (selectedRemoved)
+        {
+            SelectedTab = tab;
         }
     }
     
@@ -331,7 +358,6 @@ public class MainWindowViewModel : BindableBase
         foreach (var t in tabsToClose)
         {
             Tabs.Remove(t);
-            _tabIdToModel.Remove(t.Id);
         }
 
         SelectedTab = tab;
@@ -344,7 +370,6 @@ public class MainWindowViewModel : BindableBase
         foreach (var t in tabsToClose)
         {
             Tabs.Remove(t);
-            _tabIdToModel.Remove(t.Id);
         }
 
         // 如果没有标签了，默认打开首页
@@ -368,10 +393,10 @@ public class MainWindowViewModel : BindableBase
     {
         if (tab == null) return;
 
-        // 复制参数
         var newParams = new NavigationParameters();
         foreach (var kvp in tab.Parameters)
         {
+            if (kvp.Key == "NavigationKey") continue;
             newParams.Add(kvp.Key, kvp.Value);
         }
 
@@ -383,11 +408,13 @@ public class MainWindowViewModel : BindableBase
     {
         if (tab == null) return;
 
-        _regionManager.RequestNavigate(ContentRegion, tab.ViewName, tab.Parameters);
-
         if (SelectedTab != tab)
         {
             SelectedTab = tab;
+        }
+        else
+        {
+            SwitchToTab(tab);
         }
     }
 
