@@ -199,6 +199,12 @@ public class ViewLoginViewModel : ViewModelBase
         LoginQrCodeStatus = false;
     }
 
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
+    }
+
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);

@@ -71,6 +71,10 @@ public class ViewModelBase : BindableBase, INavigationAware
     {
     }
 
+    public virtual void OnTabClosed()
+    {
+    }
+
     /// <summary>
     /// 异步修改绑定到UI的属性
     /// </summary>

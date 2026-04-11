@@ -455,6 +455,12 @@ namespace DownKyi.ViewModels
             IsSelectAll = false;
         }
 
+        public override void OnTabClosed()
+        {
+            _tokenSource?.Cancel();
+            base.OnTabClosed();
+        }
+
         /// <summary>
         /// 导航到页面时执行
         /// </summary>

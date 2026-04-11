@@ -588,6 +588,12 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         IsEnabled = true;
     }
 
+    public override void OnTabClosed()
+    {
+        tokenSource?.Cancel();
+        base.OnTabClosed();
+    }
+
     /// <summary>
     /// 导航到VideoDetail页面时执行
     /// </summary>

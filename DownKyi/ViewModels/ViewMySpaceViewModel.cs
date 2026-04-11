@@ -639,6 +639,12 @@ public class ViewMySpaceViewModel : ViewModelBase
         });
     }
 
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
+    }
+
     /// <summary>
     /// 接收mid参数
     /// </summary>

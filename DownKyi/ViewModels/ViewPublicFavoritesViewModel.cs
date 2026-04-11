@@ -384,4 +384,10 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
             UpdateView(new FavoritesService(), parameter, cancellationToken);
         }, (_tokenSource = new CancellationTokenSource()).Token);
     }
+
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
+    }
 }

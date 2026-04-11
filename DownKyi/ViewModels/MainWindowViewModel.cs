@@ -376,6 +376,11 @@ public class MainWindowViewModel : BindableBase
         {
             try
             {
+                if (cachedView is Avalonia.Visual visual && visual.DataContext is ViewModelBase vm)
+                {
+                    vm.OnTabClosed();
+                }
+
                 _regionManager.Regions[ContentRegion].Remove(cachedView);
             }
             catch (Exception e)
@@ -600,6 +605,12 @@ public class MainWindowViewModel : BindableBase
 
     private void ExecuteClosingCommand()
     {
+        foreach (var tab in Tabs.ToList())
+        {
+            RemoveTabFromRegion(tab);
+        }
+        Tabs.Clear();
+
         _eventAggregator.GetEvent<NavigationEvent>().Unsubscribe(OnNavigationRequest);
         _eventAggregator.GetEvent<TabTitleUpdateEvent>().Unsubscribe(OnTabTitleUpdate);
 
