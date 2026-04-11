@@ -84,66 +84,66 @@ public partial class App : PrismApplication
     }
 
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
-    {
-        containerRegistry.RegisterSingleton<DownloadStorageService>();
+{
+    containerRegistry.RegisterSingleton<DownloadStorageService>();
 
-        containerRegistry.RegisterSingleton<MainWindow>();
-        containerRegistry.RegisterSingleton<IDialogService, DialogService>();
-        containerRegistry.Register<IDialogWindow, DialogWindow>();
-        // pages
-        containerRegistry.RegisterForNavigation<ViewIndex>(ViewIndexViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewLogin>(ViewLoginViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewVideoDetail>(ViewVideoDetailViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewSettings>(ViewSettingsViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewToolbox>(ViewToolboxViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewDownloadManager>(ViewDownloadManagerViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewPublicFavorites>(ViewPublicFavoritesViewModel.Tag);
+    containerRegistry.RegisterSingleton<MainWindow>();
+    containerRegistry.RegisterSingleton<IDialogService, DialogService>();
+    containerRegistry.Register<IDialogWindow, DialogWindow>();
+    // pages
+    containerRegistry.RegisterViewWithTitle<ViewIndex>(ViewIndexViewModel.Tag, "首页");
+    containerRegistry.RegisterViewWithTitle<ViewLogin>(ViewLoginViewModel.Tag, "登录");
+    containerRegistry.RegisterViewWithTitle<ViewVideoDetail>(ViewVideoDetailViewModel.Tag, "视频详情");
+    containerRegistry.RegisterViewWithTitle<ViewSettings>(ViewSettingsViewModel.Tag, "设置");
+    containerRegistry.RegisterViewWithTitle<ViewToolbox>(ViewToolboxViewModel.Tag, "工具箱");
+    containerRegistry.RegisterViewWithTitle<ViewDownloadManager>(ViewDownloadManagerViewModel.Tag, "下载管理");
+    containerRegistry.RegisterViewWithTitle<ViewPublicFavorites>(ViewPublicFavoritesViewModel.Tag, "公开收藏");
+    
+    containerRegistry.RegisterViewWithTitle<ViewUserSpace>(ViewUserSpaceViewModel.Tag, "用户空间");
+    containerRegistry.RegisterViewWithTitle<ViewPublication>(ViewPublicationViewModel.Tag, "投稿");
+    // containerRegistry.RegisterForNavigation<Views.ViewChannel>(ViewModels.ViewChannelViewModel.Tag);
+    containerRegistry.RegisterViewWithTitle<ViewSeasonsSeries>(ViewSeasonsSeriesViewModel.Tag, "合集");
+    containerRegistry.RegisterViewWithTitle<ViewFriends>(ViewFriendsViewModel.Tag, "关注");
 
-        containerRegistry.RegisterForNavigation<ViewUserSpace>(ViewUserSpaceViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewPublication>(ViewPublicationViewModel.Tag);
-        // containerRegistry.RegisterForNavigation<Views.ViewChannel>(ViewModels.ViewChannelViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewSeasonsSeries>(ViewSeasonsSeriesViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewFriends>(ViewFriendsViewModel.Tag);
+    containerRegistry.RegisterViewWithTitle<ViewMySpace>(ViewMySpaceViewModel.Tag, "我的空间");
+    containerRegistry.RegisterViewWithTitle<ViewMyFavorites>(ViewMyFavoritesViewModel.Tag, "我的收藏");
+    containerRegistry.RegisterViewWithTitle<ViewMyBangumiFollow>(ViewMyBangumiFollowViewModel.Tag, "我的订阅");
+    containerRegistry.RegisterViewWithTitle<ViewMyToViewVideo>(ViewMyToViewVideoViewModel.Tag, "稍后再看");
+    containerRegistry.RegisterViewWithTitle<ViewMyHistory>(ViewMyHistoryViewModel.Tag, "历史记录");
 
-        containerRegistry.RegisterForNavigation<ViewMySpace>(ViewMySpaceViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewMyFavorites>(ViewMyFavoritesViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewMyBangumiFollow>(ViewMyBangumiFollowViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewMyToViewVideo>(ViewMyToViewVideoViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewMyHistory>(ViewMyHistoryViewModel.Tag);
+    // downloadManager pages
+    containerRegistry.RegisterForNavigation<ViewDownloading>(ViewDownloadingViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewDownloadFinished>(ViewDownloadFinishedViewModel.Tag);
 
-        // downloadManager pages
-        containerRegistry.RegisterForNavigation<ViewDownloading>(ViewDownloadingViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewDownloadFinished>(ViewDownloadFinishedViewModel.Tag);
+    // Friend
+    containerRegistry.RegisterForNavigation<ViewFollowing>(ViewFollowingViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewFollower>(ViewFollowerViewModel.Tag);
 
-        // Friend
-        containerRegistry.RegisterForNavigation<ViewFollowing>(ViewFollowingViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewFollower>(ViewFollowerViewModel.Tag);
+    // settings pages
+    containerRegistry.RegisterForNavigation<ViewBasic>(ViewBasicViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewNetwork>(ViewNetworkViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewVideo>(ViewVideoViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewDanmaku>(ViewDanmakuViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewAbout>(ViewAboutViewModel.Tag);
 
-        // settings pages
-        containerRegistry.RegisterForNavigation<ViewBasic>(ViewBasicViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewNetwork>(ViewNetworkViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewVideo>(ViewVideoViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewDanmaku>(ViewDanmakuViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewAbout>(ViewAboutViewModel.Tag);
+    // tools pages
+    containerRegistry.RegisterForNavigation<ViewBiliHelper>(ViewBiliHelperViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewDelogo>(ViewDelogoViewModel.Tag);
+    containerRegistry.RegisterForNavigation<ViewExtractMedia>(ViewExtractMediaViewModel.Tag);
 
-        // tools pages
-        containerRegistry.RegisterForNavigation<ViewBiliHelper>(ViewBiliHelperViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewDelogo>(ViewDelogoViewModel.Tag);
-        containerRegistry.RegisterForNavigation<ViewExtractMedia>(ViewExtractMediaViewModel.Tag);
+    // UserSpace
+    containerRegistry.RegisterForNavigation<ViewArchive>(ViewArchiveViewModel.Tag);
+    // containerRegistry.RegisterForNavigation<Views.UserSpace.ViewChannel>(ViewModels.UserSpace.ViewChannelViewModel.Tag);
+    containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace.ViewSeasonsSeriesViewModel.Tag);
 
-        // UserSpace
-        containerRegistry.RegisterForNavigation<ViewArchive>(ViewArchiveViewModel.Tag);
-        // containerRegistry.RegisterForNavigation<Views.UserSpace.ViewChannel>(ViewModels.UserSpace.ViewChannelViewModel.Tag);
-        containerRegistry.RegisterForNavigation<Views.UserSpace.ViewSeasonsSeries>(ViewModels.UserSpace.ViewSeasonsSeriesViewModel.Tag);
-
-        // dialogs
-        containerRegistry.RegisterDialog<ViewAlertDialog>(ViewAlertDialogViewModel.Tag);
-        containerRegistry.RegisterDialog<ViewDownloadSetter>(ViewDownloadSetterViewModel.Tag);
-        containerRegistry.RegisterDialog<ViewParsingSelector>(ViewParsingSelectorViewModel.Tag);
-        containerRegistry.RegisterDialog<ViewAlreadyDownloadedDialog>(ViewAlreadyDownloadedDialogViewModel.Tag);
-        containerRegistry.RegisterDialog<NewVersionAvailableDialog>(NewVersionAvailableDialogViewModel.Tag);
-        containerRegistry.RegisterDialog<ViewUpgradingDialog>(ViewUpgradingDialogViewModel.Tag);
-    }
+    // dialogs
+    containerRegistry.RegisterDialog<ViewAlertDialog>(ViewAlertDialogViewModel.Tag);
+    containerRegistry.RegisterDialog<ViewDownloadSetter>(ViewDownloadSetterViewModel.Tag);
+    containerRegistry.RegisterDialog<ViewParsingSelector>(ViewParsingSelectorViewModel.Tag);
+    containerRegistry.RegisterDialog<ViewAlreadyDownloadedDialog>(ViewAlreadyDownloadedDialogViewModel.Tag);
+    containerRegistry.RegisterDialog<NewVersionAvailableDialog>(NewVersionAvailableDialogViewModel.Tag);
+    containerRegistry.RegisterDialog<ViewUpgradingDialog>(ViewUpgradingDialogViewModel.Tag);
+}
 
 
     protected override AvaloniaObject CreateShell()

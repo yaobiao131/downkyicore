@@ -26,6 +26,7 @@ public class ViewModelBase : BindableBase, INavigationAware
         EventAggregator = eventAggregator;
         DialogService = dialogService;
     }
+    
 
     public virtual void OnNavigatedTo(NavigationContext navigationContext)
     {
@@ -64,7 +65,8 @@ public class ViewModelBase : BindableBase, INavigationAware
 
     public bool IsNavigationTarget(NavigationContext navigationContext)
     {
-        return true;
+        var requestedKey = navigationContext.Parameters.GetValue<string>("NavigationKey");
+        return string.IsNullOrEmpty(NavigationKey) || NavigationKey == requestedKey;
     }
 
     public virtual void OnNavigatedFrom(NavigationContext navigationContext)

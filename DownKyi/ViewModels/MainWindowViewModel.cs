@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -21,7 +20,6 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using IDialogService = DownKyi.PrismExtension.Dialog.IDialogService;
-using Console = DownKyi.Core.Utils.Debugging.Console;
 
 namespace DownKyi.ViewModels;
 
@@ -260,28 +258,9 @@ public class MainWindowViewModel : BindableBase
     }
 
     
-    private string GetDefaultTitle(string? viewName)
+    private string GetDefaultTitle(string? tag) 
     {
-        return viewName switch
-        {
-            "PageIndex" => "首页",
-            "PageVideoDetail" => "视频详情",
-            "PageUserSpace" => "用户空间",
-            "PageMySpace" => "我的空间",
-            "PageDownloadManager" => "下载管理",
-            "PageSettings" => "设置",
-            "PageToolbox" => "工具箱",
-            "PageMyFavorites" => "我的收藏",
-            "PageMyHistory" => "历史记录",
-            "PageMyBangumiFollow" => "追番",
-            "PageMyToView" => "稍后再看",
-            "PageFriends" => "关注",
-            "PagePublication" => "投稿",
-            "PageSeasonsSeries" => "合集",
-            "PagePublicFavorites" => "公开收藏",
-            "PageLogin" => "登录",
-            _ => viewName ?? "新标签页"
-        };
+        return NavigationRegistrationExtensions.GetNavigationTitle(tag);
     }
 
    
@@ -315,7 +294,7 @@ public class MainWindowViewModel : BindableBase
         SelectedTab = tab;
     }
 
-   
+    
     private void SwitchToTab(TabItemModel tab, bool isRefresh = false)
     {
         try
@@ -332,39 +311,23 @@ public class MainWindowViewModel : BindableBase
                 return;
             }
 
-            var navService = region.NavigationService;
-            EventHandler<RegionNavigationEventArgs>? successHandler = null;
-            EventHandler<RegionNavigationFailedEventArgs>? failedHandler = null;
-
-            var sch = successHandler;
-            var fdh = failedHandler;
-            successHandler = (_, e) =>
+            _regionManager.RequestNavigate(ContentRegion, tab.ViewName, result =>
             {
-                navService.Navigated -= sch;
-                navService.NavigationFailed -= fdh;
-                if (e.Uri.OriginalString != tab.ViewName) return;
-                var activeView = region.ActiveViews.FirstOrDefault();
-                if (activeView != null && !string.IsNullOrEmpty(tab.NavigationKey))
+                if (result.Result == true)
                 {
-                    _tabViewCache[tab.NavigationKey] = activeView;
+                    if (region.ActiveViews.FirstOrDefault() is Control activeView && !string.IsNullOrEmpty(tab.NavigationKey))
+                    {
+                        var scopedManager = _regionManager.CreateRegionManager();
+                        RegionManager.SetRegionManager(activeView, scopedManager);
+                        _tabViewCache[tab.NavigationKey] = activeView;
+                      
+                    }
                 }
-            };
-
-            failedHandler = (_, _) =>
-            {
-                navService.Navigated -= sch;
-                navService.NavigationFailed -= fdh;
-            };
-
-            navService.Navigated += successHandler;
-            navService.NavigationFailed += failedHandler;
-
-            _regionManager.RequestNavigate(ContentRegion, tab.ViewName, tab.Parameters);
+            }, tab.Parameters);
         }
         catch (Exception e)
         {
             LogManager.Error(Tag, e);
-            Console.PrintLine("切换标签页发生异常: {0}", e);
         }
     }
 

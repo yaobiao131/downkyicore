@@ -4,7 +4,7 @@
              xmlns:vmc="clr-namespace:DownKyi.CustomControl"
              x:DataType="vmc:CustomPagerViewModel"
              xmlns:action="clr-namespace:DownKyi.CustomAction"
-             x:CompileBindings="True">
+             x:CompileBindings="False"> 
 
     <UserControl.Resources>
         <DrawingImage x:Key="ToLeftDrawingImage">
