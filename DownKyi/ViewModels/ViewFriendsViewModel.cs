@@ -96,13 +96,15 @@ namespace DownKyi.ViewModels
                 { "isFirst", isFirst },
             };
 
+            var manager = ScopedRegionManager ?? _regionManager;
+
             switch (id)
             {
                 case 0:
-                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
+                    manager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
                     break;
                 case 1:
-                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
+                    manager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
                     break;
             }
         }
@@ -115,19 +117,31 @@ namespace DownKyi.ViewModels
         {
             base.OnNavigatedTo(navigationContext);
 
-            // 根据传入参数不同执行不同任务
+            var currentRegionManager = ScopedRegionManager ?? navigationContext.NavigationService.Region.RegionManager;
+
             var parameter = navigationContext.Parameters.GetValue<Dictionary<string, object>>("Parameter");
-            if (parameter == null)
-            {
-                return;
-            }
+            if (parameter == null) return;
 
             mid = (long)parameter["mid"];
             SelectTabId = (int)parameter["friendId"];
 
             PropertyChangeAsync(() =>
             {
-                NavigationView(SelectTabId, true);
+                var param = new NavigationParameters()
+                {
+                    { "mid", mid },
+                    { "isFirst", true },
+                };
+
+                switch (SelectTabId)
+                {
+                    case 0:
+                        currentRegionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
+                        break;
+                    case 1:
+                        currentRegionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
+                        break;
+                }
             });
         }
     }

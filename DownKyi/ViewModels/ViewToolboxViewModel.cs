@@ -73,13 +73,13 @@ namespace DownKyi.ViewModels
             switch (tabHeader.Id)
             {
                 case 0:
-                    _regionManager.RequestNavigate("ToolboxContentRegion", ViewBiliHelperViewModel.Tag);
+                    (ScopedRegionManager ?? _regionManager).RequestNavigate("ToolboxContentRegion", ViewBiliHelperViewModel.Tag);
                     break;
                 case 1:
-                    _regionManager.RequestNavigate("ToolboxContentRegion", ViewDelogoViewModel.Tag);
+                    (ScopedRegionManager ?? _regionManager).RequestNavigate("ToolboxContentRegion", ViewDelogoViewModel.Tag);
                     break;
                 case 2:
-                    _regionManager.RequestNavigate("ToolboxContentRegion", ViewExtractMediaViewModel.Tag);
+                    (ScopedRegionManager ?? _regionManager).RequestNavigate("ToolboxContentRegion", ViewExtractMediaViewModel.Tag);
                     break;
             }
         }
@@ -96,7 +96,7 @@ namespace DownKyi.ViewModels
 
             // 进入设置页面时显示的设置项
             SelectTabId = 0;
-            PropertyChangeAsync(() => { _regionManager.RequestNavigate("ToolboxContentRegion", ViewBiliHelperViewModel.Tag); });
+            PropertyChangeAsync(() => { (ScopedRegionManager ?? _regionManager).RequestNavigate("ToolboxContentRegion", ViewBiliHelperViewModel.Tag); });
         }
     }
 }

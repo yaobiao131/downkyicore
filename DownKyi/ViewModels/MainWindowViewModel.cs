@@ -16,6 +16,7 @@ using DownKyi.ViewModels.Dialogs;
 using DownKyi.CustomAction;
 using Prism.Commands;
 using Prism.Events;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
@@ -30,6 +31,7 @@ public class MainWindowViewModel : BindableBase
     private readonly IEventAggregator _eventAggregator;
     private readonly IRegionManager _regionManager;
     private readonly IDialogService _dialogService;
+    private readonly IContainerProvider _containerProvider;
 
     private const string ContentRegion = nameof(ContentRegion);
 
@@ -126,11 +128,12 @@ public class MainWindowViewModel : BindableBase
     public DelegateCommand<MoveTabParam?> MoveTabCommand =>
         _moveTabCommand ??= new DelegateCommand<MoveTabParam?>(ExecuteMoveTab);
 
-    public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService)
+    public MainWindowViewModel(IRegionManager regionManager, IEventAggregator eventAggregator, IDialogService dialogService, IContainerProvider containerProvider)
     {
         _eventAggregator = eventAggregator;
         _regionManager = regionManager;
         _dialogService = dialogService;
+        _containerProvider = containerProvider;
 
         // 订阅导航事件
         _eventAggregator.GetEvent<NavigationEvent>().Subscribe(OnNavigationRequest);
@@ -311,19 +314,41 @@ public class MainWindowViewModel : BindableBase
                 return;
             }
 
-            _regionManager.RequestNavigate(ContentRegion, tab.ViewName, result =>
+            if (tab.ViewName == ViewIndexViewModel.Tag)
             {
-                if (result.Result == true)
+                _regionManager.RequestNavigate(ContentRegion, tab.ViewName, result =>
                 {
-                    if (region.ActiveViews.FirstOrDefault() is Control activeView && !string.IsNullOrEmpty(tab.NavigationKey))
+                    if (result.Result == true)
                     {
-                        var scopedManager = _regionManager.CreateRegionManager();
-                        RegionManager.SetRegionManager(activeView, scopedManager);
-                        _tabViewCache[tab.NavigationKey] = activeView;
-                      
+                        if (region.ActiveViews.FirstOrDefault() is Control activeView && !string.IsNullOrEmpty(tab.NavigationKey))
+                        {
+                            _tabViewCache[tab.NavigationKey] = activeView;
+                        }
+                    }
+                }, tab.Parameters);
+            }
+            else
+            {
+                var view = _containerProvider.Resolve<object>(tab.ViewName);
+                if (view is Control control)
+                {
+                    var scopedManager = region.Add(view, tab.NavigationKey, true);
+                    region.Activate(view);
+                    _tabViewCache[tab.NavigationKey] = control;
+
+                    if (control.DataContext is ViewModelBase vmBase)
+                    {
+                        vmBase.SetScopedRegionManager(scopedManager);
+                    }
+
+                    if (control.DataContext is INavigationAware navAware)
+                    {
+                        var navService = region.NavigationService;
+                        var context = new NavigationContext(navService, new Uri(tab.ViewName, UriKind.Relative), tab.Parameters);
+                        navAware.OnNavigatedTo(context);
                     }
                 }
-            }, tab.Parameters);
+            }
         }
         catch (Exception e)
         {

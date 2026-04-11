@@ -75,19 +75,19 @@ public class ViewSettingsViewModel : ViewModelBase
         switch (tabHeader.Id)
         {
             case 0:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
                 break;
             case 1:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag);
                 break;
             case 2:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag);
                 break;
             case 3:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag);
                 break;
             case 4:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag);
                 break;
         }
     }
@@ -101,7 +101,7 @@ public class ViewSettingsViewModel : ViewModelBase
     /// </summary>
     private void ExecuteLoadedCommand()
     {
-        _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
+        (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
     }
 
     #endregion
@@ -117,7 +117,7 @@ public class ViewSettingsViewModel : ViewModelBase
         // 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() => { _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
+        PropertyChangeAsync(() => { (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
 
     }
 }

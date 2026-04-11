@@ -82,10 +82,10 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         switch (tabHeader.Id)
         {
             case 0:
-                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
                 break;
             case 1:
-                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
                 break;
             default:
                 break;
@@ -105,6 +105,6 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         //// 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() => { _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
+        PropertyChangeAsync(() => { (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
     }
 }

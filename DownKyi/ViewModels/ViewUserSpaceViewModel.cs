@@ -216,16 +216,17 @@ public class ViewUserSpaceViewModel : ViewModelBase
             { "mid", mid },
         };
 
+        var manager = ScopedRegionManager ?? _regionManager;
         switch (banner.Id)
         {
             case 0: // 投稿
-                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
+                manager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
                 break;
             case 1: // 频道（弃用）
-                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
+                manager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
                 break;
             case 2: // 合集和列表
-                _regionManager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
+                manager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
                     param);
                 break;
         }
@@ -293,7 +294,8 @@ public class ViewUserSpaceViewModel : ViewModelBase
         SelectedRightBanner = -1;
 
         // 将内容置空，使其不指向任何页面
-        _regionManager.RequestNavigate("UserSpaceContentRegion", "");
+        var manager = ScopedRegionManager ?? _regionManager;
+        manager.RequestNavigate("UserSpaceContentRegion", "");
 
         ContentVisibility = false;
         ViewVisibility = false;

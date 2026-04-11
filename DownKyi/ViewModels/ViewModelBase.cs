@@ -16,6 +16,13 @@ public class ViewModelBase : BindableBase, INavigationAware
     protected string ParentNavigationKey = string.Empty;
     protected string NavigationKey = string.Empty;
 
+    public IRegionManager? ScopedRegionManager { get; private set; }
+
+    public void SetScopedRegionManager(IRegionManager regionManager)
+    {
+        ScopedRegionManager = regionManager;
+    }
+
     public ViewModelBase(IEventAggregator eventAggregator)
     {
         EventAggregator = eventAggregator;
