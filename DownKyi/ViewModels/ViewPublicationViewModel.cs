@@ -454,7 +454,7 @@ namespace DownKyi.ViewModels
                             Bvid = video.Bvid,
                             Cover = _defaultPic,
                             Duration = video.Length,
-                            Title = Format.SanitizeForAvalonia(video.Title),
+                            Title = video.Title,
                             PlayNumber = play,
                             CreateTime = ctime,
                             CoverUrl = coverUrl

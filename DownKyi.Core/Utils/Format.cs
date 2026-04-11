@@ -132,42 +132,4 @@ public static class Format
 
        return new string(cleanedName);
     }
-
-    /// <summary>
-    /// 清理可能导致 Avalonia UI 崩溃的特殊 Unicode 字符
-    /// </summary>
-    /// <param name="text">原始文本</param>
-    /// <returns>清理后的文本</returns>
-    public static string SanitizeForAvalonia(string? text)
-    {
-        if (string.IsNullOrEmpty(text))
-        {
-            return string.Empty;
-        }
-
-        var result = new System.Text.StringBuilder(text.Length);
-        foreach (var c in text)
-        {
-            // 跳过零宽度字符和某些控制字符
-            if (c is '\u200B' or '\u200C' or '\u200D' or '\uFEFF' or '\u2060' or '\u180E')
-            {
-                continue;
-            }
-
-            // 跳过某些可能导致问题的 Unicode 区域
-            // 0xE000-0xF8FF: 私人使用区
-            // 0xF0000-0xFFFFD: 补充私人使用区-A
-            // 0x100000-0x10FFFD: 补充私人使用区-B
-            if ((c >= 0xE000 && c <= 0xF8FF) ||
-                (c >= 0xF0000 && c <= 0xFFFFD) ||
-                (c >= 0x100000 && c <= 0x10FFFD))
-            {
-                continue;
-            }
-
-            result.Append(c);
-        }
-
-        return result.ToString();
-    }
 }
