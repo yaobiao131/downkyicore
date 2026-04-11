@@ -193,26 +193,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            Title = UserName,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 左侧tab点击事件
     private DelegateCommand<object>? _tabLeftBannersCommand;
 

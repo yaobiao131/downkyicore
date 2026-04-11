@@ -146,28 +146,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回
-
-    /// <summary>
-    /// 返回
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        NavigationParam parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 

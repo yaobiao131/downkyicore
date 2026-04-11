@@ -116,31 +116,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        InitView();
-
-
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 

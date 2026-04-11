@@ -34,4 +34,9 @@ public class NavigationParam
     /// 返回导航时用于精确匹配目标Tab的稳定标识
     /// </summary>
     public string? NavigationKey { get; set; }
+
+    /// <summary>
+    /// 返回导航时，需要关闭的源Tab的NavigationKey
+    /// </summary>
+    public string? CloseTabNavigationKey { get; set; }
 }

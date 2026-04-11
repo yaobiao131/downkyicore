@@ -144,26 +144,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回
-
-    /// <summary>
-    /// 返回
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            Title = VideoInfoView?.Title,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 

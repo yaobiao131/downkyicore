@@ -309,29 +309,7 @@ public class ViewMySpaceViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            Title = UserName,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 退出登录事件
     private DelegateCommand? _logoutCommand;
 

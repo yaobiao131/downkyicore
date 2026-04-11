@@ -26,8 +26,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
 {
     public const string Tag = "PageMyHistory";
 
-    private CancellationTokenSource? _tokenSource;
-
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
     private const int VideoNumberInPage = 30;
 
@@ -123,33 +121,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    
- 
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        InitView();
-
-
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null,
-            IsBackNavigation = true,
-            NavigationKey = ParentNavigationKey
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 

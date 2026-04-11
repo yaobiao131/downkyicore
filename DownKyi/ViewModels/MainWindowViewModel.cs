@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -37,6 +38,8 @@ public class MainWindowViewModel : BindableBase
     private ClipboardListener? _clipboardListener;
     private bool _messageVisibility;
     private string? _oldMessage;
+
+    private readonly Dictionary<string, object> _tabViewCache = new();
 
     public bool MessageVisibility
     {
@@ -174,7 +177,7 @@ public class MainWindowViewModel : BindableBase
     }
 
     
-    private int _tabIdCounter = 0;
+    private int _tabIdCounter;
     
     private void OnTabTitleUpdate(TabTitleUpdateParam param)
     {
@@ -210,6 +213,17 @@ public class MainWindowViewModel : BindableBase
 
         Dispatcher.UIThread.InvokeAsync(() =>
         {
+            // 如果要求关闭某个源Tab（如登录成功后关闭登录页），先处理关闭
+            if (!string.IsNullOrEmpty(view.CloseTabNavigationKey))
+            {
+                var tabToClose = Tabs.FirstOrDefault(t => t.NavigationKey == view.CloseTabNavigationKey);
+                if (tabToClose != null)
+                {
+                    RemoveTabFromRegion(tabToClose);
+                    Tabs.Remove(tabToClose);
+                }
+            }
+
             if (view.IsBackNavigation)
             {
                 if (!string.IsNullOrEmpty(view.NavigationKey))
@@ -230,6 +244,9 @@ public class MainWindowViewModel : BindableBase
                     SelectedTab = fallbackTab;
                     return;
                 }
+
+                // 返回导航找不到目标Tab时，不应创建新Tab
+                return;
             }
 
             // 将当前选中Tab的NavigationKey作为ParentNavigationKey传给新Tab
@@ -272,12 +289,15 @@ public class MainWindowViewModel : BindableBase
     {
         if (string.IsNullOrEmpty(viewName)) return;
 
-        var tabId = $"tab_{_tabIdCounter++}";
-        var navigationKey = parameters.GetValue<string>("NavigationKey");
-        if (string.IsNullOrEmpty(navigationKey))
+        var tabId = $"tab_{Interlocked.Increment(ref _tabIdCounter)}";
+        var navigationKey = $"{viewName}_{tabId}";
+        parameters.Add("NavigationKey", navigationKey);
+
+        // 浅拷贝参数，防止外部后续修改影响 Tab 状态
+        var tabParameters = new NavigationParameters();
+        foreach (var kvp in parameters)
         {
-            navigationKey = $"{viewName}_{tabId}";
-            parameters.Add("NavigationKey", navigationKey);
+            tabParameters.Add(kvp.Key, kvp.Value);
         }
 
         var tab = new TabItemModel
@@ -285,7 +305,7 @@ public class MainWindowViewModel : BindableBase
             Id = tabId,
             Title = title,
             ViewName = viewName,
-            Parameters = parameters,
+            Parameters = tabParameters,
             CanClose = !isHome,
             IsHome = isHome,
             NavigationKey = navigationKey
@@ -296,10 +316,49 @@ public class MainWindowViewModel : BindableBase
     }
 
    
-    private void SwitchToTab(TabItemModel tab)
+    private void SwitchToTab(TabItemModel tab, bool isRefresh = false)
     {
         try
         {
+            var region = _regionManager.Regions[ContentRegion];
+
+            // 若缓存中已有该 Tab 的视图且仍在 Region 中，直接激活，不触发 OnNavigatedTo
+            if (!string.IsNullOrEmpty(tab.NavigationKey)
+                && _tabViewCache.TryGetValue(tab.NavigationKey, out var cachedView)
+                && !isRefresh
+                && region.Views.Contains(cachedView))
+            {
+                region.Activate(cachedView);
+                return;
+            }
+
+            var navService = region.NavigationService;
+            EventHandler<RegionNavigationEventArgs>? successHandler = null;
+            EventHandler<RegionNavigationFailedEventArgs>? failedHandler = null;
+
+            var sch = successHandler;
+            var fdh = failedHandler;
+            successHandler = (_, e) =>
+            {
+                navService.Navigated -= sch;
+                navService.NavigationFailed -= fdh;
+                if (e.Uri.OriginalString != tab.ViewName) return;
+                var activeView = region.ActiveViews.FirstOrDefault();
+                if (activeView != null && !string.IsNullOrEmpty(tab.NavigationKey))
+                {
+                    _tabViewCache[tab.NavigationKey] = activeView;
+                }
+            };
+
+            failedHandler = (_, _) =>
+            {
+                navService.Navigated -= sch;
+                navService.NavigationFailed -= fdh;
+            };
+
+            navService.Navigated += successHandler;
+            navService.NavigationFailed += failedHandler;
+
             _regionManager.RequestNavigate(ContentRegion, tab.ViewName, tab.Parameters);
         }
         catch (Exception e)
@@ -310,6 +369,23 @@ public class MainWindowViewModel : BindableBase
     }
 
   
+    private void RemoveTabFromRegion(TabItemModel? tab)
+    {
+        if (tab == null || string.IsNullOrEmpty(tab.NavigationKey)) return;
+        if (_tabViewCache.TryGetValue(tab.NavigationKey, out var cachedView))
+        {
+            try
+            {
+                _regionManager.Regions[ContentRegion].Remove(cachedView);
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(Tag, e);
+            }
+            _tabViewCache.Remove(tab.NavigationKey);
+        }
+    }
+
     private void ExecuteCloseTab(TabItemModel? tab)
     {
         if (tab == null || !tab.CanClose) return;
@@ -325,8 +401,13 @@ public class MainWindowViewModel : BindableBase
             {
                 SelectedTab = Tabs[newIndex];
             }
+            else
+            {
+                SelectedTab = null;
+            }
         }
 
+        RemoveTabFromRegion(tab);
         Tabs.RemoveAt(index);
 
         if (Tabs.Count == 0)
@@ -347,6 +428,7 @@ public class MainWindowViewModel : BindableBase
         var tabsToClose = Tabs.Where(t => t != tab && t.CanClose).ToList();
         foreach (var t in tabsToClose)
         {
+            RemoveTabFromRegion(t);
             Tabs.Remove(t);
         }
 
@@ -364,6 +446,7 @@ public class MainWindowViewModel : BindableBase
         var selectedRemoved = tabsToClose.Contains(SelectedTab);
         foreach (var t in tabsToClose)
         {
+            RemoveTabFromRegion(t);
             Tabs.Remove(t);
         }
 
@@ -383,6 +466,7 @@ public class MainWindowViewModel : BindableBase
         var tabsToClose = Tabs.Take(index).Where(t => t.CanClose).ToList();
         foreach (var t in tabsToClose)
         {
+            RemoveTabFromRegion(t);
             Tabs.Remove(t);
         }
 
@@ -395,6 +479,7 @@ public class MainWindowViewModel : BindableBase
         var tabsToClose = Tabs.Where(t => t.CanClose).ToList();
         foreach (var t in tabsToClose)
         {
+            RemoveTabFromRegion(t);
             Tabs.Remove(t);
         }
 
@@ -438,10 +523,12 @@ public class MainWindowViewModel : BindableBase
         {
             SelectedTab = tab;
         }
-        else
-        {
-            SwitchToTab(tab);
-        }
+
+        // 刷新前先从 Region 和缓存中移除旧视图，防止重复实例和内存泄漏
+        RemoveTabFromRegion(tab);
+
+        // 使用完整参数重新导航，以实现真正的刷新
+        SwitchToTab(tab, true);
     }
 
     private void ExecuteMoveTab(MoveTabParam? param)
@@ -513,6 +600,9 @@ public class MainWindowViewModel : BindableBase
 
     private void ExecuteClosingCommand()
     {
+        _eventAggregator.GetEvent<NavigationEvent>().Unsubscribe(OnNavigationRequest);
+        _eventAggregator.GetEvent<TabTitleUpdateEvent>().Unsubscribe(OnTabTitleUpdate);
+
         if (_clipboardListener == null) return;
         _clipboardListener.Changed -= ClipboardListenerOnChanged;
         _clipboardListener.Dispose();
