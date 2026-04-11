@@ -11,7 +11,9 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewVideoDetailViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewVideoDetailViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
         <ControlTheme TargetType="TextBlock" x:Key="DataGridCellTextBlockTheme">

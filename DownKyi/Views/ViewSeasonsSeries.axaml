@@ -10,7 +10,9 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewSeasonsSeriesViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewSeasonsSeriesViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="ListBoxItem" x:DataType="vmp:ChannelMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />

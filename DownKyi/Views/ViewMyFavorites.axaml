@@ -10,7 +10,9 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewMyFavoritesViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewMyFavoritesViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FavoritesMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />

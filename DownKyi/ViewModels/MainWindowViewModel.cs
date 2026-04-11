@@ -37,9 +37,18 @@ public class MainWindowViewModel : BindableBase
 
     private ClipboardListener? _clipboardListener;
     private bool _messageVisibility;
-    private string? _oldMessage;
 
     private readonly Dictionary<string, object> _tabViewCache = new();
+
+    private static readonly HashSet<string> SingletonTabs = new()
+    {
+        ViewIndexViewModel.Tag,
+        ViewDownloadManagerViewModel.Tag,
+        ViewSettingsViewModel.Tag,
+        ViewToolboxViewModel.Tag,
+        ViewLoginViewModel.Tag,
+        ViewMySpaceViewModel.Tag,
+    };
 
     public bool MessageVisibility
     {
@@ -145,10 +154,10 @@ public class MainWindowViewModel : BindableBase
         _eventAggregator.GetEvent<MessageEvent>().Subscribe(message =>
         {
             MessageVisibility = true;
-            _oldMessage = Message;
+            var oldMessage = Message;
             Message = message;
             var sleep = 2000;
-            if (_oldMessage == Message)
+            if (oldMessage == Message)
             {
                 sleep = 1500;
             }
@@ -250,13 +259,25 @@ public class MainWindowViewModel : BindableBase
                 return;
             }
 
+            // 如果已存在相同 ViewName 的标签，直接切换而不创建新标签
+            if (view.ViewName != null && SingletonTabs.Contains(view.ViewName))
+            {
+                var existingTab = Tabs.FirstOrDefault(t => t.ViewName == view.ViewName);
+                if (existingTab != null)
+                {
+                    SelectedTab = existingTab;
+                    return;
+                }
+            }
+
             // 将当前选中Tab的NavigationKey作为ParentNavigationKey传给新Tab
             if (SelectedTab != null && !string.IsNullOrEmpty(SelectedTab.NavigationKey))
             {
                 param.Add("ParentNavigationKey", SelectedTab.NavigationKey);
             }
 
-            OpenNewTab(view.ViewName, title, param);
+            var isHome = view.ViewName == ViewIndexViewModel.Tag;
+            OpenNewTab(view.ViewName, title, param, isHome);
         });
     }
 
@@ -334,7 +355,7 @@ public class MainWindowViewModel : BindableBase
                 {
                     var scopedManager = region.Add(view, tab.NavigationKey, true);
                     region.Activate(view);
-                    _tabViewCache[tab.NavigationKey] = control;
+                    if (tab.NavigationKey != null) _tabViewCache[tab.NavigationKey] = control;
 
                     if (control.DataContext is ViewModelBase vmBase)
                     {
@@ -364,7 +385,7 @@ public class MainWindowViewModel : BindableBase
         {
             try
             {
-                if (cachedView is Avalonia.Visual visual && visual.DataContext is ViewModelBase vm)
+                if (cachedView is Avalonia.Visual { DataContext: ViewModelBase vm })
                 {
                     vm.OnTabClosed();
                 }
@@ -389,15 +410,9 @@ public class MainWindowViewModel : BindableBase
         if (SelectedTab == tab)
         {
             // 优先切换到左侧标签，如果没有则切换到右侧
-            var newIndex = index > 0 ? index - 1 : (index < Tabs.Count - 1 ? index + 1 : -1);
-            if (newIndex >= 0)
-            {
-                SelectedTab = Tabs[newIndex];
-            }
-            else
-            {
-                SelectedTab = null;
-            }
+            var newIndex = index < Tabs.Count - 1 ? index : index - 1;
+        
+            SelectedTab = newIndex >= 0 ? Tabs[newIndex] : null;
         }
 
         RemoveTabFromRegion(tab);
@@ -436,7 +451,7 @@ public class MainWindowViewModel : BindableBase
         if (index < 0 || index >= Tabs.Count - 1) return;
 
         var tabsToClose = Tabs.Skip(index + 1).Where(t => t.CanClose).ToList();
-        var selectedRemoved = tabsToClose.Contains(SelectedTab);
+        var selectedRemoved = SelectedTab != null && tabsToClose.Contains(SelectedTab);
         foreach (var t in tabsToClose)
         {
             RemoveTabFromRegion(t);
@@ -611,13 +626,9 @@ public class MainWindowViewModel : BindableBase
     {
     }
 
-    private UserControl? GetCurrentUserControl() => _regionManager
-        .Regions[ContentRegion].ActiveViews
-        .FirstOrDefault() as UserControl;
-
     private void Upgrade()
     {
-        _dialogService.ShowDialogAsync(ViewUpgradingDialogViewModel.Tag, new DialogParameters(), (result) => { });
+        _dialogService.ShowDialogAsync(ViewUpgradingDialogViewModel.Tag, new DialogParameters(), (_) => { });
     }
 
     private async void CheckForUpdates()
@@ -631,11 +642,11 @@ public class MainWindowViewModel : BindableBase
             var release = await service.GetLatestReleaseAsync(SettingsManager.GetInstance().GetSkipVersionOnLaunch());
             if (release != null && service.IsNewVersionAvailable(release.TagName))
             {
-                await _dialogService?.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new
-                    DialogParameters { { "release", release }, { "enableSkipVersion", true } })!;
+                await _dialogService.ShowDialogAsync(NewVersionAvailableDialogViewModel.Tag, new
+                    DialogParameters { { "release", release }, { "enableSkipVersion", true } });
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             /**/
         }
