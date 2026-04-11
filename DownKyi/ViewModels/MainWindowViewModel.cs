@@ -322,10 +322,10 @@ public class MainWindowViewModel : BindableBase
         {
             var region = _regionManager.Regions[ContentRegion];
 
-            // 若缓存中已有该 Tab 的视图且仍在 Region 中，直接激活，不触发 OnNavigatedTo
-            if (!string.IsNullOrEmpty(tab.NavigationKey)
+            if (!isRefresh
+                && tab.ViewName != ViewIndexViewModel.Tag
+                && !string.IsNullOrEmpty(tab.NavigationKey)
                 && _tabViewCache.TryGetValue(tab.NavigationKey, out var cachedView)
-                && !isRefresh
                 && region.Views.Contains(cachedView))
             {
                 region.Activate(cachedView);
