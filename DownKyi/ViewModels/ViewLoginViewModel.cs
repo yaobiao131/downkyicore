@@ -51,9 +51,6 @@ public class ViewLoginViewModel : ViewModelBase
     {
     }
 
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     protected internal override void ExecuteBackSpace()
     {

@@ -21,14 +21,6 @@ namespace DownKyi.ViewModels
 
         #region 页面属性申明
 
-        private VectorImage _arrowBack;
-
-        public VectorImage ArrowBack
-        {
-            get => _arrowBack;
-            set => SetProperty(ref _arrowBack, value);
-        }
-
         private ObservableCollection<TabHeader> _tabHeaders;
 
         public ObservableCollection<TabHeader> TabHeaders
@@ -54,9 +46,6 @@ namespace DownKyi.ViewModels
 
             #region 属性初始化
 
-            ArrowBack = NavigationIcon.Instance().ArrowBack;
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
             TabHeaders = new ObservableCollection<TabHeader>
             {
                 new() { Id = 0, Title = DictionaryResource.GetString("FriendFollowing") },
@@ -67,31 +56,6 @@ namespace DownKyi.ViewModels
         }
 
         #region 命令申明
-
-        // 返回事件
-        private DelegateCommand _backSpaceCommand;
-
-        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-        /// <summary>
-        /// 返回事件
-        /// </summary>
-        protected internal override void ExecuteBackSpace()
-        {
-            //InitView();
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
-            var parameter = new NavigationParam
-            {
-                ViewName = ParentView,
-                ParentViewName = null,
-                Parameter = null,
-                IsBackNavigation = true,
-                NavigationKey = ParentNavigationKey
-            };
-            EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-        }
 
         // 顶部tab点击事件
         private DelegateCommand<object> _tabHeadersCommand;
@@ -150,8 +114,6 @@ namespace DownKyi.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             base.OnNavigatedTo(navigationContext);
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
             // 根据传入参数不同执行不同任务
             var parameter = navigationContext.Parameters.GetValue<Dictionary<string, object>>("Parameter");

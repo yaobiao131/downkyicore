@@ -520,17 +520,6 @@ public class MainWindowViewModel : BindableBase
 
     private void ExecutePointerPressed(PointerPressedEventArgs e)
     {
-        var point = e.GetCurrentPoint(null);
-        var updateKind = point.Properties.PointerUpdateKind;
-        if (updateKind == PointerUpdateKind.XButton1Pressed)
-        {
-            var v = GetCurrentUserControl()?.DataContext;
-            if (v is ViewModelBase vm)
-            {
-                vm.ExecuteBackSpace();
-                e.Handled = true;
-            }
-        }
     }
 
     private UserControl? GetCurrentUserControl() => _regionManager

@@ -28,14 +28,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private bool _loading;
 
     public bool Loading
@@ -189,10 +181,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
 
         #region 属性初始化
 
-        // 返回按钮
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 初始化loading
         Loading = true;
 
@@ -207,9 +195,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -311,7 +296,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
     private void InitView()
     {
         TopNavigationBg = "#00FFFFFF"; // 透明
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
         Background = null;
 
         Header = null;
@@ -406,7 +390,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
         if (isNoData)
         {
             TopNavigationBg = "#00FFFFFF"; // 透明
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
             Background = null;
 
             ViewVisibility = false;
@@ -422,8 +405,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
             // 等级
             Level = levelUri == null ? null : ImageHelper.LoadFromResource(levelUri);
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
             TopNavigationBg = DictionaryResource.GetColor("ColorMask100");
             Background = toutuUri;
 

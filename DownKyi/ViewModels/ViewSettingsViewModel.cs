@@ -18,14 +18,6 @@ public class ViewSettingsViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private List<TabHeader> _tabHeaders;
 
     public List<TabHeader> TabHeaders
@@ -50,9 +42,6 @@ public class ViewSettingsViewModel : ViewModelBase
 
         #region 属性初始化
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         TabHeaders = new List<TabHeader>
         {
             new() { Id = 0, Title = DictionaryResource.GetString("Basic") },
@@ -66,11 +55,6 @@ public class ViewSettingsViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     // 左侧tab点击事件
     private DelegateCommand<object> _leftTabHeadersCommand;
@@ -135,6 +119,5 @@ public class ViewSettingsViewModel : ViewModelBase
 
         PropertyChangeAsync(() => { _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
 
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
     }
 }

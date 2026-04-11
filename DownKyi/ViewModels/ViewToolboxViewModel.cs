@@ -54,11 +54,6 @@ namespace DownKyi.ViewModels
 
         #region 命令申明
 
-        // 返回事件
-        private DelegateCommand? _backSpaceCommand;
-
-        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
         // 左侧tab点击事件
         private DelegateCommand<object>? _leftTabHeadersCommand;
 

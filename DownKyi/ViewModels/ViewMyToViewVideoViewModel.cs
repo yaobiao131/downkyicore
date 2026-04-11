@@ -34,14 +34,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
         set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
@@ -112,9 +104,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
         LoadingVisibility = false;
         NoDataVisibility = false;
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
@@ -129,9 +118,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     #region 命令申明
 
     // 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回事件
@@ -140,7 +126,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     {
         InitView();
 
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
 
         // 结束任务
         _tokenSource?.Cancel();
@@ -376,8 +361,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     /// </summary>
     private void InitView()
     {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         ContentVisibility = false;
         LoadingVisibility = false;
         NoDataVisibility = false;
@@ -393,8 +376,6 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;

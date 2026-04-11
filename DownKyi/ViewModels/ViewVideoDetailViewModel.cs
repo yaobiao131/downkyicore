@@ -146,9 +146,6 @@ public class ViewVideoDetailViewModel : ViewModelBase
     #region 命令申明
 
     // 返回
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     /// <summary>
     /// 返回
