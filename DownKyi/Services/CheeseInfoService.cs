@@ -76,7 +76,7 @@ public class CheeseInfoService : IInfoService
                 EpisodeId = episode.Id,
                 FirstFrame = episode.Cover,
                 Order = order,
-                Name = Format.SanitizeForAvalonia(name),
+                Name = name,
                 Duration = "N/A"
             };
 
@@ -165,7 +165,7 @@ public class CheeseInfoService : IInfoService
         {
             videoInfoView.CoverUrl = coverUrl;
 
-            videoInfoView.Title = Format.SanitizeForAvalonia(_cheeseView.Title);
+            videoInfoView.Title = _cheeseView.Title;
 
             // 分区id
             // 课堂的type id B站没有定义，这里自定义为-10

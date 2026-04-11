@@ -90,7 +90,7 @@ public class VideoInfoService : IInfoService
                 EpisodeId = -1,
                 FirstFrame = page.FirstFrame,
                 Order = order,
-                Name = Format.SanitizeForAvalonia(name),
+                Name = name,
                 Duration = "N/A",
                 Page = page.Page,
                 LazyTags = new Lazy<List<string>?>(() =>
@@ -214,7 +214,7 @@ public class VideoInfoService : IInfoService
                 EpisodeId = -1,
                 FirstFrame = episode.Arc.Pic,
                 Order = order++,
-                Name = Format.SanitizeForAvalonia(p.Part),
+                Name = p.Part,
                 Duration = "N/A",
                 Owner = _videoView.Owner,
                 Page = p.Page,
@@ -242,7 +242,7 @@ public class VideoInfoService : IInfoService
             EpisodeId = -1,
             FirstFrame = episode.Arc.Pic,
             Order = order,
-            Name = Format.SanitizeForAvalonia(episode.Title),
+            Name = episode.Title,
             Duration = "N/A",
             Owner = _videoView?.Owner ?? new VideoOwner { Name = "", Face = "", Mid = -1 },
             Page = episode.Page.Page,
@@ -326,7 +326,7 @@ public class VideoInfoService : IInfoService
         App.PropertyChangeAsync(() =>
         {
             videoInfoView.CoverUrl = coverUrl;
-            videoInfoView.Title = Format.SanitizeForAvalonia(_videoView.Title);
+            videoInfoView.Title = _videoView.Title;
 
             // 分区id
             videoInfoView.TypeId = _videoView.Tid;

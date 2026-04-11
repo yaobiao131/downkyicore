@@ -479,7 +479,7 @@ public class ViewMyBangumiFollowViewModel : ViewModelBase
                     {
                         MediaId = bangumiFollow.MediaId,
                         SeasonId = bangumiFollow.SeasonId,
-                        Title = Format.SanitizeForAvalonia(bangumiFollow.Title),
+                        Title = bangumiFollow.Title,
                         SeasonTypeName = bangumiFollow.SeasonTypeName,
                         Area = area,
                         Badge = bangumiFollow.Badge,

@@ -349,7 +349,7 @@ public class ViewMyToViewVideoViewModel : ViewModelBase
                         Bvid = toView.Bvid,
                         UpMid = upMid,
                         Cover = coverUrl,
-                        Title = Format.SanitizeForAvalonia(toView.Title),
+                        Title = toView.Title,
                         UpName = upName,
                         UpHeader = toView.Owner?.Face ?? ""
                     };
