@@ -129,6 +129,9 @@ public class MainWindowViewModel : BindableBase
         // 订阅导航事件
         _eventAggregator.GetEvent<NavigationEvent>().Subscribe(OnNavigationRequest);
 
+        // 订阅标签页标题更新事件
+        _eventAggregator.GetEvent<TabTitleUpdateEvent>().Subscribe(OnTabTitleUpdate);
+
         // 订阅消息发送事件
         _eventAggregator.GetEvent<MessageEvent>().Subscribe(message =>
         {
@@ -168,6 +171,23 @@ public class MainWindowViewModel : BindableBase
     
     private int _tabIdCounter = 0;
     
+    private void OnTabTitleUpdate(TabTitleUpdateParam param)
+    {
+        if (string.IsNullOrEmpty(param.NavigationKey) || string.IsNullOrEmpty(param.Title))
+        {
+            return;
+        }
+
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            var tab = Tabs.FirstOrDefault(t => t.NavigationKey == param.NavigationKey);
+            if (tab != null)
+            {
+                tab.Title = param.Title;
+            }
+        });
+    }
+
     private void OnNavigationRequest(NavigationParam view)
     {
         var param = new NavigationParameters
@@ -252,6 +272,7 @@ public class MainWindowViewModel : BindableBase
         if (string.IsNullOrEmpty(navigationKey))
         {
             navigationKey = $"{viewName}_{tabId}";
+            parameters.Add("NavigationKey", navigationKey);
         }
 
         var tab = new TabItemModel

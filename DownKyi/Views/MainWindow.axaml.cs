@@ -55,6 +55,6 @@ public partial class MainWindow : Window
     //     _windowSettings.X = Position.X;
     //     _windowSettings.Y = Position.Y;
     //
-    //     SettingsManager.GetInstance().SettingWindowSettings(_windowSettings);
+    //     // SettingsManager.GetInstance().SettingWindowSettings(_windowSettings);
     // }
 }

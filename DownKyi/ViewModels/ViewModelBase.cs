@@ -14,6 +14,7 @@ public class ViewModelBase : BindableBase, INavigationAware
     protected IRegionNavigationJournal? Journal;
     protected string ParentView = string.Empty;
     protected string ParentNavigationKey = string.Empty;
+    protected string NavigationKey = string.Empty;
 
     public ViewModelBase(IEventAggregator eventAggregator)
     {
@@ -39,6 +40,12 @@ public class ViewModelBase : BindableBase, INavigationAware
         if (parentKey != null)
         {
             ParentNavigationKey = parentKey;
+        }
+
+        var navKey = navigationContext.Parameters.GetValue<string>("NavigationKey");
+        if (navKey != null)
+        {
+            NavigationKey = navKey;
         }
     }
     

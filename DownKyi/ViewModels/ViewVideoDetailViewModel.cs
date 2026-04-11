@@ -683,6 +683,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
             NoDataVisibility = false;
         }
 
+        if (!string.IsNullOrWhiteSpace(VideoInfoView.Title))
+        {
+            var rawTitle = VideoInfoView.Title.Trim();
+            EventAggregator.GetEvent<TabTitleUpdateEvent>().Publish(new TabTitleUpdateParam
+            {
+                NavigationKey = NavigationKey,
+                Title = rawTitle
+            });
+        }
+
         // 获取视频列表
         var videoSections = videoInfoService.GetVideoSections(false);
 
