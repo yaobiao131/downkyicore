@@ -159,7 +159,10 @@ public class ViewVideoDetailViewModel : ViewModelBase
         {
             ViewName = ParentView,
             ParentViewName = null,
-            Parameter = null
+            Parameter = null,
+            Title = VideoInfoView?.Title,
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
@@ -317,7 +320,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private void ExecuteUpperCommand()
     {
-        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid, VideoInfoView.UpName);
     }
 
     // 视频章节选择事件
@@ -678,6 +681,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
             LoadingVisibility = false;
             ContentVisibility = true;
             NoDataVisibility = false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(VideoInfoView.Title))
+        {
+            var rawTitle = VideoInfoView.Title.Trim();
+            EventAggregator.GetEvent<TabTitleUpdateEvent>().Publish(new TabTitleUpdateParam
+            {
+                NavigationKey = NavigationKey,
+                Title = rawTitle
+            });
         }
 
         // 获取视频列表

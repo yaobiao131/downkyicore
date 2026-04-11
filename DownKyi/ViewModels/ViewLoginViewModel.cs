@@ -66,7 +66,9 @@ public class ViewLoginViewModel : ViewModelBase
         {
             ViewName = ParentView,
             ParentViewName = null,
-            Parameter = "login"
+            Parameter = "login",
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }

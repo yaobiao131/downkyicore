@@ -1,7 +1,9 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:DownKyi.ViewModels"
+        xmlns:models="using:DownKyi.Models"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:ca="using:DownKyi.CustomAction"
         x:Class="DownKyi.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         prism:ViewModelLocator.AutoWireViewModel="True"
@@ -22,17 +24,196 @@
                                  PassEventArgsToCommand="True" />
         </EventTriggerBehavior>
     </Interaction.Behaviors>
-    <Grid RowDefinitions="*">
-        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
 
-        <Border
-            MinHeight="30"
-            Margin="0,0,0,20"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Background="{DynamicResource BrushBackgroundDark}"
-            CornerRadius="15"
-            IsVisible="{Binding MessageVisibility}">
+    <Window.Resources>
+        <ContextMenu x:Key="TabContextMenu"
+                     x:DataType="models:TabItemModel">
+            <MenuItem Header="{DynamicResource TabRefresh}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).RefreshTabCommand}"
+                      CommandParameter="{Binding }">
+                <MenuItem.Icon>
+                    <PathIcon Data="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"
+                              Width="16"
+                              Height="16" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="{DynamicResource TabDuplicate}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).DuplicateTabCommand}"
+                      CommandParameter="{Binding }">
+                <MenuItem.Icon>
+                    <PathIcon Data="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"
+                              Width="16"
+                              Height="16" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <Separator />
+            <MenuItem Header="{DynamicResource TabClose}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseTabCommand}"
+                      CommandParameter="{Binding}" />
+            <MenuItem Header="{DynamicResource TabCloseOther}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseOtherTabsCommand}"
+                      CommandParameter="{Binding}"/>
+            <MenuItem Header="{DynamicResource TabCloseRight}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseRightTabsCommand}"
+                      CommandParameter="{Binding}"/>
+            <MenuItem Header="{DynamicResource TabCloseLeft}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseLeftTabsCommand}"
+                      CommandParameter="{Binding}" />
+            <Separator />
+            <MenuItem Header="{DynamicResource TabCloseAll}"
+                      Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseAllTabsCommand}"
+                      CommandParameter="{Binding }" />
+        </ContextMenu>
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+                Background="{DynamicResource BrushBackground}"
+                BorderBrush="{DynamicResource BrushBorder}"
+                BorderThickness="0,0,0,1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled"
+                          ClipToBounds="False">
+                <ListBox ItemsSource="{Binding Tabs}"
+                         SelectedItem="{Binding SelectedTab}"
+                         HorizontalAlignment="Left"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Padding="4,2,4,0">
+                    <Interaction.Behaviors>
+                        <ca:DragTabBehavior MoveTabCommand="{Binding MoveTabCommand}" />
+                    </Interaction.Behaviors>
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="-4,0,0,0" />
+                            <Setter Property="MinHeight" Value="36" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="ContextMenu" Value="{StaticResource TabContextMenu}" />
+                            <Setter Property="Template">
+                                <ControlTemplate TargetType="ListBoxItem" x:DataType="models:TabItemModel">
+                                    <Border x:Name="TabBorder"
+                                            Background="Transparent"
+                                            BorderBrush="Transparent"
+                                            BorderThickness="1,1,1,0"
+                                            CornerRadius="10,10,0,0"
+                                            MinWidth="140"
+                                            MaxWidth="160"
+                                            Margin="0,4,0,0"
+                                            Padding="10,0,6,0">
+                                        <Border.Transitions>
+                                            <Transitions>
+                                                <BrushTransition Property="Background" Duration="0:0:0.12" />
+                                                <BrushTransition Property="BorderBrush" Duration="0:0:0.12" />
+                                                <ThicknessTransition Property="Margin" Duration="0:0:0.15" />
+                                                <ThicknessTransition Property="Padding" Duration="0:0:0.15" />
+                                            </Transitions>
+                                        </Border.Transitions>
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <ContentPresenter Grid.Column="0"
+                                                              x:Name="PART_ContentPresenter"
+                                                              Content="{TemplateBinding Content}"
+                                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                              VerticalAlignment="Center"
+                                                              HorizontalAlignment="Left"
+                                                              Background="Transparent"
+                                                              IsVisible="True" />
+                                            <Button Grid.Column="1"
+                                                    x:Name="PART_CloseButton"
+                                                    Command="{Binding $parent[Window].((vm:MainWindowViewModel)DataContext).CloseTabCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    IsVisible="{Binding CanClose}"
+                                                    Background="Transparent"
+                                                    BorderThickness="0"
+                                                    Width="18"
+                                                    Height="18"
+                                                    Margin="4,0,0,0"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    Padding="2"
+                                                    Opacity="0.6">
+                                                <Button.Transitions>
+                                                    <Transitions>
+                                                        <DoubleTransition Property="Opacity" Duration="0:0:0.12" />
+                                                        <BrushTransition Property="Background" Duration="0:0:0.12" />
+                                                        <BrushTransition Property="Foreground" Duration="0:0:0.12" />
+                                                    </Transitions>
+                                                </Button.Transitions>
+                                                <PathIcon Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                                          Width="12"
+                                                          Height="12" />
+                                            </Button>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter>
+                        </Style>
+                        
+                        
+
+                        <Style Selector="ListBoxItem:selected">
+                            <Setter Property="(Panel.ZIndex)" Value="100" />
+                        </Style>
+                        <Style Selector="ListBoxItem /template/ ContentPresenter#PART_ContentPresenter">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                            <Setter Property="Background" Value="Transparent" />
+                        </Style>
+                     
+                      
+                        <Style Selector="ListBoxItem:pointerover /template/ Border#TabBorder">
+                            <Setter Property="Background" Value="{DynamicResource BrushBackgroundGreyTranslucent2}" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected /template/ Border#TabBorder">
+                            <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
+                            <Setter Property="BorderBrush" Value="{DynamicResource BrushBorder}" />
+                            <Setter Property="Margin" Value="0,4,0,-1" />
+                        </Style>
+                        <Style Selector="ListBoxItem:selected:pointerover /template/ Border#TabBorder">
+                            <Setter Property="Background" Value="{DynamicResource BrushBackground}" />
+                        </Style>
+                      
+                        <Style Selector="ListBoxItem /template/ Button#PART_CloseButton:pointerover">
+                            <Setter Property="Background" Value="{DynamicResource BrushBackgroundGrey}" />
+                            <Setter Property="Opacity" Value="1" />
+                            <Setter Property="CornerRadius" Value="4" />
+                        </Style>
+                    </ListBox.Styles>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" ClipToBounds="False" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="models:TabItemModel">
+                            <TextBlock Text="{Binding Title}"
+                                       FontSize="12"
+                                       VerticalAlignment="Center"
+                                       Margin="0,0,4,0"
+                                       TextTrimming="CharacterEllipsis"
+                                       ToolTip.Tip="{Binding Title}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
+        </Border>
+
+        <ContentControl Grid.Row="1"
+                        Background="{DynamicResource BrushBackground}"
+                        prism:RegionManager.RegionName="ContentRegion" />
+
+        <Border Grid.Row="1"
+                MinHeight="30"
+                Margin="0,0,0,20"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Background="{DynamicResource BrushBackgroundDark}"
+                CornerRadius="15"
+                IsVisible="{Binding MessageVisibility}">
             <TextBlock
                 Margin="15,5,15,5"
                 HorizontalAlignment="Center"

@@ -364,4 +364,13 @@
     <!-- CustomControl -->
     <system:String x:Key="Page">页</system:String>
     <system:String x:Key="JumpTo">跳至</system:String>
+    
+    <!-- Tab Context Menu -->
+    <system:String x:Key="TabRefresh">刷新</system:String>
+    <system:String x:Key="TabDuplicate">复制标签页</system:String>
+    <system:String x:Key="TabClose">关闭标签页</system:String>
+    <system:String x:Key="TabCloseOther">关闭其他标签页</system:String>
+    <system:String x:Key="TabCloseRight">关闭右侧标签页</system:String>
+    <system:String x:Key="TabCloseLeft">关闭左侧标签页</system:String>
+    <system:String x:Key="TabCloseAll">关闭所有标签页</system:String>
 </ResourceDictionary>

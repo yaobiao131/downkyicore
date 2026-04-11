@@ -59,20 +59,6 @@ namespace DownKyi.ViewModels
 
         public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
-        /// <summary>
-        /// 返回事件
-        /// </summary>
-        protected internal override void ExecuteBackSpace()
-        {
-            var parameter = new NavigationParam
-            {
-                ViewName = ParentView,
-                ParentViewName = null,
-                Parameter = null
-            };
-            EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-        }
-
         // 左侧tab点击事件
         private DelegateCommand<object>? _leftTabHeadersCommand;
 
