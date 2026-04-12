@@ -105,6 +105,7 @@
                                                 <BrushTransition Property="BorderBrush" Duration="0:0:0.12" />
                                                 <ThicknessTransition Property="Margin" Duration="0:0:0.15" />
                                                 <ThicknessTransition Property="Padding" Duration="0:0:0.15" />
+                                                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" />
                                             </Transitions>
                                         </Border.Transitions>
                                         <Grid ColumnDefinitions="*,Auto">

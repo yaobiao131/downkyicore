@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Avalonia;
+using Avalonia.Animation;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
+using Avalonia.VisualTree;
 using Avalonia.Xaml.Interactivity;
 
 namespace DownKyi.CustomAction;
 
 public record MoveTabParam(int SourceIndex, int TargetIndex);
-
 
 public class DragTabBehavior : Behavior<ListBox>
 {
@@ -25,7 +28,11 @@ public class DragTabBehavior : Behavior<ListBox>
     private ListBoxItem? _draggedItem;
     private Point _dragStartPoint;
     private int _draggedIndex = -1;
+    private bool _isDragging;
     private const double DragThreshold = 3;
+    private Transitions? _originalTransitions;
+    private ScrollViewer? _scrollViewer;
+    private List<double>? _originalCenters;
 
     protected override void OnAttached()
     {
@@ -35,9 +42,7 @@ public class DragTabBehavior : Behavior<ListBox>
         AssociatedObject.AddHandler(InputElement.PointerPressedEvent, OnPointerPressed, RoutingStrategies.Tunnel);
         AssociatedObject.AddHandler(InputElement.PointerMovedEvent, OnPointerMoved, RoutingStrategies.Tunnel);
         AssociatedObject.AddHandler(InputElement.PointerReleasedEvent, OnPointerReleased, RoutingStrategies.Tunnel);
-        AssociatedObject.AddHandler(DragDrop.DragOverEvent, OnDragOver);
-        AssociatedObject.AddHandler(DragDrop.DropEvent, OnDrop);
-        DragDrop.SetAllowDrop(AssociatedObject, true);
+        AssociatedObject.AddHandler(InputElement.PointerCaptureLostEvent, OnPointerCaptureLost, RoutingStrategies.Tunnel);
     }
 
     protected override void OnDetaching()
@@ -48,8 +53,8 @@ public class DragTabBehavior : Behavior<ListBox>
         AssociatedObject.RemoveHandler(InputElement.PointerPressedEvent, OnPointerPressed);
         AssociatedObject.RemoveHandler(InputElement.PointerMovedEvent, OnPointerMoved);
         AssociatedObject.RemoveHandler(InputElement.PointerReleasedEvent, OnPointerReleased);
-        AssociatedObject.RemoveHandler(DragDrop.DragOverEvent, OnDragOver);
-        AssociatedObject.RemoveHandler(DragDrop.DropEvent, OnDrop);
+        AssociatedObject.RemoveHandler(InputElement.PointerCaptureLostEvent, OnPointerCaptureLost);
+        ResetDragState();
     }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -68,6 +73,7 @@ public class DragTabBehavior : Behavior<ListBox>
     private void OnPointerMoved(object? sender, PointerEventArgs e)
     {
         if (_draggedItem == null || _draggedIndex < 0) return;
+
         if (!e.GetCurrentPoint(AssociatedObject).Properties.IsLeftButtonPressed)
         {
             ResetDragState();
@@ -75,45 +81,197 @@ public class DragTabBehavior : Behavior<ListBox>
         }
 
         var position = e.GetPosition(AssociatedObject);
-        if (Math.Abs(position.X - _dragStartPoint.X) <= DragThreshold &&
-            Math.Abs(position.Y - _dragStartPoint.Y) <= DragThreshold)
+
+        if (!_isDragging)
         {
-            return;
+            if (Math.Abs(position.X - _dragStartPoint.X) <= DragThreshold &&
+                Math.Abs(position.Y - _dragStartPoint.Y) <= DragThreshold)
+            {
+                return;
+            }
+
+            _isDragging = true;
+            BeginDrag();
         }
 
         e.Handled = true;
 
-        var data = new DataObject();
-        data.Set("TabIndex", _draggedIndex);
+        // 让被拖拽标签严格跟随鼠标（仅水平方向）
+        var offsetX = position.X - _dragStartPoint.X;
+        _draggedItem.RenderTransform = new TranslateTransform(offsetX, 0);
 
-        DragDrop.DoDragDrop(e, data, DragDropEffects.Move);
-        ResetDragState();
+        // 计算目标插入位置并实时让位
+        var targetIndex = CalculateTargetIndex(position);
+        if (targetIndex >= 0 && targetIndex != _draggedIndex)
+        {
+            ApplySlideTransforms(targetIndex);
+        }
+        else if (targetIndex == _draggedIndex)
+        {
+            ClearSlideTransforms();
+        }
     }
 
     private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
     {
+        if (_isDragging && _draggedItem != null && AssociatedObject != null)
+        {
+            var position = e.GetPosition(AssociatedObject);
+            var targetIndex = CalculateTargetIndex(position);
+
+            if (targetIndex >= 0 && targetIndex != _draggedIndex)
+            {
+                MoveTabCommand?.Execute(new MoveTabParam(_draggedIndex, targetIndex));
+            }
+        }
+
         ResetDragState();
     }
 
-    private void OnDragOver(object? sender, DragEventArgs e)
+    private void OnPointerCaptureLost(object? sender, PointerCaptureLostEventArgs e)
     {
-        e.DragEffects = e.Data.Contains("TabIndex") ? DragDropEffects.Move : DragDropEffects.None;
-        e.Handled = true;
+        ResetDragState();
     }
 
-    private void OnDrop(object? sender, DragEventArgs e)
+    private void BeginDrag()
     {
-        e.Handled = true;
-        if (!e.Data.Contains("TabIndex")) return;
+        if (_draggedItem == null || AssociatedObject == null) return;
 
-        var sourceIndex = e.Data.Get("TabIndex") is int idx ? idx : -1;
-        if (sourceIndex < 0 || AssociatedObject == null) return;
+        // 保存并临时清除 transitions，让被拖拽项严格跟随鼠标（无动画延迟）
+        _originalTransitions = _draggedItem.Transitions;
+        _draggedItem.Transitions = null;
 
-        var targetItem = GetItemAtPoint(e.GetPosition(AssociatedObject));
-        var targetIndex = targetItem != null ? GetItemIndex(targetItem) : -1;
-        if (targetIndex < 0 || targetIndex == sourceIndex) return;
+        _draggedItem.SetValue(Visual.ZIndexProperty, 1000);
+        _draggedItem.Opacity = 0.92;
 
-        MoveTabCommand?.Execute(new MoveTabParam(sourceIndex, targetIndex));
+        // 临时禁用祖先 ScrollViewer 的裁剪，使标签能拖到容器边缘外也不消失
+        _scrollViewer = FindAncestor<ScrollViewer>(_draggedItem);
+        if (_scrollViewer != null)
+        {
+            _scrollViewer.ClipToBounds = false;
+        }
+
+        // 缓存所有标签的原始中心点 X 坐标，避免 RenderTransform 干扰后续位置计算
+        _originalCenters = new List<double>();
+        var containers = GetOrderedContainers();
+        foreach (var container in containers)
+        {
+            var center = container.TranslatePoint(new Point(container.Bounds.Width / 2, 0), AssociatedObject);
+            _originalCenters.Add(center?.X ?? 0);
+        }
+    }
+
+    private void EndDrag()
+    {
+        if (_draggedItem == null) return;
+
+        _draggedItem.RenderTransform = null;
+        _draggedItem.Opacity = 1.0;
+        _draggedItem.SetValue(Visual.ZIndexProperty, 0);
+        _draggedItem.Transitions = _originalTransitions;
+        _originalTransitions = null;
+
+        if (_scrollViewer != null)
+        {
+            _scrollViewer.ClipToBounds = true;
+            _scrollViewer = null;
+        }
+
+        _originalCenters = null;
+    }
+
+    private int CalculateTargetIndex(Point mousePosition)
+    {
+        if (_originalCenters == null || _originalCenters.Count == 0) return 0;
+
+        int targetIndex = 0;
+        for (int i = 0; i < _originalCenters.Count; i++)
+        {
+            if (mousePosition.X > _originalCenters[i])
+            {
+                targetIndex = i + 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return Math.Clamp(targetIndex, 0, _originalCenters.Count);
+    }
+
+    private void ApplySlideTransforms(int targetIndex)
+    {
+        if (AssociatedObject == null || _draggedItem == null || _originalCenters == null) return;
+
+        var containers = GetOrderedContainers();
+        if (containers.Count == 0) return;
+
+        // 用相邻原始中心点间距作为滑动距离，更准确
+        double draggedWidth = _draggedItem.Bounds.Width;
+        if (_originalCenters.Count > 1 && _draggedIndex < _originalCenters.Count - 1)
+        {
+            draggedWidth = _originalCenters[_draggedIndex + 1] - _originalCenters[_draggedIndex];
+        }
+        else if (_originalCenters.Count > 1 && _draggedIndex > 0)
+        {
+            draggedWidth = _originalCenters[_draggedIndex] - _originalCenters[_draggedIndex - 1];
+        }
+
+        for (int i = 0; i < containers.Count; i++)
+        {
+            var container = containers[i];
+            if (container == _draggedItem) continue;
+
+            double offsetX = 0;
+
+            if (_draggedIndex < targetIndex)
+            {
+                if (i > _draggedIndex && i <= targetIndex)
+                {
+                    offsetX = -draggedWidth;
+                }
+            }
+            else
+            {
+                if (i >= targetIndex && i < _draggedIndex)
+                {
+                    offsetX = draggedWidth;
+                }
+            }
+
+            container.RenderTransform = offsetX != 0
+                ? new TranslateTransform(offsetX, 0)
+                : null;
+        }
+    }
+
+    private void ClearSlideTransforms()
+    {
+        if (AssociatedObject == null) return;
+
+        foreach (var container in GetOrderedContainers())
+        {
+            if (container != _draggedItem)
+            {
+                container.RenderTransform = null;
+            }
+        }
+    }
+
+    private List<ListBoxItem> GetOrderedContainers()
+    {
+        if (AssociatedObject == null) return new List<ListBoxItem>();
+
+        var result = new List<ListBoxItem>();
+        for (int i = 0; i < AssociatedObject.Items.Count; i++)
+        {
+            if (AssociatedObject.ContainerFromIndex(i) is ListBoxItem item)
+            {
+                result.Add(item);
+            }
+        }
+        return result;
     }
 
     private ListBoxItem? GetItemAtPoint(Point point)
@@ -141,7 +299,25 @@ public class DragTabBehavior : Behavior<ListBox>
 
     private void ResetDragState()
     {
+        if (_draggedItem != null)
+        {
+            EndDrag();
+        }
+
+        ClearSlideTransforms();
+
         _draggedItem = null;
         _draggedIndex = -1;
+        _isDragging = false;
+    }
+
+    private static T? FindAncestor<T>(Visual? visual) where T : Visual
+    {
+        while (visual != null)
+        {
+            if (visual is T target) return target;
+            visual = visual.GetVisualParent();
+        }
+        return null;
     }
 }
