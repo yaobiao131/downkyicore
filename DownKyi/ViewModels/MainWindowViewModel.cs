@@ -48,6 +48,10 @@ public class MainWindowViewModel : BindableBase
         ViewToolboxViewModel.Tag,
         ViewLoginViewModel.Tag,
         ViewMySpaceViewModel.Tag,
+        ViewMyToViewVideoViewModel.Tag,
+        ViewMyBangumiFollowViewModel.Tag,
+        ViewMyHistoryViewModel.Tag,
+        ViewMyFavoritesViewModel.Tag
     };
 
     public bool MessageVisibility
