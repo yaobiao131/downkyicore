@@ -33,6 +33,7 @@ public class DragTabBehavior : Behavior<ListBox>
     private Transitions? _originalTransitions;
     private ScrollViewer? _scrollViewer;
     private List<double>? _originalCenters;
+    private IPointer? _pointer;
 
     protected override void OnAttached()
     {
@@ -68,6 +69,8 @@ public class DragTabBehavior : Behavior<ListBox>
         _draggedItem = item;
         _dragStartPoint = e.GetPosition(AssociatedObject);
         _draggedIndex = GetItemIndex(item);
+        _pointer = e.Pointer;
+        _pointer.Capture(AssociatedObject);
     }
 
     private void OnPointerMoved(object? sender, PointerEventArgs e)
@@ -96,12 +99,25 @@ public class DragTabBehavior : Behavior<ListBox>
 
         e.Handled = true;
 
-        // 让被拖拽标签严格跟随鼠标（仅水平方向）
+        // 让被拖拽标签严格跟随鼠标（仅水平方向），并限制在可视区域内
         var offsetX = position.X - _dragStartPoint.X;
+        if (_originalCenters != null && _draggedIndex < _originalCenters.Count && AssociatedObject != null)
+        {
+            var originalCenter = _originalCenters[_draggedIndex];
+            var itemWidth = _draggedItem.Bounds.Width;
+            var containerWidth = AssociatedObject.Bounds.Width;
+
+            // 左边缘不能超出容器左边界
+            var minOffsetX = -(originalCenter - itemWidth / 2);
+            // 右边缘不能超出容器右边界
+            var maxOffsetX = containerWidth - (originalCenter + itemWidth / 2);
+
+            offsetX = Math.Clamp(offsetX, minOffsetX, maxOffsetX);
+        }
         _draggedItem.RenderTransform = new TranslateTransform(offsetX, 0);
 
         // 计算目标插入位置并实时让位
-        var targetIndex = CalculateTargetIndex(position);
+        var targetIndex = CalculateTargetIndex();
         if (targetIndex >= 0 && targetIndex != _draggedIndex)
         {
             ApplySlideTransforms(targetIndex);
@@ -116,8 +132,7 @@ public class DragTabBehavior : Behavior<ListBox>
     {
         if (_isDragging && _draggedItem != null && AssociatedObject != null)
         {
-            var position = e.GetPosition(AssociatedObject);
-            var targetIndex = CalculateTargetIndex(position);
+            var targetIndex = CalculateTargetIndex();
 
             if (targetIndex >= 0 && targetIndex != _draggedIndex)
             {
@@ -180,24 +195,44 @@ public class DragTabBehavior : Behavior<ListBox>
         _originalCenters = null;
     }
 
-    private int CalculateTargetIndex(Point mousePosition)
+    private int CalculateTargetIndex()
     {
         if (_originalCenters == null || _originalCenters.Count == 0) return 0;
 
-        int targetIndex = 0;
+        double visualCenter = 0;
+        if (_draggedItem != null && _draggedIndex >= 0)
+        {
+            var transform = _draggedItem.RenderTransform as TranslateTransform;
+            var offsetX = transform?.X ?? 0;
+            visualCenter = _originalCenters[_draggedIndex] + offsetX;
+        }
+
+        // 如果视觉中心已经过了最后一个中心点，直接返回最后一位
+        if (visualCenter >= _originalCenters[^1]) 
+        {
+            return _originalCenters.Count - 1;
+        }
+        // 如果视觉中心在第一个中心点左侧，直接返回第一位
+        if (visualCenter <= _originalCenters[0])
+        {
+            return 0;
+        }
+
+        // 寻找最接近的中心点
+        int bestIndex = 0;
+        double minDistance = double.MaxValue;
+
         for (int i = 0; i < _originalCenters.Count; i++)
         {
-            if (mousePosition.X > _originalCenters[i])
+            double dist = Math.Abs(visualCenter - _originalCenters[i]);
+            if (dist < minDistance)
             {
-                targetIndex = i + 1;
-            }
-            else
-            {
-                break;
+                minDistance = dist;
+                bestIndex = i;
             }
         }
 
-        return Math.Clamp(targetIndex, 0, _originalCenters.Count);
+        return bestIndex;
     }
 
     private void ApplySlideTransforms(int targetIndex)
@@ -309,6 +344,8 @@ public class DragTabBehavior : Behavior<ListBox>
         _draggedItem = null;
         _draggedIndex = -1;
         _isDragging = false;
+        _pointer?.Capture(null);
+        _pointer = null;
     }
 
     private static T? FindAncestor<T>(Visual? visual) where T : Visual

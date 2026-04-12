@@ -549,23 +549,20 @@ public class MainWindowViewModel : BindableBase
 
         var sourceIndex = param.SourceIndex;
         var targetIndex = param.TargetIndex;
+
         if (sourceIndex < 0 || targetIndex < 0 || sourceIndex == targetIndex) return;
         if (sourceIndex >= Tabs.Count || targetIndex >= Tabs.Count) return;
 
-        var item = Tabs[sourceIndex];
-        var wasSelected = SelectedTab == item;
+        // 获取当前是否移动的是选中的标签
+        var movingSelected = SelectedTab == Tabs[sourceIndex];
 
-        if (wasSelected)
+        if (movingSelected)
         {
-            SelectedTab = null;
+            Tabs.Move(sourceIndex, targetIndex);
         }
-
-        Tabs.RemoveAt(sourceIndex);
-        Tabs.Insert(targetIndex, item);
-
-        if (wasSelected)
+        else
         {
-            SelectedTab = item;
+            Tabs.Move(sourceIndex, targetIndex);
         }
     }
 
