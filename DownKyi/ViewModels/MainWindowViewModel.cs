@@ -411,13 +411,7 @@ public class MainWindowViewModel : BindableBase
         var index = Tabs.IndexOf(tab);
         if (index < 0) return;
 
-        if (SelectedTab == tab)
-        {
-            // 优先切换到左侧标签，如果没有则切换到右侧
-            var newIndex = index < Tabs.Count - 1 ? index : index - 1;
-        
-            SelectedTab = newIndex >= 0 ? Tabs[newIndex] : null;
-        }
+        var wasSelected = SelectedTab == tab;
 
         RemoveTabFromRegion(tab);
         Tabs.RemoveAt(index);
@@ -430,6 +424,11 @@ public class MainWindowViewModel : BindableBase
                 { "Parameter", "start" }
             };
             OpenNewTab(ViewIndexViewModel.Tag, "首页", param, true);
+        }
+        else if (wasSelected)
+        {
+            var newIndex = index < Tabs.Count ? index : Tabs.Count - 1;
+            SelectedTab = Tabs[newIndex];
         }
     }
     
@@ -554,15 +553,14 @@ public class MainWindowViewModel : BindableBase
         if (sourceIndex >= Tabs.Count || targetIndex >= Tabs.Count) return;
 
         // 获取当前是否移动的是选中的标签
-        var movingSelected = SelectedTab == Tabs[sourceIndex];
+        var tabToMove = Tabs[sourceIndex];
+        var movingSelected = SelectedTab == tabToMove;
+
+        Tabs.Move(sourceIndex, targetIndex);
 
         if (movingSelected)
         {
-            Tabs.Move(sourceIndex, targetIndex);
-        }
-        else
-        {
-            Tabs.Move(sourceIndex, targetIndex);
+            SelectedTab = tabToMove;
         }
     }
 
