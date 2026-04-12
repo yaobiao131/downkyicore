@@ -71,9 +71,7 @@
                 Background="{DynamicResource BrushBackground}"
                 BorderBrush="{DynamicResource BrushBorder}"
                 BorderThickness="0,0,0,1">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                          VerticalScrollBarVisibility="Disabled"
-                          ClipToBounds="False">
+       
                 <ListBox ItemsSource="{Binding Tabs}"
                          SelectedItem="{Binding SelectedTab}"
                          HorizontalAlignment="Left"
@@ -97,7 +95,7 @@
                                             BorderBrush="Transparent"
                                             BorderThickness="1,1,1,0"
                                             CornerRadius="10,10,0,0"
-                                            MinWidth="140"
+                                            MinWidth="60"
                                             MaxWidth="160"
                                             Margin="0,4,0,0"
                                             Padding="10,0,6,0">
@@ -210,7 +208,6 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </ScrollViewer>
         </Border>
 
         <ContentControl Grid.Row="1"
