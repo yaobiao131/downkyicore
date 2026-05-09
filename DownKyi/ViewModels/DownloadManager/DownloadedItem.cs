@@ -6,6 +6,8 @@ namespace DownKyi.ViewModels.DownloadManager;
 
 public class DownloadedItem : DownloadBaseItem
 {
+    private bool _isSelected;
+
     public DownloadedItem()
     {
         // 打开文件夹按钮
@@ -23,6 +25,12 @@ public class DownloadedItem : DownloadBaseItem
 
     // model数据
     public Downloaded Downloaded { get; set; }
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set => SetProperty(ref _isSelected, value);
+    }
 
     //  下载速度
     public string? MaxSpeedDisplay

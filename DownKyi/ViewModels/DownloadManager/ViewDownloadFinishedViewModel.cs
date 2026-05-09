@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Input;
 using DownKyi.Commands;
 using DownKyi.Core.Settings;
 using DownKyi.Events;
@@ -22,6 +24,7 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
     public const string Tag = "PageDownloadManagerDownloadFinished";
 
     private DownloadStorageService _downloadStorageService;
+    private DownloadedItem? _lastAnchorItem;
 
     #region 页面属性申明
 
@@ -31,6 +34,37 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
     {
         get => _downloadedList;
         set => SetProperty(ref _downloadedList, value);
+    }
+
+    private string? _searchText;
+
+    public string? SearchText
+    {
+        get => _searchText;
+        set
+        {
+            if (SetProperty(ref _searchText, value))
+            {
+                ApplySearch();
+            }
+        }
+    }
+
+    private bool _isAllSelected;
+
+    public bool IsAllSelected
+    {
+        get => _isAllSelected;
+        set
+        {
+            if (SetProperty(ref _isAllSelected, value))
+            {
+                foreach (var item in DownloadedList)
+                {
+                    item.IsSelected = value;
+                }
+            }
+        }
     }
 
     private int _finishedSortBy;
@@ -51,8 +85,9 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
         dialogService)
     {
         // 初始化DownloadedList
-        DownloadedList = App.DownloadedList;
+        DownloadedList = new ImmutableObservableCollection<DownloadedItem>(App.DownloadedList);
         _downloadStorageService = downloadStorageService;
+        App.DownloadedList.CollectionChanged += OnSourceCollectionChanged;
 
         var finishedSort = SettingsManager.GetInstance().GetDownloadFinishedSort();
         FinishedSortBy = finishedSort switch
@@ -63,9 +98,19 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
             _ => 0
         };
         App.SortDownloadedList(finishedSort);
+        ApplySearch();
     }
 
     #region 命令申明
+
+    private DelegateCommand? _selectAllCommand;
+    public DelegateCommand SelectAllCommand =>
+        _selectAllCommand ??= new DelegateCommand(ExecuteSelectAllCommand);
+
+    private void ExecuteSelectAllCommand()
+    {
+        IsAllSelected = !IsAllSelected;
+    }
 
     // 下载完成列表排序事件
     private DelegateCommand<object>? _finishedSortCommand;
@@ -105,6 +150,8 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
                 SettingsManager.GetInstance().SetDownloadFinishedSort(DownloadFinishedSort.DownloadAsc);
                 break;
         }
+
+        ApplySearch();
     }
 
     // 清空下载完成列表事件
@@ -228,6 +275,123 @@ public class ViewDownloadFinishedViewModel : ViewModelBase
 
         App.DownloadedList.Remove(downloadedItem);
         _downloadStorageService.RemoveDownloaded(downloadedItem);
+    }
+
+    private DelegateCommand? _deleteSelectedCommand;
+    public DelegateCommand DeleteSelectedCommand =>
+        _deleteSelectedCommand ??= new DelegateCommand(ExecuteDeleteSelectedCommand);
+
+    private async void ExecuteDeleteSelectedCommand()
+    {
+        var selectedItems = DownloadedList.Where(x => x.IsSelected).ToList();
+        if (!selectedItems.Any())
+        {
+            EventAggregator.GetEvent<MessageEvent>().Publish("请先选择要删除的记录");
+            return;
+        }
+
+        var alertService = new AlertService(DialogService);
+        var result = await alertService.ShowWarning($"确认删除选中的 {selectedItems.Count} 条记录？", 2);
+        if (result != ButtonResult.OK)
+        {
+            return;
+        }
+
+        foreach (var item in selectedItems)
+        {
+            App.DownloadedList.Remove(item);
+            _downloadStorageService.RemoveDownloaded(item);
+        }
+    }
+
+    #endregion
+
+    #region 搜索和多选
+
+    private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        ApplySearch();
+    }
+
+    private void ApplySearch()
+    {
+        var keyword = SearchText?.Trim();
+        var source = App.DownloadedList.AsEnumerable();
+
+        if (!string.IsNullOrEmpty(keyword))
+        {
+            source = source.Where(x =>
+                (!string.IsNullOrEmpty(x.MainTitle) &&
+                 x.MainTitle.Contains(keyword, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(x.Name) &&
+                 x.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        DownloadedList = new ImmutableObservableCollection<DownloadedItem>(source);
+        IsAllSelected = DownloadedList.Any() && DownloadedList.All(x => x.IsSelected);
+        _lastAnchorItem = DownloadedList.Contains(_lastAnchorItem) ? _lastAnchorItem : null;
+    }
+
+    public void HandleItemClick(DownloadedItem item, KeyModifiers modifiers)
+    {
+        if (modifiers.HasFlag(KeyModifiers.Shift))
+        {
+            SelectRange(item);
+        }
+        else if (modifiers.HasFlag(KeyModifiers.Control))
+        {
+            item.IsSelected = !item.IsSelected;
+            _lastAnchorItem = item;
+        }
+        else
+        {
+            SelectSingle(item);
+        }
+
+        IsAllSelected = DownloadedList.Any() && DownloadedList.All(x => x.IsSelected);
+    }
+
+    private void SelectRange(DownloadedItem target)
+    {
+        if (_lastAnchorItem == null)
+        {
+            SelectSingle(target);
+            return;
+        }
+
+        var start = DownloadedList.IndexOf(_lastAnchorItem);
+        var end = DownloadedList.IndexOf(target);
+        if (start == -1 || end == -1)
+        {
+            SelectSingle(target);
+            return;
+        }
+
+        if (start > end)
+        {
+            (start, end) = (end, start);
+        }
+
+        foreach (var current in DownloadedList)
+        {
+            current.IsSelected = false;
+        }
+
+        for (var i = start; i <= end; i++)
+        {
+            DownloadedList[i].IsSelected = true;
+        }
+    }
+
+    private void SelectSingle(DownloadedItem item)
+    {
+        foreach (var current in DownloadedList)
+        {
+            current.IsSelected = false;
+        }
+
+        item.IsSelected = true;
+        _lastAnchorItem = item;
     }
 
     #endregion

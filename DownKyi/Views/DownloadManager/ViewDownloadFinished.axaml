@@ -1,27 +1,41 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="DownKyi.Views.DownloadManager.ViewDownloadFinished"
+             xmlns:converter="clr-namespace:DownKyi.Converter"
              xmlns:vmdm="clr-namespace:DownKyi.ViewModels.DownloadManager"
              x:DataType="vmdm:ViewDownloadFinishedViewModel">
     <UserControl.Resources>
+        <converter:DownloadedItemSelectedBrushConverter x:Key="DownloadedItemSelectedBrushConverter" />
         <ControlTheme x:Key="DownloadedStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmdm:DownloadedItem">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
                         <Grid
+                            PointerPressed="Item_PointerPressed" Focusable="True"
                             Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}, Path=Bounds.Width}"
                             Height="70">
-                            <Grid ColumnDefinitions="70,*,auto,120,30">
+
+                            <Border
+                                Background="{Binding IsSelected, Converter={StaticResource DownloadedItemSelectedBrushConverter}}"
+                                CornerRadius="4" />
+
+                            <Grid ColumnDefinitions="30,70,*,auto,120,30">
+
+                                <CheckBox
+                                    Grid.Column="0"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsChecked="{Binding IsSelected, Mode=TwoWay}" />
 
                                 <Image
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     Width="48"
                                     Height="48"
                                     Source="{Binding ZoneImage}" />
 
                                 <!--  标题等视频信息  -->
                                 <Grid
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     Margin="0,0,10,0"
                                     HorizontalAlignment="Left" RowDefinitions="*,*">
 
@@ -71,7 +85,7 @@
                                 </Grid>
 
                                 <TextBlock
-                                    Grid.Column="2"
+                                    Grid.Column="3"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
                                     FontSize="12"
@@ -79,7 +93,7 @@
                                     Text="{Binding FinishedTime}" />
 
                                 <!--  控制面板，暂停继续删除  -->
-                                <Grid Grid.Column="3" ColumnDefinitions="*,*,*">
+                                <Grid Grid.Column="4" ColumnDefinitions="*,*,*">
 
                                     <Button
                                         Grid.Column="0"
@@ -144,12 +158,14 @@
         </ControlTheme>
     </UserControl.Resources>
     <Grid>
-        <Grid RowDefinitions="*,1,50">
+        <Grid RowDefinitions="*,1,60">
 
             <ListBox
                 Name="DownloadedList"
                 Grid.Row="0"
                 BorderThickness="0"
+                SelectionMode="Single"
+                PointerPressed="ListBox_PointerPressed"
                 ItemContainerTheme="{StaticResource DownloadedStyle}"
                 ItemsSource="{Binding DownloadedList}">
                 <ListBox.Theme>
@@ -178,7 +194,7 @@
 
             <TextBlock Grid.Row="1" Background="{DynamicResource BrushBorderTranslucent}" />
 
-            <Grid Grid.Row="2" ColumnDefinitions="*,130,110">
+            <Grid Grid.Row="2" ColumnDefinitions="*,130,220">
 
                 <StackPanel
                     Grid.Column="0"
@@ -186,6 +202,22 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
+                    <TextBox
+                        Margin="0,0,5,0"
+                        Width="220"
+                        VerticalAlignment="Center"
+                        Watermark="{DynamicResource SearchCompletedDownloads}"
+                        Text="{Binding SearchText, Mode=TwoWay}" />
+
+                    <Button Content="{DynamicResource SelectAll}"
+                            Command="{Binding SelectAllCommand}"
+                            Theme="{StaticResource BtnBorderStyle}" />
+
+                    <Button Margin="5,0,5,0"
+                            Content="{DynamicResource DeleteSelected}"
+                            Command="{Binding DeleteSelectedCommand}"
+                            Theme="{StaticResource BtnBorderStyle}" />
+
                     <TextBlock
                         VerticalAlignment="Center"
                         FontSize="14"

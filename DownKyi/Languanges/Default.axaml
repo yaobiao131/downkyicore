@@ -170,7 +170,8 @@
     <system:String x:Key="DeleteDownload">移除</system:String>
     <system:String x:Key="OpenFolder">打开文件夹</system:String>
     <system:String x:Key="OpenVideo">播放</system:String>
-    
+    <system:String x:Key="SearchCompletedDownloads">搜索已完成下载</system:String>
+	  <system:String x:Key="DeleteSelected">删除选中项</system:String>
     <!--  Settings  -->
     <system:String x:Key="PressEnterToApplySettingTip">按回车键应用设置</system:String>
     <system:String x:Key="Basic">基本</system:String>
