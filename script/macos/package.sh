@@ -1,7 +1,7 @@
 #!/bin/bash
 arch=$1
 APP_NAME="./哔哩下载姬.app"
-PUBLISH_OUTPUT_DIRECTORY="../../DownKyi/bin/Release/net8.0/osx-$arch/publish/."
+PUBLISH_OUTPUT_DIRECTORY="../../DownKyi/bin/Release/net10.0/osx-$arch/publish/."
 
 INFO_PLIST="./Info.plist"
 ICON_FILE="./logo.icns"

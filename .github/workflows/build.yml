@@ -43,7 +43,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -51,7 +51,7 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet --version 1.8.0
+          dotnet tool install -g KuiperZone.PupNet --version 1.10.0
       - name: Get Deps
         run: |
           .\ffmpeg.ps1 ${{ matrix.cpu }}
@@ -132,7 +132,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -140,7 +140,7 @@ jobs:
           path: version.txt
       - name: Install Pupnet
         run: |
-          dotnet tool install -g KuiperZone.PupNet --version 1.8.0
+          dotnet tool install -g KuiperZone.PupNet --version 1.10.0
           sudo apt-get update
           sudo apt-get install libfuse2
       - name: Get Deps
@@ -192,7 +192,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
