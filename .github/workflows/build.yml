@@ -43,7 +43,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -132,7 +132,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
@@ -192,7 +192,7 @@ jobs:
       - name: Install .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
       - name: Read Version Text
         id: version
         uses: juliangruber/read-file-action@v1
