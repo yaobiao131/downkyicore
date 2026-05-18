@@ -103,6 +103,77 @@ public class WebClientTests
     }
 
     [Fact]
+    public void CreateRequestMessage_GetParametersPreservesExistingQueryConstruction()
+    {
+        using var request = BiliWebClient.CreateRequestMessage(
+            "https://example.test/api",
+            "https://example.test/referer",
+            parameters: new Dictionary<string, object?>
+            {
+                ["keyword"] = "test-value",
+                ["empty"] = null
+            });
+
+        Assert.Equal(HttpMethod.Get, request.Method);
+        Assert.Equal("https://example.test/api?keyword=test-value&empty=", request.RequestUri?.OriginalString);
+        Assert.Equal("https://example.test/referer", request.Headers.Referrer?.AbsoluteUri);
+        Assert.Null(request.Content);
+    }
+
+    [Fact]
+    public async Task CreateRequestMessage_PostParametersCanUseFormOrJsonContent()
+    {
+        using var formRequest = BiliWebClient.CreateRequestMessage(
+            "https://example.test/api",
+            method: "POST",
+            parameters: new Dictionary<string, object?>
+            {
+                ["name"] = "fake-user",
+                ["empty"] = null
+            });
+        using var jsonRequest = BiliWebClient.CreateRequestMessage(
+            "https://example.test/api",
+            method: "POST",
+            parameters: new Dictionary<string, object?>
+            {
+                ["name"] = "fake-user"
+            },
+            json: true);
+
+        Assert.Equal("name=fake-user&empty=", await formRequest.Content!.ReadAsStringAsync());
+        Assert.Equal("application/x-www-form-urlencoded", formRequest.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("{\"name\":\"fake-user\"}", await jsonRequest.Content!.ReadAsStringAsync());
+        Assert.Equal("application/json", jsonRequest.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public void CreateStreamRequestMessage_AppliesStreamSpecificHeadersWithoutSending()
+    {
+        LoginHelper.SetLoginInfoCookiesForTests(null);
+
+        try
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(new List<DownKyiCookie>
+            {
+                new("SESSDATA", "fake-session", ".bilibili.com")
+            });
+
+            using var normalRequest = BiliWebClient.CreateStreamRequestMessage("https://example.test/video", "https://example.test/referer");
+            using var loginRequest = BiliWebClient.CreateStreamRequestMessage("https://example.test/getLogin");
+
+            Assert.Equal("https://m.bilibili.com", Assert.Single(normalRequest.Headers.GetValues("origin")));
+            Assert.Contains("SESSDATA=fake-session", Assert.Single(normalRequest.Headers.GetValues("cookie")));
+            Assert.Equal("https://example.test/referer", normalRequest.Headers.Referrer?.AbsoluteUri);
+            Assert.False(loginRequest.Headers.Contains("origin"));
+            Assert.False(loginRequest.Headers.Contains("cookie"));
+        }
+        finally
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(null);
+        }
+    }
+
+    [Fact]
     public void RequestWeb_SpiFailureDoesNotPreventNormalRequestFallback()
     {
         BiliWebClient.ResetBuvidForTests();
