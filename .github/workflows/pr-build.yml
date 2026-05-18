@@ -32,11 +32,3 @@ jobs:
 
       - name: Test
         run: dotnet test DownKyi.Core.Tests/DownKyi.Core.Tests.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: DownKyi.Core.Tests/TestResults/
-          if-no-files-found: warn
