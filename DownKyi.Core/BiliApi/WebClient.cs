@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
@@ -6,6 +7,8 @@ using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
+
+[assembly: InternalsVisibleTo("DownKyi.Core.Tests")]
 
 namespace DownKyi.Core.BiliApi;
 
@@ -161,14 +164,24 @@ public static class WebClient
 
     public static void DownloadFile(string url, string destFile, string? referer = null)
     {
+        DownloadFile(HttpClient, url, destFile, referer);
+    }
+
+    internal static void DownloadFile(HttpClient httpClient, string url, string destFile, string? referer = null)
+    {
         using var fs = File.Create(destFile);
-        using var stream = RequestStream(url, referer);
+        using var stream = RequestStream(httpClient, url, referer);
         stream.CopyTo(fs);
     }
 
     public static Stream RequestStream(string url, string? referer = null, string method = "GET")
     {
-        var request = new HttpRequestMessage(new HttpMethod(method), url);
+        return RequestStream(HttpClient, url, referer, method);
+    }
+
+    internal static Stream RequestStream(HttpClient httpClient, string url, string? referer = null, string method = "GET")
+    {
+        using var request = new HttpRequestMessage(new HttpMethod(method), url);
 
         if (referer != null)
         {
@@ -185,8 +198,79 @@ public static class WebClient
             }
         }
 
-        var response = HttpClient.Send(request);
-        response.EnsureSuccessStatusCode();
-        return response.Content.ReadAsStream();
+        var response = httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
+
+        try
+        {
+            response.EnsureSuccessStatusCode();
+            return new HttpResponseStream(response.Content.ReadAsStream(), response);
+        }
+        catch
+        {
+            response.Dispose();
+            throw;
+        }
+    }
+
+    private sealed class HttpResponseStream : Stream
+    {
+        private readonly Stream _inner;
+        private readonly HttpResponseMessage _response;
+
+        public HttpResponseStream(Stream inner, HttpResponseMessage response)
+        {
+            _inner = inner;
+            _response = response;
+        }
+
+        public override bool CanRead => _inner.CanRead;
+
+        public override bool CanSeek => _inner.CanSeek;
+
+        public override bool CanWrite => _inner.CanWrite;
+
+        public override long Length => _inner.Length;
+
+        public override long Position
+        {
+            get => _inner.Position;
+            set => _inner.Position = value;
+        }
+
+        public override void Flush()
+        {
+            _inner.Flush();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            return _inner.Read(buffer, offset, count);
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            return _inner.Seek(offset, origin);
+        }
+
+        public override void SetLength(long value)
+        {
+            _inner.SetLength(value);
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            _inner.Write(buffer, offset, count);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _inner.Dispose();
+                _response.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
