@@ -1,0 +1,34 @@
+name: PR Build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore DownKyi.sln
+
+      - name: Build
+        run: dotnet build DownKyi.sln --configuration Release --no-restore -p:ContinuousIntegrationBuild=true
+
+      - name: Test
+        run: dotnet test DownKyi.Core.Tests/DownKyi.Core.Tests.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage"

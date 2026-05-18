@@ -5,6 +5,8 @@
 
 */**/obj
 */**/bin
+TestResults/
+**/TestResults/
 
 DownKyi.Core/Binary/*
 
