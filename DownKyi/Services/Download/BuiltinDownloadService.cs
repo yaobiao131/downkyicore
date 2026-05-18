@@ -342,14 +342,15 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
         foreach (var url in urls)
         {
             var downloader = downloading.DownloadService;
+            var isFinished = false;
             var isComplete = false;
             if (downloading.DownloadService == null)
             {
                 downloader = new Downloader.DownloadService(downloadOpt);
-                downloader.DownloadFileCompleted += (_, _) =>
+                downloader.DownloadFileCompleted += (_, args) =>
                 {
-                    if (!File.Exists(Path.Combine(path, localFileName))) return;
-                    isComplete = true;
+                    isComplete = !args.Cancelled && args.Error == null && File.Exists(Path.Combine(path, localFileName));
+                    isFinished = true;
                     downloading.DownloadService = null;
                 };
                 downloader.DownloadProgressChanged += (_, args) =>
@@ -378,7 +379,7 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
             }
 
             // 阻塞当前任务，监听暂停事件
-            while (!isComplete)
+            while (!isFinished)
             {
                 CancellationToken?.ThrowIfCancellationRequested();
                 switch (downloading.Downloading.DownloadStatus)
@@ -396,7 +397,10 @@ public class BuiltinDownloadService : DownloadService, IDownloadService
                 Thread.Sleep(100);
             }
 
-            return isComplete;
+            if (isComplete)
+            {
+                return true;
+            }
         }
 
         return false;
