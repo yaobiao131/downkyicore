@@ -15,6 +15,11 @@ namespace DownKyi.Core.BiliApi;
 
 public static class WebClient
 {
+    private const string Tag = "WebClient";
+    private const string SpiUrl = "https://api.bilibili.com/x/frontend/finger/spi";
+    private const string BilibiliOrigin = "https://www.bilibili.com";
+    private const string AcceptLanguage = "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7";
+
     private static readonly HttpClient HttpClient;
     private static string? _bvuid3 = string.Empty;
     private static string? _bvuid4 = string.Empty;
@@ -57,8 +62,7 @@ public static class WebClient
         }
 
         HttpClient = new HttpClient(socketsHandler);
-        HttpClient.DefaultRequestHeaders.Add("User-Agent", SettingsManager.GetInstance().GetUserAgent());
-        HttpClient.DefaultRequestHeaders.Add("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7");
+        EnsureDefaultHeaders(HttpClient);
     }
 
     internal class SpiOrigin
@@ -74,16 +78,35 @@ public static class WebClient
         [JsonPropertyName("b_4")] public string? Bvuid4 { get; set; }
     }
 
-    private static void GetBuvid()
+    private static void GetBuvid(HttpClient httpClient)
     {
-        const string url = "https://api.bilibili.com/x/frontend/finger/spi";
-        var response = RequestWeb(url);
-        var spi = JsonSerializer.Deserialize<SpiOrigin>(response);
-        _bvuid3 = spi?.Data?.Bvuid3;
-        _bvuid4 = spi?.Data?.Bvuid4;
+        try
+        {
+            var response = RequestWeb(httpClient, SpiUrl);
+            if (string.IsNullOrWhiteSpace(response))
+            {
+                Console.PrintLine("GetBuvid()返回空响应");
+                LogManager.Error(Tag, "GetBuvid() returned an empty response.");
+                return;
+            }
+
+            var spi = JsonSerializer.Deserialize<SpiOrigin>(response);
+            _bvuid3 = spi?.Data?.Bvuid3;
+            _bvuid4 = spi?.Data?.Bvuid4;
+        }
+        catch (Exception e)
+        {
+            Console.PrintLine("GetBuvid()发生异常: {0}", e);
+            LogManager.Error(Tag, e);
+        }
     }
 
     public static string RequestWeb(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 2, bool json = false)
+    {
+        return RequestWeb(HttpClient, url, referer, method, parameters, retry, json);
+    }
+
+    internal static string RequestWeb(HttpClient httpClient, string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, int retry = 2, bool json = false)
     {
         if (retry <= 0)
         {
@@ -92,9 +115,11 @@ public static class WebClient
 
         try
         {
-            if (string.IsNullOrEmpty(_bvuid3) && url != "https://api.bilibili.com/x/frontend/finger/spi")
+            EnsureDefaultHeaders(httpClient);
+
+            if (string.IsNullOrEmpty(_bvuid3) && !IsSpiUrl(url) && !IsGetLoginUrl(url))
             {
-                GetBuvid();
+                GetBuvid(httpClient);
             }
 
             var request = new HttpRequestMessage(new HttpMethod(method), url);
@@ -104,11 +129,13 @@ public static class WebClient
                 request.Headers.Referrer = new Uri(referer);
             }
 
-            if (!url.Contains("getLogin"))
+            if (!IsGetLoginUrl(url))
             {
-                request.Headers.Add("origin", "https://www.bilibili.com");
+                request.Headers.Add("origin", BilibiliOrigin);
 
-                var cookies = LoginHelper.GetLoginInfoCookies();
+                var cookies = LoginHelper.GetLoginInfoCookies()
+                    .Select(item => new DownKyiCookie(item.Name, item.Value, item.Domain))
+                    .ToList();
 
                 if (!string.IsNullOrEmpty(_bvuid3))
                 {
@@ -144,7 +171,7 @@ public static class WebClient
                 request.RequestUri = new Uri(url);
             }
 
-            var response = HttpClient.Send(request);
+            var response = httpClient.Send(request);
             response.EnsureSuccessStatusCode();
 
             using var reader = new StreamReader(response.Content.ReadAsStream());
@@ -154,14 +181,43 @@ public static class WebClient
         {
             Console.PrintLine("RequestWeb()发生HTTP请求异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(url, referer, method, parameters, retry - 1);
+            return RequestWeb(httpClient, url, referer, method, parameters, retry - 1, json);
         }
         catch (Exception e)
         {
             Console.PrintLine("RequestWeb()发生其他异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(url, referer, method, parameters, retry - 1);
+            return RequestWeb(httpClient, url, referer, method, parameters, retry - 1, json);
         }
+    }
+
+    private static bool IsSpiUrl(string url)
+    {
+        return string.Equals(url, SpiUrl, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsGetLoginUrl(string url)
+    {
+        return url.Contains("getLogin", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void EnsureDefaultHeaders(HttpClient httpClient)
+    {
+        if (!httpClient.DefaultRequestHeaders.UserAgent.Any())
+        {
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", SettingsManager.GetInstance().GetUserAgent());
+        }
+
+        if (!httpClient.DefaultRequestHeaders.AcceptLanguage.Any())
+        {
+            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept-language", AcceptLanguage);
+        }
+    }
+
+    internal static void ResetBuvidForTests()
+    {
+        _bvuid3 = string.Empty;
+        _bvuid4 = string.Empty;
     }
 
     public static void DownloadFile(string url, string destFile, string? referer = null)
