@@ -1,4 +1,6 @@
 using System.Net;
+using DownKyi.Core.BiliApi.Login;
+using DownKyi.Core.Storage;
 using Xunit;
 using BiliWebClient = DownKyi.Core.BiliApi.WebClient;
 
@@ -6,6 +8,119 @@ namespace DownKyi.Core.Tests.BiliApi;
 
 public class WebClientTests
 {
+    [Fact]
+    public void RequestWeb_SpiBuvidRequestIncludesUserAgentAndAcceptLanguage()
+    {
+        BiliWebClient.ResetBuvidForTests();
+        var handler = new CapturingHandler(_ => JsonResponse("{\"code\":0,\"data\":{\"b_3\":\"test-buvid3\",\"b_4\":\"test-buvid4\"}}"));
+        using var httpClient = new HttpClient(handler);
+
+        BiliWebClient.RequestWeb(httpClient, "https://api.bilibili.com/x/frontend/finger/spi");
+
+        var request = Assert.Single(handler.Requests);
+        Assert.True(request.Headers.UserAgent.Any());
+        Assert.Contains(request.Headers.GetValues("accept-language"), value => value.Contains("zh-CN"));
+    }
+
+    [Fact]
+    public void RequestWeb_NormalApiRequestIncludesBuvidCookiesAfterSpiResponse()
+    {
+        BiliWebClient.ResetBuvidForTests();
+        LoginHelper.SetLoginInfoCookiesForTests(null);
+        var handler = new CapturingHandler(request =>
+            request.RequestUri?.AbsoluteUri == "https://api.bilibili.com/x/frontend/finger/spi"
+                ? JsonResponse("{\"code\":0,\"data\":{\"b_3\":\"test-buvid3\",\"b_4\":\"test-buvid4\"}}")
+                : JsonResponse("{}"));
+        using var httpClient = new HttpClient(handler);
+
+        BiliWebClient.RequestWeb(httpClient, "https://api.bilibili.com/x/web-interface/nav");
+        Assert.Equal(2, handler.Requests.Count);
+        var cookie = Assert.Single(handler.Requests[1].Headers.GetValues("cookie"));
+        Assert.Contains("buvid3=test-buvid3", cookie);
+        Assert.Contains("buvid4=test-buvid4", cookie);
+        Assert.Equal("https://www.bilibili.com", Assert.Single(handler.Requests[1].Headers.GetValues("origin")));
+    }
+
+    [Fact]
+    public void RequestWeb_NormalApiRequestKeepsLoginCookiesWithBuvidCookies()
+    {
+        BiliWebClient.ResetBuvidForTests();
+        LoginHelper.SetLoginInfoCookiesForTests(null);
+
+        try
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(new List<DownKyiCookie>
+            {
+                new("SESSDATA", "fake-session", ".bilibili.com"),
+                new("bili_jct", "fake-jct", ".bilibili.com")
+            });
+
+            var handler = new CapturingHandler(request =>
+                request.RequestUri?.AbsoluteUri == "https://api.bilibili.com/x/frontend/finger/spi"
+                    ? JsonResponse("{\"code\":0,\"data\":{\"b_3\":\"test-buvid3\",\"b_4\":\"test-buvid4\"}}")
+                    : JsonResponse("{}"));
+            using var httpClient = new HttpClient(handler);
+
+            BiliWebClient.RequestWeb(httpClient, "https://api.bilibili.com/x/web-interface/nav");
+            var cookie = Assert.Single(handler.Requests[1].Headers.GetValues("cookie"));
+            Assert.Contains("SESSDATA=fake-session", cookie);
+            Assert.Contains("bili_jct=fake-jct", cookie);
+            Assert.Contains("buvid3=test-buvid3", cookie);
+            Assert.Contains("buvid4=test-buvid4", cookie);
+        }
+        finally
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(null);
+        }
+    }
+
+    [Fact]
+    public void RequestWeb_GetLoginUrlDoesNotReceiveCookieOrOriginInjection()
+    {
+        BiliWebClient.ResetBuvidForTests();
+        LoginHelper.SetLoginInfoCookiesForTests(null);
+
+        try
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(new List<DownKyiCookie>
+            {
+                new("SESSDATA", "fake-session", ".bilibili.com")
+            });
+
+            var handler = new CapturingHandler(_ => JsonResponse("{}"));
+            using var httpClient = new HttpClient(handler);
+
+            BiliWebClient.RequestWeb(httpClient, "https://example.test/getLogin");
+
+            var request = Assert.Single(handler.Requests);
+            Assert.False(request.Headers.Contains("cookie"));
+            Assert.False(request.Headers.Contains("origin"));
+        }
+        finally
+        {
+            LoginHelper.SetLoginInfoCookiesForTests(null);
+        }
+    }
+
+    [Fact]
+    public void RequestWeb_SpiFailureDoesNotPreventNormalRequestFallback()
+    {
+        BiliWebClient.ResetBuvidForTests();
+        LoginHelper.SetLoginInfoCookiesForTests(null);
+        var handler = new CapturingHandler(request =>
+            request.RequestUri?.AbsoluteUri == "https://api.bilibili.com/x/frontend/finger/spi"
+                ? new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = new StringContent("failure") }
+                : JsonResponse("normal-response"));
+        using var httpClient = new HttpClient(handler);
+
+        var response = BiliWebClient.RequestWeb(httpClient, "https://api.bilibili.com/x/web-interface/nav");
+        Assert.Equal("normal-response", response);
+        Assert.Equal(3, handler.Requests.Count);
+        Assert.Equal("https://api.bilibili.com/x/web-interface/nav", handler.Requests[2].RequestUri?.AbsoluteUri);
+        Assert.False(handler.Requests[2].Headers.Contains("cookie"));
+        Assert.Equal("https://www.bilibili.com", Assert.Single(handler.Requests[2].Headers.GetValues("origin")));
+    }
+
     [Fact]
     public void RequestStream_ReturnsReadableStreamThatRemainsValidAfterReturn()
     {
@@ -137,6 +252,51 @@ public class WebClientTests
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return Task.FromResult(_response);
+        }
+    }
+
+
+    private static HttpResponseMessage JsonResponse(string content)
+    {
+        return new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(content)
+        };
+    }
+
+    private sealed class CapturingHandler : HttpMessageHandler
+    {
+        private readonly Func<HttpRequestMessage, HttpResponseMessage> _responseFactory;
+
+        public CapturingHandler(Func<HttpRequestMessage, HttpResponseMessage> responseFactory)
+        {
+            _responseFactory = responseFactory;
+        }
+
+        public List<HttpRequestMessage> Requests { get; } = new();
+
+        protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Requests.Add(CloneRequest(request));
+            return _responseFactory(request);
+        }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            Requests.Add(CloneRequest(request));
+            return Task.FromResult(_responseFactory(request));
+        }
+
+        private static HttpRequestMessage CloneRequest(HttpRequestMessage request)
+        {
+            var clone = new HttpRequestMessage(request.Method, request.RequestUri);
+
+            foreach (var header in request.Headers)
+            {
+                clone.Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
+
+            return clone;
         }
     }
 

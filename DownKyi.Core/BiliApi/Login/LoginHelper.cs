@@ -35,6 +35,22 @@ public static class LoginHelper
         }
     }
 
+    internal static void SetLoginInfoCookiesForTests(List<DownKyiCookie>? cookies)
+    {
+        CacheLock.EnterWriteLock();
+        try
+        {
+            _cachedCookies = cookies?.Select(cookie => new DownKyiCookie(cookie.Name, HttpUtility.UrlEncode(cookie.Value), cookie.Domain)).ToList();
+            _cachedCookieString = _cachedCookies is { Count: > 0 }
+                ? string.Join("; ", _cachedCookies.Select(item => $"{item.Name}={item.Value}"))
+                : "";
+        }
+        finally
+        {
+            CacheLock.ExitWriteLock();
+        }
+    }
+
     /// <summary>
     /// 保存登录的cookies到文件
     /// </summary>
