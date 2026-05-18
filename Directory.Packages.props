@@ -12,9 +12,13 @@
     <PackageVersion Include="Prism.DryIoc.Avalonia" Version="8.1.97.11073" />
     <PackageVersion Include="FFMpegCore" Version="5.4.0" />
     <PackageVersion Include="Google.Protobuf" Version="3.34.1" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="Microsoft.Data.Sqlite.Core" Version="10.0.7" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="QRCoder" Version="1.8.0" />
     <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlcipher" Version="2.1.11" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
 </Project>
