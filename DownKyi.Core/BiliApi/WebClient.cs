@@ -242,9 +242,34 @@ public static class WebClient
             _inner.Flush();
         }
 
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+            return _inner.FlushAsync(cancellationToken);
+        }
+
         public override int Read(byte[] buffer, int offset, int count)
         {
             return _inner.Read(buffer, offset, count);
+        }
+
+        public override int Read(Span<byte> buffer)
+        {
+            return _inner.Read(buffer);
+        }
+
+        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return _inner.ReadAsync(buffer, offset, count, cancellationToken);
+        }
+
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            return _inner.ReadAsync(buffer, cancellationToken);
+        }
+
+        public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
+        {
+            return _inner.CopyToAsync(destination, bufferSize, cancellationToken);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -260,6 +285,20 @@ public static class WebClient
         public override void Write(byte[] buffer, int offset, int count)
         {
             _inner.Write(buffer, offset, count);
+        }
+
+        public override async ValueTask DisposeAsync()
+        {
+            try
+            {
+                await _inner.DisposeAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                _response.Dispose();
+            }
+
+            await base.DisposeAsync().ConfigureAwait(false);
         }
 
         protected override void Dispose(bool disposing)

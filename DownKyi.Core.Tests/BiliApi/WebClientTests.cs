@@ -47,6 +47,29 @@ public class WebClientTests
     }
 
     [Fact]
+    public async Task RequestStream_CopyToAsyncCopiesContentAndDisposeAsyncDisposesOwnedHttpResponse()
+    {
+        var payload = CreatePayload(32 * 1024);
+        var contentStream = new TrackingStream(payload);
+        var response = new TrackingResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StreamContent(contentStream)
+        };
+        using var httpClient = new HttpClient(new StaticResponseHandler(response));
+
+        var stream = BiliWebClient.RequestStream(httpClient, "https://example.test/getLogin");
+        await using var destination = new MemoryStream();
+
+        await stream.CopyToAsync(destination);
+        await stream.DisposeAsync();
+
+        Assert.Equal(payload, destination.ToArray());
+        Assert.Equal(payload.Length, contentStream.TotalBytesRead);
+        Assert.True(contentStream.IsDisposed);
+        Assert.True(response.IsDisposed);
+    }
+
+    [Fact]
     public void DownloadFile_WritesResponseContentToDisk()
     {
         var payload = CreatePayload(64 * 1024);
@@ -171,6 +194,27 @@ public class WebClientTests
             return read;
         }
 
+        public override int Read(Span<byte> buffer)
+        {
+            var read = _inner.Read(buffer);
+            TotalBytesRead += read;
+            return read;
+        }
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            var read = await _inner.ReadAsync(buffer, offset, count, cancellationToken);
+            TotalBytesRead += read;
+            return read;
+        }
+
+        public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
+        {
+            var read = await _inner.ReadAsync(buffer, cancellationToken);
+            TotalBytesRead += read;
+            return read;
+        }
+
         public override long Seek(long offset, SeekOrigin origin)
         {
             return _inner.Seek(offset, origin);
@@ -184,6 +228,13 @@ public class WebClientTests
         public override void Write(byte[] buffer, int offset, int count)
         {
             _inner.Write(buffer, offset, count);
+        }
+
+        public override async ValueTask DisposeAsync()
+        {
+            IsDisposed = true;
+            await _inner.DisposeAsync();
+            await base.DisposeAsync();
         }
 
         protected override void Dispose(bool disposing)
