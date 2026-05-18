@@ -7,6 +7,7 @@ using DownKyi.Core.BiliApi.Login;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Settings;
 using DownKyi.Core.Storage;
+using Console = DownKyi.Core.Utils.Debugging.Console;
 
 [assembly: InternalsVisibleTo("DownKyi.Core.Tests")]
 
@@ -48,9 +49,10 @@ public static class WebClient
                 {
                     socketsHandler.UseProxy = false;
                     socketsHandler.Proxy = null;
-                    Console.WriteLine(e);
+                    Console.PrintLine("WebClient初始化自定义代理发生异常: {0}", e);
+                    LogManager.Error("WebClient", e);
                 }
-            } 
+            }
                 break;
         }
 
@@ -150,13 +152,13 @@ public static class WebClient
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine("RequestWeb()发生HTTP请求异常: {0}", e);
+            Console.PrintLine("RequestWeb()发生HTTP请求异常: {0}", e);
             LogManager.Error(e);
             return RequestWeb(url, referer, method, parameters, retry - 1);
         }
         catch (Exception e)
         {
-            Console.WriteLine("RequestWeb()发生其他异常: {0}", e);
+            Console.PrintLine("RequestWeb()发生其他异常: {0}", e);
             LogManager.Error(e);
             return RequestWeb(url, referer, method, parameters, retry - 1);
         }
@@ -205,8 +207,10 @@ public static class WebClient
             response.EnsureSuccessStatusCode();
             return new HttpResponseStream(response.Content.ReadAsStream(), response);
         }
-        catch
+        catch (Exception e)
         {
+            Console.PrintLine("RequestStream()发生异常: {0}", e);
+            LogManager.Error("RequestStream()", e);
             response.Dispose();
             throw;
         }
