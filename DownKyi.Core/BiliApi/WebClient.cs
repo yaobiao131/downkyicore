@@ -113,82 +113,129 @@ public static class WebClient
             return "";
         }
 
+        var retryUrl = url;
+
         try
         {
-            EnsureDefaultHeaders(httpClient);
+            PrepareHttpClientForRequest(httpClient);
+            EnsureBuvidForRequest(httpClient, url);
 
-            if (string.IsNullOrEmpty(_bvuid3) && !IsSpiUrl(url) && !IsGetLoginUrl(url))
-            {
-                GetBuvid(httpClient);
-            }
+            using var request = CreateRequestMessage(url, referer, method, parameters, json);
+            retryUrl = CreateRequestUrl(url, method, parameters);
+            ApplyBiliRequestHeaders(request, url);
 
-            var request = new HttpRequestMessage(new HttpMethod(method), url);
-
-            if (referer != null)
-            {
-                request.Headers.Referrer = new Uri(referer);
-            }
-
-            if (!IsGetLoginUrl(url))
-            {
-                request.Headers.Add("origin", BilibiliOrigin);
-
-                var cookies = LoginHelper.GetLoginInfoCookies()
-                    .Select(item => new DownKyiCookie(item.Name, item.Value, item.Domain))
-                    .ToList();
-
-                if (!string.IsNullOrEmpty(_bvuid3))
-                {
-                    cookies.Add(new DownKyiCookie("buvid3", HttpUtility.UrlEncode(_bvuid3)));
-                }
-
-                if (!string.IsNullOrEmpty(_bvuid4))
-                {
-                    cookies.Add(new DownKyiCookie("buvid4", HttpUtility.UrlEncode(_bvuid4)));
-                }
-
-                if (cookies.Count > 0)
-                {
-                    request.Headers.Add("cookie", string.Join("; ", cookies.Select(item => $"{item.Name}={item.Value}")));
-                }
-            }
-
-            if (method == "POST" && parameters != null)
-            {
-                if (json)
-                {
-                    request.Content = new StringContent(JsonSerializer.Serialize(parameters), System.Text.Encoding.UTF8, "application/json");
-                }
-                else
-                {
-                    request.Content = new FormUrlEncodedContent(parameters.Select(item => new KeyValuePair<string, string>(item.Key, item.Value?.ToString() ?? "")));
-                }
-            }
-            else if (parameters != null)
-            {
-                var query = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-                url = $"{url}?{query}";
-                request.RequestUri = new Uri(url);
-            }
-
-            var response = httpClient.Send(request);
-            response.EnsureSuccessStatusCode();
-
-            using var reader = new StreamReader(response.Content.ReadAsStream());
-            return reader.ReadToEnd();
+            return SendRequestWeb(httpClient, request);
         }
         catch (HttpRequestException e)
         {
             Console.PrintLine("RequestWeb()发生HTTP请求异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(httpClient, url, referer, method, parameters, retry - 1, json);
+            return RequestWeb(httpClient, retryUrl, referer, method, parameters, retry - 1, json);
         }
         catch (Exception e)
         {
             Console.PrintLine("RequestWeb()发生其他异常: {0}", e);
             LogManager.Error(e);
-            return RequestWeb(httpClient, url, referer, method, parameters, retry - 1, json);
+            return RequestWeb(httpClient, retryUrl, referer, method, parameters, retry - 1, json);
         }
+    }
+
+    private static void PrepareHttpClientForRequest(HttpClient httpClient)
+    {
+        EnsureDefaultHeaders(httpClient);
+    }
+
+    private static void EnsureBuvidForRequest(HttpClient httpClient, string url)
+    {
+        if (string.IsNullOrEmpty(_bvuid3) && !IsSpiUrl(url) && !IsGetLoginUrl(url))
+        {
+            GetBuvid(httpClient);
+        }
+    }
+
+    internal static HttpRequestMessage CreateRequestMessage(string url, string? referer = null, string method = "GET", Dictionary<string, object?>? parameters = null, bool json = false)
+    {
+        var request = new HttpRequestMessage(new HttpMethod(method), CreateRequestUri(url, method, parameters));
+        ApplyReferer(request, referer);
+
+        if (method == "POST" && parameters != null)
+        {
+            request.Content = CreatePostContent(parameters, json);
+        }
+
+        return request;
+    }
+
+    private static Uri CreateRequestUri(string url, string method, Dictionary<string, object?>? parameters)
+    {
+        return new Uri(CreateRequestUrl(url, method, parameters));
+    }
+
+    private static string CreateRequestUrl(string url, string method, Dictionary<string, object?>? parameters)
+    {
+        if (method == "POST" || parameters == null)
+        {
+            return url;
+        }
+
+        var query = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+        return $"{url}?{query}";
+    }
+
+    private static HttpContent CreatePostContent(Dictionary<string, object?> parameters, bool json)
+    {
+        if (json)
+        {
+            return new StringContent(JsonSerializer.Serialize(parameters), System.Text.Encoding.UTF8, "application/json");
+        }
+
+        return new FormUrlEncodedContent(parameters.Select(item => new KeyValuePair<string, string>(item.Key, item.Value?.ToString() ?? "")));
+    }
+
+    private static void ApplyReferer(HttpRequestMessage request, string? referer)
+    {
+        if (referer != null)
+        {
+            request.Headers.Referrer = new Uri(referer);
+        }
+    }
+
+    internal static void ApplyBiliRequestHeaders(HttpRequestMessage request, string url)
+    {
+        if (IsGetLoginUrl(url))
+        {
+            return;
+        }
+
+        request.Headers.Add("origin", BilibiliOrigin);
+
+        var cookies = LoginHelper.GetLoginInfoCookies()
+            .Select(item => new DownKyiCookie(item.Name, item.Value, item.Domain))
+            .ToList();
+
+        if (!string.IsNullOrEmpty(_bvuid3))
+        {
+            cookies.Add(new DownKyiCookie("buvid3", HttpUtility.UrlEncode(_bvuid3)));
+        }
+
+        if (!string.IsNullOrEmpty(_bvuid4))
+        {
+            cookies.Add(new DownKyiCookie("buvid4", HttpUtility.UrlEncode(_bvuid4)));
+        }
+
+        if (cookies.Count > 0)
+        {
+            request.Headers.Add("cookie", string.Join("; ", cookies.Select(item => $"{item.Name}={item.Value}")));
+        }
+    }
+
+    internal static string SendRequestWeb(HttpClient httpClient, HttpRequestMessage request)
+    {
+        using var response = httpClient.Send(request);
+        response.EnsureSuccessStatusCode();
+
+        using var reader = new StreamReader(response.Content.ReadAsStream());
+        return reader.ReadToEnd();
     }
 
     private static bool IsSpiUrl(string url)
@@ -239,24 +286,8 @@ public static class WebClient
 
     internal static Stream RequestStream(HttpClient httpClient, string url, string? referer = null, string method = "GET")
     {
-        using var request = new HttpRequestMessage(new HttpMethod(method), url);
-
-        if (referer != null)
-        {
-            request.Headers.Referrer = new Uri(referer);
-        }
-
-        if (!url.Contains("getLogin"))
-        {
-            request.Headers.Add("origin", "https://m.bilibili.com");
-            var cookies = LoginHelper.GetLoginInfoCookiesString();
-            if (cookies is not "")
-            {
-                request.Headers.Add("cookie", cookies);
-            }
-        }
-
-        var response = httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
+        using var request = CreateStreamRequestMessage(url, referer, method);
+        var response = SendRequestStream(httpClient, request);
 
         try
         {
@@ -270,6 +301,34 @@ public static class WebClient
             response.Dispose();
             throw;
         }
+    }
+
+    internal static HttpRequestMessage CreateStreamRequestMessage(string url, string? referer = null, string method = "GET")
+    {
+        var request = new HttpRequestMessage(new HttpMethod(method), url);
+        ApplyReferer(request, referer);
+        ApplyStreamRequestHeaders(request, url);
+        return request;
+    }
+
+    internal static void ApplyStreamRequestHeaders(HttpRequestMessage request, string url)
+    {
+        if (url.Contains("getLogin"))
+        {
+            return;
+        }
+
+        request.Headers.Add("origin", "https://m.bilibili.com");
+        var cookies = LoginHelper.GetLoginInfoCookiesString();
+        if (cookies is not "")
+        {
+            request.Headers.Add("cookie", cookies);
+        }
+    }
+
+    internal static HttpResponseMessage SendRequestStream(HttpClient httpClient, HttpRequestMessage request)
+    {
+        return httpClient.Send(request, HttpCompletionOption.ResponseHeadersRead);
     }
 
     private sealed class HttpResponseStream : Stream
