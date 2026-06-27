@@ -36,6 +36,16 @@ public static class LoginHelper
     }
 
     /// <summary>
+    /// 创建cookies的独立副本，避免调用方修改缓存内容
+    /// </summary>
+    /// <param name="cookies"></param>
+    /// <returns></returns>
+    private static List<DownKyiCookie> CloneCookies(IEnumerable<DownKyiCookie> cookies)
+    {
+        return cookies.Select(cookie => new DownKyiCookie(cookie.Name, cookie.Value, cookie.Domain)).ToList();
+    }
+
+    /// <summary>
     /// 保存登录的cookies到文件
     /// </summary>
     /// <param name="url"></param>
@@ -93,7 +103,7 @@ public static class LoginHelper
     }
 
     /// <summary>
-    /// 获得登录的cookies，结果会被缓存到内存中，直到下次写操作使缓存失效
+    /// 获得登录的cookies，缓存内容会以独立快照返回，直到下次写操作使缓存失效
     /// </summary>
     /// <returns></returns>
     public static List<DownKyiCookie> GetLoginInfoCookies()
@@ -104,7 +114,7 @@ public static class LoginHelper
         {
             if (_cachedCookies != null)
             {
-                return _cachedCookies;
+                return CloneCookies(_cachedCookies);
             }
         }
         finally
@@ -119,7 +129,7 @@ public static class LoginHelper
             // 双重检查：可能其他线程已完成加载
             if (_cachedCookies != null)
             {
-                return _cachedCookies;
+                return CloneCookies(_cachedCookies);
             }
 
             if (!File.Exists(LocalLoginInfo))
@@ -151,7 +161,7 @@ public static class LoginHelper
                 ? string.Join("; ", _cachedCookies.Select(item => $"{item.Name}={item.Value}"))
                 : "";
 
-            return _cachedCookies;
+            return CloneCookies(_cachedCookies);
         }
         finally
         {
