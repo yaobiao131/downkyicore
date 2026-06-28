@@ -28,14 +28,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private bool _loading;
 
     public bool Loading
@@ -189,10 +181,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
 
         #region 属性初始化
 
-        // 返回按钮
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 初始化loading
         Loading = true;
 
@@ -205,26 +193,7 @@ public class ViewUserSpaceViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 左侧tab点击事件
     private DelegateCommand<object>? _tabLeftBannersCommand;
 
@@ -247,16 +216,17 @@ public class ViewUserSpaceViewModel : ViewModelBase
             { "mid", mid },
         };
 
+        var manager = ScopedRegionManager ?? _regionManager;
         switch (banner.Id)
         {
             case 0: // 投稿
-                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
+                manager.RequestNavigate("UserSpaceContentRegion", ViewArchiveViewModel.Tag, param);
                 break;
             case 1: // 频道（弃用）
-                _regionManager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
+                manager.RequestNavigate("UserSpaceContentRegion", ViewChannelViewModel.Tag, param);
                 break;
             case 2: // 合集和列表
-                _regionManager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
+                manager.RequestNavigate("UserSpaceContentRegion", UserSpace.ViewSeasonsSeriesViewModel.Tag,
                     param);
                 break;
         }
@@ -308,7 +278,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
     private void InitView()
     {
         TopNavigationBg = "#00FFFFFF"; // 透明
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
         Background = null;
 
         Header = null;
@@ -325,7 +294,8 @@ public class ViewUserSpaceViewModel : ViewModelBase
         SelectedRightBanner = -1;
 
         // 将内容置空，使其不指向任何页面
-        _regionManager.RequestNavigate("UserSpaceContentRegion", "");
+        var manager = ScopedRegionManager ?? _regionManager;
+        manager.RequestNavigate("UserSpaceContentRegion", "");
 
         ContentVisibility = false;
         ViewVisibility = false;
@@ -403,7 +373,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
         if (isNoData)
         {
             TopNavigationBg = "#00FFFFFF"; // 透明
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
             Background = null;
 
             ViewVisibility = false;
@@ -419,8 +388,6 @@ public class ViewUserSpaceViewModel : ViewModelBase
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
             // 等级
             Level = levelUri == null ? null : ImageHelper.LoadFromResource(levelUri);
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
             TopNavigationBg = DictionaryResource.GetColor("ColorMask100");
             Background = toutuUri;
 

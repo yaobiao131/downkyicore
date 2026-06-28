@@ -26,8 +26,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
 {
     public const string Tag = "PageMyHistory";
 
-    private CancellationTokenSource? _tokenSource;
-
     // 每页视频数量，暂时在此写死，以后在设置中增加选项
     private const int VideoNumberInPage = 30;
 
@@ -39,14 +37,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
     {
         get => _pageName;
         set => SetProperty(ref _pageName, value);
-    }
-
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
     }
 
     private VectorImage _downloadManage;
@@ -119,9 +109,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
         LoadingVisibility = false;
         NoDataVisibility = false;
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
@@ -134,35 +121,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-    
- 
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        InitView();
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 
@@ -378,8 +336,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
     /// </summary>
     private void InitView()
     {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
         DownloadManage.Width = 24;
@@ -402,8 +358,6 @@ public class ViewMyHistoryViewModel : ViewModelBase
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;

@@ -70,14 +70,6 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         set => SetProperty(ref _noDataVisibility, value);
     }
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
@@ -140,9 +132,6 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         LoadingVisibility = false;
         NoDataVisibility = false;
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
@@ -155,30 +144,6 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
-        // 结束任务
-        tokenSource?.Cancel();
-
-        NavigationParam parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
 
     // 前往下载管理页面
     private DelegateCommand _downloadManagerCommand;
@@ -623,6 +588,12 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
         IsEnabled = true;
     }
 
+    public override void OnTabClosed()
+    {
+        tokenSource?.Cancel();
+        base.OnTabClosed();
+    }
+
     /// <summary>
     /// 导航到VideoDetail页面时执行
     /// </summary>
@@ -630,8 +601,6 @@ public class ViewSeasonsSeriesViewModel : ViewModelBase
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
         base.OnNavigatedTo(navigationContext);
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;

@@ -29,14 +29,6 @@ public class ViewMySpaceViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private VectorImage _logout;
 
     public VectorImage Logout
@@ -291,10 +283,6 @@ public class ViewMySpaceViewModel : ViewModelBase
     {
         #region 属性初始化
 
-        // 返回按钮
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 退出登录按钮
         Logout = NavigationIcon.Instance().Logout;
         Logout.Fill = DictionaryResource.GetColor("ColorTextDark");
@@ -321,29 +309,7 @@ public class ViewMySpaceViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 退出登录事件
     private DelegateCommand? _logoutCommand;
 
@@ -453,7 +419,6 @@ public class ViewMySpaceViewModel : ViewModelBase
     private void InitView()
     {
         TopNavigationBg = "#00FFFFFF"; // 透明
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
         Logout.Fill = DictionaryResource.GetColor("ColorTextDark");
         Background = null;
 
@@ -620,7 +585,6 @@ public class ViewMySpaceViewModel : ViewModelBase
         if (isNoData)
         {
             TopNavigationBg = "#00FFFFFF"; // 透明
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
             Logout.Fill = DictionaryResource.GetColor("ColorTextDark");
             Background = null;
 
@@ -637,8 +601,6 @@ public class ViewMySpaceViewModel : ViewModelBase
             Sex = sexUri == null ? null : ImageHelper.LoadFromResource(sexUri);
             // 等级
             Level = levelUri == null ? null : ImageHelper.LoadFromResource(levelUri);
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
             Logout.Fill = DictionaryResource.GetColor("ColorText");
             TopNavigationBg = DictionaryResource.GetColor("ColorMask100");
             Background = toutuUri ?? "";
@@ -675,6 +637,12 @@ public class ViewMySpaceViewModel : ViewModelBase
             // 黑名单数
             StatusList[3].Subtitle = relationStat.Black.ToString();
         });
+    }
+
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
     }
 
     /// <summary>

@@ -13,6 +13,15 @@ public class ViewModelBase : BindableBase, INavigationAware
     protected IDialogService? DialogService;
     protected IRegionNavigationJournal? Journal;
     protected string ParentView = string.Empty;
+    protected string ParentNavigationKey = string.Empty;
+    protected string NavigationKey = string.Empty;
+
+    public IRegionManager? ScopedRegionManager { get; private set; }
+
+    public void SetScopedRegionManager(IRegionManager regionManager)
+    {
+        ScopedRegionManager = regionManager;
+    }
 
     public ViewModelBase(IEventAggregator eventAggregator)
     {
@@ -24,6 +33,7 @@ public class ViewModelBase : BindableBase, INavigationAware
         EventAggregator = eventAggregator;
         DialogService = dialogService;
     }
+    
 
     public virtual void OnNavigatedTo(NavigationContext navigationContext)
     {
@@ -33,19 +43,44 @@ public class ViewModelBase : BindableBase, INavigationAware
         {
             ParentView = viewName;
         }
+
+        var parentKey = navigationContext.Parameters.GetValue<string>("ParentNavigationKey");
+        if (parentKey != null)
+        {
+            ParentNavigationKey = parentKey;
+        }
+
+        var navKey = navigationContext.Parameters.GetValue<string>("NavigationKey");
+        if (navKey != null)
+        {
+            NavigationKey = navKey;
+        }
     }
     
     protected internal virtual void ExecuteBackSpace()
     {
-      
+        var parameter = new Events.NavigationParam
+        {
+            ViewName = ParentView,
+            ParentViewName = null,
+            Parameter = null,
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey
+        };
+        EventAggregator.GetEvent<Events.NavigationEvent>().Publish(parameter);
     }
 
     public bool IsNavigationTarget(NavigationContext navigationContext)
     {
-        return true;
+        var requestedKey = navigationContext.Parameters.GetValue<string>("NavigationKey");
+        return string.IsNullOrEmpty(NavigationKey) || NavigationKey == requestedKey;
     }
 
     public virtual void OnNavigatedFrom(NavigationContext navigationContext)
+    {
+    }
+
+    public virtual void OnTabClosed()
     {
     }
 

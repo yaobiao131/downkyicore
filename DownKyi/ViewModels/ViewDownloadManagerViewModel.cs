@@ -61,25 +61,6 @@ public class ViewDownloadManagerViewModel : ViewModelBase
 
     #region 命令申明
 
-// 返回事件
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
     // 左侧tab点击事件
     private DelegateCommand<object>? _leftTabHeadersCommand;
 
@@ -101,10 +82,10 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         switch (tabHeader.Id)
         {
             case 0:
-                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, param);
                 break;
             case 1:
-                _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadFinishedViewModel.Tag, param);
                 break;
             default:
                 break;
@@ -124,6 +105,6 @@ public class ViewDownloadManagerViewModel : ViewModelBase
         //// 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() => { _regionManager.RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
+        PropertyChangeAsync(() => { (ScopedRegionManager ?? _regionManager).RequestNavigate("DownloadManagerContentRegion", ViewDownloadingViewModel.Tag, new NavigationParameters()); });
     }
 }

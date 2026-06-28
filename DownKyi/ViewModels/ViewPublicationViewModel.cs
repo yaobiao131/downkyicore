@@ -70,14 +70,6 @@ namespace DownKyi.ViewModels
             set => SetProperty(ref _noDataVisibility, value);
         }
 
-        private VectorImage _arrowBack;
-
-        public VectorImage ArrowBack
-        {
-            get => _arrowBack;
-            set => SetProperty(ref _arrowBack, value);
-        }
-
         private VectorImage _downloadManage;
 
         public VectorImage DownloadManage
@@ -148,9 +140,6 @@ namespace DownKyi.ViewModels
             LoadingVisibility = false;
             NoDataVisibility = false;
 
-            ArrowBack = NavigationIcon.Instance().ArrowBack;
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
             // 下载管理按钮
             DownloadManage = ButtonIcon.Instance().DownloadManage;
             DownloadManage.Height = 24;
@@ -164,31 +153,6 @@ namespace DownKyi.ViewModels
         }
 
         #region 命令申明
-
-        // 返回事件
-        private DelegateCommand _backSpaceCommand;
-
-        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-        /// <summary>
-        /// 返回事件
-        /// </summary>
-        protected internal override void ExecuteBackSpace()
-        {
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
-            // 结束任务
-            _tokenSource?.Cancel();
-            _tokenSource?.Dispose();
-            _tokenSource = null;
-            var parameter = new NavigationParam
-            {
-                ViewName = ParentView,
-                ParentViewName = null,
-                Parameter = null
-            };
-            EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-        }
 
         // 前往下载管理页面
         private DelegateCommand _downloadManagerCommand;
@@ -480,8 +444,6 @@ namespace DownKyi.ViewModels
         /// </summary>
         private void InitView()
         {
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
             DownloadManage = ButtonIcon.Instance().DownloadManage;
             DownloadManage.Height = 24;
             DownloadManage.Width = 24;
@@ -491,6 +453,12 @@ namespace DownKyi.ViewModels
             Medias.Clear();
             SelectTabId = -1;
             IsSelectAll = false;
+        }
+
+        public override void OnTabClosed()
+        {
+            _tokenSource?.Cancel();
+            base.OnTabClosed();
         }
 
         /// <summary>

@@ -144,26 +144,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 
@@ -317,7 +298,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
     /// </summary>
     private void ExecuteUpperCommand()
     {
-        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid);
+        NavigateToView.NavigateToViewUserSpace(EventAggregator, Tag, VideoInfoView.UpperMid, VideoInfoView.UpName);
     }
 
     // 视频章节选择事件
@@ -678,6 +659,16 @@ public class ViewVideoDetailViewModel : ViewModelBase
             LoadingVisibility = false;
             ContentVisibility = true;
             NoDataVisibility = false;
+        }
+
+        if (!string.IsNullOrWhiteSpace(VideoInfoView.Title))
+        {
+            var rawTitle = VideoInfoView.Title.Trim();
+            EventAggregator.GetEvent<TabTitleUpdateEvent>().Publish(new TabTitleUpdateParam
+            {
+                NavigationKey = NavigationKey,
+                Title = rawTitle
+            });
         }
 
         // 获取视频列表

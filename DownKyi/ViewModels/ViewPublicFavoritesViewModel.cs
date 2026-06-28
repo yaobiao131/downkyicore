@@ -34,14 +34,6 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         set => SetProperty(ref _pageName, value);
     }
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
@@ -141,8 +133,6 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
         MediaLoadingVisibility = false;
         MediaNoDataVisibility = false;
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
 
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
@@ -156,29 +146,7 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        // 结束任务
-        _tokenSource?.Cancel();
-
-        NavigationParam parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
-
+    
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
 
@@ -337,8 +305,6 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
     {
         LogManager.Debug(Tag, "初始化页面元素");
 
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
         DownloadManage.Width = 24;
@@ -417,5 +383,11 @@ public class ViewPublicFavoritesViewModel : ViewModelBase
 
             UpdateView(new FavoritesService(), parameter, cancellationToken);
         }, (_tokenSource = new CancellationTokenSource()).Token);
+    }
+
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
     }
 }

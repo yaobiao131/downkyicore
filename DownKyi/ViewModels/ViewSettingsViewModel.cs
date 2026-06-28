@@ -18,14 +18,6 @@ public class ViewSettingsViewModel : ViewModelBase
 
     #region 页面属性申明
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private List<TabHeader> _tabHeaders;
 
     public List<TabHeader> TabHeaders
@@ -50,9 +42,6 @@ public class ViewSettingsViewModel : ViewModelBase
 
         #region 属性初始化
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         TabHeaders = new List<TabHeader>
         {
             new() { Id = 0, Title = DictionaryResource.GetString("Basic") },
@@ -66,25 +55,6 @@ public class ViewSettingsViewModel : ViewModelBase
     }
 
     #region 命令申明
-
-    // 返回事件
-    private DelegateCommand _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
 
     // 左侧tab点击事件
     private DelegateCommand<object> _leftTabHeadersCommand;
@@ -105,19 +75,19 @@ public class ViewSettingsViewModel : ViewModelBase
         switch (tabHeader.Id)
         {
             case 0:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
                 break;
             case 1:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewNetworkViewModel.Tag);
                 break;
             case 2:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewVideoViewModel.Tag);
                 break;
             case 3:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewDanmakuViewModel.Tag);
                 break;
             case 4:
-                _regionManager.RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag);
+                (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewAboutViewModel.Tag);
                 break;
         }
     }
@@ -131,7 +101,7 @@ public class ViewSettingsViewModel : ViewModelBase
     /// </summary>
     private void ExecuteLoadedCommand()
     {
-        _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
+        (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag);
     }
 
     #endregion
@@ -147,8 +117,7 @@ public class ViewSettingsViewModel : ViewModelBase
         // 进入设置页面时显示的设置项
         SelectTabId = 0;
 
-        PropertyChangeAsync(() => { _regionManager.RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
+        PropertyChangeAsync(() => { (ScopedRegionManager ?? _regionManager).RequestNavigate("SettingsContentRegion", ViewBasicViewModel.Tag); });
 
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
     }
 }

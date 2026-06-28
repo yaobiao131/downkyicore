@@ -1,5 +1,6 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converter="using:DownKyi.Converter"
              x:Class="DownKyi.App">
     <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -13,6 +14,7 @@
             </ResourceDictionary.MergedDictionaries>
             <FontFamily x:Key="DefaultFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
             <FontFamily x:Key="ProgramFont">Simsun,微软雅黑,Microsoft YaHei,苹方-简,宋体-简,$Default</FontFamily>
+            <converter:BoolToBrushConverter x:Key="BoolToBrushConverter" />
         </ResourceDictionary>
     </Application.Resources>
     <Application.Styles>

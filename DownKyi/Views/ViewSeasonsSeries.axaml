@@ -10,7 +10,9 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewSeasonsSeriesViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewSeasonsSeriesViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="ListBoxItem" x:DataType="vmp:ChannelMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -116,52 +118,35 @@
     </UserControl.Resources>
     <Grid RowDefinitions="50,1,*">
 
-        <Grid Grid.Row="0" ColumnDefinitions="auto,*,100">
-
+        <Grid Grid.Row="0" ColumnDefinitions="*,100">
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{DynamicResource SeasonsSeries}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text=" - ">
+                    <Interaction.Behaviors>
+                        <DataTriggerBehavior Binding="{Binding Title}" Value="{x:Null}">
+                            <ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                        </DataTriggerBehavior>
+                        <DataTriggerBehavior Binding="{Binding Title}" Value="">
+                            <ChangePropertyAction PropertyName="IsVisible" Value="False" />
+                        </DataTriggerBehavior>
+                    </Interaction.Behaviors>
+                </TextBlock>
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="{DynamicResource BrushTextDark}"
+                    Text="{Binding Title}" />
+            </StackPanel>
             <Button
-                Grid.Column="0"
-                Margin="10,5,0,5"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Command="{Binding BackSpaceCommand}"
-                Theme="{StaticResource ImageBtnStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <ContentControl Width="24" Height="24">
-                        <Path
-                            Width="{Binding ArrowBack.Width}"
-                            Height="{Binding ArrowBack.Height}"
-                            Data="{Binding ArrowBack.Data}"
-                            Fill="{Binding ArrowBack.Fill}"
-                            Stretch="None" />
-                    </ContentControl>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{DynamicResource SeasonsSeries}" />
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text=" - ">
-                        <Interaction.Behaviors>
-                            <DataTriggerBehavior Binding="{Binding Title}" Value="{x:Null}">
-                                <ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                            </DataTriggerBehavior>
-                            <DataTriggerBehavior Binding="{Binding Title}" Value="">
-                                <ChangePropertyAction PropertyName="IsVisible" Value="False" />
-                            </DataTriggerBehavior>
-                        </Interaction.Behaviors>
-                    </TextBlock>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{Binding Title}" />
-                </StackPanel>
-            </Button>
-            <Button
-                Grid.Column="2"
+                Grid.Column="1"
                 Width="24"
                 Height="24"
                 Margin="10,5"

@@ -109,14 +109,6 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         set => SetProperty(ref _mediaNoDataVisibility, value);
     }
 
-    private VectorImage _arrowBack;
-
-    public VectorImage ArrowBack
-    {
-        get => _arrowBack;
-        set => SetProperty(ref _arrowBack, value);
-    }
-
     private VectorImage _downloadManage;
 
     public VectorImage DownloadManage
@@ -190,9 +182,6 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         MediaLoadingVisibility = false;
         MediaNoDataVisibility = false;
 
-        ArrowBack = NavigationIcon.Instance().ArrowBack;
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         // 下载管理按钮
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
@@ -209,29 +198,6 @@ public class ViewMyFavoritesViewModel : ViewModelBase
 
     // 返回事件
     private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-    /// <summary>
-    /// 返回事件
-    /// </summary>
-    protected internal override void ExecuteBackSpace()
-    {
-        InitView();
-
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-        // 结束任务
-        _tokenSource1?.Cancel();
-        _tokenSource2?.Cancel();
-
-        var parameter = new NavigationParam
-        {
-            ViewName = ParentView,
-            ParentViewName = null,
-            Parameter = null
-        };
-        EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-    }
 
     // 前往下载管理页面
     private DelegateCommand? _downloadManagerCommand;
@@ -473,8 +439,6 @@ public class ViewMyFavoritesViewModel : ViewModelBase
     /// </summary>
     private void InitView()
     {
-        ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
         DownloadManage = ButtonIcon.Instance().DownloadManage;
         DownloadManage.Height = 24;
         DownloadManage.Width = 24;
@@ -490,6 +454,13 @@ public class ViewMyFavoritesViewModel : ViewModelBase
         Medias.Clear();
         SelectTabId = -1;
         IsSelectAll = false;
+    }
+
+    public override void OnTabClosed()
+    {
+        _tokenSource1?.Cancel();
+        _tokenSource2?.Cancel();
+        base.OnTabClosed();
     }
 
     /// <summary>

@@ -302,32 +302,14 @@
             IsVisible="{Binding NoDataVisibility}" />
 
         <!--  顶部导航  -->
-        <Grid VerticalAlignment="Top" Background="{Binding TopNavigationBg}" ColumnDefinitions="150,*,150">
-
-            <Button
-                Grid.Column="0"
+        <Grid VerticalAlignment="Top" Background="{Binding TopNavigationBg}" ColumnDefinitions="*">
+            <TextBlock
                 Margin="10,5,0,5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Command="{Binding BackSpaceCommand}"
-                Theme="{StaticResource ImageBtnStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <ContentControl Width="24" Height="24">
-                        <Path
-                            Width="{Binding ArrowBack.Width}"
-                            Height="{Binding ArrowBack.Height}"
-                            Data="{Binding ArrowBack.Data}"
-                            Fill="{Binding ArrowBack.Fill}"
-                            Stretch="None" />
-                    </ContentControl>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="{Binding ArrowBack.Fill}"
-                        Text="{DynamicResource UserSpace}" />
-                </StackPanel>
-            </Button>
-
+                FontSize="16"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource UserSpace}" />
         </Grid>
     </Grid>
 </UserControl>

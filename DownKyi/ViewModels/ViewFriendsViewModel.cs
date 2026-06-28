@@ -21,14 +21,6 @@ namespace DownKyi.ViewModels
 
         #region 页面属性申明
 
-        private VectorImage _arrowBack;
-
-        public VectorImage ArrowBack
-        {
-            get => _arrowBack;
-            set => SetProperty(ref _arrowBack, value);
-        }
-
         private ObservableCollection<TabHeader> _tabHeaders;
 
         public ObservableCollection<TabHeader> TabHeaders
@@ -54,9 +46,6 @@ namespace DownKyi.ViewModels
 
             #region 属性初始化
 
-            ArrowBack = NavigationIcon.Instance().ArrowBack;
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
-
             TabHeaders = new ObservableCollection<TabHeader>
             {
                 new() { Id = 0, Title = DictionaryResource.GetString("FriendFollowing") },
@@ -67,29 +56,6 @@ namespace DownKyi.ViewModels
         }
 
         #region 命令申明
-
-        // 返回事件
-        private DelegateCommand _backSpaceCommand;
-
-        public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
-
-        /// <summary>
-        /// 返回事件
-        /// </summary>
-        protected internal override void ExecuteBackSpace()
-        {
-            //InitView();
-
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorText");
-
-            var parameter = new NavigationParam
-            {
-                ViewName = ParentView,
-                ParentViewName = null,
-                Parameter = null
-            };
-            EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
-        }
 
         // 顶部tab点击事件
         private DelegateCommand<object> _tabHeadersCommand;
@@ -130,13 +96,15 @@ namespace DownKyi.ViewModels
                 { "isFirst", isFirst },
             };
 
+            var manager = ScopedRegionManager ?? _regionManager;
+
             switch (id)
             {
                 case 0:
-                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
+                    manager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
                     break;
                 case 1:
-                    _regionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
+                    manager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
                     break;
             }
         }
@@ -149,21 +117,31 @@ namespace DownKyi.ViewModels
         {
             base.OnNavigatedTo(navigationContext);
 
-            ArrowBack.Fill = DictionaryResource.GetColor("ColorTextDark");
+            var currentRegionManager = ScopedRegionManager ?? navigationContext.NavigationService.Region.RegionManager;
 
-            // 根据传入参数不同执行不同任务
             var parameter = navigationContext.Parameters.GetValue<Dictionary<string, object>>("Parameter");
-            if (parameter == null)
-            {
-                return;
-            }
+            if (parameter == null) return;
 
             mid = (long)parameter["mid"];
             SelectTabId = (int)parameter["friendId"];
 
             PropertyChangeAsync(() =>
             {
-                NavigationView(SelectTabId, true);
+                var param = new NavigationParameters()
+                {
+                    { "mid", mid },
+                    { "isFirst", true },
+                };
+
+                switch (SelectTabId)
+                {
+                    case 0:
+                        currentRegionManager.RequestNavigate("FriendContentRegion", ViewFollowingViewModel.Tag, param);
+                        break;
+                    case 1:
+                        currentRegionManager.RequestNavigate("FriendContentRegion", ViewFollowerViewModel.Tag, param);
+                        break;
+                }
             });
         }
     }

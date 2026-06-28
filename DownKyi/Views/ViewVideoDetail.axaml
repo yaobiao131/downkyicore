@@ -11,7 +11,9 @@
              xmlns:custom="clr-namespace:DownKyi.CustomControl"
              xmlns:behavior="clr-namespace:DownKyi.CustomAction"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewVideoDetailViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewVideoDetailViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
 
     <UserControl.Resources>
         <ControlTheme TargetType="TextBlock" x:Key="DataGridCellTextBlockTheme">
@@ -22,26 +24,9 @@
     </UserControl.Resources>
     <Grid RowDefinitions="50,10,*">
 
-        <Grid Grid.Row="0" ColumnDefinitions="40,*,50">
+        <Grid Grid.Row="0" ColumnDefinitions="*,50">
 
-            <Button
-                Grid.Column="0"
-                Width="24"
-                Height="24"
-                Margin="10,5"
-                VerticalAlignment="Center"
-                Command="{Binding BackSpaceCommand}"
-                Theme="{StaticResource ImageBtnStyle}">
-                <ContentControl>
-                    <Path
-                        Theme="{StaticResource NavigationIcon.ArrowBack}"
-                        Width="24"
-                        Height="24"
-                        Fill="{DynamicResource ColorTextDark}"
-                        Stretch="None" />
-                </ContentControl>
-            </Button>
-            <Border Grid.Column="1" Height="32" Margin="0,5,0,5" BorderBrush="{DynamicResource BrushPrimary}"
+            <Border Height="32" Margin="10,5,0,5" BorderBrush="{DynamicResource BrushPrimary}"
                     BorderThickness="1" CornerRadius="16">
                 <TextBox
                     Margin="16,0,30,0"

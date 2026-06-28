@@ -51,9 +51,6 @@ public class ViewLoginViewModel : ViewModelBase
     {
     }
 
-    private DelegateCommand? _backSpaceCommand;
-
-    public DelegateCommand BackSpaceCommand => _backSpaceCommand ??= new DelegateCommand(ExecuteBackSpace);
 
     protected internal override void ExecuteBackSpace()
     {
@@ -66,7 +63,10 @@ public class ViewLoginViewModel : ViewModelBase
         {
             ViewName = ParentView,
             ParentViewName = null,
-            Parameter = "login"
+            Parameter = "login",
+            IsBackNavigation = true,
+            NavigationKey = ParentNavigationKey,
+            CloseTabNavigationKey = NavigationKey
         };
         EventAggregator.GetEvent<NavigationEvent>().Publish(parameter);
     }
@@ -197,6 +197,12 @@ public class ViewLoginViewModel : ViewModelBase
         LoginQrCode = null;
         LoginQrCodeOpacity = 1;
         LoginQrCodeStatus = false;
+    }
+
+    public override void OnTabClosed()
+    {
+        _tokenSource?.Cancel();
+        base.OnTabClosed();
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)

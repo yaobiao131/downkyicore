@@ -10,7 +10,9 @@
              xmlns:vm="clr-namespace:DownKyi.ViewModels"
              xmlns:vmp="clr-namespace:DownKyi.ViewModels.PageViewModels"
              xmlns:asyncImageLoader="clr-namespace:DownKyi.CustomControl.AsyncImageLoader"
-             x:DataType="vm:ViewMyFavoritesViewModel">
+             xmlns:prism="http://prismlibrary.com/"
+             x:DataType="vm:ViewMyFavoritesViewModel"
+             prism:ViewModelLocator.AutoWireViewModel="True">
     <UserControl.Resources>
         <ControlTheme x:Key="MediaListStyle" TargetType="{x:Type ListBoxItem}" x:DataType="vmp:FavoritesMedia">
             <Setter Property="IsSelected" Value="{Binding IsSelected}" />
@@ -168,33 +170,16 @@
         </ControlTheme>
     </UserControl.Resources>
     <Grid RowDefinitions="50,1,*">
-        <Grid Grid.Row="0" ColumnDefinitions="100,*,100">
-            <Button
-                Grid.Column="0"
+        <Grid Grid.Row="0" ColumnDefinitions="*,100">
+            <TextBlock
                 Margin="10,5,0,5"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Command="{Binding BackSpaceCommand}"
-                Theme="{StaticResource ImageBtnStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <ContentControl Width="24" Height="24">
-                        <Path
-                            Width="{Binding ArrowBack.Width}"
-                            Height="{Binding ArrowBack.Height}"
-                            Data="{Binding ArrowBack.Data}"
-                            Fill="{Binding ArrowBack.Fill}"
-                            Stretch="None" />
-                    </ContentControl>
-                    <TextBlock
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="{DynamicResource BrushTextDark}"
-                        Text="{DynamicResource PublicFavorites}" />
-                </StackPanel>
-            </Button>
-
+                FontSize="16"
+                Foreground="{DynamicResource BrushTextDark}"
+                Text="{DynamicResource PublicFavorites}" />
             <Button
-                Grid.Column="2"
+                Grid.Column="1"
                 Width="24"
                 Height="24"
                 Margin="10,5"
