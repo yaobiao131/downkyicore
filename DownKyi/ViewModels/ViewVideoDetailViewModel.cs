@@ -681,7 +681,7 @@ public class ViewVideoDetailViewModel : ViewModelBase
         }
 
         // 获取视频列表
-        var videoSections = videoInfoService.GetVideoSections(false);
+        var videoSections = videoInfoService.GetVideoSections(true);
 
         // 清空以前的数据
         PropertyChangeAsync(() =>
