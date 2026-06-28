@@ -56,18 +56,18 @@
                                     </Border>
                                 </Grid>
                             </Border>
-                            <!-- Avalonia Bug 如果有emoji TextTrimming="CharacterEllipsis" 会崩溃 -->
-                            <TextBlock
-                                Name="nameTitle"
-                                Height="35"
-                                MaxWidth="190"
-                                Margin="0,10,0,0"
-                                Foreground="{DynamicResource BrushTextDark}"
-                                Tag="{Binding Bvid}"
-                                Text="{Binding Title}"
-                                TextWrapping="Wrap"
-                                ToolTip.Tip="{Binding Title}">
-                                <Interaction.Behaviors>
+                            
+                                <TextBlock
+                                    Name="nameTitle"
+                                    Height="35"
+                                    MaxWidth="190"
+                                    TextTrimming="CharacterEllipsis"
+                                    Margin="0,10,0,0"
+                                    Foreground="{DynamicResource BrushTextDark}"
+                                    Tag="{Binding Bvid}"
+                                    Text="{Binding Title}"
+                                    ToolTip.Tip="{Binding Title}">
+                                    <Interaction.Behaviors>
                                     <EventTriggerBehavior EventName="PointerReleased">
                                         <InvokeCommandAction Command="{Binding TitleCommand}"
                                                              CommandParameter="{ReflectionBinding DataContext.PageName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" />
