@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DownKyi.Core.BiliApi.History;
 using DownKyi.Core.BiliApi.VideoStream;
+using DownKyi.Core.Utils;
 using DownKyi.Events;
 using DownKyi.Images;
 using DownKyi.PrismExtension.Dialog;

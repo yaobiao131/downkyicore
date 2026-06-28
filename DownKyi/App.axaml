@@ -25,6 +25,9 @@
         <Style Selector="TemplatedControl">
             <Setter Property="FontFamily" Value="{DynamicResource ProgramFont}" />
         </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="FontFamily" Value="{DynamicResource DefaultFont}" />
+        </Style>
         <Style Selector="HeaderedContentControl">
             <Setter Property="Template">
                 <Setter.Value>

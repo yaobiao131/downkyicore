@@ -6,6 +6,8 @@ namespace DownKyi.Core.BiliApi.Users.Models;
 // https://api.bilibili.com/x/space/arc/search
 public class SpacePublicationOrigin : BaseModel
 {
+    [JsonProperty("code")] public int Code { get; set; }
+    [JsonProperty("message")] public string? Message { get; set; }
     [JsonProperty("data")] public SpacePublication? Data { get; set; }
 }
 

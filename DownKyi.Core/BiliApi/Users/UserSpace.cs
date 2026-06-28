@@ -1,4 +1,4 @@
-﻿using DownKyi.Core.BiliApi.Sign;
+using DownKyi.Core.BiliApi.Sign;
 using DownKyi.Core.BiliApi.Users.Models;
 using DownKyi.Core.Logging;
 using DownKyi.Core.Storage;
@@ -115,8 +115,9 @@ public static class UserSpace
     /// <param name="order">排序</param>
     /// <param name="tid">视频分区</param>
     /// <param name="keyword">搜索关键词</param>
+    /// <param name="retryWithFreshKey">是否使用刷新后的密钥重试</param>
     /// <returns></returns>
-    public static SpacePublicationList? GetPublication(long mid, int pn, int ps, long tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "")
+    public static SpacePublicationList? GetPublication(long mid, int pn, int ps, long tid = 0, PublicationOrder order = PublicationOrder.PUBDATE, string keyword = "", bool retryWithFreshKey = false)
     {
         var parameters = new Dictionary<string, object?>
         {
@@ -140,9 +141,37 @@ public static class UserSpace
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
 
+        // 如果返回空且未尝试过刷新密钥，则刷新密钥后重试
+        if (string.IsNullOrEmpty(response) && !retryWithFreshKey)
+        {
+            Console.PrintLine("GetPublication()返回空，尝试刷新WBI密钥后重试");
+            LogManager.Info("UserSpace", "GetPublication() returned empty, retrying with fresh WBI keys");
+            WbiSign.RefreshKeys();
+            return GetPublication(mid, pn, ps, tid, order, keyword, true);
+        }
+
         try
         {
-            // 忽略play的值为“--”时的类型错误
+            // 先检查API返回的code
+            var origin = JsonConvert.DeserializeObject<SpacePublicationOrigin>(response);
+            if (origin?.Code != 0)
+            {
+                Console.PrintLine("GetPublication() API返回错误码: {0}, 消息: {1}", origin?.Code, origin?.Message);
+                LogManager.Info("UserSpace", $"API returned error code: {origin?.Code}, message: {origin?.Message}");
+
+                // 如果是-352错误（风控校验失败）且未重试，则刷新密钥后重试
+                if (origin?.Code == -352 && !retryWithFreshKey)
+                {
+                    Console.PrintLine("GetPublication()收到-352错误，尝试刷新WBI密钥后重试");
+                    LogManager.Info("UserSpace", "Received -352 error, retrying with fresh WBI keys");
+                    WbiSign.RefreshKeys();
+                    return GetPublication(mid, pn, ps, tid, order, keyword, true);
+                }
+
+                return null;
+            }
+
+            // 忽略play的值为"--"时的类型错误
             var settings = new JsonSerializerSettings
             {
                 Error = (sender, args) =>

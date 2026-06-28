@@ -40,8 +40,9 @@ public static class UserInfo
     /// 用户空间详细信息
     /// </summary>
     /// <param name="mid"></param>
+    /// <param name="retryWithFreshKey">是否使用刷新后的密钥重试</param>
     /// <returns></returns>
-    public static UserInfoForSpace? GetUserInfoForSpace(long mid)
+    public static UserInfoForSpace? GetUserInfoForSpace(long mid, bool retryWithFreshKey = false)
     {
         var parameters = new Dictionary<string, object?>
         {
@@ -60,6 +61,15 @@ public static class UserInfo
         var url = $"https://api.bilibili.com/x/space/wbi/acc/info?{query}";
         const string referer = "https://www.bilibili.com";
         var response = WebClient.RequestWeb(url, referer);
+
+        // 如果返回空且未尝试过刷新密钥，则刷新密钥后重试
+        if (string.IsNullOrEmpty(response) && !retryWithFreshKey)
+        {
+            Console.PrintLine("GetUserInfoForSpace()返回空，尝试刷新WBI密钥后重试");
+            LogManager.Info("UserInfo", "GetUserInfoForSpace() returned empty, retrying with fresh WBI keys");
+            WbiSign.RefreshKeys();
+            return GetUserInfoForSpace(mid, true);
+        }
 
         try
         {
